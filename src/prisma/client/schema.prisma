@@ -1,0 +1,303 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/prisma/client"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id                      String               @id @default(cuid())
+  email                   String               @unique
+  name                    String?
+  password                String
+  phone                   String?
+  publicKey               String               @db.Text
+  encryptedPrivateKey     String               @db.Text
+  otpCode                 String?
+  otpExpiry               DateTime?
+  isVerified              Boolean              @default(false)
+  deviceId                String?
+  deviceInfo              Json?
+  location                Json?
+  allowedCountry          String?
+  isBanned                Boolean              @default(false)
+  isFirstLogin            Boolean              @default(true)
+  currentLocation         Json?
+  lastSeen                DateTime?
+  isOnline                Boolean              @default(false)
+  role                    UserRole             @default(USER)
+  canPublishNotifications Boolean              @default(false)
+  createdAt               DateTime             @default(now())
+  updatedAt               DateTime             @updatedAt
+  publishedAnnouncements  Announcement[]
+  deptMemberships         DepartmentMember[]
+  groupMemberships        GroupMember[]
+  sentMessages            Message[]
+  notifications           Notification[]
+  orgMemberships          OrganizationMember[]
+
+  @@index([email])
+  @@index([isOnline])
+  @@index([allowedCountry])
+}
+
+model Organization {
+  id           String               @id @default(cuid())
+  name         String
+  code         String               @unique
+  logo         String?              @db.Text
+  address      String?              @db.Text
+  isSuspended  Boolean              @default(false)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  ownerId      String
+  departments  Department[]
+  members      OrganizationMember[]
+  subscription Subscription?
+  events       EventInvitation[]
+
+  @@index([code])
+  @@index([isSuspended])
+}
+
+model OrganizationMember {
+  id           String       @id @default(cuid())
+  userId       String
+  orgId        String
+  role         OrgRole      @default(MEMBER)
+  joinedAt     DateTime     @default(now())
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, orgId])
+  @@index([orgId], map: "OrganizationMember_orgId_fkey")
+}
+
+model Department {
+  id            String             @id @default(cuid())
+  name          String
+  orgId         String
+  publicKey     String             @db.Text
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  organization  Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  members       DepartmentMember[]
+  conversations Group[]
+
+  @@index([orgId], map: "Department_orgId_fkey")
+}
+
+model DepartmentMember {
+  id               String     @id @default(cuid())
+  deptId           String
+  userId           String
+  encryptedDeptKey String     @db.Text
+  department       Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([deptId, userId])
+  @@index([userId], map: "DepartmentMember_userId_fkey")
+}
+
+model Group {
+  id         String        @id @default(cuid())
+  name       String?
+  isDirect   Boolean       @default(false)
+  deptId     String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  department Department?   @relation(fields: [deptId], references: [id])
+  members    GroupMember[]
+  messages   Message[]
+
+  @@index([deptId], map: "Group_deptId_fkey")
+}
+
+model GroupMember {
+  id       String   @id @default(cuid())
+  groupId  String
+  userId   String
+  joinedAt DateTime @default(now())
+  group    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([userId], map: "GroupMember_userId_fkey")
+}
+
+model Message {
+  id          String       @id @default(cuid())
+  content     String       @db.LongText
+  senderId    String
+  groupId     String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  attachments Attachment[]
+  group       Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  sender      User         @relation(fields: [senderId], references: [id])
+
+  @@index([groupId, createdAt])
+  @@index([senderId])
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  messageId String
+  type      FileType
+  filename  String
+  data      String   @db.LongText
+  createdAt DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  content   String
+  userId    String?
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  isRead    Boolean   @default(false)
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Announcement {
+  id          String             @id @default(cuid())
+  title       String
+  content     String             @db.Text
+  publisherId String
+  expiresAt   DateTime
+  createdAt   DateTime           @default(now())
+  isActive    Boolean            @default(true)
+  publisher   User               @relation(fields: [publisherId], references: [id], onDelete: Cascade)
+  reads       AnnouncementRead[]
+
+  @@index([expiresAt])
+  @@index([isActive])
+  @@index([publisherId], map: "Announcement_publisherId_fkey")
+}
+
+model AnnouncementRead {
+  id             String       @id @default(cuid())
+  announcementId String
+  userId         String
+  readAt         DateTime     @default(now())
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+
+  @@unique([announcementId, userId])
+  @@index([userId])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum OrgRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum FileType {
+  IMAGE
+  PDF
+  WORD
+  AUDIO
+  OTHER
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum SubscriptionPlan {
+  FREE
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum EventType {
+  PROFESSIONAL
+  DINNER
+  MEETING
+  PARTY
+  CONFERENCE
+  WORKSHOP
+  OTHER
+}
+
+model OrganizationRequest {
+  id         String        @id @default(cuid())
+  userId     String
+  cardCode   String
+  status     RequestStatus @default(PENDING)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  reviewedBy String?
+  reviewedAt DateTime?
+  orgId      String?       @unique
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Subscription {
+  id                String           @id @default(cuid())
+  orgId             String           @unique
+  plan              SubscriptionPlan @default(FREE)
+  startDate         DateTime         @default(now())
+  endDate           DateTime?
+  maxDepartments    Int              @default(2)
+  maxMembersPerDept Int              @default(5)
+  isActive          Boolean          @default(true)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  organization      Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([isActive])
+}
+
+model EventInvitation {
+  id           String           @id @default(cuid())
+  orgId        String
+  title        String
+  description  String?          @db.Text
+  eventType    EventType        @default(OTHER)
+  eventDate    DateTime
+  maxAttendees Int
+  imageUrl     String?          @db.LongText
+  token        String           @unique
+  createdBy    String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  organization Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  rsvps        InvitationRSVP[]
+
+  @@index([orgId])
+  @@index([token])
+  @@index([eventDate])
+}
+
+model InvitationRSVP {
+  id        String          @id @default(cuid())
+  eventId   String
+  name      String
+  phone     String
+  createdAt DateTime        @default(now())
+  event     EventInvitation @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+}
