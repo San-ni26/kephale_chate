@@ -11,15 +11,16 @@ const createRSVPSchema = z.object({
 // POST: Submit RSVP (public, no auth required)
 export async function POST(
     request: NextRequest,
-    { params }: { params: { token: string } }
+    { params }: { params: Promise<{ token: string }> }
 ) {
     try {
+        const { token } = await params;
         const body = await request.json();
         const validatedData = createRSVPSchema.parse(body);
 
         // Get event
         const event = await prisma.eventInvitation.findUnique({
-            where: { token: params.token },
+            where: { token },
             include: {
                 _count: {
                     select: {
@@ -106,9 +107,10 @@ export async function POST(
 // GET: List RSVPs for event (organization members only)
 export async function GET(
     request: NextRequest,
-    { params }: { params: { token: string } }
+    { params }: { params: Promise<{ token: string }> }
 ) {
     try {
+        const { token } = await params;
         const authError = await authenticate(request);
         if (authError) return authError;
 
@@ -119,7 +121,7 @@ export async function GET(
 
         // Get event
         const event = await prisma.eventInvitation.findUnique({
-            where: { token: params.token },
+            where: { token },
             include: {
                 rsvps: {
                     orderBy: {

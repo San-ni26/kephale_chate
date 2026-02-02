@@ -4,11 +4,12 @@ import { prisma } from '@/src/lib/prisma';
 // GET: Get event details by token (public, no auth required)
 export async function GET(
     request: NextRequest,
-    { params }: { params: { token: string } }
+    { params }: { params: Promise<{ token: string }> }
 ) {
     try {
+        const { token } = await params;
         const event = await prisma.eventInvitation.findUnique({
-            where: { token: params.token },
+            where: { token },
             include: {
                 organization: {
                     select: {
