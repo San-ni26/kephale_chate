@@ -300,137 +300,20 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
 
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-};
-
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
-};
-
-exports.Prisma.UserOrderByRelevanceFieldEnum = {
-  id: 'id',
-  email: 'email',
-  name: 'name',
-  password: 'password',
-  phone: 'phone',
-  publicKey: 'publicKey',
-  encryptedPrivateKey: 'encryptedPrivateKey',
-  otpCode: 'otpCode',
-  deviceId: 'deviceId',
-  allowedCountry: 'allowedCountry'
-};
-
-exports.Prisma.OrganizationOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  code: 'code',
-  logo: 'logo',
-  address: 'address',
-  ownerId: 'ownerId'
-};
-
-exports.Prisma.OrganizationMemberOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  orgId: 'orgId'
-};
-
-exports.Prisma.DepartmentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  orgId: 'orgId',
-  publicKey: 'publicKey'
-};
-
-exports.Prisma.DepartmentMemberOrderByRelevanceFieldEnum = {
-  id: 'id',
-  deptId: 'deptId',
-  userId: 'userId',
-  encryptedDeptKey: 'encryptedDeptKey'
-};
-
-exports.Prisma.GroupOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  deptId: 'deptId'
-};
-
-exports.Prisma.GroupMemberOrderByRelevanceFieldEnum = {
-  id: 'id',
-  groupId: 'groupId',
-  userId: 'userId'
-};
-
-exports.Prisma.MessageOrderByRelevanceFieldEnum = {
-  id: 'id',
-  content: 'content',
-  senderId: 'senderId',
-  groupId: 'groupId'
-};
-
-exports.Prisma.AttachmentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  messageId: 'messageId',
-  filename: 'filename',
-  data: 'data'
-};
-
-exports.Prisma.NotificationOrderByRelevanceFieldEnum = {
-  id: 'id',
-  content: 'content',
-  userId: 'userId'
-};
-
-exports.Prisma.AnnouncementOrderByRelevanceFieldEnum = {
-  id: 'id',
-  title: 'title',
-  content: 'content',
-  publisherId: 'publisherId'
-};
-
-exports.Prisma.AnnouncementReadOrderByRelevanceFieldEnum = {
-  id: 'id',
-  announcementId: 'announcementId',
-  userId: 'userId'
-};
-
-exports.Prisma.OrganizationRequestOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  cardCode: 'cardCode',
-  reviewedBy: 'reviewedBy',
-  orgId: 'orgId'
-};
-
-exports.Prisma.SubscriptionOrderByRelevanceFieldEnum = {
-  id: 'id',
-  orgId: 'orgId'
-};
-
-exports.Prisma.EventInvitationOrderByRelevanceFieldEnum = {
-  id: 'id',
-  orgId: 'orgId',
-  title: 'title',
-  description: 'description',
-  imageUrl: 'imageUrl',
-  token: 'token',
-  createdBy: 'createdBy'
-};
-
-exports.Prisma.InvitationRSVPOrderByRelevanceFieldEnum = {
-  id: 'id',
-  eventId: 'eventId',
-  name: 'name',
-  phone: 'phone'
 };
 exports.UserRole = exports.$Enums.UserRole = {
   USER: 'USER',

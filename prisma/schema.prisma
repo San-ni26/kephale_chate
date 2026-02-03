@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
 model User {
@@ -68,11 +68,11 @@ model OrganizationMember {
   orgId        String
   role         OrgRole      @default(MEMBER)
   joinedAt     DateTime     @default(now())
-  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade, map: "OrganizationMember_orgId_fk")
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, orgId])
-  @@index([orgId], map: "OrganizationMember_orgId_fkey")
+  @@index([orgId], map: "OrganizationMember_orgId_idx")
 }
 
 model Department {
@@ -82,11 +82,11 @@ model Department {
   publicKey     String             @db.Text
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
-  organization  Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  organization  Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade, map: "Department_orgId_fk")
   members       DepartmentMember[]
   conversations Group[]
 
-  @@index([orgId], map: "Department_orgId_fkey")
+  @@index([orgId], map: "Department_orgId_idx")
 }
 
 model DepartmentMember {
@@ -95,10 +95,10 @@ model DepartmentMember {
   userId           String
   encryptedDeptKey String     @db.Text
   department       Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
-  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade, map: "DepartmentMember_userId_fk")
 
   @@unique([deptId, userId])
-  @@index([userId], map: "DepartmentMember_userId_fkey")
+  @@index([userId], map: "DepartmentMember_userId_idx")
 }
 
 model Group {
@@ -108,11 +108,11 @@ model Group {
   deptId     String?
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
-  department Department?   @relation(fields: [deptId], references: [id])
+  department Department?   @relation(fields: [deptId], references: [id], map: "Group_deptId_fk")
   members    GroupMember[]
   messages   Message[]
 
-  @@index([deptId], map: "Group_deptId_fkey")
+  @@index([deptId], map: "Group_deptId_idx")
 }
 
 model GroupMember {
@@ -121,15 +121,15 @@ model GroupMember {
   userId   String
   joinedAt DateTime @default(now())
   group    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "GroupMember_userId_fk")
 
   @@unique([groupId, userId])
-  @@index([userId], map: "GroupMember_userId_fkey")
+  @@index([userId], map: "GroupMember_userId_idx")
 }
 
 model Message {
   id          String       @id @default(cuid())
-  content     String       @db.LongText
+  content     String       @db.Text
   senderId    String
   groupId     String
   createdAt   DateTime     @default(now())
@@ -147,7 +147,7 @@ model Attachment {
   messageId String
   type      FileType
   filename  String
-  data      String   @db.LongText
+  data      String   @db.Text
   createdAt DateTime @default(now())
   message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
@@ -180,7 +180,7 @@ model Announcement {
 
   @@index([expiresAt])
   @@index([isActive])
-  @@index([publisherId], map: "Announcement_publisherId_fkey")
+  @@index([publisherId], map: "Announcement_publisherId_idx")
 }
 
 model AnnouncementRead {
@@ -278,7 +278,7 @@ model EventInvitation {
   eventType    EventType        @default(OTHER)
   eventDate    DateTime
   maxAttendees Int
-  imageUrl     String?          @db.LongText
+  imageUrl     String?          @db.Text
   token        String           @unique
   createdBy    String
   createdAt    DateTime         @default(now())

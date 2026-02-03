@@ -60,10 +60,10 @@ export default function OrganizationRequestDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="bg-slate-900 border-slate-800 text-slate-100">
+            <DialogContent className="bg-card border-border text-foreground">
                 <DialogHeader>
                     <DialogTitle>Créer une Organisation</DialogTitle>
-                    <DialogDescription className="text-slate-400">
+                    <DialogDescription className="text-muted-foreground">
                         Entrez votre code de carte à 12 chiffres pour soumettre une demande de création d'organisation.
                         Un administrateur examinera votre demande.
                     </DialogDescription>
@@ -76,7 +76,7 @@ export default function OrganizationRequestDialog({
                             id="cardCode"
                             type="text"
                             placeholder="123456789012"
-                            className="bg-slate-800 border-slate-700 text-white"
+                            className="bg-muted border-border text-foreground"
                             value={cardCode}
                             onChange={(e) => {
                                 const value = e.target.value.replace(/\D/g, '').slice(0, 12);
@@ -85,7 +85,7 @@ export default function OrganizationRequestDialog({
                             maxLength={12}
                             required
                         />
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-muted-foreground">
                             {cardCode.length}/12 chiffres
                         </p>
                     </div>
@@ -94,7 +94,7 @@ export default function OrganizationRequestDialog({
                         <Button
                             type="button"
                             variant="outline"
-                            className="flex-1 border-slate-700 hover:bg-slate-800"
+                            className="flex-1 border-border hover:bg-muted"
                             onClick={() => onOpenChange(false)}
                             disabled={loading}
                         >
@@ -102,7 +102,7 @@ export default function OrganizationRequestDialog({
                         </Button>
                         <Button
                             type="submit"
-                            className="flex-1 bg-purple-600 hover:bg-purple-700"
+                            className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                             disabled={loading || cardCode.length !== 12}
                         >
                             {loading ? (

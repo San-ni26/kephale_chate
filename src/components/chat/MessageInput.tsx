@@ -84,21 +84,21 @@ export function MessageInput({ onSendMessage, disabled }: MessageInputProps) {
     };
 
     return (
-        <div className="p-4 bg-slate-900 border-t border-slate-800">
+        <div className="p-4 bg-card border-t border-border">
             {selectedFile && (
-                <div className="flex items-center gap-2 mb-2 p-2 bg-slate-800 rounded-lg">
+                <div className="flex items-center gap-2 mb-2 p-2 bg-muted rounded-lg">
                     {selectedFile.preview ? (
-                        <img src={selectedFile.preview} alt="Preview" className="h-12 w-12 object-cover rounded" />
+                        <img src={selectedFile.preview} alt="Preview" className="h-12 w-12 object-cover rounded border border-border" />
                     ) : (
-                        <div className="h-12 w-12 bg-slate-700 flex items-center justify-center rounded">
-                            <File className="w-6 h-6 text-slate-400" />
+                        <div className="h-12 w-12 bg-muted flex items-center justify-center rounded border border-border">
+                            <File className="w-6 h-6 text-muted-foreground" />
                         </div>
                     )}
                     <div className="flex-1 overflow-hidden">
-                        <p className="text-sm text-slate-200 truncate">{selectedFile.file.name}</p>
-                        <p className="text-xs text-slate-400">{(selectedFile.file.size / 1024).toFixed(1)} KB</p>
+                        <p className="text-sm text-foreground truncate">{selectedFile.file.name}</p>
+                        <p className="text-xs text-muted-foreground">{(selectedFile.file.size / 1024).toFixed(1)} KB</p>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={clearFile} className="text-slate-400 hover:text-red-400">
+                    <Button variant="ghost" size="icon" onClick={clearFile} className="text-muted-foreground hover:text-destructive">
                         <X className="w-5 h-5" />
                     </Button>
                 </div>
@@ -117,7 +117,7 @@ export function MessageInput({ onSendMessage, disabled }: MessageInputProps) {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="text-slate-400 hover:text-white shrink-0"
+                    className="text-muted-foreground hover:text-foreground shrink-0"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={disabled || loading}
                 >
@@ -128,13 +128,13 @@ export function MessageInput({ onSendMessage, disabled }: MessageInputProps) {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Écrivez votre message..."
-                    className="bg-slate-800 border-slate-700 text-slate-100"
+                    className="bg-muted border-border text-foreground"
                     disabled={disabled || loading}
                 />
 
                 <Button
                     type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 shrink-0"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 shrink-0"
                     disabled={disabled || loading || (!message.trim() && !selectedFile)}
                 >
                     <Send className="w-5 h-5" />

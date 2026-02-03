@@ -117,37 +117,37 @@ export default function SettingsPage() {
     };
 
     return (
-        <div className="p-4 space-y-6">
-            <h2 className="text-xl font-bold px-2">Paramètres</h2>
+        <div className="p-4 space-y-6 pt-16">
+            <h2 className="text-xl font-bold px-2 text-foreground">Paramètres</h2>
 
-            <div className="flex items-center p-4 bg-slate-900 rounded-xl border border-slate-800">
+            <div className="flex items-center p-4 bg-card rounded-xl border border-border">
                 <Avatar className="h-16 w-16">
                     <AvatarImage src="https://github.com/shadcn.png" />
                     <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
                 <div className="ml-4 flex-1">
-                    <h3 className="font-semibold text-lg text-slate-100">Jean Dupont</h3>
-                    <p className="text-sm text-slate-400">jean@exemple.com</p>
+                    <h3 className="font-semibold text-lg text-foreground">Jean Dupont</h3>
+                    <p className="text-sm text-muted-foreground">jean@exemple.com</p>
                 </div>
-                <Button variant="outline" size="icon" className="border-slate-700">
+                <Button variant="outline" size="icon" className="border-border">
                     <Upload className="h-4 w-4" />
                 </Button>
             </div>
 
             <div className="space-y-4">
-                <Card className="bg-slate-900 border-slate-800">
+                <Card className="bg-card border-border">
                     <CardHeader>
-                        <CardTitle className="text-sm uppercase text-slate-500 font-bold">Sécurité</CardTitle>
+                        <CardTitle className="text-sm uppercase text-muted-foreground font-bold">Sécurité</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {/* Change Password Dialog */}
                         <Dialog open={isChangingPassword} onOpenChange={setIsChangingPassword}>
                             <DialogTrigger asChild>
-                                <Button variant="outline" className="w-full justify-start border-slate-700 hover:bg-slate-800 text-slate-200">
+                                <Button variant="outline" className="w-full justify-start border-border hover:bg-muted text-foreground">
                                     <Shield className="mr-2 h-4 w-4" /> Changer de Mot de Passe
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="bg-slate-900 border-slate-800 text-slate-100">
+                            <DialogContent className="bg-card border-border text-foreground">
                                 <DialogHeader>
                                     <DialogTitle>Changer le Mot de Passe</DialogTitle>
                                 </DialogHeader>
@@ -159,7 +159,7 @@ export default function SettingsPage() {
                                             type="password"
                                             value={passwordData.currentPassword}
                                             onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                                            className="bg-slate-800 border-slate-700"
+                                            className="bg-muted border-border"
                                         />
                                     </div>
                                     <div>
@@ -169,7 +169,7 @@ export default function SettingsPage() {
                                             type="password"
                                             value={passwordData.newPassword}
                                             onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                                            className="bg-slate-800 border-slate-700"
+                                            className="bg-muted border-border"
                                         />
                                     </div>
                                     <div>
@@ -179,10 +179,10 @@ export default function SettingsPage() {
                                             type="password"
                                             value={passwordData.confirmPassword}
                                             onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                                            className="bg-slate-800 border-slate-700"
+                                            className="bg-muted border-border"
                                         />
                                     </div>
-                                    <Button onClick={handleChangePassword} className="w-full">
+                                    <Button onClick={handleChangePassword} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                                         Modifier
                                     </Button>
                                 </div>
@@ -193,22 +193,22 @@ export default function SettingsPage() {
                         <Button
                             onClick={handleChangeDevice}
                             variant="outline"
-                            className="w-full justify-start border-slate-700 hover:bg-slate-800 text-slate-200"
+                            className="w-full justify-start border-border hover:bg-muted text-foreground"
                         >
                             <Smartphone className="mr-2 h-4 w-4" /> Changer d'Appareil
                         </Button>
                     </CardContent>
                 </Card>
 
-                <Card className="bg-slate-900 border-slate-800">
+                <Card className="bg-card border-border">
                     <CardHeader>
-                        <CardTitle className="text-sm uppercase text-slate-500 font-bold">Actions</CardTitle>
+                        <CardTitle className="text-sm uppercase text-muted-foreground font-bold">Actions</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-slate-300 hover:text-white hover:bg-slate-800">
+                        <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-foreground hover:text-foreground hover:bg-muted">
                             <LogOut className="mr-2 h-4 w-4" /> Déconnexion
                         </Button>
-                        <Button onClick={handleDeleteAccount} variant="ghost" className="w-full justify-start text-red-500 hover:text-red-400 hover:bg-red-950/30">
+                        <Button onClick={handleDeleteAccount} variant="ghost" className="w-full justify-start text-destructive hover:text-destructive/80 hover:bg-destructive/10">
                             <Trash2 className="mr-2 h-4 w-4" /> Supprimer mon Compte
                         </Button>
                     </CardContent>

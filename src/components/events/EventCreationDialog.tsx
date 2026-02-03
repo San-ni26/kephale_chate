@@ -130,7 +130,7 @@ export default function EventCreationDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="bg-slate-900 border-slate-800 text-slate-100 max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="bg-card border-border text-foreground max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Créer un Événement</DialogTitle>
                 </DialogHeader>
@@ -142,7 +142,7 @@ export default function EventCreationDialog({
                             id="title"
                             type="text"
                             placeholder="Réunion d'équipe"
-                            className="bg-slate-800 border-slate-700 text-white"
+                            className="bg-muted border-border text-foreground"
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             required
@@ -155,10 +155,10 @@ export default function EventCreationDialog({
                             value={formData.eventType}
                             onValueChange={(value) => setFormData({ ...formData, eventType: value })}
                         >
-                            <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+                            <SelectTrigger className="bg-muted border-border text-foreground">
                                 <SelectValue />
                             </SelectTrigger>
-                            <SelectContent className="bg-slate-800 border-slate-700">
+                            <SelectContent className="bg-card border-border">
                                 {EVENT_TYPES.map((type) => (
                                     <SelectItem key={type.value} value={type.value}>
                                         {type.label}
@@ -174,7 +174,7 @@ export default function EventCreationDialog({
                             <Input
                                 id="eventDate"
                                 type="datetime-local"
-                                className="bg-slate-800 border-slate-700 text-white"
+                                className="bg-muted border-border text-foreground"
                                 value={formData.eventDate}
                                 onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
                                 required
@@ -188,7 +188,7 @@ export default function EventCreationDialog({
                                 type="number"
                                 min="1"
                                 placeholder="50"
-                                className="bg-slate-800 border-slate-700 text-white"
+                                className="bg-muted border-border text-foreground"
                                 value={formData.maxAttendees}
                                 onChange={(e) => setFormData({ ...formData, maxAttendees: parseInt(e.target.value) })}
                                 required
@@ -201,7 +201,7 @@ export default function EventCreationDialog({
                         <Textarea
                             id="description"
                             placeholder="Détails de l'événement..."
-                            className="bg-slate-800 border-slate-700 text-white"
+                            className="bg-muted border-border text-foreground"
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             rows={4}
@@ -215,7 +215,7 @@ export default function EventCreationDialog({
                                 <img
                                     src={imagePreview}
                                     alt="Preview"
-                                    className="w-full h-40 object-cover rounded-lg border-2 border-slate-700"
+                                    className="w-full h-40 object-cover rounded-lg border-2 border-border"
                                 />
                             </div>
                         )}
@@ -223,7 +223,7 @@ export default function EventCreationDialog({
                             id="image"
                             type="file"
                             accept="image/*"
-                            className="bg-slate-800 border-slate-700 text-white"
+                            className="bg-muted border-border text-foreground"
                             onChange={handleImageUpload}
                         />
                     </div>
@@ -232,7 +232,7 @@ export default function EventCreationDialog({
                         <Button
                             type="button"
                             variant="outline"
-                            className="flex-1 border-slate-700 hover:bg-slate-800"
+                            className="flex-1 border-border hover:bg-muted"
                             onClick={() => onOpenChange(false)}
                             disabled={loading}
                         >
@@ -240,7 +240,7 @@ export default function EventCreationDialog({
                         </Button>
                         <Button
                             type="submit"
-                            className="flex-1 bg-purple-600 hover:bg-purple-700"
+                            className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                             disabled={loading}
                         >
                             {loading ? (
@@ -249,7 +249,7 @@ export default function EventCreationDialog({
                                     Création...
                                 </>
                             ) : (
-                                'Créer l\'Événement'
+                                'Créer l\'\u00c9vénement'
                             )}
                         </Button>
                     </div>

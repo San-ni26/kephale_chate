@@ -88,13 +88,13 @@ export function AudioPlayer({ src, onPlay }: AudioPlayerProps) {
     };
 
     return (
-        <div className="flex items-center gap-3 bg-slate-800/80 rounded-lg p-2 min-w-[280px] border border-slate-700">
+        <div className="flex items-center gap-3 bg-muted/80 rounded-lg p-2 min-w-[280px] border border-border">
             <audio ref={audioRef} src={src} preload="metadata" />
 
             <Button
                 size="icon"
                 variant="ghost"
-                className="h-8 w-8 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-200"
+                className="h-8 w-8 rounded-full bg-muted hover:bg-muted-foreground/20 text-foreground"
                 onClick={togglePlay}
                 disabled={isLoading}
             >
@@ -114,9 +114,9 @@ export function AudioPlayer({ src, onPlay }: AudioPlayerProps) {
                     max="100"
                     value={progress}
                     onChange={handleSeek}
-                    className="w-full h-1 bg-slate-600 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500"
+                    className="w-full h-1 bg-border rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary"
                 />
-                <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                <div className="flex justify-between text-[10px] text-muted-foreground font-mono">
                     <span>{formatDuration(duration ? (progress / 100) * duration : 0)}</span>
                     <span>{formatDuration(duration)}</span>
                 </div>
@@ -125,7 +125,7 @@ export function AudioPlayer({ src, onPlay }: AudioPlayerProps) {
             <Button
                 size="sm"
                 variant="ghost"
-                className={`h-6 px-1.5 text-[10px] font-bold rounded ${playbackRate > 1 ? 'bg-blue-500/20 text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
+                className={`h-6 px-1.5 text-[10px] font-bold rounded ${playbackRate > 1 ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                 onClick={toggleSpeed}
             >
                 {playbackRate}x

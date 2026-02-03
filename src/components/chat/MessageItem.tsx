@@ -94,8 +94,8 @@ export function MessageItem({
         >
             <div
                 className={`max-w-[70%] rounded-2xl px-4 py-2 ${isOwnMessage
-                        ? "bg-blue-600 text-white"
-                        : "bg-slate-800 text-slate-100"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-foreground"
                     }`}
             >
                 <div className="flex items-start justify-between gap-2">
@@ -108,17 +108,18 @@ export function MessageItem({
                                     if (e.key === "Enter") handleEdit();
                                     if (e.key === "Escape") setIsEditing(false);
                                 }}
-                                className="bg-slate-700 border-slate-600"
+                                className="bg-muted border-border"
                                 autoFocus
                             />
                             <div className="flex gap-2">
-                                <Button size="sm" onClick={handleEdit}>
+                                <Button size="sm" onClick={handleEdit} className="bg-primary text-primary-foreground hover:bg-primary/90">
                                     Enregistrer
                                 </Button>
                                 <Button
                                     size="sm"
                                     variant="outline"
                                     onClick={() => setIsEditing(false)}
+                                    className="border-border"
                                 >
                                     Annuler
                                 </Button>
@@ -135,7 +136,7 @@ export function MessageItem({
                                         {message.attachments.map((attachment) => (
                                             <div
                                                 key={attachment.id}
-                                                className="flex items-center gap-2 p-2 bg-slate-700/50 rounded-lg"
+                                                className="flex items-center gap-2 p-2 bg-background/50 rounded-lg border border-border"
                                             >
                                                 <span className="text-xs flex-1 truncate">
                                                     {attachment.filename}
@@ -175,11 +176,11 @@ export function MessageItem({
                                             <MoreVertical className="h-4 w-4" />
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="bg-slate-800 border-slate-700">
+                                    <DropdownMenuContent className="bg-card border-border">
                                         {canEdit && (
                                             <DropdownMenuItem
                                                 onClick={() => setIsEditing(true)}
-                                                className="hover:bg-slate-700"
+                                                className="hover:bg-muted"
                                             >
                                                 <Edit2 className="mr-2 h-4 w-4" />
                                                 Modifier
@@ -187,7 +188,7 @@ export function MessageItem({
                                         )}
                                         <DropdownMenuItem
                                             onClick={() => onDelete?.(message.id)}
-                                            className="hover:bg-slate-700 text-red-400"
+                                            className="hover:bg-muted text-destructive"
                                         >
                                             <Trash2 className="mr-2 h-4 w-4" />
                                             Supprimer

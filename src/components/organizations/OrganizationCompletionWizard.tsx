@@ -28,7 +28,6 @@ const SUBSCRIPTION_PLANS = [
             'Invitations événements illimitées',
             'Support communautaire',
         ],
-        color: 'from-slate-600 to-slate-700',
         recommended: false,
     },
     {
@@ -42,7 +41,6 @@ const SUBSCRIPTION_PLANS = [
             'Invitations événements illimitées',
             'Support par email',
         ],
-        color: 'from-blue-600 to-blue-700',
         recommended: false,
     },
     {
@@ -57,7 +55,6 @@ const SUBSCRIPTION_PLANS = [
             'Support prioritaire',
             'Statistiques avancées',
         ],
-        color: 'from-purple-600 to-purple-700',
         recommended: true,
     },
     {
@@ -73,7 +70,6 @@ const SUBSCRIPTION_PLANS = [
             'Statistiques avancées',
             'API personnalisée',
         ],
-        color: 'from-purple-600 via-pink-600 to-purple-600',
         recommended: false,
     },
 ];
@@ -162,7 +158,7 @@ export default function OrganizationCompletionWizard({
                                 id="orgName"
                                 type="text"
                                 placeholder="Mon Entreprise"
-                                className="bg-slate-800 border-slate-700 text-white"
+                                className="bg-muted border-border text-foreground"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
@@ -176,7 +172,7 @@ export default function OrganizationCompletionWizard({
                                     <img
                                         src={logo}
                                         alt="Logo preview"
-                                        className="w-16 h-16 rounded-full object-cover border-2 border-slate-700"
+                                        className="w-16 h-16 rounded-full object-cover border-2 border-border"
                                     />
                                 )}
                                 <div className="flex-1">
@@ -184,7 +180,7 @@ export default function OrganizationCompletionWizard({
                                         id="orgLogo"
                                         type="file"
                                         accept="image/*"
-                                        className="bg-slate-800 border-slate-700 text-white"
+                                        className="bg-muted border-border text-foreground"
                                         onChange={handleLogoUpload}
                                     />
                                 </div>
@@ -196,7 +192,7 @@ export default function OrganizationCompletionWizard({
                             <Textarea
                                 id="orgAddress"
                                 placeholder="123 Rue Example, Ville, Pays"
-                                className="bg-slate-800 border-slate-700 text-white"
+                                className="bg-muted border-border text-foreground"
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                                 rows={3}
@@ -208,7 +204,7 @@ export default function OrganizationCompletionWizard({
             case 2:
                 return (
                     <div className="space-y-4">
-                        <p className="text-sm text-slate-400">
+                        <p className="text-sm text-muted-foreground">
                             Choisissez le plan d'abonnement qui correspond le mieux à vos besoins
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2">
@@ -216,34 +212,34 @@ export default function OrganizationCompletionWizard({
                                 <div
                                     key={plan.id}
                                     className={`relative p-4 rounded-lg border-2 cursor-pointer transition ${selectedPlan === plan.id
-                                        ? 'border-purple-500 bg-purple-500/10'
-                                        : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
+                                        ? 'border-primary bg-primary/10'
+                                        : 'border-border bg-muted/50 hover:border-muted-foreground'
                                         }`}
                                     onClick={() => setSelectedPlan(plan.id)}
                                 >
                                     {plan.recommended && (
-                                        <div className="absolute -top-2 -right-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs px-2 py-1 rounded-full">
+                                        <div className="absolute -top-2 -right-2 bg-foreground text-background text-xs px-2 py-1 rounded-full">
                                             Recommandé
                                         </div>
                                     )}
 
                                     <div className="flex items-center justify-between mb-3">
-                                        <h3 className="font-semibold text-lg">{plan.name}</h3>
+                                        <h3 className="font-semibold text-lg text-foreground">{plan.name}</h3>
                                         {selectedPlan === plan.id && (
-                                            <Check className="w-5 h-5 text-purple-500" />
+                                            <Check className="w-5 h-5 text-primary" />
                                         )}
                                     </div>
 
                                     <div className="mb-4">
-                                        <span className="text-2xl font-bold">{plan.price}</span>
-                                        <span className="text-slate-400 text-sm">{plan.duration}</span>
+                                        <span className="text-2xl font-bold text-foreground">{plan.price}</span>
+                                        <span className="text-muted-foreground text-sm">{plan.duration}</span>
                                     </div>
 
                                     <ul className="space-y-2">
                                         {plan.features.map((feature, idx) => (
                                             <li key={idx} className="flex items-start gap-2 text-sm">
-                                                <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                                                <span className="text-slate-300">{feature}</span>
+                                                <Check className="w-4 h-4 text-foreground mt-0.5 flex-shrink-0" />
+                                                <span className="text-muted-foreground">{feature}</span>
                                             </li>
                                         ))}
                                     </ul>
@@ -271,7 +267,7 @@ export default function OrganizationCompletionWizard({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="bg-slate-900 border-slate-800 text-slate-100 max-w-3xl">
+            <DialogContent className="bg-card border-border text-foreground max-w-3xl">
                 <DialogHeader>
                     <DialogTitle>Compléter votre Organisation</DialogTitle>
                 </DialogHeader>
@@ -281,11 +277,11 @@ export default function OrganizationCompletionWizard({
                     {[1, 2].map((stepNumber) => (
                         <div key={stepNumber} className="flex items-center gap-2">
                             <div
-                                className={`flex items-center justify-center w-10 h-10 rounded-full ${step === stepNumber
-                                    ? 'bg-purple-600 text-white'
+                                className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${step === stepNumber
+                                    ? 'bg-primary text-primary-foreground border-primary'
                                     : step > stepNumber
-                                        ? 'bg-green-600 text-white'
-                                        : 'bg-slate-700 text-slate-400'
+                                        ? 'bg-foreground text-background border-foreground'
+                                        : 'bg-muted text-muted-foreground border-border'
                                     }`}
                             >
                                 {step > stepNumber ? (
@@ -296,7 +292,7 @@ export default function OrganizationCompletionWizard({
                             </div>
                             {stepNumber < 2 && (
                                 <div
-                                    className={`w-16 h-1 ${step > stepNumber ? 'bg-green-600' : 'bg-slate-700'
+                                    className={`w-16 h-1 ${step > stepNumber ? 'bg-foreground' : 'bg-border'
                                         }`}
                                 />
                             )}
@@ -314,7 +310,7 @@ export default function OrganizationCompletionWizard({
                     {step > 1 && (
                         <Button
                             variant="outline"
-                            className="flex-1 border-slate-700 hover:bg-slate-800"
+                            className="flex-1 border-border hover:bg-muted"
                             onClick={() => setStep(step - 1)}
                             disabled={loading}
                         >
@@ -324,7 +320,7 @@ export default function OrganizationCompletionWizard({
 
                     {step < 2 ? (
                         <Button
-                            className="flex-1 bg-purple-600 hover:bg-purple-700"
+                            className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={() => setStep(step + 1)}
                             disabled={!name}
                         >
@@ -332,7 +328,7 @@ export default function OrganizationCompletionWizard({
                         </Button>
                     ) : (
                         <Button
-                            className="flex-1 bg-purple-600 hover:bg-purple-700"
+                            className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={handleSubmit}
                             disabled={loading || !name}
                         >

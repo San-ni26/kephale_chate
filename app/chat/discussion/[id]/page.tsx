@@ -80,6 +80,7 @@ export default function DiscussionPage() {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
     const [editContent, setEditContent] = useState('');
+    const [isRecordingAudio, setIsRecordingAudio] = useState(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -318,16 +319,6 @@ export default function DiscussionPage() {
                 setNewMessage('');
                 setSelectedFiles([]);
                 scrollToBottom();
-
-                // WebSocket code removed
-                /*
-                if (socket) {
-                    socket.emit('send-message', {
-                        conversationId,
-                        message: data.message,
-                    });
-                }
-                */
             } else {
                 const error = await response.json();
                 toast.error(error.error || 'Erreur d\'envoi');
@@ -424,14 +415,14 @@ export default function DiscussionPage() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+            <div className="flex justify-center items-center h-screen bg-background">
+                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col h-screen bg-slate-950">
+        <div className="flex flex-col h-screen bg-background text-foreground pt-2">
             <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
                 <DialogContent>
                     <DialogHeader>
@@ -456,25 +447,25 @@ export default function DiscussionPage() {
             </Dialog>
 
             {/* Header */}
-            <div className="fixed top-0 left-0 right-0 bg-slate-900 border-b border-slate-800 z-40 h-16 flex items-center px-4">
+            <div className="fixed top-0 left-0 right-0 bg-background border-b border-border z-40 h-16 flex items-center px-4">
                 <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => router.push('/chat')}
                     className="mr-3"
                 >
-                    <ArrowLeft className="w-5 h-5" />
+                    <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
                 </Button>
 
-                <Avatar className="h-10 w-10 border border-slate-700">
+                <Avatar className="h-10 w-10 border border-border">
                     <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${getConversationName()}`} />
                     <AvatarFallback>{getConversationName()[0]}</AvatarFallback>
                 </Avatar>
 
                 <div className="ml-3 flex-1">
-                    <h2 className="font-semibold text-slate-100">{getConversationName()}</h2>
+                    <h2 className="font-semibold text-foreground">{getConversationName()}</h2>
                     {otherUser && (
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-muted-foreground">
                             {otherUser.isOnline ? 'En ligne' : 'Hors ligne'}
                         </p>
                     )}
@@ -495,11 +486,11 @@ export default function DiscussionPage() {
                         >
                             <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
                                 {editingMessageId === message.id ? (
-                                    <div className="bg-slate-800 rounded-lg p-3 w-full">
+                                    <div className="bg-card rounded-lg p-3 w-full border border-border">
                                         <Input
                                             value={editContent}
                                             onChange={(e) => setEditContent(e.target.value)}
-                                            className="mb-2 bg-slate-900"
+                                            className="mb-2 bg-muted border-border"
                                             autoFocus
                                         />
                                         <div className="flex gap-2">
@@ -524,9 +515,9 @@ export default function DiscussionPage() {
                                 ) : (
                                     <div className="group relative">
                                         <div
-                                            className={`rounded-2xl px-4 py-2 ${isOwn
-                                                ? 'bg-blue-600 text-white'
-                                                : 'bg-slate-800 text-slate-100'
+                                            className={`rounded-2xl px-4 py-2 border ${isOwn
+                                                ? 'bg-primary text-primary-foreground border-primary'
+                                                : 'bg-muted text-foreground border-border'
                                                 }`}
                                         >
                                             <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
@@ -557,7 +548,7 @@ export default function DiscussionPage() {
                                         </div>
 
                                         <div className="flex items-center gap-2 mt-1">
-                                            <span className="text-xs text-slate-500">
+                                            <span className="text-xs text-muted-foreground">
                                                 {formatDistanceToNow(new Date(message.createdAt), {
                                                     addSuffix: true,
                                                     locale: fr,
@@ -570,12 +561,13 @@ export default function DiscussionPage() {
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
-                                                            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100"
+                                                            className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                                                         >
-                                                            <MoreVertical className="w-3 h-3" />
+                                                            <MoreVertical className="w-4 h-4" />
+                                                            <span className="sr-only">Actions</span>
                                                         </Button>
                                                     </DropdownMenuTrigger>
-                                                    <DropdownMenuContent>
+                                                    <DropdownMenuContent align="end">
                                                         <DropdownMenuItem
                                                             onClick={() => {
                                                                 setEditingMessageId(message.id);
@@ -587,7 +579,7 @@ export default function DiscussionPage() {
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             onClick={() => handleDeleteMessage(message.id)}
-                                                            className="text-red-500"
+                                                            className="text-destructive"
                                                         >
                                                             <Trash2 className="w-4 h-4 mr-2" />
                                                             Supprimer
@@ -606,23 +598,23 @@ export default function DiscussionPage() {
             </div>
 
             {/* Input */}
-            <div className="fixed bottom-16 left-0 right-0 bg-slate-900 border-t border-slate-800 p-4">
+            <div className="fixed bottom-16 left-0 right-0 bg-background border-t border-border p-4">
                 {selectedFiles.length > 0 && (
                     <div className="mb-3 flex gap-2 flex-wrap">
                         {selectedFiles.map((file, idx) => (
                             <div
                                 key={idx}
-                                className="bg-slate-800 rounded px-3 py-2 flex items-center gap-2 text-sm"
+                                className="bg-muted rounded px-3 py-2 flex items-center gap-2 text-sm border border-border"
                             >
                                 {file.type.startsWith('image/') ? (
-                                    <ImageIcon className="w-4 h-4" />
+                                    <ImageIcon className="w-4 h-4 text-muted-foreground" />
                                 ) : (
-                                    <FileText className="w-4 h-4" />
+                                    <FileText className="w-4 h-4 text-muted-foreground" />
                                 )}
-                                <span className="max-w-[150px] truncate">{file.name}</span>
+                                <span className="max-w-[150px] truncate text-foreground">{file.name}</span>
                                 <button
                                     onClick={() => removeFile(idx)}
-                                    className="text-red-400 hover:text-red-300"
+                                    className="text-destructive hover:text-red-300"
                                 >
                                     ×
                                 </button>
@@ -641,40 +633,46 @@ export default function DiscussionPage() {
                         className="hidden"
                     />
 
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={sending}
-                    >
-                        <Paperclip className="w-5 h-5" />
-                    </Button>
+                    {!isRecordingAudio && (
+                        <>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={sending}
+                                className="text-muted-foreground hover:text-foreground hover:bg-muted"
+                            >
+                                <Paperclip className="w-5 h-5" />
+                            </Button>
 
-                    <Input
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
-                        placeholder="Votre message..."
-                        className="flex-1 bg-slate-800 border-slate-700"
-                        disabled={sending}
-                    />
+                            <Input
+                                value={newMessage}
+                                onChange={(e) => setNewMessage(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
+                                placeholder="Votre message..."
+                                className="flex-1 bg-muted border-border text-foreground placeholder:text-muted-foreground"
+                                disabled={sending}
+                            />
 
-                    <Button
-                        onClick={handleSendMessage}
-                        disabled={sending || (!newMessage.trim() && selectedFiles.length === 0)}
-                        className="bg-blue-600 hover:bg-blue-700"
-                    >
-                        {sending ? (
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                        ) : (
-                            <Send className="w-5 h-5" />
-                        )}
-                    </Button>
+                            <Button
+                                onClick={handleSendMessage}
+                                disabled={sending || (!newMessage.trim() && selectedFiles.length === 0)}
+                                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                            >
+                                {sending ? (
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                ) : (
+                                    <Send className="w-5 h-5" />
+                                )}
+                            </Button>
+                        </>
+                    )}
 
-                    <div className="border-l border-slate-700 pl-2 ml-1">
+                    <div className={`${!isRecordingAudio ? 'border-l border-border pl-2 ml-1' : 'flex-1'}`}>
                         <AudioRecorderComponent
                             onAudioRecorded={handleAudioRecorded}
                             isRecordingDisabled={sending}
+                            onRecordingStatusChange={setIsRecordingAudio}
                         />
                     </div>
                 </div>

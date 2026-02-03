@@ -123,34 +123,26 @@ export default function PublicEventPage() {
     };
 
     const getEventTypeColor = (type: string) => {
-        const colors: Record<string, string> = {
-            PROFESSIONAL: 'from-blue-600 to-blue-700',
-            DINNER: 'from-orange-600 to-orange-700',
-            MEETING: 'from-purple-600 to-purple-700',
-            PARTY: 'from-pink-600 to-pink-700',
-            CONFERENCE: 'from-green-600 to-green-700',
-            WORKSHOP: 'from-yellow-600 to-yellow-700',
-            OTHER: 'from-slate-600 to-slate-700',
-        };
-        return colors[type] || 'from-slate-600 to-slate-700';
+        // Thème monochromatique : on utilise primary ou une couleur neutre
+        return 'from-primary to-primary/80';
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
-                <div className="text-slate-400">Chargement...</div>
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <div className="text-muted-foreground">Chargement...</div>
             </div>
         );
     }
 
     if (!event) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
-                <Card className="bg-slate-900 border-slate-800 max-w-md">
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <Card className="bg-card border-border max-w-md">
                     <CardContent className="pt-6 text-center">
-                        <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                        <h2 className="text-xl font-bold text-white mb-2">Événement non trouvé</h2>
-                        <p className="text-slate-400">Le lien d'invitation est invalide ou a expiré.</p>
+                        <XCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
+                        <h2 className="text-xl font-bold text-foreground mb-2">Événement non trouvé</h2>
+                        <p className="text-muted-foreground">Le lien d'invitation est invalide ou a expiré.</p>
                     </CardContent>
                 </Card>
             </div>
@@ -158,10 +150,10 @@ export default function PublicEventPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-12 px-4">
+        <div className="min-h-screen bg-background py-12 px-4">
             <div className="max-w-4xl mx-auto">
                 {/* Event Header */}
-                <Card className="bg-slate-900 border-slate-800 overflow-hidden mb-6">
+                <Card className="bg-card border-border overflow-hidden mb-6">
                     {event.imageUrl && (
                         <div className="w-full h-64 md:h-80 overflow-hidden">
                             <img
@@ -175,10 +167,10 @@ export default function PublicEventPage() {
                     <CardHeader>
                         <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
-                                <CardTitle className="text-3xl mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                                <CardTitle className="text-3xl mb-2 text-foreground">
                                     {event.title}
                                 </CardTitle>
-                                <div className="flex items-center gap-2 text-slate-400">
+                                <div className="flex items-center gap-2 text-muted-foreground">
                                     {event.organization.logo ? (
                                         <img
                                             src={event.organization.logo}
@@ -192,9 +184,7 @@ export default function PublicEventPage() {
                                 </div>
                             </div>
                             <span
-                                className={`px-3 py-1.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r ${getEventTypeColor(
-                                    event.eventType
-                                )}`}
+                                className={`px-3 py-1.5 rounded-full text-sm font-semibold text-primary-foreground bg-primary`}
                             >
                                 {getEventTypeLabel(event.eventType)}
                             </span>
@@ -203,24 +193,24 @@ export default function PublicEventPage() {
 
                     <CardContent className="space-y-4">
                         {event.description && (
-                            <p className="text-slate-300">{event.description}</p>
+                            <p className="text-muted-foreground">{event.description}</p>
                         )}
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="flex items-center gap-3 text-slate-300">
-                                <div className="w-10 h-10 rounded-full bg-purple-600/20 flex items-center justify-center">
-                                    <Calendar className="w-5 h-5 text-purple-400" />
+                            <div className="flex items-center gap-3 text-muted-foreground">
+                                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                                    <Calendar className="w-5 h-5 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-xs text-slate-400">Date et heure</p>
-                                    <p className="font-medium">
+                                    <p className="text-xs text-muted-foreground">Date et heure</p>
+                                    <p className="font-medium text-foreground">
                                         {new Date(event.eventDate).toLocaleDateString('fr-FR', {
                                             day: 'numeric',
                                             month: 'long',
                                             year: 'numeric',
                                         })}
                                     </p>
-                                    <p className="text-sm">
+                                    <p className="text-sm text-foreground">
                                         {new Date(event.eventDate).toLocaleTimeString('fr-FR', {
                                             hour: '2-digit',
                                             minute: '2-digit',
@@ -229,18 +219,18 @@ export default function PublicEventPage() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 text-slate-300">
-                                <div className="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center">
-                                    <Users className="w-5 h-5 text-blue-400" />
+                            <div className="flex items-center gap-3 text-muted-foreground">
+                                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                                    <Users className="w-5 h-5 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-xs text-slate-400">Participants</p>
-                                    <p className="font-medium">
+                                    <p className="text-xs text-muted-foreground">Participants</p>
+                                    <p className="font-medium text-foreground">
                                         {event.rsvpCount} / {event.maxAttendees} confirmés
                                     </p>
-                                    <div className="w-32 bg-slate-800 rounded-full h-2 mt-1">
+                                    <div className="w-32 bg-muted rounded-full h-2 mt-1">
                                         <div
-                                            className="bg-blue-600 h-2 rounded-full transition-all"
+                                            className="bg-primary h-2 rounded-full transition-all"
                                             style={{
                                                 width: `${Math.min((event.rsvpCount / event.maxAttendees) * 100, 100)}%`,
                                             }}
@@ -254,29 +244,29 @@ export default function PublicEventPage() {
 
                 {/* RSVP Form */}
                 {submitted ? (
-                    <Card className="bg-gradient-to-br from-green-900/20 to-green-800/20 border-green-700">
+                    <Card className="bg-primary/10 border-primary">
                         <CardContent className="pt-6 text-center">
-                            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                            <h2 className="text-2xl font-bold text-white mb-2">Confirmation réussie !</h2>
-                            <p className="text-slate-300">
+                            <CheckCircle className="w-16 h-16 text-primary mx-auto mb-4" />
+                            <h2 className="text-2xl font-bold text-foreground mb-2">Confirmation réussie !</h2>
+                            <p className="text-muted-foreground">
                                 Merci {name}, votre présence a été enregistrée. Nous avons hâte de vous voir !
                             </p>
                         </CardContent>
                     </Card>
                 ) : event.isFull ? (
-                    <Card className="bg-gradient-to-br from-red-900/20 to-red-800/20 border-red-700">
+                    <Card className="bg-destructive/10 border-destructive">
                         <CardContent className="pt-6 text-center">
-                            <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                            <h2 className="text-2xl font-bold text-white mb-2">Événement complet</h2>
-                            <p className="text-slate-300">
+                            <XCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
+                            <h2 className="text-2xl font-bold text-foreground mb-2">Événement complet</h2>
+                            <p className="text-muted-foreground">
                                 Désolé, cet événement a atteint sa capacité maximale. Aucune nouvelle inscription n'est possible.
                             </p>
                         </CardContent>
                     </Card>
                 ) : (
-                    <Card className="bg-slate-900 border-slate-800">
+                    <Card className="bg-card border-border">
                         <CardHeader>
-                            <CardTitle className="text-xl">Confirmer votre présence</CardTitle>
+                            <CardTitle className="text-xl text-foreground">Confirmer votre présence</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={handleSubmitRSVP} className="space-y-4">
@@ -286,7 +276,7 @@ export default function PublicEventPage() {
                                         id="name"
                                         type="text"
                                         placeholder="Jean Dupont"
-                                        className="bg-slate-800 border-slate-700 text-white"
+                                        className="bg-muted border-border text-foreground"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         required
@@ -299,7 +289,7 @@ export default function PublicEventPage() {
                                         id="phone"
                                         type="tel"
                                         placeholder="0612345678"
-                                        className="bg-slate-800 border-slate-700 text-white"
+                                        className="bg-muted border-border text-foreground"
                                         value={phone}
                                         onChange={(e) => {
                                             const value = e.target.value.replace(/\D/g, '');
@@ -311,7 +301,7 @@ export default function PublicEventPage() {
 
                                 <Button
                                     type="submit"
-                                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                                     disabled={submitting}
                                 >
                                     {submitting ? 'Confirmation...' : 'Confirmer ma présence'}

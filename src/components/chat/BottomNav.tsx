@@ -17,7 +17,7 @@ export function BottomNav() {
     ];
 
     return (
-        <nav className="fixed bottom-0 w-full left-0 bg-slate-900 border-t border-slate-800 z-50 md:hidden">
+        <nav className="fixed bottom-0 w-full left-0 bg-background border-t border-border z-50 md:hidden">
             <div className="flex justify-around items-center h-16">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href || (item.href !== "/chat" && pathname.startsWith(item.href));
@@ -28,7 +28,7 @@ export function BottomNav() {
                             href={item.href}
                             className={cn(
                                 "flex flex-col items-center justify-center w-full h-full text-[10px] space-y-1 transition-colors",
-                                isActive ? "text-blue-500" : "text-slate-400 hover:text-slate-200"
+                                isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                             )}
                         >
                             <item.icon size={20} />

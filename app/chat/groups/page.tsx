@@ -16,19 +16,19 @@ export default function GroupsPage() {
     return (
         <div className="p-4 space-y-6">
             <div className="flex justify-between items-center px-2">
-                <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">Groupes</h2>
+                <h2 className="text-xl font-bold text-foreground">Groupes</h2>
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button size="icon" className="rounded-full bg-blue-600 hover:bg-blue-700"><Plus /></Button>
+                        <Button size="icon" className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"><Plus /></Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-slate-900 border-slate-800 text-slate-100">
+                    <DialogContent className="bg-card border-border text-foreground">
                         <DialogHeader>
                             <DialogTitle>Nouveau Groupe</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4 pt-2">
-                            <Input placeholder="Nom du groupe" className="bg-slate-800 border-slate-700" />
-                            <p className="text-xs text-slate-400">Ajoutez des participants directement depuis vos contacts après la création.</p>
-                            <Button className="w-full bg-blue-600">Créer</Button>
+                            <Input placeholder="Nom du groupe" className="bg-muted border-border" />
+                            <p className="text-xs text-muted-foreground">Ajoutez des participants directement depuis vos contacts après la création.</p>
+                            <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">Créer</Button>
                         </div>
                     </DialogContent>
                 </Dialog>
@@ -36,15 +36,15 @@ export default function GroupsPage() {
 
             <div className="space-y-2">
                 {groups.map((group) => (
-                    <div key={group.id} className="flex items-center p-4 bg-slate-900/50 border border-slate-800 rounded-xl hover:bg-slate-900 transition">
-                        <Avatar className="h-10 w-10 border border-slate-700">
-                            <AvatarFallback className="bg-blue-900 text-blue-200">{group.name[0]}</AvatarFallback>
+                    <div key={group.id} className="flex items-center p-4 bg-muted/50 border border-border rounded-xl hover:bg-muted transition">
+                        <Avatar className="h-10 w-10 border border-border">
+                            <AvatarFallback className="bg-secondary text-secondary-foreground">{group.name[0]}</AvatarFallback>
                         </Avatar>
                         <div className="ml-4 flex-1">
-                            <h3 className="font-semibold text-slate-100">{group.name}</h3>
-                            <p className="text-xs text-slate-500">{group.members} membres</p>
+                            <h3 className="font-semibold text-foreground">{group.name}</h3>
+                            <p className="text-xs text-muted-foreground">{group.members} membres</p>
                         </div>
-                        <Button variant="ghost" size="icon" className="text-slate-400">
+                        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
                             <MessageSquare className="w-5 h-5" />
                         </Button>
                     </div>

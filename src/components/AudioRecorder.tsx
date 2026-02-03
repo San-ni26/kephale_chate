@@ -9,9 +9,10 @@ import { toast } from 'sonner';
 interface AudioRecorderProps {
     onAudioRecorded: (blob: Blob, duration: number) => void;
     isRecordingDisabled?: boolean;
+    onRecordingStatusChange?: (isRecording: boolean) => void;
 }
 
-export function AudioRecorderComponent({ onAudioRecorded, isRecordingDisabled = false }: AudioRecorderProps) {
+export function AudioRecorderComponent({ onAudioRecorded, isRecordingDisabled = false, onRecordingStatusChange }: AudioRecorderProps) {
     const [isRecording, setIsRecording] = useState(false);
     const [duration, setDuration] = useState(0);
     const [audioLevel, setAudioLevel] = useState(0);
@@ -68,6 +69,7 @@ export function AudioRecorderComponent({ onAudioRecorded, isRecordingDisabled = 
             recorderRef.current = recorder;
 
             setIsRecording(true);
+            onRecordingStatusChange?.(true);
             setDuration(0);
             startTimer();
             startLevelMonitor();
@@ -84,6 +86,7 @@ export function AudioRecorderComponent({ onAudioRecorded, isRecordingDisabled = 
         stopLevelMonitor();
         const { blob, duration } = await recorderRef.current.stop();
         setIsRecording(false);
+        onRecordingStatusChange?.(false);
         recorderRef.current = null;
 
         if (shouldSend && blob.size > 0) {
@@ -98,16 +101,17 @@ export function AudioRecorderComponent({ onAudioRecorded, isRecordingDisabled = 
         stopTimer();
         stopLevelMonitor();
         setIsRecording(false);
+        onRecordingStatusChange?.(false);
         recorderRef.current = null;
         setDuration(0);
     };
 
     if (isRecording) {
         return (
-            <div className="flex items-center gap-2 flex-1 bg-slate-800 rounded-full px-2 py-1 animate-in fade-in slide-in-from-bottom-2">
+            <div className="flex items-center gap-2 flex-1 bg-muted rounded-full px-2 py-1 animate-in fade-in slide-in-from-bottom-2">
                 <div className="flex items-center gap-2 px-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-                    <span className="text-white font-medium min-w-[50px]">
+                    <div className="w-3 h-3 rounded-full bg-destructive animate-pulse" />
+                    <span className="text-foreground font-medium min-w-[50px]">
                         {formatDuration(duration)}
                     </span>
                 </div>
@@ -117,7 +121,7 @@ export function AudioRecorderComponent({ onAudioRecorded, isRecordingDisabled = 
                     {Array.from({ length: 20 }).map((_, i) => (
                         <div
                             key={i}
-                            className="w-1 bg-slate-500 rounded-full transition-all duration-75"
+                            className="w-1 bg-muted-foreground rounded-full transition-all duration-75"
                             style={{
                                 height: `${Math.max(10, Math.random() * audioLevel + 10)}%`,
                                 opacity: 0.5 + (audioLevel / 200)
@@ -129,7 +133,7 @@ export function AudioRecorderComponent({ onAudioRecorded, isRecordingDisabled = 
                 <Button
                     size="icon"
                     variant="ghost"
-                    className="text-red-400 hover:text-red-300 hover:bg-red-950/30 rounded-full w-8 h-8"
+                    className="text-destructive hover:text-destructive/80 hover:bg-destructive/10 rounded-full w-8 h-8"
                     onClick={handleCancelRecording}
                 >
                     <Trash2 className="w-5 h-5" />
@@ -137,10 +141,10 @@ export function AudioRecorderComponent({ onAudioRecorded, isRecordingDisabled = 
 
                 <Button
                     size="icon"
-                    className="bg-blue-600 hover:bg-blue-700 rounded-full w-8 h-8 ml-1"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full w-8 h-8 ml-1"
                     onClick={() => handleStopRecording(true)}
                 >
-                    <Send className="w-4 h-4 text-white" />
+                    <Send className="w-4 h-4" />
                 </Button>
             </div>
         );
@@ -152,7 +156,7 @@ export function AudioRecorderComponent({ onAudioRecorded, isRecordingDisabled = 
             size="icon"
             onClick={handleStartRecording}
             disabled={isRecordingDisabled}
-            className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-full"
+            className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-full"
         >
             <Mic className="w-6 h-6" />
         </Button>

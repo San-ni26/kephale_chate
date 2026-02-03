@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Loader2 } from 'lucide-react';
+import { Loader2, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth } from '@/src/lib/auth-client';
 
@@ -86,47 +86,52 @@ export default function ChatListPage() {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
         );
     }
 
     return (
-        <div className="p-4 space-y-2">
-            <h2 className="text-xl font-bold mb-4 px-2 text-slate-100">Discussions</h2>
+        <div className="p-4 pt-16 max-w-2xl mx-auto h-full flex flex-col">
+            <h2 className="text-2xl font-bold mb-6 px-1 text-foreground">Discussions</h2>
 
             {conversations.length === 0 ? (
-                <div className="text-center text-slate-500 py-10">
-                    <p>Aucune discussion.</p>
-                    <p className="text-sm">Cliquez sur + en haut pour commencer.</p>
+                <div className="flex-1 flex flex-col justify-center items-center text-center text-muted-foreground">
+                    <div className="bg-muted/50 p-6 rounded-full mb-4">
+                        <User className="w-10 h-10 opacity-50" />
+                    </div>
+                    <p className="font-medium">Aucune discussion</p>
+                    <p className="text-sm mt-1">Commencez une nouvelle conversation.</p>
                 </div>
             ) : (
-                <div className="space-y-1">
+                <div className="flex flex-col gap-3 pb-20">
                     {conversations.map((chat) => {
                         const chatName = getConversationName(chat);
                         const lastMessage = chat.messages[0];
 
                         return (
                             <Link href={`/chat/discussion/${chat.id}`} key={chat.id}>
-                                <div className="flex items-center p-3 rounded-xl hover:bg-slate-900 active:bg-slate-800 transition cursor-pointer">
-                                    <Avatar className="h-12 w-12 border border-slate-700">
-                                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${chatName}`} />
-                                        <AvatarFallback>{chatName[0]}</AvatarFallback>
+                                <div className="flex items-center p-4 rounded-xl border border-border bg-card shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 cursor-pointer">
+                                    <Avatar className="h-12 w-12 border border-border/50 shadow-sm shrink-0">
+                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                        <AvatarFallback className="bg-muted">
+                                            <User className="w-6 h-6 text-muted-foreground" />
+                                        </AvatarFallback>
                                     </Avatar>
 
                                     <div className="ml-4 flex-1 min-w-0">
-                                        <div className="flex justify-between items-baseline">
-                                            <h3 className="font-semibold text-slate-100 truncate">{chatName}</h3>
-                                            <span className="text-xs text-slate-500">
+                                        <div className="flex justify-between items-center mb-1">
+                                            <h3 className="font-semibold text-foreground truncate text-base">{chatName}</h3>
+                                            <span className="text-xs font-medium text-muted-foreground shrink-0 ml-2">
                                                 {lastMessage ? formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: true, locale: fr }) : ''}
                                             </span>
                                         </div>
-                                        <p className="text-sm text-slate-400 truncate pr-4">
+                                        <p className="text-sm text-muted-foreground truncate pr-2">
                                             {lastMessage ? (
-                                                // In a real list view, decrypting every last message is expensive.
-                                                // Usually we show "Message chiffré" or we cache decrypted previews.
-                                                // For now:
-                                                "Message chiffré"
+                                                <span className="text-foreground/80">
+                                                    {lastMessage.sender.id === currentUserId && "Vous: "}
+                                                    Message chiffré
+                                                </span>
                                             ) : (
                                                 <span className="italic opacity-50">Aucun message</span>
                                             )}

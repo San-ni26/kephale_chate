@@ -104,33 +104,24 @@ export default function OrganizationDashboard() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-slate-400">Chargement...</div>
+            <div className="flex items-center justify-center h-screen bg-background">
+                <div className="text-muted-foreground">Chargement...</div>
             </div>
         );
     }
 
     if (!org) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-slate-400">Organisation non trouvée</div>
+            <div className="flex items-center justify-center h-screen bg-background">
+                <div className="text-muted-foreground">Organisation non trouvée</div>
             </div>
         );
     }
 
     const getPlanColor = (plan: string) => {
-        switch (plan) {
-            case 'FREE':
-                return 'bg-slate-600';
-            case 'BASIC':
-                return 'bg-blue-600';
-            case 'PROFESSIONAL':
-                return 'bg-purple-600';
-            case 'ENTERPRISE':
-                return 'bg-gradient-to-r from-purple-600 to-pink-600';
-            default:
-                return 'bg-slate-600';
-        }
+        // En thème monochromatique, on peut utiliser des variantes de gris ou juste le primary
+        // Mais pour différencier les plans, utilisons des bordures ou des badges simples
+        return 'bg-primary text-primary-foreground';
     };
 
     const canCreateDepartment = org.subscription
@@ -138,7 +129,7 @@ export default function OrganizationDashboard() {
         : false;
 
     return (
-        <div className="p-4 space-y-6">
+        <div className="p-4 space-y-6 mt-15 bg-background min-h-screen">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -146,7 +137,7 @@ export default function OrganizationDashboard() {
                         variant="ghost"
                         size="icon"
                         onClick={() => router.push('/chat/organizations')}
-                        className="hover:bg-slate-800"
+                        className="hover:bg-muted"
                     >
                         <ArrowLeft className="w-5 h-5" />
                     </Button>
@@ -158,22 +149,22 @@ export default function OrganizationDashboard() {
                             className="w-12 h-12 rounded-full object-cover"
                         />
                     ) : (
-                        <div className="w-12 h-12 rounded-full bg-purple-600/20 flex items-center justify-center">
-                            <Building2 className="w-6 h-6 text-purple-400" />
+                        <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                            <Building2 className="w-6 h-6 text-muted-foreground" />
                         </div>
                     )}
 
                     <div>
-                        <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        <h1 className="text-2xl font-bold text-foreground">
                             {org.name}
                         </h1>
-                        <p className="text-sm text-slate-400">Code: {org.code}</p>
+                        <p className="text-sm text-muted-foreground">Code: {org.code}</p>
                     </div>
                 </div>
 
                 {org.subscription && (
                     <span
-                        className={`px-3 py-1.5 rounded-full text-sm font-semibold text-white ${getPlanColor(
+                        className={`px-3 py-1.5 rounded-full text-sm font-semibold ${getPlanColor(
                             org.subscription.plan
                         )}`}
                     >
@@ -184,40 +175,40 @@ export default function OrganizationDashboard() {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="bg-slate-900 border-slate-800">
+                <Card className="bg-card border-border">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">Départements</p>
-                                <p className="text-2xl font-bold">
+                                <p className="text-sm text-muted-foreground">Départements</p>
+                                <p className="text-2xl font-bold text-foreground">
                                     {org._count.departments} / {org.subscription?.maxDepartments || '∞'}
                                 </p>
                             </div>
-                            <Building2 className="w-8 h-8 text-purple-500" />
+                            <Building2 className="w-8 h-8 text-primary" />
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="bg-slate-900 border-slate-800">
+                <Card className="bg-card border-border">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">Membres</p>
-                                <p className="text-2xl font-bold">{org._count.members}</p>
+                                <p className="text-sm text-muted-foreground">Membres</p>
+                                <p className="text-2xl font-bold text-foreground">{org._count.members}</p>
                             </div>
-                            <Users className="w-8 h-8 text-blue-500" />
+                            <Users className="w-8 h-8 text-primary" />
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="bg-slate-900 border-slate-800">
+                <Card className="bg-card border-border">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">Événements</p>
-                                <p className="text-2xl font-bold">{org._count.events}</p>
+                                <p className="text-sm text-muted-foreground">Événements</p>
+                                <p className="text-2xl font-bold text-foreground">{org._count.events}</p>
                             </div>
-                            <Calendar className="w-8 h-8 text-green-500" />
+                            <Calendar className="w-8 h-8 text-primary" />
                         </div>
                     </CardContent>
                 </Card>
@@ -226,10 +217,10 @@ export default function OrganizationDashboard() {
             {/* Departments Section */}
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold">Départements</h2>
+                    <h2 className="text-xl font-semibold text-foreground">Départements</h2>
                     <Button
                         size="sm"
-                        className="bg-purple-600 hover:bg-purple-700"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90"
                         onClick={handleCreateDepartment}
                         disabled={!canCreateDepartment}
                     >
@@ -239,7 +230,7 @@ export default function OrganizationDashboard() {
                 </div>
 
                 {!canCreateDepartment && org.subscription && (
-                    <div className="bg-yellow-500/10 border border-yellow-500/50 rounded-lg p-3 text-sm text-yellow-500">
+                    <div className="bg-destructive/10 border border-destructive/50 rounded-lg p-3 text-sm text-destructive">
                         Limite de départements atteinte ({org.subscription.maxDepartments}). Mettez à niveau votre plan pour créer plus de départements.
                     </div>
                 )}
@@ -248,21 +239,21 @@ export default function OrganizationDashboard() {
                     {departments.map((dept) => (
                         <Card
                             key={dept.id}
-                            className="bg-slate-900 border-slate-800 hover:border-purple-500/50 transition cursor-pointer"
+                            className="bg-card border-border hover:border-primary/50 transition cursor-pointer"
                         >
                             <CardHeader>
-                                <CardTitle className="text-lg">{dept.name}</CardTitle>
+                                <CardTitle className="text-lg text-foreground">{dept.name}</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
                                 <div className="flex items-center justify-between text-sm">
-                                    <span className="text-slate-400">Membres</span>
-                                    <span className="text-slate-200">
+                                    <span className="text-muted-foreground">Membres</span>
+                                    <span className="text-foreground">
                                         {dept._count.members} / {org.subscription?.maxMembersPerDept || '∞'}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between text-sm">
-                                    <span className="text-slate-400">Conversations</span>
-                                    <span className="text-slate-200">{dept._count.conversations}</span>
+                                    <span className="text-muted-foreground">Conversations</span>
+                                    <span className="text-foreground">{dept._count.conversations}</span>
                                 </div>
                             </CardContent>
                         </Card>
@@ -270,13 +261,13 @@ export default function OrganizationDashboard() {
                 </div>
 
                 {departments.length === 0 && (
-                    <div className="text-center py-12 border-2 border-dashed border-slate-800 rounded-lg">
-                        <Building2 className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                        <p className="text-slate-400">Aucun département</p>
-                        <p className="text-sm text-slate-500 mb-4">Créez votre premier département pour commencer</p>
+                    <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+                        <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                        <p className="text-muted-foreground">Aucun département</p>
+                        <p className="text-sm text-muted-foreground mb-4">Créez votre premier département pour commencer</p>
                         <Button
                             size="sm"
-                            className="bg-purple-600 hover:bg-purple-700"
+                            className="bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={handleCreateDepartment}
                             disabled={!canCreateDepartment}
                         >
@@ -290,31 +281,31 @@ export default function OrganizationDashboard() {
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card
-                    className="bg-slate-900 border-slate-800 hover:border-purple-500/50 transition cursor-pointer"
+                    className="bg-card border-border hover:border-primary/50 transition cursor-pointer"
                     onClick={() => router.push(`/chat/organizations/${orgId}/events`)}
                 >
                     <CardContent className="pt-6">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-purple-600/20 flex items-center justify-center">
-                                <Calendar className="w-6 h-6 text-purple-400" />
+                            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                                <Calendar className="w-6 h-6 text-primary" />
                             </div>
                             <div>
-                                <h3 className="font-semibold">Gérer les Événements</h3>
-                                <p className="text-sm text-slate-400">Créer et gérer les invitations</p>
+                                <h3 className="font-semibold text-foreground">Gérer les Événements</h3>
+                                <p className="text-sm text-muted-foreground">Créer et gérer les invitations</p>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="bg-slate-900 border-slate-800 hover:border-slate-700 transition cursor-pointer opacity-50">
+                <Card className="bg-card border-border hover:border-border/80 transition cursor-pointer opacity-50">
                     <CardContent className="pt-6">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-slate-600/20 flex items-center justify-center">
-                                <Settings className="w-6 h-6 text-slate-400" />
+                            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                                <Settings className="w-6 h-6 text-muted-foreground" />
                             </div>
                             <div>
-                                <h3 className="font-semibold">Paramètres</h3>
-                                <p className="text-sm text-slate-400">Gérer l'organisation</p>
+                                <h3 className="font-semibold text-foreground">Paramètres</h3>
+                                <p className="text-sm text-muted-foreground">Gérer l'organisation</p>
                             </div>
                         </div>
                     </CardContent>
