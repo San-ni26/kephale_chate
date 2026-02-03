@@ -1,5 +1,4 @@
 
-import * as geoip from 'geoip-lite';
 import { headers } from 'next/headers';
 
 export interface GeolocationData {
@@ -10,6 +9,19 @@ export interface GeolocationData {
     latitude: number;
     longitude: number;
     timezone: string;
+}
+
+interface IPAPIResponse {
+    status: string;
+    country?: string;
+    countryCode?: string;
+    region?: string;
+    regionName?: string;
+    city?: string;
+    lat?: number;
+    lon?: number;
+    timezone?: string;
+    message?: string;
 }
 
 /**
@@ -40,9 +52,10 @@ export async function getClientIP(): Promise<string> {
 }
 
 /**
- * Get geolocation data from IP address
+ * Get geolocation data from IP address using ip-api.com
+ * Free tier: 45 requests per minute
  */
-export function getGeolocationFromIP(ip: string): GeolocationData | null {
+export async function getGeolocationFromIP(ip: string): Promise<GeolocationData | null> {
     // Handle localhost
     if (ip === '127.0.0.1' || ip === '::1' || ip === 'localhost') {
         return {
@@ -51,26 +64,42 @@ export function getGeolocationFromIP(ip: string): GeolocationData | null {
             city: 'Bamako',
             region: 'Bamako',
             latitude: 12.65,
-            longitude: 2.3522,
-            timezone: 'africa/paris',
+            longitude: -8.0,
+            timezone: 'Africa/Bamako',
         };
     }
 
-    const geo = geoip.lookup(ip);
+    try {
+        // Use ip-api.com free tier (no API key required)
+        const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,country,countryCode,region,regionName,city,lat,lon,timezone`, {
+            next: { revalidate: 3600 }, // Cache for 1 hour
+        });
 
-    if (!geo) {
+        if (!response.ok) {
+            console.error(`IP API request failed: ${response.status}`);
+            return null;
+        }
+
+        const data: IPAPIResponse = await response.json();
+
+        if (data.status === 'fail') {
+            console.error(`IP API lookup failed: ${data.message}`);
+            return null;
+        }
+
+        return {
+            ip,
+            country: data.countryCode || 'Unknown',
+            city: data.city || 'Unknown',
+            region: data.regionName || data.region || 'Unknown',
+            latitude: data.lat || 0,
+            longitude: data.lon || 0,
+            timezone: data.timezone || 'UTC',
+        };
+    } catch (error) {
+        console.error('Error fetching geolocation data:', error);
         return null;
     }
-
-    return {
-        ip,
-        country: geo.country,
-        city: geo.city || 'Unknown',
-        region: geo.region || 'Unknown',
-        latitude: geo.ll[0],
-        longitude: geo.ll[1],
-        timezone: geo.timezone,
-    };
 }
 
 /**

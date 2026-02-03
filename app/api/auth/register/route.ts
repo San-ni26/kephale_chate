@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
         const validatedData = registerSchema.parse(body);
 
         // Get geolocation from IP
-        const geoData = getGeolocationFromIP(clientIP);
+        const geoData = await getGeolocationFromIP(clientIP);
 
         if (!geoData) {
             return NextResponse.json(
