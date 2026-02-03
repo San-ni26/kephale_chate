@@ -1,5 +1,6 @@
 import { BottomNav } from "@/src/components/chat/BottomNav";
 import { TopNav } from "@/src/components/chat/TopNav";
+import { PWAInstaller } from "@/src/components/PWAInstaller";
 
 export default function ChatLayout({
     children,
@@ -11,6 +12,7 @@ export default function ChatLayout({
             {children}
             <TopNav />
             <BottomNav />
+            <PWAInstaller />
         </div>
     );
 }
