@@ -8,7 +8,7 @@ interface FileAttachmentProps {
     attachment: {
         filename: string;
         type: string;
-        data: string; // URL path to the file
+        data: string; // Base64-encoded data
     };
 }
 
@@ -16,7 +16,42 @@ export function EncryptedAttachment({ attachment }: FileAttachmentProps) {
     console.log('EncryptedAttachment rendering:', attachment);
     const isImage = attachment.type === 'IMAGE';
     const isAudio = attachment.type === 'AUDIO';
-    const fileUrl = attachment.data; // Direct URL to file
+    const isPDF = attachment.type === 'PDF';
+    const isWord = attachment.type === 'WORD';
+
+    // Determine MIME type based on file type and extension
+    const getMimeType = () => {
+        if (isImage) {
+            const ext = attachment.filename.split('.').pop()?.toLowerCase();
+            if (ext === 'png') return 'image/png';
+            if (ext === 'gif') return 'image/gif';
+            if (ext === 'webp') return 'image/webp';
+            return 'image/jpeg'; // default
+        }
+        if (isAudio) {
+            const ext = attachment.filename.split('.').pop()?.toLowerCase();
+            if (ext === 'mp3') return 'audio/mpeg';
+            if (ext === 'ogg') return 'audio/ogg';
+            if (ext === 'wav') return 'audio/wav';
+            if (ext === 'm4a') return 'audio/mp4';
+            return 'audio/webm'; // default
+        }
+        if (isPDF) return 'application/pdf';
+        if (isWord) return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        return 'application/octet-stream';
+    };
+
+    // Construct data URL from base64 data
+    // If data already includes the data URL prefix, use as-is; otherwise, add it
+    const getDataUrl = () => {
+        if (attachment.data.startsWith('data:')) {
+            return attachment.data;
+        }
+        const mimeType = getMimeType();
+        return `data:${mimeType};base64,${attachment.data}`;
+    };
+
+    const fileUrl = getDataUrl();
 
     const handleDownload = () => {
         try {
@@ -64,17 +99,17 @@ export function EncryptedAttachment({ attachment }: FileAttachmentProps) {
 
     // Display document as download link
     return (
-        <div className="flex items-center gap-3 bg-black/20 hover:bg-black/30 transition-colors rounded-lg p-3 max-w-[250px] border border-white/5">
+        <div className="flex items-center gap-3 bg-muted/50 hover:bg-muted transition-colors rounded-lg p-3 max-w-[250px] border border-border">
             <div className="flex-shrink-0">
-                {attachment.type === 'PDF' ? (
-                    <FileText className="w-8 h-8 text-red-400" />
+                {isPDF ? (
+                    <FileText className="w-8 h-8 text-red-500" />
                 ) : (
-                    <FileText className="w-8 h-8 text-blue-400" />
+                    <FileText className="w-8 h-8 text-blue-500" />
                 )}
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{attachment.filename}</p>
-                <p className="text-xs text-slate-400">{attachment.type}</p>
+                <p className="text-sm font-medium truncate text-foreground">{attachment.filename}</p>
+                <p className="text-xs text-muted-foreground">{attachment.type}</p>
             </div>
             <Button
                 size="sm"

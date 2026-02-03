@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
-import { saveFile } from '@/src/lib/storage';
 
 // GET: Get all messages for a conversation
 export async function GET(
@@ -107,24 +106,12 @@ export async function POST(
         // Prepare attachments if any
         let attachmentsData = undefined;
         if (attachments && Array.isArray(attachments) && attachments.length > 0) {
-            const processedAttachments = await Promise.all(attachments.map(async (att: any) => {
-                // Attachment data comes as base64 string from client (for HTTP transport)
-                // Convert base64 to Buffer for file storage
-                const base64Data = att.data;
-                const fileBuffer = Buffer.from(base64Data, 'base64');
-
-                // Save file directly (no encryption) with UUID name
-                const filePath = await saveFile(
-                    fileBuffer,
-                    att.filename,
-                    att.type as 'IMAGE' | 'PDF' | 'WORD' | 'AUDIO'
-                );
-
-                return {
-                    filename: att.filename,
-                    type: att.type,
-                    data: filePath // Store path instead of raw data
-                };
+            // Store base64 data directly in database (like events system)
+            // The data comes as a full data URL (data:image/...;base64,...) from client
+            const processedAttachments = attachments.map((att: any) => ({
+                filename: att.filename,
+                type: att.type,
+                data: att.data // Store base64 data URL directly
             }));
 
             attachmentsData = {

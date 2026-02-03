@@ -161,13 +161,12 @@ export default function DiscussionPage() {
         setSelectedFiles(prev => prev.filter((_, i) => i !== index));
     };
 
-    // Helper function to convert File to base64 efficiently (avoids stack overflow)
+    // Helper function to convert File to base64 data URL (includes data:...;base64, prefix)
     const fileToBase64 = async (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
-                const base64 = (reader.result as string).split(',')[1]; // Remove data:...;base64, prefix
-                resolve(base64);
+                resolve(reader.result as string); // Keep the full data URL with prefix
             };
             reader.onerror = reject;
             reader.readAsDataURL(file);
