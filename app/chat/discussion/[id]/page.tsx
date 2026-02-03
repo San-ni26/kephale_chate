@@ -210,9 +210,9 @@ export default function DiscussionPage() {
                 data: base64Data,
             };
 
-            // Send via API (text content is still encrypted)
+            // Send via API (no text for audio-only messages)
             const encryptedContent = encryptMessage(
-                '[Message vocal]',
+                '',
                 privateKey,
                 otherUser.publicKey
             );
@@ -295,9 +295,9 @@ export default function DiscussionPage() {
                 }
             }
 
-            // Encrypt message content
+            // Encrypt message content (empty string if only files)
             const encryptedContent = encryptMessage(
-                newMessage.trim() || '[Fichier joint]',
+                newMessage.trim() || '',
                 privateKey, // Use decrypted key
                 otherUser.publicKey
             );
@@ -391,7 +391,7 @@ export default function DiscussionPage() {
                 message.content,
                 privateKey, // Use decrypted key
                 senderPublicKey
-            ) || '[Erreur de déchiffrement]';
+            ) || '';
         } catch (error) {
             return '[Erreur de déchiffrement]';
         }
@@ -513,38 +513,40 @@ export default function DiscussionPage() {
                                     </div>
                                 ) : (
                                     <div className="group relative">
-                                        <div
-                                            className={`rounded-2xl px-4 py-2 border ${isOwn
-                                                ? 'bg-primary text-primary-foreground border-primary'
-                                                : 'bg-muted text-foreground border-border'
-                                                }`}
-                                        >
-                                            <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
+                                        {/* Only show text bubble if there's actual content */}
+                                        {decryptedContent && decryptedContent.trim() && (
+                                            <div
+                                                className={`rounded-2xl px-4 py-2 border ${isOwn
+                                                    ? 'bg-primary text-primary-foreground border-primary'
+                                                    : 'bg-muted text-foreground border-border'
+                                                    }`}
+                                            >
+                                                <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
+                                                {message.isEdited && (
+                                                    <p className="text-xs opacity-70 mt-1">Modifié</p>
+                                                )}
+                                            </div>
+                                        )}
 
-                                            {/* Attachments */}
-                                            {message.attachments && message.attachments.length > 0 && (
-                                                <div className="mt-2 space-y-2">
-                                                    {message.attachments.map((att, idx) => {
-                                                        const senderKey = message.senderId === currentUser?.id
-                                                            ? otherUser?.publicKey
-                                                            : (message.sender.publicKey || otherUser?.publicKey);
+                                        {/* Attachments - shown with transparent background if no text */}
+                                        {message.attachments && message.attachments.length > 0 && (
+                                            <div className={`${decryptedContent && decryptedContent.trim() ? 'mt-2' : ''} space-y-2`}>
+                                                {message.attachments.map((att, idx) => {
+                                                    const senderKey = message.senderId === currentUser?.id
+                                                        ? otherUser?.publicKey
+                                                        : (message.sender.publicKey || otherUser?.publicKey);
 
-                                                        if (!senderKey) return null;
+                                                    if (!senderKey) return null;
 
-                                                        return (
-                                                            <EncryptedAttachment
-                                                                key={idx}
-                                                                attachment={att}
-                                                            />
-                                                        );
-                                                    })}
-                                                </div>
-                                            )}
-
-                                            {message.isEdited && (
-                                                <p className="text-xs opacity-70 mt-1">Modifié</p>
-                                            )}
-                                        </div>
+                                                    return (
+                                                        <EncryptedAttachment
+                                                            key={idx}
+                                                            attachment={att}
+                                                        />
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
 
                                         <div className="flex items-center gap-2 mt-1">
                                             <span className="text-xs text-muted-foreground">
@@ -677,6 +679,6 @@ export default function DiscussionPage() {
                 </div>
             </div>
 
-        </div>
+        </div >
     );
 }

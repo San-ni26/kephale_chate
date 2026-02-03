@@ -81,9 +81,10 @@ export async function POST(
         const body = await request.json();
         const { content, attachments } = body;
 
-        if (!content) {
+        // Allow empty content if attachments are present
+        if (!content && (!attachments || attachments.length === 0)) {
             return NextResponse.json(
-                { error: 'Contenu du message requis' },
+                { error: 'Contenu du message ou fichiers requis' },
                 { status: 400 }
             );
         }
