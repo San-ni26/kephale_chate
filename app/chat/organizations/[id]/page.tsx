@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Building2, Users, Calendar, Plus, ArrowLeft, Settings } from "lucide-react";
+import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 import { toast } from "sonner";
+import { fetchWithAuth, getUser } from "@/src/lib/auth-client";
 
 interface Organization {
     id: string;
@@ -13,6 +15,7 @@ interface Organization {
     logo?: string;
     address?: string;
     code: string;
+    ownerId: string;
     subscription?: {
         plan: string;
         maxDepartments: number;
@@ -35,14 +38,28 @@ interface Department {
     };
 }
 
+interface UserDepartment {
+    id: string;
+    department: {
+        id: string;
+        name: string;
+        _count: {
+            members: number;
+        };
+    };
+}
+
 export default function OrganizationDashboard() {
     const router = useRouter();
     const params = useParams();
     const orgId = params.id as string;
+    const currentUser = getUser();
 
     const [org, setOrg] = useState<Organization | null>(null);
     const [departments, setDepartments] = useState<Department[]>([]);
+    const [userDepartments, setUserDepartments] = useState<UserDepartment[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         if (orgId) {
@@ -53,20 +70,32 @@ export default function OrganizationDashboard() {
     const fetchData = async () => {
         try {
             // Fetch organization details
-            const orgRes = await fetch('/api/organizations');
+            const orgRes = await fetchWithAuth(`/api/organizations/${orgId}`);
             if (orgRes.ok) {
                 const data = await orgRes.json();
-                const foundOrg = data.organizations.find((o: Organization) => o.id === orgId);
-                if (foundOrg) {
-                    setOrg(foundOrg);
-                }
+                setOrg(data.organization);
+
+                // Check if user is admin/owner
+                const isOwnerOrAdmin = data.organization.ownerId === currentUser?.id ||
+                    data.userRole === 'ADMIN' ||
+                    data.userRole === 'OWNER';
+                setIsAdmin(isOwnerOrAdmin);
             }
 
-            // Fetch departments
-            const deptRes = await fetch(`/api/organizations/${orgId}/departments`);
-            if (deptRes.ok) {
-                const data = await deptRes.json();
-                setDepartments(data.departments || []);
+            if (isAdmin) {
+                // Fetch all departments for admin
+                const deptRes = await fetchWithAuth(`/api/organizations/${orgId}/departments`);
+                if (deptRes.ok) {
+                    const data = await deptRes.json();
+                    setDepartments(data.departments || []);
+                }
+            } else {
+                // Fetch only user's departments for regular members
+                const userDeptRes = await fetchWithAuth(`/api/organizations/${orgId}/user-departments`);
+                if (userDeptRes.ok) {
+                    const data = await userDeptRes.json();
+                    setUserDepartments(data.departments || []);
+                }
             }
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -81,7 +110,7 @@ export default function OrganizationDashboard() {
         if (!name) return;
 
         try {
-            const res = await fetch(`/api/organizations/${orgId}/departments`, {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/departments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name }),
@@ -102,6 +131,27 @@ export default function OrganizationDashboard() {
         }
     };
 
+    const handleLeaveDepartment = async (deptMemberId: string, deptName: string) => {
+        if (!confirm(`Voulez-vous vraiment quitter le département "${deptName}" ?`)) return;
+
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/departments/leave/${deptMemberId}`, {
+                method: 'DELETE',
+            });
+
+            if (res.ok) {
+                toast.success('Vous avez quitté le département');
+                fetchData();
+            } else {
+                const error = await res.json();
+                toast.error(error.error || 'Erreur lors de la sortie du département');
+            }
+        } catch (error) {
+            console.error('Error leaving department:', error);
+            toast.error('Erreur lors de la sortie du département');
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen bg-background">
@@ -119,8 +169,6 @@ export default function OrganizationDashboard() {
     }
 
     const getPlanColor = (plan: string) => {
-        // En thème monochromatique, on peut utiliser des variantes de gris ou juste le primary
-        // Mais pour différencier les plans, utilisons des bordures ou des badges simples
         return 'bg-primary text-primary-foreground';
     };
 
@@ -128,6 +176,108 @@ export default function OrganizationDashboard() {
         ? org._count.departments < org.subscription.maxDepartments
         : false;
 
+    // Vue pour les membres simples (non-admin)
+    if (!isAdmin) {
+        return (
+            <div className="p-4 space-y-6 mt-15 bg-background min-h-screen">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => router.push('/chat/organizations')}
+                            className="hover:bg-muted"
+                        >
+                            <ArrowLeft className="w-5 h-5" />
+                        </Button>
+
+                        {org.logo ? (
+                            <img
+                                src={org.logo}
+                                alt={org.name}
+                                className="w-12 h-12 rounded-full object-cover"
+                            />
+                        ) : (
+                            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                                <Building2 className="w-6 h-6 text-muted-foreground" />
+                            </div>
+                        )}
+
+                        <div>
+                            <h1 className="text-2xl font-bold text-foreground">
+                                {org.name}
+                            </h1>
+                            <p className="text-sm text-muted-foreground">Code: {org.code}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* My Departments Section */}
+                <div className="space-y-4">
+                    <h2 className="text-xl font-semibold text-foreground">Mes Départements</h2>
+
+                    {userDepartments.length === 0 ? (
+                        <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+                            <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                            <p className="text-muted-foreground">Vous n'êtes membre d'aucun département</p>
+                            <p className="text-sm text-muted-foreground">Contactez un administrateur pour être ajouté</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {userDepartments.map((userDept) => (
+                                <Card
+                                    key={userDept.id}
+                                    className="bg-card border-border hover:border-primary/50 transition"
+                                >
+                                    <CardHeader>
+                                        <div className="flex items-center justify-between">
+                                            <Avatar className="h-10 w-10 border border-border">
+                                                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${userDept.department.name}`} />
+                                                <AvatarFallback>{userDept.department.name[0]}</AvatarFallback>
+                                            </Avatar>
+                                        </div>
+                                        <CardTitle className="text-lg text-foreground mt-2">
+                                            {userDept.department.name}
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-3">
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-muted-foreground">Membres</span>
+                                            <span className="text-foreground">
+                                                {userDept.department._count.members}
+                                            </span>
+                                        </div>
+
+                                        <div className="flex gap-2">
+                                            <Button
+                                                size="sm"
+                                                className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                                                onClick={() => router.push(`/chat/organizations/${orgId}/departments/${userDept.department.id}/chat`)}
+                                            >
+                                                <MessageSquare className="w-4 h-4 mr-2" />
+                                                Ouvrir le chat
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                onClick={() => handleLeaveDepartment(userDept.id, userDept.department.name)}
+                                            >
+                                                <LogOut className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    // Vue pour les administrateurs (code existant)
     return (
         <div className="p-4 space-y-6 mt-15 bg-background min-h-screen">
             {/* Header */}
@@ -240,6 +390,7 @@ export default function OrganizationDashboard() {
                         <Card
                             key={dept.id}
                             className="bg-card border-border hover:border-primary/50 transition cursor-pointer"
+                            onClick={() => router.push(`/chat/organizations/${orgId}/departments/${dept.id}`)}
                         >
                             <CardHeader>
                                 <CardTitle className="text-lg text-foreground">{dept.name}</CardTitle>

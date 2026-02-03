@@ -5,10 +5,20 @@ import { useParams, useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2 } from 'lucide-react';
+import {
+    ArrowLeft,
+    Send,
+    Paperclip,
+    Loader2,
+    Image as ImageIcon,
+    FileText,
+    MoreVertical,
+    Edit2,
+    Trash2,
+    Settings
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
-
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import {
@@ -17,15 +27,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/src/components/ui/dropdown-menu';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-} from '@/src/components/ui/dialog';
-import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
-import { EncryptedAttachment } from './EncryptedAttachment';
+import { EncryptedAttachment } from '@/app/chat/discussion/[id]/EncryptedAttachment';
 import { AudioRecorderComponent } from '@/src/components/AudioRecorder';
 
 interface Message {
@@ -35,7 +37,6 @@ interface Message {
     createdAt: string;
     updatedAt: string;
     isEdited: boolean;
-
     attachments?: {
         filename: string;
         type: string;
@@ -49,34 +50,25 @@ interface Message {
     };
 }
 
-interface Conversation {
+interface Department {
     id: string;
-    isDirect: boolean;
-    name?: string;
-    members: {
-        user: {
-            id: string;
-            name: string;
-            email: string;
-            publicKey: string;
-            isOnline: boolean;
-        };
-    }[];
+    name: string;
+    _count: {
+        members: number;
+    };
 }
 
-export default function DiscussionPage() {
+export default function DepartmentChatPage() {
     const params = useParams();
     const router = useRouter();
-    const conversationId = params.id as string;
+    const orgId = params.id as string;
+    const deptId = params.deptId as string;
 
-    const [conversation, setConversation] = useState<Conversation | null>(null);
+    const [department, setDepartment] = useState<Department | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState('');
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
-    const [privateKey, setPrivateKey] = useState<string | null>(null);
-    const [password, setPassword] = useState('');
-    const [showPasswordDialog, setShowPasswordDialog] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
     const [editContent, setEditContent] = useState('');
@@ -86,40 +78,39 @@ export default function DiscussionPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const currentUser = getUser();
-    const otherUser = conversation?.members.find(m => m.user.id !== currentUser?.id)?.user;
 
-    // Polling for new messages (every 10 seconds)
+    // Polling for new messages
     useEffect(() => {
         const interval = setInterval(() => {
-            loadMessages(true); // silent update
+            loadMessages(true);
         }, 10000);
 
         return () => clearInterval(interval);
-    }, [conversationId]);
+    }, [deptId]);
 
-    // Load conversation and messages
     useEffect(() => {
-        loadConversation();
-        loadMessages();
-    }, [conversationId]);
+        if (deptId) {
+            loadDepartment();
+            loadMessages();
+        }
+    }, [deptId]);
 
-    const loadConversation = async () => {
+    const loadDepartment = async () => {
         try {
-            const response = await fetchWithAuth(`/api/conversations/${conversationId}`);
+            const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}`);
             if (response.ok) {
                 const data = await response.json();
-                setConversation(data.conversation);
+                setDepartment(data.department);
             }
         } catch (error) {
-            console.error('Load conversation error:', error);
-            toast.error('Erreur de chargement de la conversation');
+            console.error('Load department error:', error);
         }
     };
 
     const loadMessages = async (silent = false) => {
         try {
             if (!silent) setLoading(true);
-            const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`);
+            const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/messages`);
             if (response.ok) {
                 const data = await response.json();
                 setMessages(data.messages || []);
@@ -161,12 +152,11 @@ export default function DiscussionPage() {
         setSelectedFiles(prev => prev.filter((_, i) => i !== index));
     };
 
-    // Helper function to convert File to base64 data URL (includes data:...;base64, prefix)
     const fileToBase64 = async (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
-                resolve(reader.result as string); // Keep the full data URL with prefix
+                resolve(reader.result as string);
             };
             reader.onerror = reject;
             reader.readAsDataURL(file);
@@ -174,34 +164,24 @@ export default function DiscussionPage() {
     };
 
     const handleAudioRecorded = async (blob: Blob, duration: number) => {
-        // Determine extension and type based on blob.type
         let ext = 'webm';
         if (blob.type.includes('mp4')) ext = 'mp4';
         else if (blob.type.includes('aac')) ext = 'aac';
         else if (blob.type.includes('ogg')) ext = 'ogg';
 
-        // Create a File object from the Blob
         const file = new File([blob], `audio-message-${Date.now()}.${ext}`, { type: blob.type });
-
-        // Add to selected files to trigger encryption and sending flow
-        // But we want to send immediately usually? 
-        // Let's reuse handleSendMessage mechanism by adding it to selectedFiles and calling send
-        // Or better, creating a specialized function since file handling is tied to UI
-
-        const audioFile = file;
-        await sendAudioMessage(audioFile);
+        await sendAudioMessage(file);
     };
 
     const sendAudioMessage = async (audioFile: File) => {
-        if (!currentUser || !otherUser || !privateKey) {
-            toast.error("Clé de chiffrement manquante");
+        if (!currentUser) {
+            toast.error("Utilisateur non connecté");
             return;
         }
 
         setSending(true);
 
         try {
-            // Convert audio file to base64 efficiently (no encryption)
             const base64Data = await fileToBase64(audioFile);
 
             const attachment = {
@@ -210,18 +190,11 @@ export default function DiscussionPage() {
                 data: base64Data,
             };
 
-            // Send via API (no text for audio-only messages)
-            const encryptedContent = encryptMessage(
-                '',
-                privateKey,
-                otherUser.publicKey
-            );
-
-            const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
+            const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/messages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    content: encryptedContent,
+                    content: '',
                     attachments: [attachment],
                 }),
             });
@@ -241,38 +214,10 @@ export default function DiscussionPage() {
         }
     };
 
-    // Initial check for key
-    useEffect(() => {
-        if (currentUser) {
-            const storedKey = sessionStorage.getItem(`privateKey_${currentUser.id}`);
-            if (storedKey) {
-                setPrivateKey(storedKey);
-                setShowPasswordDialog(false);
-            } else if (!privateKey) {
-                setShowPasswordDialog(true);
-            }
-        }
-    }, [currentUser, privateKey]);
-
-    const handleUnlock = () => {
-        if (!currentUser || !password) return;
-
-        try {
-            const decrypted = decryptPrivateKey(currentUser.encryptedPrivateKey, password);
-            setPrivateKey(decrypted);
-            sessionStorage.setItem(`privateKey_${currentUser.id}`, decrypted);
-            setShowPasswordDialog(false);
-            setPassword('');
-            toast.success('Clé de chiffrement déverrouillée');
-        } catch (error) {
-            toast.error('Mot de passe incorrect');
-        }
-    };
-
     const handleSendMessage = async () => {
         if (!newMessage.trim() && selectedFiles.length === 0) return;
-        if (!currentUser || !otherUser || !privateKey) {
-            if (!privateKey) setShowPasswordDialog(true);
+        if (!currentUser) {
+            toast.error("Utilisateur non connecté");
             return;
         }
 
@@ -281,13 +226,10 @@ export default function DiscussionPage() {
         try {
             let attachments = [];
 
-            // Process files if any (no encryption, just convert to base64)
             if (selectedFiles.length > 0) {
                 for (const file of selectedFiles) {
-                    // Convert file to base64 efficiently
                     const base64Data = await fileToBase64(file);
 
-                    // Determine file type from extension
                     const ext = file.name.split('.').pop()?.toLowerCase() || '';
                     let fileType = 'IMAGE';
                     if (['pdf'].includes(ext)) fileType = 'PDF';
@@ -302,19 +244,11 @@ export default function DiscussionPage() {
                 }
             }
 
-            // Encrypt message content (empty string if only files)
-            const encryptedContent = encryptMessage(
-                newMessage.trim() || '',
-                privateKey, // Use decrypted key
-                otherUser.publicKey
-            );
-
-            // Send via API
-            const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
+            const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/messages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    content: encryptedContent,
+                    content: newMessage.trim() || '',
                     attachments: attachments.length > 0 ? attachments : undefined,
                 }),
             });
@@ -338,19 +272,13 @@ export default function DiscussionPage() {
     };
 
     const handleEditMessage = async (messageId: string) => {
-        if (!editContent.trim() || !currentUser || !otherUser || !privateKey) return;
+        if (!editContent.trim() || !currentUser) return;
 
         try {
-            const encryptedContent = encryptMessage(
-                editContent.trim(),
-                privateKey, // Use decrypted key
-                otherUser.publicKey
-            );
-
             const response = await fetchWithAuth(`/api/messages/${messageId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: encryptedContent }),
+                body: JSON.stringify({ content: editContent.trim() }),
             });
 
             if (response.ok) {
@@ -384,39 +312,11 @@ export default function DiscussionPage() {
         }
     };
 
-
-
-    const decryptMessageContent = (message: Message): string => {
-        if (!currentUser || !otherUser || !privateKey) return '[Chiffré]';
-
-        try {
-            const senderPublicKey = message.senderId === currentUser.id
-                ? otherUser.publicKey
-                : (message.sender.publicKey || otherUser.publicKey);
-
-            return decryptMessage(
-                message.content,
-                privateKey, // Use decrypted key
-                senderPublicKey
-            ) || '';
-        } catch (error) {
-            return '[Erreur de déchiffrement]';
-        }
-    };
-
     const canEditOrDelete = (message: Message): boolean => {
         if (message.senderId !== currentUser?.id) return false;
         const messageTime = new Date(message.createdAt).getTime();
         const now = Date.now();
         return (now - messageTime) < 5 * 60 * 1000; // 5 minutes
-    };
-
-    const getConversationName = () => {
-        if (!conversation) return 'Chargement...';
-        if (conversation.isDirect && otherUser) {
-            return otherUser.name || otherUser.email;
-        }
-        return conversation.name || 'Discussion';
     };
 
     if (loading) {
@@ -427,62 +327,54 @@ export default function DiscussionPage() {
         );
     }
 
+    if (!department) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-background">
+                <div className="text-muted-foreground">Département non trouvé</div>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col h-screen bg-background text-foreground pt-2">
-            <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Déverrouiller la discussion</DialogTitle>
-                    </DialogHeader>
-                    <div className="py-4">
-                        <p className="text-sm text-muted-foreground mb-4">
-                            Entrez votre mot de passe pour déchiffrer votre clé privée et accéder aux messages.
-                        </p>
-                        <Input
-                            type="password"
-                            placeholder="Votre mot de passe"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleUnlock()}
-                        />
-                    </div>
-                    <DialogFooter>
-                        <Button onClick={handleUnlock}>Déverrouiller</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
             {/* Header */}
             <div className="fixed top-0 left-0 right-0 bg-background border-b border-border z-40 h-16 flex items-center px-4">
                 <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => router.push('/chat')}
+                    onClick={() => router.push(`/chat/organizations/${orgId}/departments/${deptId}`)}
                     className="mr-3"
                 >
                     <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
                 </Button>
 
                 <Avatar className="h-10 w-10 border border-border">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${getConversationName()}`} />
-                    <AvatarFallback>{getConversationName()[0]}</AvatarFallback>
+                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${department.name}`} />
+                    <AvatarFallback>{department.name[0]}</AvatarFallback>
                 </Avatar>
 
                 <div className="ml-3 flex-1">
-                    <h2 className="font-semibold text-foreground">{getConversationName()}</h2>
-                    {otherUser && (
-                        <p className="text-xs text-muted-foreground">
-                            {otherUser.isOnline ? 'En ligne' : 'Hors ligne'}
-                        </p>
-                    )}
+                    <h2 className="font-semibold text-foreground">{department.name}</h2>
+                    <p className="text-xs text-muted-foreground">
+                        {department._count.members} membre{department._count.members > 1 ? 's' : ''}
+                    </p>
                 </div>
+
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => router.push(`/chat/organizations/${orgId}/departments/${deptId}`)}
+                    className="text-muted-foreground hover:text-foreground"
+                    title="Gérer les membres"
+                >
+                    <Settings className="w-5 h-5" />
+                </Button>
             </div>
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto pt-16 pb-40 px-4 space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                 {messages.map((message) => {
                     const isOwn = message.senderId === currentUser?.id;
-                    const decryptedContent = decryptMessageContent(message);
                     const canEdit = canEditOrDelete(message);
 
                     return (
@@ -491,6 +383,13 @@ export default function DiscussionPage() {
                             className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
                         >
                             <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
+                                {/* Afficher le nom de l'utilisateur qui a envoyé le message */}
+                                {!isOwn && (
+                                    <span className="text-xs text-muted-foreground mb-1 px-2">
+                                        {message.sender.name || message.sender.email}
+                                    </span>
+                                )}
+
                                 {editingMessageId === message.id ? (
                                     <div className="bg-card rounded-lg p-3 w-full border border-border">
                                         <Input
@@ -520,38 +419,30 @@ export default function DiscussionPage() {
                                     </div>
                                 ) : (
                                     <div className="group relative">
-                                        {/* Only show text bubble if there's actual content */}
-                                        {decryptedContent && decryptedContent.trim() && (
+                                        {/* Text bubble */}
+                                        {message.content && message.content.trim() && (
                                             <div
                                                 className={`rounded-2xl px-4 py-2 border ${isOwn
                                                     ? 'bg-primary text-primary-foreground border-primary'
                                                     : 'bg-muted text-foreground border-border'
                                                     }`}
                                             >
-                                                <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
+                                                <p className="break-words whitespace-pre-wrap">{message.content}</p>
                                                 {message.isEdited && (
                                                     <p className="text-xs opacity-70 mt-1">Modifié</p>
                                                 )}
                                             </div>
                                         )}
 
-                                        {/* Attachments - shown with transparent background if no text */}
+                                        {/* Attachments */}
                                         {message.attachments && message.attachments.length > 0 && (
-                                            <div className={`${decryptedContent && decryptedContent.trim() ? 'mt-2' : ''} space-y-2`}>
-                                                {message.attachments.map((att, idx) => {
-                                                    const senderKey = message.senderId === currentUser?.id
-                                                        ? otherUser?.publicKey
-                                                        : (message.sender.publicKey || otherUser?.publicKey);
-
-                                                    if (!senderKey) return null;
-
-                                                    return (
-                                                        <EncryptedAttachment
-                                                            key={idx}
-                                                            attachment={att}
-                                                        />
-                                                    );
-                                                })}
+                                            <div className={`${message.content && message.content.trim() ? 'mt-2' : ''} space-y-2`}>
+                                                {message.attachments.map((att, idx) => (
+                                                    <EncryptedAttachment
+                                                        key={idx}
+                                                        attachment={att}
+                                                    />
+                                                ))}
                                             </div>
                                         )}
 
@@ -579,7 +470,7 @@ export default function DiscussionPage() {
                                                         <DropdownMenuItem
                                                             onClick={() => {
                                                                 setEditingMessageId(message.id);
-                                                                setEditContent(decryptedContent);
+                                                                setEditContent(message.content);
                                                             }}
                                                         >
                                                             <Edit2 className="w-4 h-4 mr-2" />
@@ -685,7 +576,6 @@ export default function DiscussionPage() {
                     </div>
                 </div>
             </div>
-
-        </div >
+        </div>
     );
 }

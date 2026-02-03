@@ -88,13 +88,12 @@ export function AudioPlayer({ src, onPlay }: AudioPlayerProps) {
     };
 
     return (
-        <div className="flex items-center gap-3 bg-muted/80 rounded-lg p-2 min-w-[280px] border border-border">
+        <div className="flex items-center gap-3 bg-muted/80 rounded-lg p-2 min-w-[280px] border border-border backdrop-blur-sm shadow-sm transition-all hover:bg-muted/90">
             <audio ref={audioRef} src={src} preload="metadata" />
 
             <Button
                 size="icon"
-                variant="ghost"
-                className="h-8 w-8 rounded-full bg-muted hover:bg-muted-foreground/20 text-foreground"
+                className="h-8 w-8 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
                 onClick={togglePlay}
                 disabled={isLoading}
             >
