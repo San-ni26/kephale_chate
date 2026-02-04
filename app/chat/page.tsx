@@ -95,7 +95,7 @@ export default function ChatListPage() {
         <div className="p-4 pt-16 max-w-2xl mx-auto h-full flex flex-col">
             <h2 className="text-2xl font-bold mb-6 px-1 text-foreground">Discussions</h2>
 
-            {conversations.length === 0 ? (
+            {conversations.filter(c => c.isDirect).length === 0 ? (
                 <div className="flex-1 flex flex-col justify-center items-center text-center text-muted-foreground">
                     <div className="bg-muted/50 p-6 rounded-full mb-4">
                         <User className="w-10 h-10 opacity-50" />
@@ -105,7 +105,7 @@ export default function ChatListPage() {
                 </div>
             ) : (
                 <div className="flex flex-col gap-3 pb-20">
-                    {conversations.map((chat) => {
+                    {conversations.filter(c => c.isDirect).map((chat) => {
                         const chatName = getConversationName(chat);
                         const lastMessage = chat.messages[0];
 

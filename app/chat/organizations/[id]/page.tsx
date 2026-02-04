@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut } from "lucide-react";
+import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 import { toast } from "sonner";
 import { fetchWithAuth, getUser } from "@/src/lib/auth-client";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/src/components/ui/dialog";
+import { Input } from "@/src/components/ui/input";
+import { Label } from "@/src/components/ui/label";
 
 interface Organization {
     id: string;
@@ -52,7 +55,7 @@ interface UserDepartment {
 export default function OrganizationDashboard() {
     const router = useRouter();
     const params = useParams();
-    const orgId = params.id as string;
+    const orgId = params?.id as string;
     const currentUser = getUser();
 
     const [org, setOrg] = useState<Organization | null>(null);
@@ -60,6 +63,11 @@ export default function OrganizationDashboard() {
     const [userDepartments, setUserDepartments] = useState<UserDepartment[]>([]);
     const [loading, setLoading] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
+
+    // Edit Department State
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
+    const [editName, setEditName] = useState("");
 
     useEffect(() => {
         if (orgId) {
@@ -80,21 +88,21 @@ export default function OrganizationDashboard() {
                     data.userRole === 'ADMIN' ||
                     data.userRole === 'OWNER';
                 setIsAdmin(isOwnerOrAdmin);
-            }
 
-            if (isAdmin) {
-                // Fetch all departments for admin
-                const deptRes = await fetchWithAuth(`/api/organizations/${orgId}/departments`);
-                if (deptRes.ok) {
-                    const data = await deptRes.json();
-                    setDepartments(data.departments || []);
-                }
-            } else {
-                // Fetch only user's departments for regular members
-                const userDeptRes = await fetchWithAuth(`/api/organizations/${orgId}/user-departments`);
-                if (userDeptRes.ok) {
-                    const data = await userDeptRes.json();
-                    setUserDepartments(data.departments || []);
+                if (isOwnerOrAdmin) {
+                    // Fetch all departments for admin
+                    const deptRes = await fetchWithAuth(`/api/organizations/${orgId}/departments`);
+                    if (deptRes.ok) {
+                        const data = await deptRes.json();
+                        setDepartments(data.departments || []);
+                    }
+                } else {
+                    // Fetch only user's departments for regular members
+                    const userDeptRes = await fetchWithAuth(`/api/organizations/${orgId}/user-departments`);
+                    if (userDeptRes.ok) {
+                        const data = await userDeptRes.json();
+                        setUserDepartments(data.departments || []);
+                    }
                 }
             }
         } catch (error) {
@@ -149,6 +157,57 @@ export default function OrganizationDashboard() {
         } catch (error) {
             console.error('Error leaving department:', error);
             toast.error('Erreur lors de la sortie du département');
+        }
+    };
+
+    const handleDeleteDepartment = async (deptId: string) => {
+        if (!confirm("Attention : Cette action est irréversible. Toutes les discussions, fichiers et membres seront supprimés et détachés de ce département. Voulez-vous vraiment continuer ?")) return;
+
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}`, {
+                method: 'DELETE',
+            });
+
+            if (res.ok) {
+                toast.success('Département supprimé');
+                fetchData();
+            } else {
+                const error = await res.json();
+                toast.error(error.error || 'Erreur lors de la suppression');
+            }
+        } catch (error) {
+            console.error('Error deleting department:', error);
+            toast.error('Erreur serveur');
+        }
+    };
+
+    const openEditDialog = (dept: Department) => {
+        setEditingDepartment(dept);
+        setEditName(dept.name);
+        setIsEditOpen(true);
+    };
+
+    const handleUpdateDepartment = async () => {
+        if (!editingDepartment || !editName.trim()) return;
+
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/departments/${editingDepartment.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: editName })
+            });
+
+            if (res.ok) {
+                toast.success('Département modifié');
+                setIsEditOpen(false);
+                setEditingDepartment(null);
+                fetchData();
+            } else {
+                toast.error('Erreur lors de la modification');
+            }
+        } catch (error) {
+            console.error('Error updating department:', error);
+            toast.error('Erreur serveur');
         }
     };
 
@@ -389,11 +448,19 @@ export default function OrganizationDashboard() {
                     {departments.map((dept) => (
                         <Card
                             key={dept.id}
-                            className="bg-card border-border hover:border-primary/50 transition cursor-pointer"
+                            className="bg-card border-border hover:border-primary/50 transition cursor-pointer group"
                             onClick={() => router.push(`/chat/organizations/${orgId}/departments/${dept.id}`)}
                         >
-                            <CardHeader>
-                                <CardTitle className="text-lg text-foreground">{dept.name}</CardTitle>
+                            <CardHeader className="relative">
+                                <CardTitle className="text-lg text-foreground pr-16">{dept.name}</CardTitle>
+                                <div className="absolute top-4 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-primary" onClick={() => openEditDialog(dept)}>
+                                        <Pencil className="h-4 w-4" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-destructive" onClick={() => handleDeleteDepartment(dept.id)}>
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </div>
                             </CardHeader>
                             <CardContent className="space-y-2">
                                 <div className="flex items-center justify-between text-sm">
@@ -406,6 +473,17 @@ export default function OrganizationDashboard() {
                                     <span className="text-muted-foreground">Conversations</span>
                                     <span className="text-foreground">{dept._count.conversations}</span>
                                 </div>
+                                <Button
+                                    className="w-full mt-2"
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        router.push(`/chat/organizations/${orgId}/departments/${dept.id}`);
+                                    }}
+                                >
+                                    Gérer les membres
+                                </Button>
                             </CardContent>
                         </Card>
                     ))}
@@ -462,6 +540,26 @@ export default function OrganizationDashboard() {
                     </CardContent>
                 </Card>
             </div>
+            {/* Edit Dialog */}
+            <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Modifier le département</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-2">
+                        <Label>Nom du département</Label>
+                        <Input
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            className="mt-2"
+                        />
+                    </div>
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={() => setIsEditOpen(false)}>Annuler</Button>
+                        <Button onClick={handleUpdateDepartment}>Enregistrer</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

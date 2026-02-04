@@ -82,14 +82,134 @@ export function initializeWebSocket(httpServer: HTTPServer) {
             content: string;
             attachments?: any[];
         }) => {
-            // Broadcast to conversation room
-            io?.to(`conversation:${data.conversationId}`).emit('message:new', {
-                conversationId: data.conversationId,
-                senderId: socket.userId,
-                content: data.content,
-                attachments: data.attachments,
-                timestamp: new Date(),
-            });
+            try {
+                if (!socket.userId) return;
+
+                // Verify user is member of conversation
+                const membership = await prisma.groupMember.findFirst({
+                    where: {
+                        groupId: data.conversationId,
+                        userId: socket.userId,
+                    },
+                });
+
+                if (!membership) {
+                    socket.emit('error', { message: 'Accès refusé' });
+                    return;
+                }
+
+                // Create message in database
+                const message = await prisma.message.create({
+                    data: {
+                        content: data.content,
+                        senderId: socket.userId,
+                        groupId: data.conversationId,
+                        attachments: data.attachments ? {
+                            create: data.attachments
+                        } : undefined,
+                    },
+                    include: {
+                        sender: {
+                            select: {
+                                id: true,
+                                name: true,
+                                email: true,
+                                publicKey: true,
+                            },
+                        },
+                        attachments: true,
+                    },
+                });
+
+                // Update conversation timestamp
+                await prisma.group.update({
+                    where: { id: data.conversationId },
+                    data: { updatedAt: new Date() },
+                });
+
+                // Broadcast to all users in the conversation
+                io?.to(`conversation:${data.conversationId}`).emit('message:new', {
+                    conversationId: data.conversationId,
+                    message,
+                });
+
+            } catch (error) {
+                console.error('Error sending message:', error);
+                socket.emit('error', { message: 'Erreur lors de l\'envoi du message' });
+            }
+        });
+
+        // Handle message edit
+        socket.on('message:edit', async (data: { messageId: string; content: string }) => {
+            try {
+                if (!socket.userId) return;
+
+                const message = await prisma.message.findUnique({
+                    where: { id: data.messageId },
+                });
+
+                if (!message || message.senderId !== socket.userId) {
+                    socket.emit('error', { message: 'Accès refusé' });
+                    return;
+                }
+
+                const updatedMessage = await prisma.message.update({
+                    where: { id: data.messageId },
+                    data: {
+                        content: data.content,
+                        isEdited: true,
+                    },
+                    include: {
+                        sender: {
+                            select: {
+                                id: true,
+                                name: true,
+                                email: true,
+                                publicKey: true,
+                            },
+                        },
+                        attachments: true,
+                    },
+                });
+
+                io?.to(`conversation:${message.groupId}`).emit('message:edited', {
+                    conversationId: message.groupId,
+                    message: updatedMessage,
+                });
+
+            } catch (error) {
+                console.error('Error editing message:', error);
+                socket.emit('error', { message: 'Erreur lors de la modification' });
+            }
+        });
+
+        // Handle message delete
+        socket.on('message:delete', async (messageId: string) => {
+            try {
+                if (!socket.userId) return;
+
+                const message = await prisma.message.findUnique({
+                    where: { id: messageId },
+                });
+
+                if (!message || message.senderId !== socket.userId) {
+                    socket.emit('error', { message: 'Accès refusé' });
+                    return;
+                }
+
+                await prisma.message.delete({
+                    where: { id: messageId },
+                });
+
+                io?.to(`conversation:${message.groupId}`).emit('message:deleted', {
+                    conversationId: message.groupId,
+                    messageId: messageId,
+                });
+
+            } catch (error) {
+                console.error('Error deleting message:', error);
+                socket.emit('error', { message: 'Erreur lors de la suppression' });
+            }
         });
 
         // Handle typing indicator

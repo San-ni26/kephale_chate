@@ -27,6 +27,7 @@ import {
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 import { EncryptedAttachment } from './EncryptedAttachment';
 import { AudioRecorderComponent } from '@/src/components/AudioRecorder';
+import { useWebSocket } from '@/src/hooks/useWebSocket';
 
 interface Message {
     id: string;
@@ -67,7 +68,7 @@ interface Conversation {
 export default function DiscussionPage() {
     const params = useParams();
     const router = useRouter();
-    const conversationId = params.id as string;
+    const conversationId = params?.id as string;
 
     const [conversation, setConversation] = useState<Conversation | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
@@ -81,6 +82,8 @@ export default function DiscussionPage() {
     const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
     const [editContent, setEditContent] = useState('');
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
+    const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -88,14 +91,88 @@ export default function DiscussionPage() {
     const currentUser = getUser();
     const otherUser = conversation?.members.find(m => m.user.id !== currentUser?.id)?.user;
 
-    // Polling for new messages (every 10 seconds)
-    useEffect(() => {
-        const interval = setInterval(() => {
-            loadMessages(true); // silent update
-        }, 10000);
+    // WebSocket integration
+    const {
+        isConnected,
+        sendMessage: wsSendMessage,
+        editMessage: wsEditMessage,
+        deleteMessage: wsDeleteMessage,
+        joinConversation,
+        leaveConversation,
+        startTyping,
+        stopTyping
+    } = useWebSocket(
+        // onNewMessage
+        (data) => {
+            if (data.conversationId === conversationId) {
+                setMessages(prev => {
+                    // Avoid duplicates
+                    if (prev.some(m => m.id === data.message.id)) {
+                        return prev;
+                    }
+                    return [...prev, data.message];
+                });
+                scrollToBottom();
+            }
+        },
+        // onMessageEdited
+        (data) => {
+            if (data.conversationId === conversationId) {
+                setMessages(prev => prev.map(msg =>
+                    msg.id === data.message.id ? data.message : msg
+                ));
+            }
+        },
+        // onMessageDeleted
+        (data) => {
+            if (data.conversationId === conversationId) {
+                setMessages(prev => prev.filter(msg => msg.id !== data.messageId));
+            }
+        },
+        // onUserTyping
+        (data) => {
+            if (data.conversationId === conversationId && data.userId !== currentUser?.id) {
+                setTypingUsers(prev => {
+                    const newSet = new Set(prev);
+                    if (data.isTyping) {
+                        newSet.add(data.userId);
+                    } else {
+                        newSet.delete(data.userId);
+                    }
+                    return newSet;
+                });
+            }
+        },
+        // onUserStatusChanged
+        (data) => {
+            // Update user online status in conversation
+            setConversation(prev => {
+                if (!prev) return prev;
+                return {
+                    ...prev,
+                    members: prev.members.map(m =>
+                        m.user.id === data.userId
+                            ? { ...m, user: { ...m.user, isOnline: data.isOnline } }
+                            : m
+                    )
+                };
+            });
+        },
+        // onError
+        (error) => {
+            toast.error(error.message);
+        }
+    );
 
-        return () => clearInterval(interval);
-    }, [conversationId]);
+    // Join conversation room when component mounts
+    useEffect(() => {
+        if (conversationId && isConnected) {
+            joinConversation(conversationId);
+            return () => {
+                leaveConversation(conversationId);
+            };
+        }
+    }, [conversationId, isConnected, joinConversation, leaveConversation]);
 
     // Load conversation and messages
     useEffect(() => {
@@ -270,6 +347,15 @@ export default function DiscussionPage() {
     };
 
     const handleSendMessage = async () => {
+        console.log('handleSendMessage called', {
+            hasMessage: !!newMessage.trim(),
+            hasFiles: selectedFiles.length > 0,
+            hasUser: !!currentUser,
+            hasOtherUser: !!otherUser,
+            hasPrivateKey: !!privateKey,
+            isConnected
+        });
+
         if (!newMessage.trim() && selectedFiles.length === 0) return;
         if (!currentUser || !otherUser || !privateKey) {
             if (!privateKey) setShowPasswordDialog(true);
@@ -309,25 +395,53 @@ export default function DiscussionPage() {
                 otherUser.publicKey
             );
 
-            // Send via API
-            const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: encryptedContent,
-                    attachments: attachments.length > 0 ? attachments : undefined,
-                }),
-            });
+            console.log('Sending message...', { isConnected, conversationId });
 
-            if (response.ok) {
-                const data = await response.json();
-                setMessages(prev => [...prev, data.message]);
-                setNewMessage('');
-                setSelectedFiles([]);
-                scrollToBottom();
+            // Send via WebSocket for instant delivery
+            if (isConnected) {
+                console.log('Sending via WebSocket');
+                wsSendMessage(
+                    conversationId,
+                    encryptedContent,
+                    attachments.length > 0 ? attachments : undefined
+                );
+                // Don't clear immediately - wait for confirmation via message:new event
+                // The message will be cleared when we receive it back
+                stopTyping(conversationId);
+                // Show optimistic UI feedback
+                toast.success('Envoi en cours...');
+
+                // Clear after a short delay as fallback
+                setTimeout(() => {
+                    setNewMessage('');
+                    setSelectedFiles([]);
+                }, 500);
             } else {
-                const error = await response.json();
-                toast.error(error.error || 'Erreur d\'envoi');
+                console.log('Sending via HTTP fallback');
+                // Fallback to HTTP if WebSocket is not connected
+                const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: encryptedContent,
+                        attachments: attachments.length > 0 ? attachments : undefined,
+                    }),
+                });
+
+                console.log('HTTP response:', response.status);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setMessages(prev => [...prev, data.message]);
+                    setNewMessage('');
+                    setSelectedFiles([]);
+                    scrollToBottom();
+                    toast.success('Message envoyé via HTTP');
+                } else {
+                    const error = await response.json();
+                    console.error('HTTP error:', error);
+                    toast.error(error.error || 'Erreur d\'envoi');
+                }
             }
         } catch (error) {
             console.error('Send message error:', error);
@@ -347,20 +461,28 @@ export default function DiscussionPage() {
                 otherUser.publicKey
             );
 
-            const response = await fetchWithAuth(`/api/messages/${messageId}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: encryptedContent }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setMessages(prev => prev.map(msg =>
-                    msg.id === messageId ? data.message : msg
-                ));
+            // Use WebSocket for instant update
+            if (isConnected) {
+                wsEditMessage(messageId, encryptedContent);
                 setEditingMessageId(null);
                 setEditContent('');
-                toast.success('Message modifié');
+            } else {
+                // Fallback to HTTP
+                const response = await fetchWithAuth(`/api/messages/${messageId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: encryptedContent }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setMessages(prev => prev.map(msg =>
+                        msg.id === messageId ? data.message : msg
+                    ));
+                    setEditingMessageId(null);
+                    setEditContent('');
+                    toast.success('Message modifié');
+                }
             }
         } catch (error) {
             toast.error('Erreur de modification');
@@ -371,13 +493,19 @@ export default function DiscussionPage() {
         if (!confirm('Supprimer ce message ?')) return;
 
         try {
-            const response = await fetchWithAuth(`/api/messages/${messageId}`, {
-                method: 'DELETE',
-            });
+            // Use WebSocket for instant update
+            if (isConnected) {
+                wsDeleteMessage(messageId);
+            } else {
+                // Fallback to HTTP
+                const response = await fetchWithAuth(`/api/messages/${messageId}`, {
+                    method: 'DELETE',
+                });
 
-            if (response.ok) {
-                setMessages(prev => prev.filter(msg => msg.id !== messageId));
-                toast.success('Message supprimé');
+                if (response.ok) {
+                    setMessages(prev => prev.filter(msg => msg.id !== messageId));
+                    toast.success('Message supprimé');
+                }
             }
         } catch (error) {
             toast.error('Erreur de suppression');
@@ -602,6 +730,20 @@ export default function DiscussionPage() {
                         </div>
                     );
                 })}
+
+                {/* Typing indicator */}
+                {typingUsers.size > 0 && (
+                    <div className="flex justify-start">
+                        <div className="bg-muted rounded-2xl px-4 py-2 border border-border">
+                            <div className="flex gap-1">
+                                <span className="w-2 h-2 bg-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                <span className="w-2 h-2 bg-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                <span className="w-2 h-2 bg-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div ref={messagesEndRef} />
             </div>
 
@@ -655,7 +797,23 @@ export default function DiscussionPage() {
 
                             <Input
                                 value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
+                                onChange={(e) => {
+                                    setNewMessage(e.target.value);
+                                    // Handle typing indicator
+                                    if (e.target.value.trim() && isConnected) {
+                                        startTyping(conversationId);
+                                        // Clear previous timeout
+                                        if (typingTimeoutRef.current) {
+                                            clearTimeout(typingTimeoutRef.current);
+                                        }
+                                        // Stop typing after 2 seconds of inactivity
+                                        typingTimeoutRef.current = setTimeout(() => {
+                                            stopTyping(conversationId);
+                                        }, 2000);
+                                    } else if (isConnected) {
+                                        stopTyping(conversationId);
+                                    }
+                                }}
                                 onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
                                 placeholder="Votre message..."
                                 className="flex-1 bg-muted border-border text-foreground placeholder:text-muted-foreground"

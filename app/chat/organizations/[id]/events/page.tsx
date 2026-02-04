@@ -25,7 +25,7 @@ interface Event {
 export default function EventsManagementPage() {
     const router = useRouter();
     const params = useParams();
-    const orgId = params.id as string;
+    const orgId = params?.id as string;
 
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);

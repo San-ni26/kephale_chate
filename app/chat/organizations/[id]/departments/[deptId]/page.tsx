@@ -45,8 +45,8 @@ interface Department {
 export default function DepartmentDetailPage() {
     const params = useParams();
     const router = useRouter();
-    const orgId = params.id as string;
-    const deptId = params.deptId as string;
+    const orgId = params?.id as string;
+    const deptId = params?.deptId as string;
 
     const [department, setDepartment] = useState<Department | null>(null);
     const [loading, setLoading] = useState(true);

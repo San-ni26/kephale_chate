@@ -203,6 +203,7 @@ exports.Prisma.MessageScalarFieldEnum = {
   content: 'content',
   senderId: 'senderId',
   groupId: 'groupId',
+  isEdited: 'isEdited',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -290,6 +291,43 @@ exports.Prisma.InvitationRSVPScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.UserPageScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  handle: 'handle',
+  bio: 'bio',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PostScalarFieldEnum = {
+  id: 'id',
+  pageId: 'pageId',
+  type: 'type',
+  content: 'content',
+  imageUrl: 'imageUrl',
+  caption: 'caption',
+  reference: 'reference',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LikeScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -359,6 +397,11 @@ exports.EventType = exports.$Enums.EventType = {
   OTHER: 'OTHER'
 };
 
+exports.PostType = exports.$Enums.PostType = {
+  TWEET: 'TWEET',
+  CONTENT: 'CONTENT'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Organization: 'Organization',
@@ -375,7 +418,11 @@ exports.Prisma.ModelName = {
   OrganizationRequest: 'OrganizationRequest',
   Subscription: 'Subscription',
   EventInvitation: 'EventInvitation',
-  InvitationRSVP: 'InvitationRSVP'
+  InvitationRSVP: 'InvitationRSVP',
+  UserPage: 'UserPage',
+  Post: 'Post',
+  Like: 'Like',
+  Comment: 'Comment'
 };
 
 /**

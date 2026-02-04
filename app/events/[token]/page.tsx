@@ -27,7 +27,7 @@ interface EventData {
 
 export default function PublicEventPage() {
     const params = useParams();
-    const token = params.token as string;
+    const token = params?.token as string;
 
     const [event, setEvent] = useState<EventData | null>(null);
     const [loading, setLoading] = useState(true);

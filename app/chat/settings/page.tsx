@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LogOut, Trash2, Smartphone, Shield, User, Upload } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
@@ -10,7 +10,7 @@ import { Label } from "@/src/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/src/components/ui/dialog";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { clearAuth } from "@/src/lib/auth-client";
+import { clearAuth, getUser, type AuthUser, getAuthHeader } from "@/src/lib/auth-client";
 
 export default function SettingsPage() {
     const router = useRouter();
@@ -21,6 +21,56 @@ export default function SettingsPage() {
         newPassword: "",
         confirmPassword: "",
     });
+
+    // User & Page State
+    const [user, setUser] = useState<AuthUser | null>(null);
+    const [userPage, setUserPage] = useState<any>(null);
+    const [isCreatePageOpen, setIsCreatePageOpen] = useState(false);
+    const [createPageData, setCreatePageData] = useState({ handle: "", bio: "" });
+
+    useEffect(() => {
+        const u = getUser();
+        setUser(u);
+
+        if (u) {
+            fetch('/api/user-page', { headers: getAuthHeader() })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.userPage) setUserPage(data.userPage);
+                })
+                .catch(err => console.error(err));
+        }
+    }, []);
+
+    const handleCreatePage = async () => {
+        if (!createPageData.handle.startsWith("@")) {
+            toast.error("Le nom d'utilisateur doit commencer par @");
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/user-page", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...getAuthHeader()
+                },
+                body: JSON.stringify(createPageData),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setUserPage(data.userPage);
+                setIsCreatePageOpen(false);
+                toast.success("Page créée avec succès !");
+            } else {
+                const data = await response.json();
+                toast.error(data.error || "Erreur lors de la création de la page");
+            }
+        } catch (error) {
+            toast.error("Erreur réseau");
+        }
+    };
 
     const handleLogout = async () => {
         try {
@@ -122,19 +172,76 @@ export default function SettingsPage() {
 
             <div className="flex items-center p-4 bg-card rounded-xl border border-border">
                 <Avatar className="h-16 w-16">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>JD</AvatarFallback>
+                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.name || 'User'}`} />
+                    <AvatarFallback>{user?.name?.substring(0, 2).toUpperCase() || 'JD'}</AvatarFallback>
                 </Avatar>
                 <div className="ml-4 flex-1">
-                    <h3 className="font-semibold text-lg text-foreground">Jean Dupont</h3>
-                    <p className="text-sm text-muted-foreground">jean@exemple.com</p>
+                    <h3 className="font-semibold text-lg text-foreground">{user?.name || 'Chargement...'}</h3>
+                    <p className="text-sm text-muted-foreground">{user?.email || '...'}</p>
                 </div>
-                <Button variant="outline" size="icon" className="border-border">
-                    <Upload className="h-4 w-4" />
-                </Button>
             </div>
 
             <div className="space-y-4">
+                {/* Public Page Section */}
+                <Card className="bg-card border-border">
+                    <CardHeader>
+                        <CardTitle className="text-sm uppercase text-muted-foreground font-bold">Page Publique</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {userPage ? (
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                    <div>
+                                        <p className="font-medium text-foreground">{userPage.handle}</p>
+                                        <p className="text-xs text-muted-foreground">{userPage.bio || "Pas de bio"}</p>
+                                    </div>
+                                    <Button onClick={() => router.push("/chat/my-page")} size="sm" variant="secondary">
+                                        Gérer
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <Dialog open={isCreatePageOpen} onOpenChange={setIsCreatePageOpen}>
+                                <DialogTrigger asChild>
+                                    <Button className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white">
+                                        <User className="mr-2 h-4 w-4" /> Créer ma Page Publique
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="bg-card border-border text-foreground">
+                                    <DialogHeader>
+                                        <DialogTitle>Créer votre Page</DialogTitle>
+                                    </DialogHeader>
+                                    <div className="space-y-4 pt-4">
+                                        <div>
+                                            <Label htmlFor="handle">Nom d'utilisateur (commence par @)</Label>
+                                            <Input
+                                                id="handle"
+                                                placeholder="@monnom"
+                                                value={createPageData.handle}
+                                                onChange={(e) => setCreatePageData({ ...createPageData, handle: e.target.value })}
+                                                className="bg-muted border-border"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="bio">Biographie</Label>
+                                            <Input
+                                                id="bio"
+                                                placeholder="Petite description..."
+                                                value={createPageData.bio}
+                                                onChange={(e) => setCreatePageData({ ...createPageData, bio: e.target.value })}
+                                                className="bg-muted border-border"
+                                            />
+                                        </div>
+                                        <Button onClick={handleCreatePage} className="w-full">
+                                            Créer la page
+                                        </Button>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        )}
+                    </CardContent>
+                </Card>
+
                 <Card className="bg-card border-border">
                     <CardHeader>
                         <CardTitle className="text-sm uppercase text-muted-foreground font-bold">Sécurité</CardTitle>

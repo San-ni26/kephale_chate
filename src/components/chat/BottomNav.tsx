@@ -12,7 +12,7 @@ export function BottomNav() {
         { label: "Orgs", icon: Building2, href: "/chat/organizations" },
         { label: "Groupes", icon: Users, href: "/chat/groups" },
         { label: "Chats", icon: MessageSquare, href: "/chat" },
-        { label: "Notifs", icon: Bell, href: "/chat/notifications" },
+        { label: "Actu", icon: Bell, href: "/chat/notifications" },
         { label: "Réglages", icon: Settings, href: "/chat/settings" },
     ];
 
@@ -20,7 +20,7 @@ export function BottomNav() {
         <nav className="fixed bottom-0 w-full left-0 bg-background border-t border-border z-50 md:hidden">
             <div className="flex justify-around items-center h-16">
                 {navItems.map((item) => {
-                    const isActive = pathname === item.href || (item.href !== "/chat" && pathname.startsWith(item.href));
+                    const isActive = pathname === item.href || (item.href !== "/chat" && pathname?.startsWith(item.href));
 
                     return (
                         <Link

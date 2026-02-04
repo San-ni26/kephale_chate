@@ -118,87 +118,87 @@ export function UserSearch() {
 
             {/* Search Dropdown */}
             {isOpen && (
-                <div className="absolute top-12 right-0 w-96 bg-card border border-border rounded-lg shadow-2xl z-50">
-                    <div className="p-4 border-b border-border">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                value={query}
-                                onChange={(e) => setQuery(e.target.value)}
-                                placeholder="Rechercher par email, téléphone ou nom..."
-                                className="pl-10 bg-muted border-border"
-                                autoFocus
-                            />
-                            {query && (
-                                <button
-                                    onClick={() => setQuery("")}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                                >
-                                    <X className="h-4 w-4" />
-                                </button>
+                <>
+                    {/* Backdrop */}
+                    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40" />
+
+                    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 max-w-[95vw] bg-card border border-border rounded-lg shadow-2xl z-50">
+                        <div className="p-4 border-b border-border">
+                            <div className="relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                    placeholder="Rechercher par email, téléphone ou nom..."
+                                    className="pl-10 bg-muted border-border"
+                                    autoFocus
+                                />
+                                {query && (
+                                    <button
+                                        onClick={() => setQuery("")}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="max-h-96 overflow-y-auto">
+                            {loading ? (
+                                <div className="p-8 text-center text-muted-foreground">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                                    <p className="mt-2 text-sm">Recherche...</p>
+                                </div>
+                            ) : query.length < 2 ? (
+                                <div className="p-8 text-center text-muted-foreground">
+                                    <Search className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                                    <p className="text-sm">Tapez au moins 2 caractères pour rechercher</p>
+                                </div>
+                            ) : results.length === 0 ? (
+                                <div className="p-8 text-center text-muted-foreground">
+                                    <User className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                                    <p className="text-sm">Aucun utilisateur trouvé</p>
+                                </div>
+                            ) : (
+                                <div className="py-2">
+                                    {results.map((user) => (
+                                        <button
+                                            key={user.id}
+                                            onClick={() => handleSelectUser(user)}
+                                            className="w-full px-4 py-3 hover:bg-muted transition-colors text-left flex items-center gap-3"
+                                        >
+                                            <div className="flex-shrink-0">
+                                                <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-foreground font-semibold border border-border">
+                                                    {user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()}
+                                                </div>
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center justify-between gap-2">
+                                                    <p className="font-medium text-foreground truncate">
+                                                        {user.name || "Sans nom"}
+                                                    </p>
+                                                    <Badge
+                                                        variant={user.isOnline ? "default" : "secondary"}
+                                                        className={`text-[10px] px-1.5 h-5 ${user.isOnline ? "bg-green-500 hover:bg-green-600" : "bg-muted-foreground/30 text-muted-foreground hover:bg-muted-foreground/40"}`}
+                                                    >
+                                                        {user.isOnline ? "En ligne" : "Hors ligne"}
+                                                    </Badge>
+                                                </div>
+                                                <div className="flex items-center gap-3 mt-1">
+                                                    <span className="text-xs text-muted-foreground flex items-center gap-1 truncate">
+                                                        <Mail className="h-3 w-3" />
+                                                        {user.email}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
                             )}
                         </div>
                     </div>
-
-                    <div className="max-h-96 overflow-y-auto">
-                        {loading ? (
-                            <div className="p-8 text-center text-muted-foreground">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-                                <p className="mt-2 text-sm">Recherche...</p>
-                            </div>
-                        ) : query.length < 2 ? (
-                            <div className="p-8 text-center text-muted-foreground">
-                                <Search className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                                <p className="text-sm">Tapez au moins 2 caractères pour rechercher</p>
-                            </div>
-                        ) : results.length === 0 ? (
-                            <div className="p-8 text-center text-muted-foreground">
-                                <User className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                                <p className="text-sm">Aucun utilisateur trouvé</p>
-                            </div>
-                        ) : (
-                            <div className="py-2">
-                                {results.map((user) => (
-                                    <button
-                                        key={user.id}
-                                        onClick={() => handleSelectUser(user)}
-                                        className="w-full px-4 py-3 hover:bg-muted transition-colors text-left flex items-center gap-3"
-                                    >
-                                        <div className="flex-shrink-0">
-                                            <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-foreground font-semibold border border-border">
-                                                {user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()}
-                                            </div>
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2">
-                                                <p className="font-medium text-foreground truncate">
-                                                    {user.name || "Sans nom"}
-                                                </p>
-                                                {user.isOnline && (
-                                                    <Badge className="bg-foreground/10 text-foreground border-border text-xs">
-                                                        En ligne
-                                                    </Badge>
-                                                )}
-                                            </div>
-                                            <div className="flex items-center gap-3 mt-1">
-                                                <span className="text-xs text-muted-foreground flex items-center gap-1 truncate">
-                                                    <Mail className="h-3 w-3" />
-                                                    {user.email}
-                                                </span>
-                                                {user.phone && (
-                                                    <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                                        <Phone className="h-3 w-3" />
-                                                        {user.phone}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </div>
+                </>
             )}
         </div>
     );
