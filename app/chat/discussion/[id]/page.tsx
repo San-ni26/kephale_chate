@@ -8,6 +8,7 @@ import { Input } from '@/src/components/ui/input';
 import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
+import useSWR from 'swr';
 
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -27,7 +28,6 @@ import {
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 import { EncryptedAttachment } from './EncryptedAttachment';
 import { AudioRecorderComponent } from '@/src/components/AudioRecorder';
-import { useWebSocket } from '@/src/hooks/useWebSocket';
 
 interface Message {
     id: string;
@@ -65,15 +65,23 @@ interface Conversation {
     }[];
 }
 
+const fetcher = async (url: string) => {
+    const res = await fetchWithAuth(url);
+    if (!res.ok) throw new Error('Failed to fetch');
+    return res.json();
+};
+
 export default function DiscussionPage() {
     const params = useParams();
     const router = useRouter();
     const conversationId = params?.id as string;
 
     const [conversation, setConversation] = useState<Conversation | null>(null);
-    const [messages, setMessages] = useState<Message[]>([]);
+    // Messages state is now handled by SWR, but we might keep local state for optimistic updates if needed
+    // strictly speaking SWR cache is enough, but to maintain compatibility with existing decrypt logic which iterates over a list,
+    // we can use the data from SWR directly in render.
+
     const [newMessage, setNewMessage] = useState('');
-    const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
     const [privateKey, setPrivateKey] = useState<string | null>(null);
     const [password, setPassword] = useState('');
@@ -82,102 +90,30 @@ export default function DiscussionPage() {
     const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
     const [editContent, setEditContent] = useState('');
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
-    const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
-    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     const currentUser = getUser();
     const otherUser = conversation?.members.find(m => m.user.id !== currentUser?.id)?.user;
 
-    // WebSocket integration
-    const {
-        isConnected,
-        sendMessage: wsSendMessage,
-        editMessage: wsEditMessage,
-        deleteMessage: wsDeleteMessage,
-        joinConversation,
-        leaveConversation,
-        startTyping,
-        stopTyping
-    } = useWebSocket(
-        // onNewMessage
-        (data) => {
-            if (data.conversationId === conversationId) {
-                setMessages(prev => {
-                    // Avoid duplicates
-                    if (prev.some(m => m.id === data.message.id)) {
-                        return prev;
-                    }
-                    return [...prev, data.message];
-                });
-                scrollToBottom();
-            }
-        },
-        // onMessageEdited
-        (data) => {
-            if (data.conversationId === conversationId) {
-                setMessages(prev => prev.map(msg =>
-                    msg.id === data.message.id ? data.message : msg
-                ));
-            }
-        },
-        // onMessageDeleted
-        (data) => {
-            if (data.conversationId === conversationId) {
-                setMessages(prev => prev.filter(msg => msg.id !== data.messageId));
-            }
-        },
-        // onUserTyping
-        (data) => {
-            if (data.conversationId === conversationId && data.userId !== currentUser?.id) {
-                setTypingUsers(prev => {
-                    const newSet = new Set(prev);
-                    if (data.isTyping) {
-                        newSet.add(data.userId);
-                    } else {
-                        newSet.delete(data.userId);
-                    }
-                    return newSet;
-                });
-            }
-        },
-        // onUserStatusChanged
-        (data) => {
-            // Update user online status in conversation
-            setConversation(prev => {
-                if (!prev) return prev;
-                return {
-                    ...prev,
-                    members: prev.members.map(m =>
-                        m.user.id === data.userId
-                            ? { ...m, user: { ...m.user, isOnline: data.isOnline } }
-                            : m
-                    )
-                };
-            });
-        },
-        // onError
-        (error) => {
-            toast.error(error.message);
+    // SWR for messages - polling every 3 seconds
+    const { data: messagesData, error: messagesError, mutate: mutateMessages } = useSWR(
+        conversationId ? `/api/conversations/${conversationId}/messages` : null,
+        fetcher,
+        {
+            refreshInterval: 3000,
+            revalidateOnFocus: true,
         }
     );
 
-    // Join conversation room when component mounts
-    useEffect(() => {
-        if (conversationId && isConnected) {
-            joinConversation(conversationId);
-            return () => {
-                leaveConversation(conversationId);
-            };
-        }
-    }, [conversationId, isConnected, joinConversation, leaveConversation]);
+    const messages: Message[] = messagesData?.messages || [];
+    const loading = !messagesData && !messagesError;
 
-    // Load conversation and messages
+    // Load conversation details (no polling needed for this usually, or less frequent)
     useEffect(() => {
         loadConversation();
-        loadMessages();
     }, [conversationId]);
 
     const loadConversation = async () => {
@@ -193,22 +129,15 @@ export default function DiscussionPage() {
         }
     };
 
-    const loadMessages = async (silent = false) => {
-        try {
-            if (!silent) setLoading(true);
-            const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`);
-            if (response.ok) {
-                const data = await response.json();
-                setMessages(data.messages || []);
-                if (!silent) scrollToBottom();
-            }
-        } catch (error) {
-            console.error('Load messages error:', error);
-            if (!silent) toast.error('Erreur de chargement des messages');
-        } finally {
-            if (!silent) setLoading(false);
+    // Auto scroll to bottom only on initial load or when sending
+    // We need a ref to track if it's the first load
+    const isFirstLoad = useRef(true);
+    useEffect(() => {
+        if (messages.length > 0 && isFirstLoad.current) {
+            scrollToBottom();
+            isFirstLoad.current = false;
         }
-    };
+    }, [messages.length]);
 
     const scrollToBottom = () => {
         setTimeout(() => {
@@ -238,12 +167,11 @@ export default function DiscussionPage() {
         setSelectedFiles(prev => prev.filter((_, i) => i !== index));
     };
 
-    // Helper function to convert File to base64 data URL (includes data:...;base64, prefix)
     const fileToBase64 = async (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
-                resolve(reader.result as string); // Keep the full data URL with prefix
+                resolve(reader.result as string);
             };
             reader.onerror = reject;
             reader.readAsDataURL(file);
@@ -251,22 +179,13 @@ export default function DiscussionPage() {
     };
 
     const handleAudioRecorded = async (blob: Blob, duration: number) => {
-        // Determine extension and type based on blob.type
         let ext = 'webm';
         if (blob.type.includes('mp4')) ext = 'mp4';
         else if (blob.type.includes('aac')) ext = 'aac';
         else if (blob.type.includes('ogg')) ext = 'ogg';
 
-        // Create a File object from the Blob
         const file = new File([blob], `audio-message-${Date.now()}.${ext}`, { type: blob.type });
-
-        // Add to selected files to trigger encryption and sending flow
-        // But we want to send immediately usually? 
-        // Let's reuse handleSendMessage mechanism by adding it to selectedFiles and calling send
-        // Or better, creating a specialized function since file handling is tied to UI
-
-        const audioFile = file;
-        await sendAudioMessage(audioFile);
+        await sendAudioMessage(file);
     };
 
     const sendAudioMessage = async (audioFile: File) => {
@@ -278,7 +197,6 @@ export default function DiscussionPage() {
         setSending(true);
 
         try {
-            // Convert audio file to base64 efficiently (no encryption)
             const base64Data = await fileToBase64(audioFile);
 
             const attachment = {
@@ -287,12 +205,32 @@ export default function DiscussionPage() {
                 data: base64Data,
             };
 
-            // Send via API (no text for audio-only messages)
             const encryptedContent = encryptMessage(
                 '',
                 privateKey,
                 otherUser.publicKey
             );
+
+            // Optimistic update
+            const tempId = `temp-${Date.now()}`;
+            const optimisticMessage: Message = {
+                id: tempId,
+                content: encryptedContent,
+                senderId: currentUser.id,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                isEdited: false,
+                attachments: [attachment],
+                sender: {
+                    id: currentUser.id,
+                    name: currentUser.name || '',
+                    email: currentUser.email || '',
+                    publicKey: currentUser.publicKey || '',
+                }
+            };
+
+            // Mutate SWR cache immediately
+            mutateMessages({ messages: [...messages, optimisticMessage] }, false);
 
             const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
                 method: 'POST',
@@ -304,15 +242,18 @@ export default function DiscussionPage() {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                setMessages(prev => [...prev, data.message]);
+                // Revalidate cache to get the real message from server
+                mutateMessages();
                 scrollToBottom();
             } else {
                 toast.error("Erreur d'envoi du message vocal");
+                // Rollback if error
+                mutateMessages();
             }
         } catch (error) {
             console.error('Send audio error:', error);
             toast.error("Erreur d'envoi du message vocal");
+            mutateMessages();
         } finally {
             setSending(false);
         }
@@ -347,15 +288,6 @@ export default function DiscussionPage() {
     };
 
     const handleSendMessage = async () => {
-        console.log('handleSendMessage called', {
-            hasMessage: !!newMessage.trim(),
-            hasFiles: selectedFiles.length > 0,
-            hasUser: !!currentUser,
-            hasOtherUser: !!otherUser,
-            hasPrivateKey: !!privateKey,
-            isConnected
-        });
-
         if (!newMessage.trim() && selectedFiles.length === 0) return;
         if (!currentUser || !otherUser || !privateKey) {
             if (!privateKey) setShowPasswordDialog(true);
@@ -363,17 +295,19 @@ export default function DiscussionPage() {
         }
 
         setSending(true);
+        const currentMessage = newMessage;
+        const currentFiles = [...selectedFiles];
+
+        // Clear UI immediately for better UX
+        setNewMessage('');
+        setSelectedFiles([]);
 
         try {
             let attachments = [];
 
-            // Process files if any (no encryption, just convert to base64)
-            if (selectedFiles.length > 0) {
-                for (const file of selectedFiles) {
-                    // Convert file to base64 efficiently
+            if (currentFiles.length > 0) {
+                for (const file of currentFiles) {
                     const base64Data = await fileToBase64(file);
-
-                    // Determine file type from extension
                     const ext = file.name.split('.').pop()?.toLowerCase() || '';
                     let fileType = 'IMAGE';
                     if (['pdf'].includes(ext)) fileType = 'PDF';
@@ -388,64 +322,62 @@ export default function DiscussionPage() {
                 }
             }
 
-            // Encrypt message content (empty string if only files)
-            const encryptedContent = encryptMessage(
-                newMessage.trim() || '',
-                privateKey, // Use decrypted key
+            const cipherText: string = encryptMessage(
+                currentMessage.trim() || '',
+                privateKey,
                 otherUser.publicKey
             );
 
-            console.log('Sending message...', { isConnected, conversationId });
-
-            // Send via WebSocket for instant delivery
-            if (isConnected) {
-                console.log('Sending via WebSocket');
-                wsSendMessage(
-                    conversationId,
-                    encryptedContent,
-                    attachments.length > 0 ? attachments : undefined
-                );
-                // Don't clear immediately - wait for confirmation via message:new event
-                // The message will be cleared when we receive it back
-                stopTyping(conversationId);
-                // Show optimistic UI feedback
-                toast.success('Envoi en cours...');
-
-                // Clear after a short delay as fallback
-                setTimeout(() => {
-                    setNewMessage('');
-                    setSelectedFiles([]);
-                }, 500);
-            } else {
-                console.log('Sending via HTTP fallback');
-                // Fallback to HTTP if WebSocket is not connected
-                const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content: encryptedContent,
-                        attachments: attachments.length > 0 ? attachments : undefined,
-                    }),
-                });
-
-                console.log('HTTP response:', response.status);
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setMessages(prev => [...prev, data.message]);
-                    setNewMessage('');
-                    setSelectedFiles([]);
-                    scrollToBottom();
-                    toast.success('Message envoyé via HTTP');
-                } else {
-                    const error = await response.json();
-                    console.error('HTTP error:', error);
-                    toast.error(error.error || 'Erreur d\'envoi');
+            // Optimistic update
+            const tempId = `temp-${Date.now()}`;
+            const optimisticMessage: Message = {
+                id: tempId,
+                content: cipherText,
+                senderId: currentUser.id,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                isEdited: false,
+                attachments: attachments,
+                sender: {
+                    id: currentUser.id,
+                    name: currentUser.name || '',
+                    email: currentUser.email || '',
+                    publicKey: currentUser.publicKey || '',
                 }
+            };
+
+            // Add optimistic message and re-render
+            mutateMessages({ messages: [...messages, optimisticMessage] }, false);
+            scrollToBottom();
+
+            const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: cipherText,
+                    attachments: attachments.length > 0 ? attachments : undefined,
+                }),
+            });
+
+            if (response.ok) {
+                // Fetch the real state from server to replace temp ID
+                mutateMessages();
+            } else {
+                const error = await response.json();
+                console.error('HTTP error:', error);
+                toast.error(error.error || 'Erreur d\'envoi');
+                // Rollback by revalidating
+                mutateMessages();
+                // Restore input if failed (optional, but good UX)
+                setNewMessage(currentMessage);
+                setSelectedFiles(currentFiles);
             }
         } catch (error) {
             console.error('Send message error:', error);
             toast.error('Erreur d\'envoi du message');
+            mutateMessages();
+            setNewMessage(currentMessage);
+            setSelectedFiles(currentFiles);
         } finally {
             setSending(false);
         }
@@ -454,37 +386,40 @@ export default function DiscussionPage() {
     const handleEditMessage = async (messageId: string) => {
         if (!editContent.trim() || !currentUser || !otherUser || !privateKey) return;
 
+        const originalMessages = messages;
+
         try {
             const encryptedContent = encryptMessage(
                 editContent.trim(),
-                privateKey, // Use decrypted key
+                privateKey,
                 otherUser.publicKey
             );
 
-            // Use WebSocket for instant update
-            if (isConnected) {
-                wsEditMessage(messageId, encryptedContent);
-                setEditingMessageId(null);
-                setEditContent('');
-            } else {
-                // Fallback to HTTP
-                const response = await fetchWithAuth(`/api/messages/${messageId}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: encryptedContent }),
-                });
+            // Optimistic update
+            const updatedMessages = messages.map(msg =>
+                msg.id === messageId ? { ...msg, content: encryptedContent, isEdited: true } : msg
+            );
+            mutateMessages({ messages: updatedMessages }, false);
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setMessages(prev => prev.map(msg =>
-                        msg.id === messageId ? data.message : msg
-                    ));
-                    setEditingMessageId(null);
-                    setEditContent('');
-                    toast.success('Message modifié');
-                }
+            setEditingMessageId(null);
+            setEditContent('');
+
+            const response = await fetchWithAuth(`/api/messages/${messageId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: encryptedContent }),
+            });
+
+            if (response.ok) {
+                mutateMessages();
+                toast.success('Message modifié');
+            } else {
+                // Rollback
+                mutateMessages({ messages: originalMessages }, false);
+                toast.error('Erreur de modification');
             }
         } catch (error) {
+            mutateMessages({ messages: originalMessages }, false);
             toast.error('Erreur de modification');
         }
     };
@@ -492,27 +427,29 @@ export default function DiscussionPage() {
     const handleDeleteMessage = async (messageId: string) => {
         if (!confirm('Supprimer ce message ?')) return;
 
-        try {
-            // Use WebSocket for instant update
-            if (isConnected) {
-                wsDeleteMessage(messageId);
-            } else {
-                // Fallback to HTTP
-                const response = await fetchWithAuth(`/api/messages/${messageId}`, {
-                    method: 'DELETE',
-                });
+        const originalMessages = messages;
 
-                if (response.ok) {
-                    setMessages(prev => prev.filter(msg => msg.id !== messageId));
-                    toast.success('Message supprimé');
-                }
+        try {
+            // Optimistic update
+            const filteredMessages = messages.filter(msg => msg.id !== messageId);
+            mutateMessages({ messages: filteredMessages }, false);
+
+            const response = await fetchWithAuth(`/api/messages/${messageId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                mutateMessages();
+                toast.success('Message supprimé');
+            } else {
+                mutateMessages({ messages: originalMessages }, false);
+                toast.error('Erreur de suppression');
             }
         } catch (error) {
+            mutateMessages({ messages: originalMessages }, false);
             toast.error('Erreur de suppression');
         }
     };
-
-
 
     const decryptMessageContent = (message: Message): string => {
         if (!currentUser || !otherUser || !privateKey) return '[Chiffré]';
@@ -524,7 +461,7 @@ export default function DiscussionPage() {
 
             return decryptMessage(
                 message.content,
-                privateKey, // Use decrypted key
+                privateKey,
                 senderPublicKey
             ) || '';
         } catch (error) {
@@ -607,16 +544,20 @@ export default function DiscussionPage() {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto pt-16 pb-40 px-4 space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div
+                className="flex-1 overflow-y-auto pt-16 pb-40 px-4 space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                ref={scrollRef}
+            >
                 {messages.map((message) => {
                     const isOwn = message.senderId === currentUser?.id;
                     const decryptedContent = decryptMessageContent(message);
                     const canEdit = canEditOrDelete(message);
+                    const isTemp = message.id.startsWith('temp-');
 
                     return (
                         <div
                             key={message.id}
-                            className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
+                            className={`flex ${isOwn ? 'justify-end' : 'justify-start'} ${isTemp ? 'opacity-70' : ''}`}
                         >
                             <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
                                 {editingMessageId === message.id ? (
@@ -689,9 +630,10 @@ export default function DiscussionPage() {
                                                     addSuffix: true,
                                                     locale: fr,
                                                 })}
+                                                {isTemp && ' • Envoi...'}
                                             </span>
 
-                                            {isOwn && canEdit && (
+                                            {isOwn && canEdit && !isTemp && (
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
                                                         <Button
@@ -730,19 +672,6 @@ export default function DiscussionPage() {
                         </div>
                     );
                 })}
-
-                {/* Typing indicator */}
-                {typingUsers.size > 0 && (
-                    <div className="flex justify-start">
-                        <div className="bg-muted rounded-2xl px-4 py-2 border border-border">
-                            <div className="flex gap-1">
-                                <span className="w-2 h-2 bg-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                                <span className="w-2 h-2 bg-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                                <span className="w-2 h-2 bg-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                            </div>
-                        </div>
-                    </div>
-                )}
 
                 <div ref={messagesEndRef} />
             </div>
@@ -797,53 +726,40 @@ export default function DiscussionPage() {
 
                             <Input
                                 value={newMessage}
-                                onChange={(e) => {
-                                    setNewMessage(e.target.value);
-                                    // Handle typing indicator
-                                    if (e.target.value.trim() && isConnected) {
-                                        startTyping(conversationId);
-                                        // Clear previous timeout
-                                        if (typingTimeoutRef.current) {
-                                            clearTimeout(typingTimeoutRef.current);
-                                        }
-                                        // Stop typing after 2 seconds of inactivity
-                                        typingTimeoutRef.current = setTimeout(() => {
-                                            stopTyping(conversationId);
-                                        }, 2000);
-                                    } else if (isConnected) {
-                                        stopTyping(conversationId);
+                                onChange={(e) => setNewMessage(e.target.value)}
+                                placeholder="Message chiffré..."
+                                className="flex-1"
+                                disabled={sending}
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleSendMessage();
                                     }
                                 }}
-                                onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
-                                placeholder="Votre message..."
-                                className="flex-1 bg-muted border-border text-foreground placeholder:text-muted-foreground"
-                                disabled={sending}
                             />
-
-                            <Button
-                                onClick={handleSendMessage}
-                                disabled={sending || (!newMessage.trim() && selectedFiles.length === 0)}
-                                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                            >
-                                {sending ? (
-                                    <Loader2 className="w-5 h-5 animate-spin" />
-                                ) : (
-                                    <Send className="w-5 h-5" />
-                                )}
-                            </Button>
                         </>
                     )}
 
-                    <div className={`${!isRecordingAudio ? 'border-l border-border pl-2 ml-1' : 'flex-1'}`}>
-                        <AudioRecorderComponent
-                            onAudioRecorded={handleAudioRecorded}
-                            isRecordingDisabled={sending}
-                            onRecordingStatusChange={setIsRecordingAudio}
-                        />
-                    </div>
+                    <AudioRecorderComponent
+                        onAudioRecorded={handleAudioRecorded}
+                        onRecordingStatusChange={setIsRecordingAudio}
+                    />
+
+                    {!isRecordingAudio && (
+                        <Button
+                            onClick={handleSendMessage}
+                            disabled={(!newMessage.trim() && selectedFiles.length === 0) || sending}
+                            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                        >
+                            {sending ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : (
+                                <Send className="w-5 h-5" />
+                            )}
+                        </Button>
+                    )}
                 </div>
             </div>
-
-        </div >
+        </div>
     );
 }
