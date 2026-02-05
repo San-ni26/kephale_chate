@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2 } from "lucide-react";
+import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2, ClipboardList, CheckCircle2, AlertCircle, Clock } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
@@ -11,6 +11,16 @@ import { fetchWithAuth, getUser } from "@/src/lib/auth-client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/src/components/ui/dialog";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/src/components/ui/select";
+
 
 interface Organization {
     id: string;
@@ -52,6 +62,18 @@ interface UserDepartment {
     };
 }
 
+interface Task {
+    id: string;
+    title: string;
+    status: string;
+    priority: string;
+    dueDate?: string | Date;
+    department: {
+        id: string;
+        name: string;
+    };
+}
+
 export default function OrganizationDashboard() {
     const router = useRouter();
     const params = useParams();
@@ -69,6 +91,11 @@ export default function OrganizationDashboard() {
     const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
     const [editName, setEditName] = useState("");
 
+    // Tasks State
+    const [myTasks, setMyTasks] = useState<Task[]>([]);
+    const [taskFilterStatus, setTaskFilterStatus] = useState<string>("ALL");
+    const [taskFilterMonth, setTaskFilterMonth] = useState<string>("ALL");
+
     useEffect(() => {
         if (orgId) {
             fetchData();
@@ -77,6 +104,11 @@ export default function OrganizationDashboard() {
 
     const fetchData = async () => {
         try {
+            // Fetch user tasks first (parallelizable)
+            if (currentUser) {
+                fetchMyTasks();
+            }
+
             // Fetch organization details
             const orgRes = await fetchWithAuth(`/api/organizations/${orgId}`);
             if (orgRes.ok) {
@@ -112,6 +144,31 @@ export default function OrganizationDashboard() {
             setLoading(false);
         }
     };
+
+    const fetchMyTasks = async () => {
+        try {
+            const params: Record<string, string> = {
+                status: taskFilterStatus
+            };
+            if (taskFilterMonth !== 'ALL') {
+                params.month = taskFilterMonth;
+            }
+            const query = new URLSearchParams(params);
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/my-tasks?${query.toString()}`);
+            if (res.ok) {
+                const data = await res.json();
+                setMyTasks(data.tasks || []);
+            }
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (orgId && !loading) {
+            fetchMyTasks();
+        }
+    }, [taskFilterStatus, taskFilterMonth, orgId]);
 
     const handleCreateDepartment = async () => {
         const name = prompt("Nom du département:");
@@ -210,6 +267,97 @@ export default function OrganizationDashboard() {
             toast.error('Erreur serveur');
         }
     };
+
+    const renderMyTasks = () => (
+        <div className="space-y-4 pt-4 border-t border-border">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+                <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+                    <ClipboardList className="w-5 h-5" />
+                    Mes Tâches
+                </h2>
+                <div className="flex items-center gap-2">
+                    <Select value={taskFilterMonth} onValueChange={setTaskFilterMonth}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Période" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="ALL">Toutes les périodes</SelectItem>
+                            {/* Generate last 6 months */}
+                            {Array.from({ length: 6 }).map((_, i) => {
+                                const date = new Date();
+                                date.setMonth(date.getMonth() - i);
+                                const value = format(date, 'yyyy-MM');
+                                const label = format(date, 'MMMM yyyy', { locale: fr });
+                                return (
+                                    <SelectItem key={value} value={value}>
+                                        {label.charAt(0).toUpperCase() + label.slice(1)}
+                                    </SelectItem>
+                                );
+                            })}
+                        </SelectContent>
+                    </Select>
+
+                    <Select value={taskFilterStatus} onValueChange={setTaskFilterStatus}>
+                        <SelectTrigger className="w-[150px]">
+                            <SelectValue placeholder="Statut" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="ALL">Tous les statuts</SelectItem>
+                            <SelectItem value="PENDING">En attente</SelectItem>
+                            <SelectItem value="IN_PROGRESS">En cours</SelectItem>
+                            <SelectItem value="COMPLETED">Terminé</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+
+            {myTasks.length === 0 ? (
+                <div className="text-center py-8 border border-dashed border-border rounded-lg bg-muted/20">
+                    <p className="text-muted-foreground">Aucune tâche trouvée</p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {myTasks.map((task) => (
+                        <Card
+                            key={task.id}
+                            className="cursor-pointer hover:border-primary/50 transition"
+                            onClick={() => router.push(`/chat/organizations/${orgId}/departments/${task.department.id}/tasks/${task.id}`)}
+                        >
+                            <CardContent className="p-4">
+                                <div className="flex justify-between items-start mb-2">
+                                    <h3 className="font-semibold text-foreground line-clamp-1">{task.title}</h3>
+                                    <div className={`w-2 h-2 rounded-full shrink-0 mt-2 ${task.priority === 'URGENT' ? 'bg-red-500' :
+                                        task.priority === 'HIGH' ? 'bg-orange-500' :
+                                            task.priority === 'MEDIUM' ? 'bg-yellow-500' : 'bg-blue-500'
+                                        }`} />
+                                </div>
+
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+                                    <Building2 className="w-3 h-3" />
+                                    <span className="truncate">{task.department.name}</span>
+                                </div>
+
+                                <div className="flex items-center justify-between mt-4">
+                                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                        <Calendar className="w-3 h-3" />
+                                        {task.dueDate ? format(new Date(task.dueDate), 'd MMM') : '-'}
+                                    </div>
+                                    <div className={`text-xs px-2 py-0.5 rounded-full ${task.status === 'COMPLETED' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                                        task.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+                                            'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                                        }`}>
+                                        {task.status === 'IN_PROGRESS' ? 'En cours' :
+                                            task.status === 'COMPLETED' ? 'Terminé' :
+                                                task.status === 'PENDING' ? 'À faire' : task.status}
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 
     if (loading) {
         return (
@@ -332,6 +480,9 @@ export default function OrganizationDashboard() {
                         </div>
                     )}
                 </div>
+
+                {/* My Tasks Section */}
+                {renderMyTasks()}
             </div>
         );
     }
@@ -506,6 +657,9 @@ export default function OrganizationDashboard() {
                     </div>
                 )}
             </div>
+
+            {/* My Tasks Section for Admins */}
+            {renderMyTasks()}
 
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

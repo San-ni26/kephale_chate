@@ -41,6 +41,9 @@ model User {
   userPage                UserPage?
   likes                   Like[]
   comments                Comment[]
+  assignedTasks           Task[]               @relation("TaskAssignee")
+  createdTasks            Task[]               @relation("TaskCreator")
+  taskMessages            TaskMessage[]
 
   followers Follow[] @relation("UserFollowers")
   following Follow[] @relation("UserFollowing")
@@ -105,6 +108,7 @@ model Department {
   organization  Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade, map: "Department_orgId_fk")
   members       DepartmentMember[]
   conversations Group[]
+  tasks         Task[]
 
   @@index([orgId], map: "Department_orgId_idx")
 }
@@ -386,4 +390,86 @@ model Comment {
 
   @@index([postId])
   @@index([parentId])
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Task {
+  id          String       @id @default(cuid())
+  title       String
+  description String?      @db.Text
+  status      TaskStatus   @default(PENDING)
+  priority    TaskPriority @default(MEDIUM)
+
+  startDate   DateTime?
+  dueDate     DateTime?
+  completedAt DateTime?
+
+  deptId     String
+  creatorId  String
+  assigneeId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  department Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  creator    User       @relation("TaskCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  assignee   User       @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
+
+  messages    TaskMessage[]
+  attachments TaskAttachment[]
+
+  @@index([deptId])
+  @@index([assigneeId])
+  @@index([creatorId])
+  @@index([status])
+}
+
+model TaskMessage {
+  id        String   @id @default(cuid())
+  taskId    String
+  senderId  String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  attachments TaskAttachment[]
+
+  @@index([taskId])
+  @@index([senderId])
+}
+
+model TaskAttachment {
+  id         String  @id @default(cuid())
+  taskId     String
+  messageId  String?
+  uploaderId String // Optional: track who uploaded if not tied to message directly, though usually tied to message or task
+
+  filename String
+  url      String  @db.Text
+  fileType String?
+  size     Int?
+
+  createdAt DateTime @default(now())
+
+  task    Task         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  message TaskMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([messageId])
 }

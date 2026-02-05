@@ -337,6 +337,43 @@ exports.Prisma.CommentScalarFieldEnum = {
   parentId: 'parentId'
 };
 
+exports.Prisma.TaskScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  startDate: 'startDate',
+  dueDate: 'dueDate',
+  completedAt: 'completedAt',
+  deptId: 'deptId',
+  creatorId: 'creatorId',
+  assigneeId: 'assigneeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TaskMessageScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  senderId: 'senderId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TaskAttachmentScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  messageId: 'messageId',
+  uploaderId: 'uploaderId',
+  filename: 'filename',
+  url: 'url',
+  fileType: 'fileType',
+  size: 'size',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -411,6 +448,20 @@ exports.PostType = exports.$Enums.PostType = {
   CONTENT: 'CONTENT'
 };
 
+exports.TaskStatus = exports.$Enums.TaskStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.TaskPriority = exports.$Enums.TaskPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Follow: 'Follow',
@@ -432,7 +483,10 @@ exports.Prisma.ModelName = {
   UserPage: 'UserPage',
   Post: 'Post',
   Like: 'Like',
-  Comment: 'Comment'
+  Comment: 'Comment',
+  Task: 'Task',
+  TaskMessage: 'TaskMessage',
+  TaskAttachment: 'TaskAttachment'
 };
 
 /**
