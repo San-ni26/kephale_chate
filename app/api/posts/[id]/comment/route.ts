@@ -5,6 +5,7 @@ import { z } from "zod";
 
 const commentSchema = z.object({
     content: z.string().min(1, "Le commentaire ne peut pas être vide"),
+    parentId: z.string().nullable().optional(),
 });
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -19,19 +20,31 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     try {
         const body = await request.json();
-        const { content } = commentSchema.parse(body);
+        const { content, parentId } = commentSchema.parse(body);
+
+        // Verify parent comment exists if parentId is provided
+        if (parentId) {
+            const parentComment = await prisma.comment.findUnique({
+                where: { id: parentId }
+            });
+            if (!parentComment) {
+                return NextResponse.json({ error: "Commentaire parent introuvable" }, { status: 404 });
+            }
+        }
 
         const comment = await prisma.comment.create({
             data: {
                 postId: id,
                 userId: user.userId,
-                content
+                content,
+                parentId
             },
             include: {
                 user: {
                     select: {
                         name: true,
-                        id: true // useful for avatar
+                        id: true,
+                        avatarUrl: true
                     }
                 }
             }

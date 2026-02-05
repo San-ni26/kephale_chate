@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { LogOut, Trash2, Smartphone, Shield, User, Upload } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
+import { Skeleton } from "@/src/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
@@ -25,6 +26,7 @@ export default function SettingsPage() {
     // User & Page State
     const [user, setUser] = useState<AuthUser | null>(null);
     const [userPage, setUserPage] = useState<any>(null);
+    const [isLoadingPage, setIsLoadingPage] = useState(true);
     const [isCreatePageOpen, setIsCreatePageOpen] = useState(false);
     const [createPageData, setCreatePageData] = useState({ handle: "", bio: "" });
 
@@ -38,7 +40,10 @@ export default function SettingsPage() {
                 .then(data => {
                     if (data.userPage) setUserPage(data.userPage);
                 })
-                .catch(err => console.error(err));
+                .catch(err => console.error(err))
+                .finally(() => setIsLoadingPage(false));
+        } else {
+            setIsLoadingPage(false);
         }
     }, []);
 
@@ -188,7 +193,17 @@ export default function SettingsPage() {
                         <CardTitle className="text-sm uppercase text-muted-foreground font-bold">Page Publique</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {userPage ? (
+                        {isLoadingPage ? (
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-32" />
+                                        <Skeleton className="h-3 w-48" />
+                                    </div>
+                                    <Skeleton className="h-8 w-16" />
+                                </div>
+                            </div>
+                        ) : userPage ? (
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                                     <div>

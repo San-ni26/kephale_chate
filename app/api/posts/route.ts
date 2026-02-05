@@ -17,21 +17,95 @@ export async function GET(request: NextRequest) {
     if (authError) return authError;
 
     try {
+        const { searchParams } = new URL(request.url);
+        const limit = parseInt(searchParams.get("limit") || "10");
+        const cursor = searchParams.get("cursor");
+        const pageId = searchParams.get("pageId");
+
+        const where = pageId ? { pageId } : {};
+
         const posts = await prisma.post.findMany({
+            take: limit,
+            skip: cursor ? 1 : 0,
+            cursor: cursor ? { id: cursor } : undefined,
+            where,
             orderBy: { createdAt: 'desc' },
             include: {
-                page: true,
-                likes: true,
-                comments: {
+                page: {
                     include: {
-                        user: true
+                        user: {
+                            select: {
+                                avatarUrl: true
+                            }
+                        }
+                    }
+                },
+                likes: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true
+                            }
+                        }
+                    }
+                },
+                comments: {
+                    where: {
+                        parentId: null // Fetch only top-level comments
+                    },
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                avatarUrl: true
+                            }
+                        },
+                        replies: {
+                            include: {
+                                user: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        avatarUrl: true
+                                    }
+                                }
+                            },
+                            orderBy: {
+                                createdAt: 'asc'
+                            }
+                        }
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
                     }
                 }
-
             }
         });
 
-        return NextResponse.json({ posts });
+        // Enhance posts with isFollowing info
+        const user = (request as AuthenticatedRequest).user;
+        const postsWithFollowStatus = await Promise.all(posts.map(async (post) => {
+            let isFollowing = false;
+            if (user && post.page.userId !== user.userId) {
+                const follow = await prisma.follow.findUnique({
+                    where: {
+                        followerId_followingId: {
+                            followerId: user.userId,
+                            followingId: post.page.userId
+                        }
+                    }
+                });
+                isFollowing = !!follow;
+            }
+            return { ...post, isFollowing };
+        }));
+
+        return NextResponse.json({
+            posts: postsWithFollowStatus,
+            nextCursor: posts.length === limit ? posts[posts.length - 1].id : undefined
+        });
     } catch (err) {
         console.error("Error fetching posts:", err);
         return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });

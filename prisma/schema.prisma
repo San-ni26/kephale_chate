@@ -11,6 +11,7 @@ model User {
   id                      String               @id @default(cuid())
   email                   String               @unique
   name                    String?
+  avatarUrl               String?              @db.Text
   password                String
   phone                   String?
   publicKey               String               @db.Text
@@ -41,9 +42,25 @@ model User {
   likes                   Like[]
   comments                Comment[]
 
+  followers Follow[] @relation("UserFollowers")
+  following Follow[] @relation("UserFollowing")
+
   @@index([email])
   @@index([isOnline])
   @@index([allowedCountry])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
 }
 
 model Organization {
@@ -363,5 +380,10 @@ model Comment {
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  parentId String?
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Comment[] @relation("CommentReplies")
+
   @@index([postId])
+  @@index([parentId])
 }

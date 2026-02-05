@@ -124,6 +124,7 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
+  avatarUrl: 'avatarUrl',
   password: 'password',
   phone: 'phone',
   publicKey: 'publicKey',
@@ -144,6 +145,13 @@ exports.Prisma.UserScalarFieldEnum = {
   canPublishNotifications: 'canPublishNotifications',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FollowScalarFieldEnum = {
+  id: 'id',
+  followerId: 'followerId',
+  followingId: 'followingId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.OrganizationScalarFieldEnum = {
@@ -325,7 +333,8 @@ exports.Prisma.CommentScalarFieldEnum = {
   userId: 'userId',
   content: 'content',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  parentId: 'parentId'
 };
 
 exports.Prisma.SortOrder = {
@@ -404,6 +413,7 @@ exports.PostType = exports.$Enums.PostType = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Follow: 'Follow',
   Organization: 'Organization',
   OrganizationMember: 'OrganizationMember',
   Department: 'Department',

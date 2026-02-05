@@ -8,6 +8,13 @@ const createPageSchema = z.object({
     bio: z.string().optional(),
 });
 
+const updatePageSchema = z.object({
+    name: z.string().min(1, "Le nom est requis").optional(),
+    avatarUrl: z.string().optional(),
+    handle: z.string().startsWith("@", "Le nom d'utilisateur doit commencer par @").min(3, "Le nom doit avoir au moins 3 caractères").optional(),
+    bio: z.string().optional(),
+});
+
 // GET: Get current user's page
 export async function GET(request: NextRequest) {
     const authError = await authenticate(request);
@@ -22,7 +29,18 @@ export async function GET(request: NextRequest) {
         const userPage = await prisma.userPage.findUnique({
             where: { userId: user.userId },
             include: {
+                user: {
+                    select: {
+                        _count: {
+                            select: {
+                                followers: true,
+                                following: true
+                            }
+                        }
+                    }
+                },
                 posts: {
+                    take: 5, // Initial limit
                     orderBy: { createdAt: 'desc' },
                     include: {
                         likes: true,
@@ -104,10 +122,83 @@ export async function DELETE(request: NextRequest) {
         await prisma.userPage.delete({
             where: { userId: user.userId }
         });
-
         return NextResponse.json({ message: "Page supprimée" });
     } catch (error) {
         console.error("Error deleting user page:", error);
         return NextResponse.json({ error: "Erreur serveur ou page inexistante" }, { status: 500 });
     }
 }
+
+// PATCH: Update user page and profile
+export async function PATCH(request: NextRequest) {
+    const authError = await authenticate(request);
+    if (authError) return authError;
+    const user = (request as AuthenticatedRequest).user;
+
+    if (!user) {
+        return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    }
+
+    try {
+        const body = await request.json();
+        const { name, avatarUrl, handle, bio } = updatePageSchema.parse(body);
+
+        // check handle uniqueness if changed
+        if (handle) {
+            const existingHandle = await prisma.userPage.findUnique({
+                where: { handle },
+            });
+            if (existingHandle && existingHandle.userId !== user.userId) {
+                return NextResponse.json({ error: "Ce nom d'utilisateur est déjà pris" }, { status: 400 });
+            }
+        }
+
+        // Update User info
+        if (name || avatarUrl) {
+            // Note: In real app, we should validate avatarUrl format/virus scan etc.
+            await prisma.user.update({
+                where: { id: user.userId },
+                data: {
+                    name: name,
+                    avatarUrl: avatarUrl
+                }
+            });
+        }
+
+        // Update UserPage info
+        if (handle || bio || bio === "") {
+            await prisma.userPage.upsert({
+                where: { userId: user.userId },
+                create: {
+                    userId: user.userId,
+                    handle: handle || `user_${user.userId.substring(0, 8)}`,
+                    bio: bio
+                },
+                update: {
+                    handle: handle,
+                    bio: bio
+                }
+            });
+        }
+
+        // Refetch complete updated data
+        const updatedPage = await prisma.userPage.findUnique({
+            where: { userId: user.userId },
+            include: { user: true }
+        });
+
+        return NextResponse.json({ userPage: updatedPage });
+
+    } catch (error) {
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                { error: 'Données invalides', details: error.issues },
+                { status: 400 }
+            );
+        }
+        console.error("Error updating user page:", error);
+        return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    }
+}
+
+

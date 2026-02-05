@@ -9,6 +9,7 @@ export interface AuthUser {
     id: string;
     email: string;
     name: string | null;
+    avatarUrl: string | null;
     phone: string | null;
     role: string;
     publicKey: string;
@@ -27,6 +28,19 @@ export function setAuth(token: string, user: AuthUser): void {
 
     // Also set as cookie for middleware
     document.cookie = `auth-token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Strict`;
+}
+
+/**
+ * Update stored user data without changing token
+ */
+export function updateAuthUser(updates: Partial<AuthUser>): void {
+    if (typeof window === 'undefined') return;
+
+    const currentUser = getUser();
+    if (!currentUser) return;
+
+    const updatedUser = { ...currentUser, ...updates };
+    localStorage.setItem(USER_KEY, JSON.stringify(updatedUser));
 }
 
 /**
