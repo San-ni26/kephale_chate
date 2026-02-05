@@ -57,7 +57,7 @@ export function useWebSocket(
             }
 
             // Initialize socket connection
-            const socket = io(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000', {
+            const socket = io(process.env.NEXT_PUBLIC_APP_URL, {
                 auth: { token },
                 autoConnect: true,
             });
