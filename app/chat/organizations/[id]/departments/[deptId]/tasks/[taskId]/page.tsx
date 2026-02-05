@@ -17,6 +17,8 @@ import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { TaskAttachment } from './TaskAttachment';
+import { Image as ImageIcon, FileText } from 'lucide-react';
 
 interface Task {
     id: string;
@@ -352,23 +354,7 @@ export default function TaskPage() {
                                                 {msg.attachments && msg.attachments.length > 0 && (
                                                     <div className="mt-2 space-y-1">
                                                         {msg.attachments.map((att) => (
-                                                            <a
-                                                                key={att.id}
-                                                                href={att.url}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className={`flex items-center gap-2 p-2 rounded text-xs no-underline hover:opacity-80 transition ${isMe ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-background/50 text-foreground'
-                                                                    }`}
-                                                            >
-                                                                {att.fileType === 'IMAGE' ? (
-                                                                    <FileIcon className="w-4 h-4" />
-                                                                    /* Ideally render image preview if image */
-                                                                ) : (
-                                                                    <FileIcon className="w-4 h-4" />
-                                                                )}
-                                                                <span className="truncate max-w-[150px]">{att.filename}</span>
-                                                                <Download className="w-3 h-3 ml-auto opacity-70" />
-                                                            </a>
+                                                            <TaskAttachment key={att.id} attachment={att} />
                                                         ))}
                                                     </div>
                                                 )}
@@ -385,10 +371,20 @@ export default function TaskPage() {
                         {pendingAttachments.length > 0 && (
                             <div className="flex flex-wrap gap-2 mb-2">
                                 {pendingAttachments.map((att, i) => (
-                                    <div key={i} className="flex items-center gap-2 bg-muted p-1.5 rounded text-xs">
-                                        <FileIcon className="w-3 h-3" />
-                                        <span className="truncate max-w-[100px]">{att.filename}</span>
-                                        <button onClick={() => removeAttachment(i)} className="text-muted-foreground hover:text-destructive">
+                                    <div
+                                        key={i}
+                                        className="bg-muted rounded px-3 py-2 flex items-center gap-2 text-sm border border-border"
+                                    >
+                                        {att.fileType === 'IMAGE' ? (
+                                            <ImageIcon className="w-4 h-4 text-muted-foreground" />
+                                        ) : (
+                                            <FileText className="w-4 h-4 text-muted-foreground" />
+                                        )}
+                                        <span className="max-w-[150px] truncate text-foreground">{att.filename}</span>
+                                        <button
+                                            onClick={() => removeAttachment(i)}
+                                            className="text-destructive hover:text-red-300 ml-1"
+                                        >
                                             <X className="w-3 h-3" />
                                         </button>
                                     </div>
