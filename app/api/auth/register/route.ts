@@ -18,7 +18,7 @@ const registerSchema = z.object({
     gpsLocation: z.object({
         latitude: z.number(),
         longitude: z.number(),
-    }).optional(),
+    }).nullable().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -50,17 +50,24 @@ export async function POST(request: NextRequest) {
         const validatedData = registerSchema.parse(body);
 
         // Get geolocation from IP
-        const geoData = await getGeolocationFromIP(clientIP);
+        let geoData = await getGeolocationFromIP(clientIP);
 
+        // Fallback if geolocation fails (e.g. localhost or privacy blockers)
         if (!geoData) {
-            return NextResponse.json(
-                { error: 'Impossible de déterminer votre localisation. Veuillez activer la géolocalisation.' },
-                { status: 400 }
-            );
+            console.warn(`Geolocation failed for IP ${clientIP}, using fallback.`);
+            geoData = {
+                ip: clientIP || '127.0.0.1',
+                country: 'XX', // Special code for unknown
+                city: 'Unknown',
+                region: 'Unknown',
+                latitude: 0,
+                longitude: 0,
+                timezone: 'UTC',
+            };
         }
 
-        // Check if country is allowed
-        if (!isCountryAllowed(geoData.country)) {
+        // Check if country is allowed (skip check for unknown country)
+        if (geoData.country !== 'XX' && !isCountryAllowed(geoData.country)) {
             return NextResponse.json(
                 {
                     error: `L'inscription n'est pas autorisée depuis votre pays (${geoData.country}). Contactez l'administrateur.`,
