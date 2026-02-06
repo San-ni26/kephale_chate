@@ -19,6 +19,8 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { TaskAttachment } from './TaskAttachment';
 import { Image as ImageIcon, FileText } from 'lucide-react';
+import useSWR from 'swr';
+import { fetcher } from '@/src/lib/fetcher';
 
 interface Task {
     id: string;
@@ -69,8 +71,14 @@ export default function TaskPage() {
     const taskId = params?.taskId as string;
     const currentUser = getUser();
 
-    const [task, setTask] = useState<Task | null>(null);
-    const [loading, setLoading] = useState(true);
+    const { data: taskData, error: taskError, mutate } = useSWR(
+        taskId ? `/api/organizations/${orgId}/departments/${deptId}/tasks/${taskId}` : null,
+        fetcher
+    );
+
+    const task: Task | null = taskData?.task || null;
+    const loading = !taskData && !taskError;
+
     const [newMessage, setNewMessage] = useState('');
     const [sending, setSending] = useState(false);
 
@@ -78,15 +86,7 @@ export default function TaskPage() {
     const [pendingAttachments, setPendingAttachments] = useState<any[]>([]);
     const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    // Auto-scroll to bottom of chat
     const messagesEndRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (taskId) {
-            loadTask();
-        }
-    }, [taskId]);
 
     useEffect(() => {
         scrollToBottom();
@@ -94,24 +94,6 @@ export default function TaskPage() {
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
-    const loadTask = async () => {
-        try {
-            // No loading state toggle here on refresh to avoid flickering if polling
-            const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/tasks/${taskId}`);
-            if (response.ok) {
-                const data = await response.json();
-                setTask(data.task);
-            } else {
-                toast.error('Erreur de chargement de la tâche');
-            }
-        } catch (error) {
-            console.error('Load task error:', error);
-            toast.error('Erreur de chargement');
-        } finally {
-            setLoading(false);
-        }
     };
 
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -165,7 +147,7 @@ export default function TaskPage() {
             if (response.ok) {
                 setNewMessage('');
                 setPendingAttachments([]);
-                loadTask(); // Reload to get new message
+                mutate();
             } else {
                 toast.error('Erreur lors de l\'envoi');
             }
@@ -189,7 +171,7 @@ export default function TaskPage() {
 
             if (response.ok) {
                 toast.success('Statut mis à jour');
-                loadTask();
+                mutate();
             } else {
                 toast.error('Erreur lors de la mise à jour');
             }

@@ -20,6 +20,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/src/components/ui/select";
+import useSWR from "swr";
+import { fetcher } from "@/src/lib/fetcher";
 
 
 interface Organization {
@@ -80,95 +82,59 @@ export default function OrganizationDashboard() {
     const orgId = params?.id as string;
     const currentUser = getUser();
 
-    const [org, setOrg] = useState<Organization | null>(null);
-    const [departments, setDepartments] = useState<Department[]>([]);
-    const [userDepartments, setUserDepartments] = useState<UserDepartment[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [isAdmin, setIsAdmin] = useState(false);
-
-    // Edit Department State
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
     const [editName, setEditName] = useState("");
 
-    // Tasks State
-    const [myTasks, setMyTasks] = useState<Task[]>([]);
+    // Tasks Filter State
     const [taskFilterStatus, setTaskFilterStatus] = useState<string>("ALL");
     const [taskFilterMonth, setTaskFilterMonth] = useState<string>("ALL");
 
-    useEffect(() => {
-        if (orgId) {
-            fetchData();
-        }
-    }, [orgId]);
+    // 1. Fetch Organization
+    const { data: orgData, error: orgError } = useSWR(
+        orgId ? `/api/organizations/${orgId}` : null,
+        fetcher
+    );
+    const org: Organization | null = orgData?.organization || null;
 
-    const fetchData = async () => {
-        try {
-            // Fetch user tasks first (parallelizable)
-            if (currentUser) {
-                fetchMyTasks();
-            }
+    // 2. Derive Admin Status
+    const isAdmin = org
+        ? (org.ownerId === currentUser?.id || orgData?.userRole === 'ADMIN' || orgData?.userRole === 'OWNER')
+        : false;
 
-            // Fetch organization details
-            const orgRes = await fetchWithAuth(`/api/organizations/${orgId}`);
-            if (orgRes.ok) {
-                const data = await orgRes.json();
-                setOrg(data.organization);
+    // 3. Fetch Departments (Admin only)
+    const { data: deptData, mutate: mutateDepartments } = useSWR(
+        orgId && isAdmin ? `/api/organizations/${orgId}/departments` : null,
+        fetcher
+    );
+    const departments: Department[] = deptData?.departments || [];
 
-                // Check if user is admin/owner
-                const isOwnerOrAdmin = data.organization.ownerId === currentUser?.id ||
-                    data.userRole === 'ADMIN' ||
-                    data.userRole === 'OWNER';
-                setIsAdmin(isOwnerOrAdmin);
+    // 4. Fetch User Departments (Non-admin)
+    const { data: userDeptData, mutate: mutateUserDepartments } = useSWR(
+        orgId && !isAdmin ? `/api/organizations/${orgId}/user-departments` : null,
+        fetcher
+    );
+    const userDepartments: UserDepartment[] = userDeptData?.departments || [];
 
-                if (isOwnerOrAdmin) {
-                    // Fetch all departments for admin
-                    const deptRes = await fetchWithAuth(`/api/organizations/${orgId}/departments`);
-                    if (deptRes.ok) {
-                        const data = await deptRes.json();
-                        setDepartments(data.departments || []);
-                    }
-                } else {
-                    // Fetch only user's departments for regular members
-                    const userDeptRes = await fetchWithAuth(`/api/organizations/${orgId}/user-departments`);
-                    if (userDeptRes.ok) {
-                        const data = await userDeptRes.json();
-                        setUserDepartments(data.departments || []);
-                    }
-                }
-            }
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            toast.error('Erreur lors du chargement des données');
-        } finally {
-            setLoading(false);
-        }
+    // 5. Fetch My Tasks
+    const getTasksUrl = () => {
+        if (!orgId) return null;
+        const params: Record<string, string> = { status: taskFilterStatus };
+        if (taskFilterMonth !== 'ALL') params.month = taskFilterMonth;
+        const query = new URLSearchParams(params);
+        return `/api/organizations/${orgId}/my-tasks?${query.toString()}`;
     };
 
-    const fetchMyTasks = async () => {
-        try {
-            const params: Record<string, string> = {
-                status: taskFilterStatus
-            };
-            if (taskFilterMonth !== 'ALL') {
-                params.month = taskFilterMonth;
-            }
-            const query = new URLSearchParams(params);
-            const res = await fetchWithAuth(`/api/organizations/${orgId}/my-tasks?${query.toString()}`);
-            if (res.ok) {
-                const data = await res.json();
-                setMyTasks(data.tasks || []);
-            }
-        } catch (error) {
-            console.error('Error fetching tasks:', error);
-        }
-    };
+    const { data: tasksData } = useSWR(getTasksUrl(), fetcher);
+    const myTasks: Task[] = tasksData?.tasks || [];
 
-    useEffect(() => {
-        if (orgId && !loading) {
-            fetchMyTasks();
-        }
-    }, [taskFilterStatus, taskFilterMonth, orgId]);
+    const loading = !orgData && !orgError;
+
+    // Helper to refresh data
+    const refreshData = () => {
+        mutateDepartments();
+        mutateUserDepartments();
+    }
 
     const handleCreateDepartment = async () => {
         const name = prompt("Nom du département:");
@@ -189,7 +155,7 @@ export default function OrganizationDashboard() {
             }
 
             toast.success('Département créé avec succès');
-            fetchData();
+            refreshData();
         } catch (error) {
             console.error('Error creating department:', error);
             toast.error('Erreur lors de la création du département');
@@ -206,7 +172,7 @@ export default function OrganizationDashboard() {
 
             if (res.ok) {
                 toast.success('Vous avez quitté le département');
-                fetchData();
+                refreshData();
             } else {
                 const error = await res.json();
                 toast.error(error.error || 'Erreur lors de la sortie du département');
@@ -227,7 +193,7 @@ export default function OrganizationDashboard() {
 
             if (res.ok) {
                 toast.success('Département supprimé');
-                fetchData();
+                refreshData();
             } else {
                 const error = await res.json();
                 toast.error(error.error || 'Erreur lors de la suppression');
@@ -258,7 +224,7 @@ export default function OrganizationDashboard() {
                 toast.success('Département modifié');
                 setIsEditOpen(false);
                 setEditingDepartment(null);
-                fetchData();
+                refreshData();
             } else {
                 toast.error('Erreur lors de la modification');
             }

@@ -8,6 +8,9 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/src/comp
 import { toast } from "sonner";
 import EventCreationDialog from "@/src/components/events/EventCreationDialog";
 
+import useSWR from "swr";
+import { fetcher } from "@/src/lib/fetcher";
+
 interface Event {
     id: string;
     title: string;
@@ -27,35 +30,22 @@ export default function EventsManagementPage() {
     const params = useParams();
     const orgId = params?.id as string;
 
-    const [events, setEvents] = useState<Event[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { data: eventsData, mutate: mutateEvents, isLoading } = useSWR(
+        orgId ? `/api/organizations/${orgId}/events` : null,
+        fetcher
+    );
+
+    const events: Event[] = eventsData?.events || [];
+    const loading = isLoading;
+
     const [showCreateDialog, setShowCreateDialog] = useState(false);
     const [copiedToken, setCopiedToken] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (orgId) {
-            fetchEvents();
-        }
-    }, [orgId]);
-
-    const fetchEvents = async () => {
-        try {
-            const res = await fetch(`/api/organizations/${orgId}/events`);
-            if (res.ok) {
-                const data = await res.json();
-                setEvents(data.events || []);
-            }
-        } catch (error) {
-            console.error('Error fetching events:', error);
-            toast.error('Erreur lors du chargement des événements');
-        } finally {
-            setLoading(false);
-        }
-    };
+    const refreshEvents = () => mutateEvents();
 
     const handleCreateSuccess = () => {
         setShowCreateDialog(false);
-        fetchEvents();
+        refreshEvents();
     };
 
     const handleCopyLink = (token: string) => {
@@ -82,7 +72,7 @@ export default function EventsManagementPage() {
             }
 
             toast.success('Événement supprimé avec succès');
-            fetchEvents();
+            refreshEvents();
         } catch (error) {
             console.error('Error deleting event:', error);
             toast.error('Erreur lors de la suppression');

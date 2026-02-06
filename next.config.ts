@@ -35,11 +35,22 @@ const pwaConfig = withPWA({
       }
     },
     {
+      urlPattern: /\/api\/.*/i,
+      handler: 'StaleWhileRevalidate',
+      options: {
+        cacheName: 'api-cache',
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 24 * 60 * 60 // 24 hours
+        }
+      }
+    },
+    {
       urlPattern: ({ url }: { url: URL }) => {
         const isSameOrigin = self.origin === url.origin;
         if (!isSameOrigin) return false;
         const pathname = url.pathname;
-        if (pathname.startsWith('/api/')) return false;
+        if (pathname.startsWith('/api/')) return false; // Already handled above
         return true;
       },
       handler: 'NetworkFirst',

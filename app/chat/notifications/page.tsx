@@ -10,6 +10,8 @@ import { getAuthHeader, getUser, type AuthUser } from "@/src/lib/auth-client";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
+import useSWR from "swr";
+import { fetcher } from "@/src/lib/fetcher";
 
 interface Comment {
     id: string;
@@ -43,9 +45,11 @@ interface Post {
     isFollowing?: boolean;
 }
 
+
+
+// ... (interfaces stay same)
+
 export default function FeedPage() {
-    const [loading, setLoading] = useState(true);
-    const [posts, setPosts] = useState<Post[]>([]);
     const [user, setUser] = useState<AuthUser | null>(null);
     const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
     const [commentText, setCommentText] = useState("");
@@ -53,43 +57,47 @@ export default function FeedPage() {
 
     useEffect(() => {
         setUser(getUser());
-        fetchPosts();
     }, []);
 
-    const fetchPosts = async () => {
-        try {
-            const res = await fetch("/api/posts", { headers: getAuthHeader() });
-            const data = await res.json();
-            if (data.posts) setPosts(data.posts);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { data: postsData, error: postsError, mutate: mutatePosts } = useSWR(
+        '/api/posts',
+        fetcher
+    );
+
+    const posts: Post[] = postsData?.posts || [];
+    const loading = !postsData && !postsError;
+
+    // Helper to refresh posts (replaces fetchPosts)
+    const refreshPosts = () => mutatePosts();
 
     const handleLike = async (postId: string) => {
+        if (!user) return;
+
+        const newPosts = posts.map(p => {
+            if (p.id === postId) {
+                const hasLiked = p.likes.some(l => l.userId === user.id);
+                if (hasLiked) return { ...p, likes: p.likes.filter(l => l.userId !== user.id) };
+                return { ...p, likes: [...p.likes, { userId: user.id }] };
+            }
+            return p;
+        });
+
+        mutatePosts({ posts: newPosts }, false);
+
         try {
             const res = await fetch(`/api/posts/${postId}/like`, { method: "POST", headers: getAuthHeader() });
-            if (res.ok) {
-                // Optimistic update or refetch
-                setPosts(posts.map(p => {
-                    if (p.id === postId) {
-                        const hasLiked = p.likes.some(l => l.userId === user?.id);
-                        if (hasLiked) return { ...p, likes: p.likes.filter(l => l.userId !== user?.id) };
-                        return { ...p, likes: [...p.likes, { userId: user?.id! }] };
-                    }
-                    return p;
-                }));
+            if (!res.ok) {
+                mutatePosts();
             }
         } catch (error) {
             toast.error("Erreur action");
+            mutatePosts();
         }
     };
 
     const handleFollow = async (targetUserId: string, isFollowing: boolean) => {
-        // Optimistic Update
-        setPosts(posts.map(p => p.page.userId === targetUserId ? { ...p, isFollowing: !isFollowing } : p));
+        const newPosts = posts.map(p => p.page.userId === targetUserId ? { ...p, isFollowing: !isFollowing } : p);
+        mutatePosts({ posts: newPosts }, false);
 
         try {
             const res = await fetch("/api/follow", {
@@ -99,17 +107,16 @@ export default function FeedPage() {
             });
 
             if (!res.ok) {
-                // Revert on error
-                setPosts(posts.map(p => p.page.userId === targetUserId ? { ...p, isFollowing: isFollowing } : p));
+                mutatePosts();
                 toast.error("Erreur lors de l'action");
             } else {
                 const data = await res.json();
-                // Ensure state is consistent with server
-                setPosts(prev => prev.map(p => p.page.userId === targetUserId ? { ...p, isFollowing: data.isFollowing } : p));
+                const finalPosts = posts.map(p => p.page.userId === targetUserId ? { ...p, isFollowing: data.isFollowing } : p);
+                mutatePosts({ posts: finalPosts }, false);
                 toast.success(data.isFollowing ? "Abonnement réussi" : "Désabonnement réussi");
             }
         } catch (error) {
-            setPosts(posts.map(p => p.page.userId === targetUserId ? { ...p, isFollowing: isFollowing } : p));
+            mutatePosts();
             toast.error("Erreur connexion");
         }
     };
@@ -127,8 +134,7 @@ export default function FeedPage() {
             if (res.ok) {
                 setCommentText("");
                 setReplyToId(null);
-                // Ideally fetch or just append if we have comment structure
-                fetchPosts();
+                mutatePosts();
                 toast.success("Commentaire ajouté");
             }
         } catch (error) {

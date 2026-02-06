@@ -7,11 +7,13 @@ import { Input } from "@/src/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/src/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 
+import useSWR from "swr";
+import { fetcher } from "@/src/lib/fetcher";
+
 export default function GroupsPage() {
-    const [groups, setGroups] = useState([
-        { id: "1", name: "Projet Alpha", members: 4 },
-        { id: "2", name: "Sortie Week-end", members: 12 }
-    ]);
+    const { data: groupsData } = useSWR('/api/groups', fetcher);
+    const groups = groupsData?.groups || [];
+
 
     return (
         <div className="p-4 space-y-6">
@@ -35,14 +37,14 @@ export default function GroupsPage() {
             </div>
 
             <div className="space-y-2">
-                {groups.map((group) => (
+                {groups.map((group: any) => (
                     <div key={group.id} className="flex items-center p-4 bg-muted/50 border border-border rounded-xl hover:bg-muted transition">
                         <Avatar className="h-10 w-10 border border-border">
                             <AvatarFallback className="bg-secondary text-secondary-foreground">{group.name[0]}</AvatarFallback>
                         </Avatar>
                         <div className="ml-4 flex-1">
                             <h3 className="font-semibold text-foreground">{group.name}</h3>
-                            <p className="text-xs text-muted-foreground">{group.members} membres</p>
+                            <p className="text-xs text-muted-foreground">{group._count?.members || 0} membres</p>
                         </div>
                         <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
                             <MessageSquare className="w-5 h-5" />

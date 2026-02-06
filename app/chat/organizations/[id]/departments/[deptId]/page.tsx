@@ -72,22 +72,23 @@ interface Task {
     createdAt: string;
 }
 
+import useSWR from 'swr';
+import { fetcher } from '@/src/lib/fetcher';
+
+// ... (interfaces stay same)
+
 export default function DepartmentDetailPage() {
     const params = useParams();
     const router = useRouter();
     const orgId = params?.id as string;
     const deptId = params?.deptId as string;
 
-    const [department, setDepartment] = useState<Department | null>(null);
-    const [loading, setLoading] = useState(true);
     const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
     const [newMemberEmail, setNewMemberEmail] = useState('');
     const [addingMember, setAddingMember] = useState(false);
     const [removingMemberId, setRemovingMemberId] = useState<string | null>(null);
 
     // Task State
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const [loadingTasks, setLoadingTasks] = useState(false);
     const [showCreateTaskDialog, setShowCreateTaskDialog] = useState(false);
     const [newTask, setNewTask] = useState({
         title: '',
@@ -102,51 +103,24 @@ export default function DepartmentDetailPage() {
 
     const currentUser = getUser();
 
-    useEffect(() => {
-        if (deptId) {
-            loadDepartment();
-        }
-    }, [deptId]);
+    // 1. Fetch Department
+    const { data: deptData, error: deptError, mutate: mutateDepartment } = useSWR(
+        deptId ? `/api/organizations/${orgId}/departments/${deptId}` : null,
+        fetcher
+    );
+    const department: Department | null = deptData?.department || null;
+    const loading = !deptData && !deptError;
 
-    useEffect(() => {
-        if (deptId && activeTab === 'tasks') {
-            loadTasks();
-        }
-    }, [deptId, activeTab]);
+    // 2. Fetch Tasks (conditionally)
+    const { data: tasksData, error: tasksError, mutate: mutateTasks } = useSWR(
+        deptId && activeTab === 'tasks' ? `/api/organizations/${orgId}/departments/${deptId}/tasks` : null,
+        fetcher
+    );
+    const tasks: Task[] = tasksData?.tasks || [];
+    const loadingTasks = !tasksData && !tasksError && activeTab === 'tasks';
 
-    const loadDepartment = async () => {
-        try {
-            setLoading(true);
-            const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}`);
-            if (response.ok) {
-                const data = await response.json();
-                setDepartment(data.department);
-            } else {
-                toast.error('Erreur de chargement du département');
-            }
-        } catch (error) {
-            console.error('Load department error:', error);
-            toast.error('Erreur de chargement du département');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const loadTasks = async () => {
-        try {
-            setLoadingTasks(true);
-            const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/tasks`);
-            if (response.ok) {
-                const data = await response.json();
-                setTasks(data.tasks);
-            }
-        } catch (error) {
-            console.error('Load tasks error:', error);
-            toast.error('Erreur de chargement des tâches');
-        } finally {
-            setLoadingTasks(false);
-        }
-    };
+    const refreshDepartment = () => mutateDepartment();
+    const refreshTasks = () => mutateTasks();
 
     const handleCreateTask = async () => {
         if (!newTask.title || !newTask.assigneeId) {
@@ -173,7 +147,7 @@ export default function DepartmentDetailPage() {
                     startDate: '',
                     dueDate: ''
                 });
-                loadTasks();
+                refreshTasks();
             } else {
                 const error = await response.json();
                 toast.error(error.error || 'Erreur lors de la création');
@@ -222,7 +196,7 @@ export default function DepartmentDetailPage() {
                 toast.success('Membre ajouté avec succès');
                 setNewMemberEmail('');
                 setShowAddMemberDialog(false);
-                loadDepartment();
+                refreshDepartment();
             } else {
                 const error = await response.json();
                 toast.error(error.error || 'Erreur lors de l\'ajout du membre');
@@ -247,7 +221,7 @@ export default function DepartmentDetailPage() {
 
             if (response.ok) {
                 toast.success('Membre retiré avec succès');
-                loadDepartment();
+                refreshDepartment();
             } else {
                 const error = await response.json();
                 toast.error(error.error || 'Erreur lors du retrait du membre');

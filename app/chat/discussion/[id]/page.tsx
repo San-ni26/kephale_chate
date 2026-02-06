@@ -76,10 +76,11 @@ export default function DiscussionPage() {
     const router = useRouter();
     const conversationId = params?.id as string;
 
-    const [conversation, setConversation] = useState<Conversation | null>(null);
-    // Messages state is now handled by SWR, but we might keep local state for optimistic updates if needed
-    // strictly speaking SWR cache is enough, but to maintain compatibility with existing decrypt logic which iterates over a list,
-    // we can use the data from SWR directly in render.
+    const { data: conversationData } = useSWR(
+        conversationId ? `/api/conversations/${conversationId}` : null,
+        fetcher
+    );
+    const conversation: Conversation | null = conversationData?.conversation || null;
 
     const [newMessage, setNewMessage] = useState('');
     const [sending, setSending] = useState(false);
@@ -111,23 +112,6 @@ export default function DiscussionPage() {
     const messages: Message[] = messagesData?.messages || [];
     const loading = !messagesData && !messagesError;
 
-    // Load conversation details (no polling needed for this usually, or less frequent)
-    useEffect(() => {
-        loadConversation();
-    }, [conversationId]);
-
-    const loadConversation = async () => {
-        try {
-            const response = await fetchWithAuth(`/api/conversations/${conversationId}`);
-            if (response.ok) {
-                const data = await response.json();
-                setConversation(data.conversation);
-            }
-        } catch (error) {
-            console.error('Load conversation error:', error);
-            toast.error('Erreur de chargement de la conversation');
-        }
-    };
 
     // Auto scroll to bottom only on initial load or when sending
     // We need a ref to track if it's the first load

@@ -7,7 +7,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Loader2, User } from 'lucide-react';
 import { toast } from 'sonner';
-import { fetchWithAuth } from '@/src/lib/auth-client';
+import useSWR from 'swr';
+import { fetcher } from '@/src/lib/fetcher';
 
 interface Conversation {
     id: string;
@@ -39,33 +40,30 @@ interface Conversation {
 }
 
 export default function ChatListPage() {
-    const [conversations, setConversations] = useState<Conversation[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+    const { data: profileData, error: profileError } = useSWR('/api/users/profile', fetcher);
+    const { data: conversationsData, error: conversationsError } = useSWR('/api/conversations', fetcher);
 
-    useEffect(() => {
-        const init = async () => {
-            try {
-                // Get current user ID from local storage or profile fetch
-                const profileRes = await fetchWithAuth('/api/users/profile');
-                if (profileRes.ok) {
-                    const data = await profileRes.json();
-                    setCurrentUserId(data.profile.id);
-                }
+    const conversations: Conversation[] = conversationsData?.conversations || [];
+    const currentUserId = profileData?.profile?.id;
+    const isLoading = (!profileData && !profileError) || (!conversationsData && !conversationsError);
 
-                const response = await fetchWithAuth('/api/conversations');
-                if (!response.ok) throw new Error('Impossible de charger les discussions');
-                const data = await response.json();
-                setConversations(data.conversations);
-            } catch (error) {
-                console.error(error);
-                toast.error('Erreur de chargement');
-            } finally {
-                setLoading(false);
-            }
-        };
-        init();
-    }, []);
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-background pt-16">
+                <div className="flex flex-col space-y-3 w-full max-w-2xl px-4">
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="flex items-center space-x-4">
+                            <div className="h-12 w-12 rounded-full bg-muted animate-pulse" />
+                            <div className="space-y-2 flex-1">
+                                <div className="h-4 w-[200px] bg-muted animate-pulse rounded" />
+                                <div className="h-4 w-[150px] bg-muted animate-pulse rounded" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     const getConversationName = (chat: Conversation) => {
         if (!chat.isDirect && chat.department) {
@@ -83,12 +81,43 @@ export default function ChatListPage() {
         return getConversationName(chat);
     };
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-64">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            </div>
-        );
+    const getConversationsList = () => {
+        return conversations.filter(c => c.isDirect).map((chat) => {
+            const chatName = getConversationName(chat);
+            const lastMessage = chat.messages[0];
+
+            return (
+                <Link href={`/chat/discussion/${chat.id}`} key={chat.id}>
+                    <div className="flex items-center p-4 rounded-xl border border-border bg-card shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 cursor-pointer">
+                        <Avatar className="h-12 w-12 border border-border/50 shadow-sm shrink-0">
+                            <AvatarImage src="https://github.com/shadcn.png" />
+                            <AvatarFallback className="bg-muted">
+                                <User className="w-6 h-6 text-muted-foreground" />
+                            </AvatarFallback>
+                        </Avatar>
+
+                        <div className="ml-4 flex-1 min-w-0">
+                            <div className="flex justify-between items-center mb-1">
+                                <h3 className="font-semibold text-foreground truncate text-base">{chatName}</h3>
+                                <span className="text-xs font-medium text-muted-foreground shrink-0 ml-2">
+                                    {lastMessage ? formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: true, locale: fr }) : ''}
+                                </span>
+                            </div>
+                            <p className="text-sm text-muted-foreground truncate pr-2">
+                                {lastMessage ? (
+                                    <span className="text-foreground/80">
+                                        {lastMessage.sender.id === currentUserId && "Vous: "}
+                                        Message chiffré
+                                    </span>
+                                ) : (
+                                    <span className="italic opacity-50">Aucun message</span>
+                                )}
+                            </p>
+                        </div>
+                    </div>
+                </Link>
+            );
+        });
     }
 
     return (
@@ -105,42 +134,7 @@ export default function ChatListPage() {
                 </div>
             ) : (
                 <div className="flex flex-col gap-3 pb-20">
-                    {conversations.filter(c => c.isDirect).map((chat) => {
-                        const chatName = getConversationName(chat);
-                        const lastMessage = chat.messages[0];
-
-                        return (
-                            <Link href={`/chat/discussion/${chat.id}`} key={chat.id}>
-                                <div className="flex items-center p-4 rounded-xl border border-border bg-card shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 cursor-pointer">
-                                    <Avatar className="h-12 w-12 border border-border/50 shadow-sm shrink-0">
-                                        <AvatarImage src="https://github.com/shadcn.png" />
-                                        <AvatarFallback className="bg-muted">
-                                            <User className="w-6 h-6 text-muted-foreground" />
-                                        </AvatarFallback>
-                                    </Avatar>
-
-                                    <div className="ml-4 flex-1 min-w-0">
-                                        <div className="flex justify-between items-center mb-1">
-                                            <h3 className="font-semibold text-foreground truncate text-base">{chatName}</h3>
-                                            <span className="text-xs font-medium text-muted-foreground shrink-0 ml-2">
-                                                {lastMessage ? formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: true, locale: fr }) : ''}
-                                            </span>
-                                        </div>
-                                        <p className="text-sm text-muted-foreground truncate pr-2">
-                                            {lastMessage ? (
-                                                <span className="text-foreground/80">
-                                                    {lastMessage.sender.id === currentUserId && "Vous: "}
-                                                    Message chiffré
-                                                </span>
-                                            ) : (
-                                                <span className="italic opacity-50">Aucun message</span>
-                                            )}
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        );
-                    })}
+                    {getConversationsList()}
                 </div>
             )}
         </div>

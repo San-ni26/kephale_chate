@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Users, ArrowRight, Clock, CheckCircle, XCircle, Building2 } from "lucide-react";
+import { Plus, Clock, CheckCircle, XCircle, Building2, ArrowRight } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/src/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/src/components/ui/dialog";
 import { toast } from "sonner";
 import OrganizationRequestDialog from "@/src/components/organizations/OrganizationRequestDialog";
 import OrganizationCompletionWizard from "@/src/components/organizations/OrganizationCompletionWizard";
+import useSWR from "swr";
+import { fetcher } from "@/src/lib/fetcher";
 
 interface Organization {
     id: string;
@@ -39,49 +40,31 @@ interface OrgRequest {
 
 export default function OrganizationsPage() {
     const router = useRouter();
-    const [orgs, setOrgs] = useState<Organization[]>([]);
-    const [requests, setRequests] = useState<OrgRequest[]>([]);
-    const [loading, setLoading] = useState(true);
     const [showRequestDialog, setShowRequestDialog] = useState(false);
     const [showCompletionWizard, setShowCompletionWizard] = useState(false);
     const [selectedRequest, setSelectedRequest] = useState<OrgRequest | null>(null);
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+    const { data: orgsData, error: orgsError, mutate: mutateOrgs } = useSWR('/api/organizations', fetcher);
+    const { data: requestsData, error: requestsError, mutate: mutateRequests } = useSWR('/api/organizations/requests', fetcher);
 
-    const fetchData = async () => {
-        try {
-            // Fetch organizations
-            const orgsRes = await fetch('/api/organizations');
-            if (orgsRes.ok) {
-                const data = await orgsRes.json();
-                setOrgs(data.organizations || []);
-            }
+    const orgs: Organization[] = orgsData?.organizations || [];
+    const requests: OrgRequest[] = requestsData?.requests || [];
+    const isLoading = (!orgsData && !orgsError) || (!requestsData && !requestsError);
 
-            // Fetch requests
-            const reqsRes = await fetch('/api/organizations/requests');
-            if (reqsRes.ok) {
-                const data = await reqsRes.json();
-                setRequests(data.requests || []);
-            }
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            toast.error('Erreur lors du chargement des données');
-        } finally {
-            setLoading(false);
-        }
+    const refreshData = () => {
+        mutateOrgs();
+        mutateRequests();
     };
 
     const handleRequestSuccess = () => {
         setShowRequestDialog(false);
-        fetchData();
+        refreshData();
     };
 
     const handleCompletionSuccess = () => {
         setShowCompletionWizard(false);
         setSelectedRequest(null);
-        fetchData();
+        refreshData();
     };
 
     const handleCompleteRequest = (request: OrgRequest) => {
@@ -135,12 +118,28 @@ export default function OrganizationsPage() {
         }
     };
 
-    if (loading) {
+    if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-screen bg-background">
-                <div className="text-muted-foreground">Chargement...</div>
+            <div className="p-5 space-y-6 bg-background min-h-screen mt-15">
+                <div className="space-y-3">
+                    <div className="h-4 w-32 bg-muted animate-pulse rounded" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {[1, 2].map((i) => (
+                            <div key={i} className="h-48 bg-muted animate-pulse rounded-lg" />
+                        ))}
+                    </div>
+                </div>
             </div>
         );
+    }
+
+    if (orgsError || requestsError) {
+        // Optionally show error state or toast
+        return (
+            <div className="flex items-center justify-center h-screen bg-background">
+                <div className="text-destructive">Erreur lors du chargement des données. Veuillez réessayer.</div>
+            </div>
+        )
     }
 
     return (

@@ -15,13 +15,16 @@ import { Textarea } from "@/src/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 import { Skeleton } from "@/src/components/ui/skeleton";
 
+import useSWR from "swr";
+import { fetcher } from "@/src/lib/fetcher";
+
 export default function MyPage() {
     const router = useRouter();
     const [user, setUser] = useState<AuthUser | null>(null);
-    const [userPage, setUserPage] = useState<any>(null);
+    // userPage handled by SWR
     const [posts, setPosts] = useState<any[]>([]);
-    const [loadingPage, setLoadingPage] = useState(true);
-    const [loadingPosts, setLoadingPosts] = useState(true);
+    // loadingPage handled by SWR
+    const [loadingPosts, setLoadingPosts] = useState(false); // Default false, controlled by fetch
 
     // Pagination state
     const [cursor, setCursor] = useState<string | null>(null);
@@ -67,24 +70,22 @@ export default function MyPage() {
             return;
         }
         setUser(u);
-        fetchPageInfo();
     }, []);
 
-    const fetchPageInfo = async () => {
-        try {
-            const res = await fetch("/api/user-page", { headers: getAuthHeader() });
-            const data = await res.json();
-            if (data.userPage) {
-                setUserPage(data.userPage);
-                // Initial posts load
-                await fetchMorePosts(data.userPage.id, null, true);
-            } else {
-                router.push("/chat/settings");
-            }
-        } finally {
-            setLoadingPage(false);
+    const { data: userPageData, mutate: mutateUserPage, isLoading: pageLoading } = useSWR(
+        user ? '/api/user-page' : null,
+        fetcher
+    );
+    const userPage = userPageData?.userPage;
+    const loadingPage = pageLoading;
+
+    // Trigger initial posts load when page is found
+    useEffect(() => {
+        if (userPage && posts.length === 0 && !loadingPosts) {
+            fetchMorePosts(userPage.id, null, true);
         }
-    };
+    }, [userPage?.id]); // Only trigger when ID changes/loads
+
 
     const fetchMorePosts = async (pageId: string, currentCursor: string | null, isInitial = false) => {
         if (!isInitial && (!hasMore || loadingPosts)) return;
@@ -283,7 +284,7 @@ export default function MyPage() {
             if (res.ok) {
                 toast.success("Profil mis à jour !");
                 setIsEditPageOpen(false);
-                setUserPage(data.userPage);
+                mutateUserPage();
 
                 const updatedUser = { name: editPageName, avatarUrl: editPageAvatarUrl };
                 updateAuthUser(updatedUser);

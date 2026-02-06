@@ -13,6 +13,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { clearAuth, getUser, type AuthUser, getAuthHeader } from "@/src/lib/auth-client";
 
+import useSWR from "swr";
+import { fetcher } from "@/src/lib/fetcher";
+
 export default function SettingsPage() {
     const router = useRouter();
     const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -25,27 +28,20 @@ export default function SettingsPage() {
 
     // User & Page State
     const [user, setUser] = useState<AuthUser | null>(null);
-    const [userPage, setUserPage] = useState<any>(null);
-    const [isLoadingPage, setIsLoadingPage] = useState(true);
     const [isCreatePageOpen, setIsCreatePageOpen] = useState(false);
     const [createPageData, setCreatePageData] = useState({ handle: "", bio: "" });
 
     useEffect(() => {
-        const u = getUser();
-        setUser(u);
-
-        if (u) {
-            fetch('/api/user-page', { headers: getAuthHeader() })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.userPage) setUserPage(data.userPage);
-                })
-                .catch(err => console.error(err))
-                .finally(() => setIsLoadingPage(false));
-        } else {
-            setIsLoadingPage(false);
-        }
+        setUser(getUser());
     }, []);
+
+    const { data: userPageData, mutate: mutateUserPage, isLoading: swrLoading } = useSWR(
+        user ? '/api/user-page' : null,
+        fetcher
+    );
+
+    const userPage = userPageData?.userPage;
+    const isLoadingPage = swrLoading;
 
     const handleCreatePage = async () => {
         if (!createPageData.handle.startsWith("@")) {
@@ -65,7 +61,7 @@ export default function SettingsPage() {
 
             if (response.ok) {
                 const data = await response.json();
-                setUserPage(data.userPage);
+                mutateUserPage();
                 setIsCreatePageOpen(false);
                 toast.success("Page créée avec succès !");
             } else {

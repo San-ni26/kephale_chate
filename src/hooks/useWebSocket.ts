@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { getToken } from '@/src/lib/auth-client';
 
 interface Message {
     id: string;
@@ -42,7 +43,7 @@ export function useWebSocket(
 
     useEffect(() => {
         // Get token from localStorage using the correct key
-        const token = localStorage.getItem('auth-token');
+        const token = getToken();
         if (!token) {
             console.warn('No authentication token found - WebSocket will not connect');
             return;
