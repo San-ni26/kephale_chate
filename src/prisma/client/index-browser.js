@@ -147,6 +147,30 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserInvitationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  status: 'status',
+  title: 'title',
+  description: 'description',
+  imageBase64: 'imageBase64',
+  type: 'type',
+  date: 'date',
+  location: 'location',
+  maxGuests: 'maxGuests',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InvitationGuestScalarFieldEnum = {
+  id: 'id',
+  invitationId: 'invitationId',
+  name: 'name',
+  phone: 'phone',
+  confirmedAt: 'confirmedAt'
+};
+
 exports.Prisma.FollowScalarFieldEnum = {
   id: 'id',
   followerId: 'followerId',
@@ -415,6 +439,20 @@ exports.UserRole = exports.$Enums.UserRole = {
   SUPER_ADMIN: 'SUPER_ADMIN'
 };
 
+exports.InvitationStatus = exports.$Enums.InvitationStatus = {
+  ACTIVE: 'ACTIVE',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.InvitationType = exports.$Enums.InvitationType = {
+  WEDDING: 'WEDDING',
+  DINNER: 'DINNER',
+  BIRTHDAY: 'BIRTHDAY',
+  PARTY: 'PARTY',
+  OTHER: 'OTHER'
+};
+
 exports.OrgRole = exports.$Enums.OrgRole = {
   OWNER: 'OWNER',
   ADMIN: 'ADMIN',
@@ -474,6 +512,8 @@ exports.TaskPriority = exports.$Enums.TaskPriority = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  UserInvitation: 'UserInvitation',
+  InvitationGuest: 'InvitationGuest',
   Follow: 'Follow',
   Organization: 'Organization',
   OrganizationMember: 'OrganizationMember',

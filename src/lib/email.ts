@@ -137,3 +137,105 @@ export async function sendWelcomeEmail(email: string, name: string): Promise<boo
     return false;
   }
 }
+
+/**
+ * Send invoice email for invitation creation/update
+ */
+export async function sendInvoiceEmail(
+  email: string,
+  name: string,
+  orderDetails: {
+    title: string;
+    type: string;
+    date: Date;
+    guests: number;
+    amount: number;
+    paymentMethod: string;
+    transactionId: string;
+  }
+): Promise<boolean> {
+  try {
+    const formatter = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' });
+    const formattedAmount = formatter.format(orderDetails.amount);
+    const formattedDate = new Date(orderDetails.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
+      to: email,
+      subject: `Facture - Invitation "${orderDetails.title}"`,
+      html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+              .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+              .header { background: #1e293b; padding: 30px; text-align: center; color: white; }
+              .content { padding: 40px 30px; color: #334155; }
+              .invoice-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 20px 0; }
+              .row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 10px; }
+              .row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+              .total { font-weight: bold; font-size: 18px; color: #0f172a; border-top: 2px solid #cbd5e1; padding-top: 15px; margin-top: 10px; }
+              .footer { background: #f1f5f9; padding: 20px; text-align: center; color: #94a3b8; font-size: 12px; }
+              .status-paid { color: #16a34a; font-weight: bold; border: 1px solid #16a34a; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-bottom: 15px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1 style="margin: 0; font-size: 24px;">Reçu de Paiement</h1>
+                <p style="opacity: 0.8; margin: 5px 0 0;">Chat Kephale Invitations</p>
+              </div>
+              <div class="content">
+                <h2 style="margin-top: 0;">Bonjour ${name},</h2>
+                <p>Merci pour votre paiement. Voici les détails de votre facture pour la création de votre invitation.</p>
+                
+                <div style="text-align: center;">
+                  <div class="status-paid">PAYÉ</div>
+                </div>
+
+                <div class="invoice-box">
+                  <div class="row">
+                    <span>Transaction ID</span>
+                    <strong>${orderDetails.transactionId}</strong>
+                  </div>
+                  <div class="row">
+                    <span>Mode de paiement</span>
+                    <strong>${orderDetails.paymentMethod}</strong>
+                  </div>
+                  <div class="row">
+                    <span>Événement</span>
+                    <strong>${orderDetails.title} (${orderDetails.type})</strong>
+                  </div>
+                  <div class="row">
+                    <span>Date de l'événement</span>
+                    <span>${formattedDate}</span>
+                  </div>
+                  <div class="row">
+                    <span>Invités prévus</span>
+                    <span>${orderDetails.guests} pers.</span>
+                  </div>
+                  <div class="row total">
+                    <span>TOTAL PAYÉ</span>
+                    <span>${formattedAmount}</span>
+                  </div>
+                </div>
+
+                <p>Votre invitation est maintenant active et prête à être partagée !</p>
+              </div>
+              <div class="footer">
+                <p>&copy; 2024 Chat Kephale - Facture générée automatiquement</p>
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error('Error sending invoice email:', error);
+    return false;
+  }
+}

@@ -45,6 +45,7 @@ model User {
   createdTasks            Task[]               @relation("TaskCreator")
   taskMessages            TaskMessage[]
   pushSubscriptions       PushSubscription[]
+  invitations             UserInvitation[]
 
   followers Follow[] @relation("UserFollowers")
   following Follow[] @relation("UserFollowing")
@@ -52,6 +53,55 @@ model User {
   @@index([email])
   @@index([isOnline])
   @@index([allowedCountry])
+}
+
+model UserInvitation {
+  id     String           @id @default(cuid())
+  userId String
+  token  String           @unique
+  status InvitationStatus @default(ACTIVE)
+
+  // New fields
+  title       String
+  description String?        @db.Text
+  imageBase64 String?        @db.Text
+  type        InvitationType @default(OTHER)
+  date        DateTime
+  location    String
+  maxGuests   Int?
+
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guests    InvitationGuest[]
+
+  @@index([userId])
+  @@index([token])
+}
+
+model InvitationGuest {
+  id           String         @id @default(cuid())
+  invitationId String
+  name         String
+  phone        String
+  confirmedAt  DateTime       @default(now())
+  invitation   UserInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId])
+}
+
+enum InvitationStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum InvitationType {
+  WEDDING
+  DINNER
+  BIRTHDAY
+  PARTY
+  OTHER
 }
 
 model Follow {
