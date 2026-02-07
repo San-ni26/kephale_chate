@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { z } from 'zod';
+import { notifyNewMessage } from '@/src/lib/websocket';
 
 const messageSchema = z.object({
     groupId: z.string(),
@@ -144,6 +145,9 @@ export async function POST(request: NextRequest) {
             where: { id: validatedData.groupId },
             data: { updatedAt: new Date() },
         });
+
+        // Notify via WebSocket
+        await notifyNewMessage(message, validatedData.groupId);
 
         return NextResponse.json(
             {

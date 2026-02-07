@@ -374,6 +374,16 @@ exports.Prisma.TaskAttachmentScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PushSubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  endpoint: 'endpoint',
+  p256dh: 'p256dh',
+  auth: 'auth',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -486,7 +496,8 @@ exports.Prisma.ModelName = {
   Comment: 'Comment',
   Task: 'Task',
   TaskMessage: 'TaskMessage',
-  TaskAttachment: 'TaskAttachment'
+  TaskAttachment: 'TaskAttachment',
+  PushSubscription: 'PushSubscription'
 };
 
 /**

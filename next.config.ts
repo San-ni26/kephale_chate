@@ -60,11 +60,11 @@ const pwaConfig = withPWA({
           maxEntries: 32,
           maxAgeSeconds: 24 * 60 * 60
         },
-        networkTimeoutSeconds: 10
       }
     }
-  ]
+  ],
+  // @ts-expect-error - importScripts is supported by next-pwa but missing from types
+  importScripts: ['/custom-sw.js'],
 });
 
 export default pwaConfig(nextConfig);
-

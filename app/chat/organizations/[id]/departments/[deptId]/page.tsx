@@ -307,12 +307,15 @@ export default function DepartmentDetailPage() {
                     </Avatar>
 
                     <div>
-                        <h1 className="text-2xl font-bold text-foreground">{department.name}</h1>
+                        <h1 className="text-1xl font-bold text-foreground">{department.name}</h1>
                         <p className="text-sm text-muted-foreground">
                             {department._count.members} membre{department._count.members > 1 ? 's' : ''}
                         </p>
                     </div>
                 </div>
+
+            </div>
+            <div>
 
                 <Button
                     onClick={() => router.push(`/chat/organizations/${orgId}/departments/${deptId}/chat`)}
@@ -322,7 +325,6 @@ export default function DepartmentDetailPage() {
                     Ouvrir le chat
                 </Button>
             </div>
-
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
                 <TabsList>
                     <TabsTrigger value="members" className="flex items-center gap-2">
@@ -340,10 +342,13 @@ export default function DepartmentDetailPage() {
                     <Card className="bg-card border-border">
                         <CardHeader>
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-xl text-foreground flex items-center gap-2">
-                                    <UsersIcon className="w-5 h-5" />
+                                <CardTitle className="text-1xl text-foreground flex items-center gap-2">
+                                    <UsersIcon className="w-5 h-5 " />
                                     Membres du département
                                 </CardTitle>
+
+                            </div>
+                            <div>
                                 <Button
                                     size="sm"
                                     onClick={() => setShowAddMemberDialog(true)}
@@ -430,10 +435,13 @@ export default function DepartmentDetailPage() {
                     <Card className="bg-card border-border">
                         <CardHeader>
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-xl text-foreground flex items-center gap-2">
+                                <CardTitle className="text-1xl text-foreground flex items-center gap-2">
                                     <ClipboardList className="w-5 h-5" />
                                     Tâches du département
                                 </CardTitle>
+
+                            </div>
+                            <div>
                                 <Button
                                     size="sm"
                                     onClick={() => setShowCreateTaskDialog(true)}

@@ -7,8 +7,8 @@ interface TaskAttachmentProps {
         id: string;
         filename: string;
         url: string; // URL instead of base64
-        fileType: string;
-        size?: number;
+        fileType?: string | null;
+        size?: number | null;
     };
 }
 

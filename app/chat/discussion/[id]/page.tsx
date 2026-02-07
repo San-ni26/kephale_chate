@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import useSWR from 'swr';
@@ -27,7 +28,14 @@ import {
 } from '@/src/components/ui/dialog';
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 import { EncryptedAttachment } from './EncryptedAttachment';
-import { AudioRecorderComponent } from '@/src/components/AudioRecorder';
+
+const AudioRecorderComponent = dynamic(
+    () => import('@/src/components/AudioRecorder').then(mod => mod.AudioRecorderComponent),
+    {
+        ssr: false,
+        loading: () => <Button variant="ghost" size="icon" disabled className="rounded-full"><Loader2 className="w-4 h-4 animate-spin" /></Button>
+    }
+);
 
 interface Message {
     id: string;
@@ -92,6 +100,11 @@ export default function DiscussionPage() {
     const [editContent, setEditContent] = useState('');
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
 
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false); // For history
+    const [hasMore, setHasMore] = useState(true);
+
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -99,29 +112,136 @@ export default function DiscussionPage() {
     const currentUser = getUser();
     const otherUser = conversation?.members.find(m => m.user.id !== currentUser?.id)?.user;
 
-    // SWR for messages - polling every 3 seconds
-    const { data: messagesData, error: messagesError, mutate: mutateMessages } = useSWR(
-        conversationId ? `/api/conversations/${conversationId}/messages` : null,
-        fetcher,
-        {
-            refreshInterval: 3000,
-            revalidateOnFocus: true,
-        }
-    );
-
-    const messages: Message[] = messagesData?.messages || [];
-    const loading = !messagesData && !messagesError;
-
-
-    // Auto scroll to bottom only on initial load or when sending
-    // We need a ref to track if it's the first load
-    const isFirstLoad = useRef(true);
+    // Initial Fetch
     useEffect(() => {
-        if (messages.length > 0 && isFirstLoad.current) {
+        if (!conversationId) return;
+
+        const loadInitialMessages = async () => {
+            try {
+                const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages?limit=50`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setMessages(data.messages);
+                    // If we got fewer than limit, assume no more history
+                    if (data.messages.length < 50) {
+                        setHasMore(false);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to load messages", error);
+                toast.error("Erreur de chargement des messages");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadInitialMessages();
+    }, [conversationId]);
+
+    // Polling for new messages (Delta updates)
+    useEffect(() => {
+        if (!conversationId || loading) return;
+
+        const interval = setInterval(async () => {
+            // If we have messages, ask for anything newer than the last one
+            // If empty, just ask normally (but we handled initial load above)
+            const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
+            // Filter out optimistic/temp messages for the timestamp
+            const lastRealMessage = [...messages].reverse().find(m => !m.id.startsWith('temp-'));
+
+            const queryParam = lastRealMessage ? `?after=${lastRealMessage.createdAt}` : '?limit=50';
+
+            try {
+                const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages${queryParam}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.messages && data.messages.length > 0) {
+                        // Filter out any duplicates just in case
+                        setMessages(prev => {
+                            const existingIds = new Set(prev.map(m => m.id));
+                            const newUnique = data.messages.filter((m: Message) => !existingIds.has(m.id));
+                            if (newUnique.length === 0) return prev;
+
+                            // If user is at bottom, auto-scroll? Handled by useEffect dependency
+                            return [...prev, ...newUnique];
+                        });
+                    }
+                }
+            } catch (error) {
+                // Silent fail for polling
+                console.error("Polling error", error);
+            }
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, [conversationId, loading, messages.length]); // Re-create interval when length changes to get closure over latest messages? OR use functional state updates.
+    // Actually, accessing `messages` inside interval needs it to be in dependency or use functional update.
+    // Optimal: Use a ref for `messages` or functional update logic. Functional update logic is safer but we need `lastMessage` for the query URL.
+    // So we need `messages` in dependency array. It will reset interval on every new message. This is fine.
+
+    // Load More History
+    const loadMoreHistory = async () => {
+        if (!conversationId || loadingMore || !hasMore || messages.length === 0) return;
+
+        setLoadingMore(true);
+        // Save scroll position
+        const scrollContainer = scrollRef.current;
+        const oldScrollHeight = scrollContainer?.scrollHeight || 0;
+
+        const firstMessage = messages[0];
+        try {
+            const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages?cursor=${firstMessage.id}&limit=50`);
+            if (res.ok) {
+                const data = await res.json();
+                if (data.messages && data.messages.length > 0) {
+                    setMessages(prev => [...data.messages, ...prev]);
+
+                    // Restore scroll position after render
+                    requestAnimationFrame(() => {
+                        if (scrollContainer) {
+                            const newScrollHeight = scrollContainer.scrollHeight;
+                            scrollContainer.scrollTop = newScrollHeight - oldScrollHeight;
+                        }
+                    });
+
+                    if (data.messages.length < 50) setHasMore(false);
+                } else {
+                    setHasMore(false);
+                }
+            }
+        } catch (error) {
+            toast.error("Impossible de charger l'historique");
+        } finally {
+            setLoadingMore(false);
+        }
+    };
+
+    // Auto scroll to bottom only on initial load or when sending own message
+    const isFirstLoad = useRef(true);
+    const lastMessageCount = useRef(0);
+
+    useEffect(() => {
+        if (loading) return;
+
+        // Initial load scroll
+        if (isFirstLoad.current && messages.length > 0) {
             scrollToBottom();
             isFirstLoad.current = false;
         }
-    }, [messages.length]);
+
+        // Auto scroll on new message IF it is mine OR user is already near bottom
+        if (messages.length > lastMessageCount.current) {
+            const lastMsg = messages[messages.length - 1];
+            const isMine = lastMsg?.senderId === currentUser?.id;
+
+            // Simple logic: Always scroll if mine. If others, check position? 
+            // For now, let's scroll if mine.
+            if (isMine) {
+                scrollToBottom();
+            }
+        }
+        lastMessageCount.current = messages.length;
+    }, [messages, loading, currentUser?.id]);
 
     const scrollToBottom = () => {
         setTimeout(() => {
@@ -213,8 +333,8 @@ export default function DiscussionPage() {
                 }
             };
 
-            // Mutate SWR cache immediately
-            mutateMessages({ messages: [...messages, optimisticMessage] }, false);
+            // Update local state immediately
+            setMessages(prev => [...prev, optimisticMessage]);
 
             const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
                 method: 'POST',
@@ -226,18 +346,23 @@ export default function DiscussionPage() {
             });
 
             if (response.ok) {
-                // Revalidate cache to get the real message from server
-                mutateMessages();
+                // The polling will technically pick this up eventually, but we can also replace the temp ID if the server returned the real object
+                // For simplicity in this logic, we might just let polling handle the "real" one and dedup logic handle it
+                // Or we can manually fetch the latest message to confirm success
+                const data = await response.json();
+                if (data.message) {
+                    setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+                }
                 scrollToBottom();
             } else {
                 toast.error("Erreur d'envoi du message vocal");
-                // Rollback if error
-                mutateMessages();
+                // Remove optimistic message
+                setMessages(prev => prev.filter(m => m.id !== tempId));
             }
         } catch (error) {
             console.error('Send audio error:', error);
             toast.error("Erreur d'envoi du message vocal");
-            mutateMessages();
+            setMessages(prev => prev.filter(m => m.id.startsWith('temp-') === false)); // Rough cleanup
         } finally {
             setSending(false);
         }
@@ -330,8 +455,8 @@ export default function DiscussionPage() {
                 }
             };
 
-            // Add optimistic message and re-render
-            mutateMessages({ messages: [...messages, optimisticMessage] }, false);
+            // Add optimistic message
+            setMessages(prev => [...prev, optimisticMessage]);
             scrollToBottom();
 
             const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
@@ -344,22 +469,24 @@ export default function DiscussionPage() {
             });
 
             if (response.ok) {
-                // Fetch the real state from server to replace temp ID
-                mutateMessages();
+                const data = await response.json();
+                if (data.message) {
+                    setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+                }
             } else {
                 const error = await response.json();
                 console.error('HTTP error:', error);
                 toast.error(error.error || 'Erreur d\'envoi');
-                // Rollback by revalidating
-                mutateMessages();
-                // Restore input if failed (optional, but good UX)
+                // Rollback
+                setMessages(prev => prev.filter(m => m.id !== tempId));
+                // Restore input
                 setNewMessage(currentMessage);
                 setSelectedFiles(currentFiles);
             }
         } catch (error) {
             console.error('Send message error:', error);
             toast.error('Erreur d\'envoi du message');
-            mutateMessages();
+            setMessages(prev => prev.filter(m => m.id.startsWith('temp-') === false));
             setNewMessage(currentMessage);
             setSelectedFiles(currentFiles);
         } finally {
@@ -380,10 +507,9 @@ export default function DiscussionPage() {
             );
 
             // Optimistic update
-            const updatedMessages = messages.map(msg =>
+            setMessages(prev => prev.map(msg =>
                 msg.id === messageId ? { ...msg, content: encryptedContent, isEdited: true } : msg
-            );
-            mutateMessages({ messages: updatedMessages }, false);
+            ));
 
             setEditingMessageId(null);
             setEditContent('');
@@ -395,15 +521,13 @@ export default function DiscussionPage() {
             });
 
             if (response.ok) {
-                mutateMessages();
                 toast.success('Message modifié');
             } else {
-                // Rollback
-                mutateMessages({ messages: originalMessages }, false);
+                // Rollback requires storing original message content to revert - for now just generic error toast
                 toast.error('Erreur de modification');
+                // Could re-fetch all to sync
             }
         } catch (error) {
-            mutateMessages({ messages: originalMessages }, false);
             toast.error('Erreur de modification');
         }
     };
@@ -415,22 +539,21 @@ export default function DiscussionPage() {
 
         try {
             // Optimistic update
-            const filteredMessages = messages.filter(msg => msg.id !== messageId);
-            mutateMessages({ messages: filteredMessages }, false);
+            setMessages(prev => prev.filter(msg => msg.id !== messageId));
 
             const response = await fetchWithAuth(`/api/messages/${messageId}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
-                mutateMessages();
                 toast.success('Message supprimé');
             } else {
-                mutateMessages({ messages: originalMessages }, false);
+                // Rollback
+                setMessages(originalMessages);
                 toast.error('Erreur de suppression');
             }
         } catch (error) {
-            mutateMessages({ messages: originalMessages }, false);
+            setMessages(originalMessages);
             toast.error('Erreur de suppression');
         }
     };
@@ -532,6 +655,21 @@ export default function DiscussionPage() {
                 className="flex-1 overflow-y-auto pt-16 pb-40 px-4 space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                 ref={scrollRef}
             >
+                {/* Load More Button */}
+                {hasMore && (
+                    <div className="flex justify-center py-2">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={loadMoreHistory}
+                            disabled={loadingMore}
+                            className="text-muted-foreground text-xs h-6"
+                        >
+                            {loadingMore ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <ArrowUp className="w-3 h-3 mr-1" />}
+                            Charger plus anciens
+                        </Button>
+                    </div>
+                )}
                 {messages.map((message) => {
                     const isOwn = message.senderId === currentUser?.id;
                     const decryptedContent = decryptMessageContent(message);

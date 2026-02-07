@@ -7,6 +7,7 @@ import { Server as HTTPServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { sendPushNotification } from '@/src/lib/push';
 
 interface AuthenticatedSocket extends Socket {
     userId?: string;
@@ -127,11 +128,8 @@ export function initializeWebSocket(httpServer: HTTPServer) {
                     data: { updatedAt: new Date() },
                 });
 
-                // Broadcast to all users in the conversation
-                io?.to(`conversation:${data.conversationId}`).emit('message:new', {
-                    conversationId: data.conversationId,
-                    message,
-                });
+                // Use the shared notification helper
+                await notifyNewMessage(message, data.conversationId);
 
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -294,8 +292,109 @@ export function emitToUser(userId: string, event: string, data: any) {
     }
 }
 
+
+
 export function emitToConversation(conversationId: string, event: string, data: any) {
     if (io) {
         io.to(`conversation:${conversationId}`).emit(event, data);
+    }
+}
+
+export async function notifyNewMessage(message: any, conversationId: string) {
+    // Broadcast to all users in the conversation
+    // We strive to get the latest IO instance
+    const socketIO = io;
+
+    if (socketIO) {
+        socketIO.to(`conversation:${conversationId}`).emit('message:new', {
+            conversationId,
+            message,
+        });
+
+        // Notify other group members
+        const groupMembers = await prisma.groupMember.findMany({
+            where: {
+                groupId: conversationId,
+                userId: { not: message.senderId } // Exclude sender
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
+            }
+        });
+
+        // Create notifications for each member
+        // valid for both socket and api route usage
+        const notificationPromises = groupMembers.map(async (member) => {
+            const notificationContent = `Nouveau message de ${message.sender.name}`;
+
+            // Create DB notification
+            const notification = await prisma.notification.create({
+                data: {
+                    userId: member.userId,
+                    content: notificationContent,
+                    isRead: false,
+                }
+            });
+
+            // Emit to user's personal room if connected
+            if (socketIO) {
+                socketIO.to(`user:${member.userId}`).emit('notification:new', {
+                    id: notification.id,
+                    content: notificationContent,
+                    messageId: message.id,
+                    conversationId: conversationId,
+                    senderName: message.sender.name,
+                    createdAt: notification.createdAt
+                });
+            }
+
+            // Send Web Push Notification
+            try {
+                const subscriptions = await prisma.pushSubscription.findMany({
+                    where: { userId: member.userId }
+                });
+
+                if (subscriptions.length > 0) {
+                    const payload = JSON.stringify({
+                        title: `Nouveau message de ${message.sender.name}`,
+                        body: message.content ? (message.content.length > 50 ? message.content.substring(0, 50) + '...' : message.content) : 'Pièce jointe',
+                        icon: '/icons/icon-192x192.png', // Adjust path based on your PWA icons
+                        url: `/chat/discussion/${conversationId}`,
+                        data: {
+                            conversationId,
+                            messageId: message.id
+                        }
+                    });
+
+                    await Promise.all(subscriptions.map(async (sub) => {
+                        try {
+                            await sendPushNotification({
+                                endpoint: sub.endpoint,
+                                keys: {
+                                    p256dh: sub.p256dh,
+                                    auth: sub.auth
+                                }
+                            }, payload);
+                        } catch (err: any) {
+                            if (err.statusCode === 410 || err.statusCode === 404) {
+                                // Subscription is invalid or expired, remove it
+                                await prisma.pushSubscription.delete({
+                                    where: { endpoint: sub.endpoint }
+                                });
+                            }
+                        }
+                    }));
+                }
+            } catch (pushError) {
+                console.error('Failed to send push notification:', pushError);
+            }
+        });
+
+        await Promise.all(notificationPromises);
     }
 }
