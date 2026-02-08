@@ -276,6 +276,51 @@ export function initializeWebSocket(httpServer: HTTPServer) {
             // Broadcast offline status
             io?.emit('user:offline', { userId: socket.userId });
         });
+
+        // --- Voice Call Signaling ---
+
+        // Handle call invite
+        socket.on('call:invite', (data: { recipientId: string; offer: any; conversationId: string }) => {
+            console.log(`Call invite from ${socket.userId} to ${data.recipientId}`);
+            // Forward the offer to the specific user
+            io?.to(`user:${data.recipientId}`).emit('call:incoming', {
+                callerId: socket.userId,
+                callerName: socket.userEmail, // Or fetch name if available in socket
+                offer: data.offer,
+                conversationId: data.conversationId,
+            });
+        });
+
+        // Handle call answer
+        socket.on('call:answer', (data: { callerId: string; answer: any }) => {
+            console.log(`Call answered by ${socket.userId} for ${data.callerId}`);
+            io?.to(`user:${data.callerId}`).emit('call:answered', {
+                answer: data.answer,
+                responderId: socket.userId
+            });
+        });
+
+        // Handle call rejection/busy
+        socket.on('call:reject', (data: { callerId: string }) => {
+            io?.to(`user:${data.callerId}`).emit('call:rejected', {
+                responderId: socket.userId
+            });
+        });
+
+        // Handle ICE candidates
+        socket.on('call:ice-candidate', (data: { targetUserId: string; candidate: any }) => {
+            io?.to(`user:${data.targetUserId}`).emit('call:ice-candidate', {
+                candidate: data.candidate,
+                senderId: socket.userId
+            });
+        });
+
+        // Handle call end
+        socket.on('call:end', (data: { targetUserId: string }) => {
+            io?.to(`user:${data.targetUserId}`).emit('call:ended', {
+                enderId: socket.userId
+            });
+        });
     });
 
     return io;

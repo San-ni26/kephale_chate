@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp } from 'lucide-react';
+import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, PhoneIncoming, PhoneOff, Mic, MicOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import useSWR from 'swr';
@@ -28,6 +28,7 @@ import {
 } from '@/src/components/ui/dialog';
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 import { EncryptedAttachment } from './EncryptedAttachment';
+import { useWebSocket } from '@/src/hooks/useWebSocket';
 
 const AudioRecorderComponent = dynamic(
     () => import('@/src/components/AudioRecorder').then(mod => mod.AudioRecorderComponent),
@@ -100,6 +101,31 @@ export default function DiscussionPage() {
     const [editContent, setEditContent] = useState('');
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
 
+    // Call State
+    const [isCallActive, setIsCallActive] = useState(false);
+    const [isIncomingCall, setIsIncomingCall] = useState(false);
+    const [callStatus, setCallStatus] = useState<'idle' | 'dialing' | 'ringing' | 'connected' | 'ended'>('idle');
+    const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+    const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+    const [incomingCallData, setIncomingCallData] = useState<{ callerId: string; offer: any; conversationId: string } | null>(null);
+    const [isMuted, setIsMuted] = useState(false);
+
+    const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+    const localVideoRef = useRef<HTMLVideoElement>(null); // Even for audio, useful to attach stream
+    const remoteVideoRef = useRef<HTMLVideoElement>(null);
+
+    const { socket, isConnected } = useWebSocket(
+        (data) => {
+            // On new message via socket - update messages
+            // This replaces/augments the polling
+            setMessages(prev => {
+                if (prev.some(m => m.id === data.message.id)) return prev;
+                return [...prev, data.message];
+            });
+            scrollToBottom();
+        }
+    );
+
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false); // For history
@@ -138,17 +164,197 @@ export default function DiscussionPage() {
         loadInitialMessages();
     }, [conversationId]);
 
+
+    // WebRTC Logic
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on('call:incoming', async (data) => {
+            if (isCallActive) {
+                socket.emit('call:reject', { callerId: data.callerId });
+                return;
+            }
+            setIncomingCallData(data);
+            setIsIncomingCall(true);
+            setCallStatus('ringing');
+
+            // Play ringtone if desired
+        });
+
+        socket.on('call:answered', async (data) => {
+            if (!peerConnectionRef.current) return;
+            await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(data.answer));
+            setCallStatus('connected');
+        });
+
+        socket.on('call:rejected', () => {
+            toast.info('Appel rejeté');
+            endCall();
+        });
+
+        socket.on('call:ended', () => {
+            toast.info('Appel terminé');
+            endCall();
+        });
+
+        socket.on('call:ice-candidate', async (data) => {
+            if (!peerConnectionRef.current) return;
+            try {
+                await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(data.candidate));
+            } catch (e) {
+                console.error('Error adding received ice candidate', e);
+            }
+        });
+
+        return () => {
+            socket.off('call:incoming');
+            socket.off('call:answered');
+            socket.off('call:rejected');
+            socket.off('call:ended');
+            socket.off('call:ice-candidate');
+        };
+    }, [socket, isCallActive]);
+
+    const initializePeerConnection = () => {
+        const pc = new RTCPeerConnection({
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+            ]
+        });
+
+        pc.onicecandidate = (event) => {
+            if (event.candidate && otherUser) {
+                socket?.emit('call:ice-candidate', {
+                    targetUserId: otherUser.id,
+                    candidate: event.candidate
+                });
+            }
+        };
+
+        pc.ontrack = (event) => {
+            setRemoteStream(event.streams[0]);
+            if (remoteVideoRef.current) {
+                remoteVideoRef.current.srcObject = event.streams[0];
+            }
+        };
+
+        peerConnectionRef.current = pc;
+        return pc;
+    };
+
+    const startCall = async () => {
+        if (!otherUser) return;
+        setIsCallActive(true);
+        setCallStatus('dialing');
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            setLocalStream(stream);
+
+            const pc = initializePeerConnection();
+            stream.getTracks().forEach(track => pc.addTrack(track, stream));
+
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+
+            socket?.emit('call:invite', {
+                recipientId: otherUser.id,
+                offer: offer,
+                conversationId: conversationId
+            });
+
+        } catch (err) {
+            console.error('Error starting call:', err);
+            toast.error('Impossible d\'accéder au microphone');
+            endCall();
+        }
+    };
+
+    const answerCall = async () => {
+        if (!incomingCallData) return;
+        setIsIncomingCall(false);
+        setIsCallActive(true);
+        setCallStatus('connected');
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            setLocalStream(stream);
+
+            const pc = initializePeerConnection();
+            stream.getTracks().forEach(track => pc.addTrack(track, stream));
+
+            await pc.setRemoteDescription(new RTCSessionDescription(incomingCallData.offer));
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+
+            socket?.emit('call:answer', {
+                callerId: incomingCallData.callerId,
+                answer: answer
+            });
+
+        } catch (err) {
+            console.error('Error answering call:', err);
+            toast.error('Erreur lors de la réponse');
+            endCall();
+        }
+    };
+
+    const rejectCall = () => {
+        if (incomingCallData) {
+            socket?.emit('call:reject', { callerId: incomingCallData.callerId });
+        }
+        setIsIncomingCall(false);
+        setIncomingCallData(null);
+        setCallStatus('idle');
+    };
+
+    const endCall = () => {
+        if (localStream) {
+            localStream.getTracks().forEach(track => track.stop());
+            setLocalStream(null);
+        }
+        if (peerConnectionRef.current) {
+            peerConnectionRef.current.close();
+            peerConnectionRef.current = null;
+        }
+
+        if (isCallActive && otherUser) {
+            // Only emit if we were actually in a call/dialing
+            socket?.emit('call:end', { targetUserId: otherUser.id });
+        }
+
+        setIsCallActive(false);
+        setIsIncomingCall(false);
+        setCallStatus('idle');
+        setIncomingCallData(null);
+        setRemoteStream(null);
+    };
+
+    const toggleMute = () => {
+        if (localStream) {
+            localStream.getAudioTracks().forEach(track => {
+                track.enabled = !track.enabled;
+            });
+            setIsMuted(!isMuted);
+        }
+    };
+
+    // Auto-play remote audio
+    useEffect(() => {
+        if (remoteVideoRef.current && remoteStream) {
+            remoteVideoRef.current.srcObject = remoteStream;
+        }
+    }, [remoteStream]);
+
+
     // Polling for new messages (Delta updates)
     useEffect(() => {
         if (!conversationId || loading) return;
 
         const interval = setInterval(async () => {
-            // If we have messages, ask for anything newer than the last one
-            // If empty, just ask normally (but we handled initial load above)
             const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
-            // Filter out optimistic/temp messages for the timestamp
             const lastRealMessage = [...messages].reverse().find(m => !m.id.startsWith('temp-'));
-
             const queryParam = lastRealMessage ? `?after=${lastRealMessage.createdAt}` : '?limit=50';
 
             try {
@@ -600,7 +806,7 @@ export default function DiscussionPage() {
     }
 
     return (
-        <div className="flex flex-col h-screen bg-background text-foreground pt-2">
+        <div className="flex flex-col h-full bg-background text-foreground pt-2 md:pt-0">
             <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
                 <DialogContent>
                     <DialogHeader>
@@ -623,14 +829,75 @@ export default function DiscussionPage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+            {/* Call Overlay */}
+            {(isCallActive || isIncomingCall) && (
+                <div className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-sm flex items-center justify-center flex-col">
+                    <div className="bg-card p-6 rounded-full w-32 h-32 flex items-center justify-center mb-8 animate-pulse border-4 border-primary/20">
+                        <Avatar className="w-24 h-24">
+                            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${getConversationName()}`} />
+                            <AvatarFallback>{getConversationName()[0]}</AvatarFallback>
+                        </Avatar>
+                    </div>
+
+                    <h3 className="text-2xl font-bold mb-2">
+                        {isIncomingCall ? 'Appel entrant...' : (callStatus === 'connected' ? 'En appel' : 'Appel en cours...')}
+                    </h3>
+                    <p className="text-muted-foreground mb-8 text-lg">
+                        {isIncomingCall ? incomingCallData?.callerId : (otherUser?.name || 'Utilisateur')}
+                    </p>
+
+                    <div className="flex items-center gap-8">
+                        {isIncomingCall ? (
+                            <>
+                                <Button
+                                    size="lg"
+                                    className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600"
+                                    onClick={rejectCall}
+                                >
+                                    <PhoneOff className="w-8 h-8 text-white" />
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 animate-bounce"
+                                    onClick={answerCall}
+                                >
+                                    <PhoneIncoming className="w-8 h-8 text-white" />
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    className={`rounded-full w-14 h-14 ${isMuted ? 'bg-muted text-muted-foreground' : ''}`}
+                                    onClick={toggleMute}
+                                >
+                                    {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600"
+                                    onClick={endCall}
+                                >
+                                    <PhoneOff className="w-8 h-8 text-white" />
+                                </Button>
+                            </>
+                        )}
+                    </div>
+
+                    {/* Hidden Audio Elements */}
+                    <audio ref={remoteVideoRef} autoPlay playsInline className="hidden" />
+                    <audio ref={localVideoRef} autoPlay playsInline muted className="hidden" />
+                </div>
+            )}
 
             {/* Header */}
-            <div className="fixed top-0 left-0 right-0 bg-background border-b border-border z-40 h-16 flex items-center px-4">
+            <div className="fixed top-0 left-0 right-0 md:static md:w-full bg-background border-b border-border z-[60] h-16 flex items-center px-4 shrink-0">
                 <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => router.push('/chat')}
-                    className="mr-3"
+                    className="mr-3 md:hidden"
                 >
                     <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
                 </Button>
@@ -648,11 +915,24 @@ export default function DiscussionPage() {
                         </p>
                     )}
                 </div>
+
+                {/* Call Buttons */}
+                <div className="flex items-center gap-1 md:mr-4">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={startCall}
+                        disabled={isCallActive || !otherUser?.isOnline}
+                        title="Appel vocal"
+                    >
+                        <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                    </Button>
+                </div>
             </div>
 
             {/* Messages */}
             <div
-                className="flex-1 overflow-y-auto pt-16 pb-40 px-4 space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                className="flex-1 overflow-y-auto px-4 pt-16 md:pt-4 pb-32 md:pb-4 space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                 ref={scrollRef}
             >
                 {/* Load More Button */}
@@ -799,7 +1079,7 @@ export default function DiscussionPage() {
             </div>
 
             {/* Input */}
-            <div className="fixed bottom-16 left-0 right-0 bg-background border-t border-border p-4">
+            <div className="fixed bottom-16 left-0 right-0 md:static md:bottom-auto md:w-full bg-background border-t border-border p-4 z-[60]">
                 {selectedFiles.length > 0 && (
                     <div className="mb-3 flex gap-2 flex-wrap">
                         {selectedFiles.map((file, idx) => (

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Loader2, User } from 'lucide-react';
+import { Loader2, User, Search, MessageSquarePlus, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
@@ -121,22 +121,43 @@ export default function ChatListPage() {
     }
 
     return (
-        <div className="p-4 pt-16 max-w-2xl mx-auto h-full flex flex-col">
-            <h2 className="text-2xl font-bold mb-6 px-1 text-foreground">Discussions</h2>
+        <div className="h-full w-full flex flex-col">
+            {/* Mobile View: Conversation List */}
+            <div className="md:hidden p-4 pt-4 pb-20 max-w-2xl mx-auto h-full flex flex-col overflow-y-auto">
+                <h2 className="text-2xl font-bold mb-6 px-1 text-foreground">Discussions</h2>
 
-            {conversations.filter(c => c.isDirect).length === 0 ? (
-                <div className="flex-1 flex flex-col justify-center items-center text-center text-muted-foreground">
-                    <div className="bg-muted/50 p-6 rounded-full mb-4">
-                        <User className="w-10 h-10 opacity-50" />
+                {conversations.filter(c => c.isDirect).length === 0 ? (
+                    <div className="flex-1 flex flex-col justify-center items-center text-center text-muted-foreground">
+                        <div className="bg-muted/50 p-6 rounded-full mb-4">
+                            <User className="w-10 h-10 opacity-50" />
+                        </div>
+                        <p className="font-medium">Aucune discussion</p>
+                        <p className="text-sm mt-1">Commencez une nouvelle conversation.</p>
                     </div>
-                    <p className="font-medium">Aucune discussion</p>
-                    <p className="text-sm mt-1">Commencez une nouvelle conversation.</p>
+                ) : (
+                    <div className="flex flex-col gap-3">
+                        {getConversationsList()}
+                    </div>
+                )}
+            </div>
+
+            {/* Desktop View: Placeholder */}
+            <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-muted/20 text-center p-8 h-full">
+                <div className="bg-background p-8 rounded-2xl shadow-sm border border-border/50 max-w-md">
+                    <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <MessageSquarePlus className="w-10 h-10 text-primary" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-foreground mb-3">Kephale Chat Web</h2>
+                    <p className="text-muted-foreground mb-8">
+                        Envoyez et recevez des messages sans garder votre téléphone connecté.
+                        Utilisez Kephale sur plusieurs appareils en même temps.
+                    </p>
+                    <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground/70">
+                        <Lock className="w-3 h-3" />
+                        <span>Vos messages personnels sont chiffrés de bout en bout</span>
+                    </div>
                 </div>
-            ) : (
-                <div className="flex flex-col gap-3 pb-20">
-                    {getConversationsList()}
-                </div>
-            )}
+            </div>
         </div>
     );
 }

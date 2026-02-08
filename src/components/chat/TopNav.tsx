@@ -23,19 +23,26 @@ export function TopNav() {
     const isOrganizationsPage = pathname?.startsWith('/chat/organizations');
 
     useEffect(() => {
+        let mounted = true;
+
         // Fetch user profile with authentication
         const fetchProfile = async () => {
             try {
                 const response = await fetchWithAuth('/api/users/profile');
-                if (response.ok) {
+                if (mounted && response.ok) {
                     const data = await response.json();
-                    setUser(data.profile);
+                    if (mounted) setUser(data.profile);
                 }
             } catch (error) {
                 console.error('Failed to fetch profile', error);
             }
         };
+
         fetchProfile();
+
+        return () => {
+            mounted = false;
+        };
     }, []);
 
     const handleStartChat = async () => {

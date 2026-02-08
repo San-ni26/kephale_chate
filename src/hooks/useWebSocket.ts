@@ -50,76 +50,68 @@ export function useWebSocket(
         }
 
         // Initialize Socket.IO server first
-        const initSocketIO = async () => {
-            try {
-                await fetch('/api/socket');
-            } catch (error) {
-                console.error('Failed to initialize Socket.IO:', error);
-            }
 
-            // Initialize socket connection
-            const socket = io(process.env.NEXT_PUBLIC_APP_URL, {
-                auth: { token },
-                autoConnect: true,
-            });
 
-            socketRef.current = socket;
+        // Initialize socket connection
+        const socket = io(process.env.NEXT_PUBLIC_APP_URL, {
+            auth: { token },
+            autoConnect: true,
+        });
 
-            // Connection events
-            socket.on('connect', () => {
-                console.log('WebSocket connected');
-                setIsConnected(true);
-            });
+        socketRef.current = socket;
 
-            socket.on('disconnect', () => {
-                console.log('WebSocket disconnected');
-                setIsConnected(false);
-            });
+        // Connection events
+        socket.on('connect', () => {
+            console.log('WebSocket connected');
+            setIsConnected(true);
+        });
 
-            socket.on('connect_error', (error) => {
-                console.error('WebSocket connection error:', error);
-                setIsConnected(false);
-            });
+        socket.on('disconnect', () => {
+            console.log('WebSocket disconnected');
+            setIsConnected(false);
+        });
 
-            // Message events
-            socket.on('message:new', (data: { conversationId: string; message: Message }) => {
-                console.log('New message received:', data);
-                onNewMessage?.(data);
-            });
+        socket.on('connect_error', (error) => {
+            console.error('WebSocket connection error:', error);
+            setIsConnected(false);
+        });
 
-            socket.on('message:edited', (data: { conversationId: string; message: Message }) => {
-                console.log('Message edited:', data);
-                onMessageEdited?.(data);
-            });
+        // Message events
+        socket.on('message:new', (data: { conversationId: string; message: Message }) => {
+            console.log('New message received:', data);
+            onNewMessage?.(data);
+        });
 
-            socket.on('message:deleted', (data: { conversationId: string; messageId: string }) => {
-                console.log('Message deleted:', data);
-                onMessageDeleted?.(data);
-            });
+        socket.on('message:edited', (data: { conversationId: string; message: Message }) => {
+            console.log('Message edited:', data);
+            onMessageEdited?.(data);
+        });
 
-            // Typing events
-            socket.on('typing:user', (data: { conversationId: string; userId: string; isTyping: boolean }) => {
-                onUserTyping?.(data);
-            });
+        socket.on('message:deleted', (data: { conversationId: string; messageId: string }) => {
+            console.log('Message deleted:', data);
+            onMessageDeleted?.(data);
+        });
 
-            // User status events
-            socket.on('user:online', (data: { userId: string }) => {
-                onUserStatusChanged?.({ userId: data.userId, isOnline: true });
-            });
+        // Typing events
+        socket.on('typing:user', (data: { conversationId: string; userId: string; isTyping: boolean }) => {
+            onUserTyping?.(data);
+        });
 
-            socket.on('user:offline', (data: { userId: string }) => {
-                onUserStatusChanged?.({ userId: data.userId, isOnline: false });
-            });
+        // User status events
+        socket.on('user:online', (data: { userId: string }) => {
+            onUserStatusChanged?.({ userId: data.userId, isOnline: true });
+        });
 
-            // Error events
-            socket.on('error', (error: { message: string }) => {
-                console.error('WebSocket error:', error);
-                onError?.(error);
-            });
-        };
+        socket.on('user:offline', (data: { userId: string }) => {
+            onUserStatusChanged?.({ userId: data.userId, isOnline: false });
+        });
 
-        // Call the initialization function
-        initSocketIO();
+        // Error events
+        socket.on('error', (error: { message: string }) => {
+            console.error('WebSocket error:', error);
+            onError?.(error);
+        });
+
 
         // Cleanup on unmount
         return () => {
