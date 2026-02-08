@@ -3,7 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { notifyNewMessage } from '@/src/lib/websocket';
 
-// GET: Get all messages for a conversation
+// GET: Get messages for a conversation with cursor-based pagination
 export async function GET(
     request: NextRequest,
     props: { params: Promise<{ id: string }> }
@@ -15,10 +15,14 @@ export async function GET(
 
         const user = (request as AuthenticatedRequest).user;
         if (!user) {
-            return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+            return NextResponse.json({ error: 'Non authentifie' }, { status: 401 });
         }
 
         const conversationId = params.id;
+        const url = new URL(request.url);
+        const limit = Math.min(parseInt(url.searchParams.get('limit') || '30'), 100);
+        const cursor = url.searchParams.get('cursor'); // message ID to paginate before
+        const after = url.searchParams.get('after'); // ISO date to get messages after
 
         // Verify user is a member
         const membership = await prisma.groupMember.findFirst({
@@ -30,34 +34,89 @@ export async function GET(
 
         if (!membership) {
             return NextResponse.json(
-                { error: 'Accès refusé' },
+                { error: 'Acces refuse' },
                 { status: 403 }
             );
         }
 
-        // Get messages
+        const include = {
+            sender: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    publicKey: true,
+                },
+            },
+            attachments: true,
+        };
+
+        // Case 1: Load messages AFTER a certain date (for polling new messages)
+        if (after) {
+            const messages = await prisma.message.findMany({
+                where: {
+                    groupId: conversationId,
+                    createdAt: { gt: new Date(after) },
+                },
+                include,
+                orderBy: { createdAt: 'asc' },
+                take: limit,
+            });
+
+            return NextResponse.json({ messages, hasMore: false });
+        }
+
+        // Case 2: Load OLDER messages before a cursor (clicking "load older")
+        if (cursor) {
+            const cursorMessage = await prisma.message.findUnique({
+                where: { id: cursor },
+                select: { createdAt: true },
+            });
+
+            if (!cursorMessage) {
+                return NextResponse.json({ messages: [], hasMore: false });
+            }
+
+            const messages = await prisma.message.findMany({
+                where: {
+                    groupId: conversationId,
+                    createdAt: { lt: cursorMessage.createdAt },
+                },
+                include,
+                orderBy: { createdAt: 'desc' },
+                take: limit,
+            });
+
+            // Reverse to get chronological order
+            messages.reverse();
+
+            return NextResponse.json({
+                messages,
+                hasMore: messages.length === limit,
+            });
+        }
+
+        // Case 3: Initial load - get the MOST RECENT messages
+        // Query in desc order to get the latest, then reverse for display
         const messages = await prisma.message.findMany({
             where: { groupId: conversationId },
-            include: {
-                sender: {
-                    select: {
-                        id: true,
-                        name: true,
-                        email: true,
-                        publicKey: true,
-                    },
-                },
-                attachments: true,
-            },
-            orderBy: { createdAt: 'asc' },
+            include,
+            orderBy: { createdAt: 'desc' },
+            take: limit,
         });
 
-        return NextResponse.json({ messages }, { status: 200 });
+        // Reverse to chronological order (oldest first for display)
+        messages.reverse();
+
+        // Check if there are older messages
+        const hasMore = messages.length === limit;
+
+        return NextResponse.json({ messages, hasMore });
 
     } catch (error) {
         console.error('Get messages error:', error);
         return NextResponse.json(
-            { error: 'Erreur lors de la récupération des messages' },
+            { error: 'Erreur lors de la recuperation des messages' },
             { status: 500 }
         );
     }
@@ -75,14 +134,13 @@ export async function POST(
 
         const user = (request as AuthenticatedRequest).user;
         if (!user) {
-            return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+            return NextResponse.json({ error: 'Non authentifie' }, { status: 401 });
         }
 
         const conversationId = params.id;
         const body = await request.json();
         const { content, attachments } = body;
 
-        // Allow empty content if attachments are present
         if (!content && (!attachments || attachments.length === 0)) {
             return NextResponse.json(
                 { error: 'Contenu du message ou fichiers requis' },
@@ -90,7 +148,6 @@ export async function POST(
             );
         }
 
-        // Verify user is a member
         const membership = await prisma.groupMember.findFirst({
             where: {
                 groupId: conversationId,
@@ -100,28 +157,21 @@ export async function POST(
 
         if (!membership) {
             return NextResponse.json(
-                { error: 'Accès refusé' },
+                { error: 'Acces refuse' },
                 { status: 403 }
             );
         }
 
-        // Prepare attachments if any
         let attachmentsData = undefined;
         if (attachments && Array.isArray(attachments) && attachments.length > 0) {
-            // Store base64 data directly in database (like events system)
-            // The data comes as a full data URL (data:image/...;base64,...) from client
             const processedAttachments = attachments.map((att: any) => ({
                 filename: att.filename,
                 type: att.type,
-                data: att.data // Store base64 data URL directly
+                data: att.data,
             }));
-
-            attachmentsData = {
-                create: processedAttachments
-            };
+            attachmentsData = { create: processedAttachments };
         }
 
-        // Create message
         const message = await prisma.message.create({
             data: {
                 content,
@@ -142,19 +192,15 @@ export async function POST(
             },
         });
 
-        // Update conversation timestamp
         await prisma.group.update({
             where: { id: conversationId },
             data: { updatedAt: new Date() },
         });
 
-        // Send notifications - await to catch errors in dev
         try {
             await notifyNewMessage(message, conversationId);
-            console.log('[Messages API] Notifications sent for message:', message.id);
         } catch (notifErr) {
             console.error('[Messages API] Notification error:', notifErr);
-            // Don't fail the message send if notifications fail
         }
 
         return NextResponse.json({ message }, { status: 201 });
@@ -162,7 +208,7 @@ export async function POST(
     } catch (error) {
         console.error('Send message error:', error);
         return NextResponse.json(
-            { error: 'Erreur lors de l\'envoi du message' },
+            { error: "Erreur lors de l'envoi du message" },
             { status: 500 }
         );
     }

@@ -228,19 +228,17 @@ export default function DiscussionPage() {
         };
     }, [conversationId, isConnected, joinConversation, leaveConversation]);
 
-    // Initial Fetch
+    // Initial Fetch - load only the 30 most recent messages
     useEffect(() => {
         if (!conversationId) return;
 
         const loadInitialMessages = async () => {
             try {
-                const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages?limit=50`);
+                const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages?limit=30`);
                 if (res.ok) {
                     const data = await res.json();
                     setMessages(data.messages);
-                    if (data.messages.length < 50) {
-                        setHasMore(false);
-                    }
+                    setHasMore(data.hasMore !== false);
                 }
             } catch (error) {
                 console.error("Failed to load messages", error);
@@ -516,13 +514,19 @@ export default function DiscussionPage() {
         };
     }, []);
 
-    // Fallback polling for missed messages (30s interval)
+    // Fallback polling - only fetch NEW messages after the last known one
     useEffect(() => {
         if (!conversationId || loading) return;
 
         const interval = setInterval(async () => {
             try {
-                const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages?limit=50`);
+                // Find the latest real message timestamp
+                const lastMsg = [...messages].reverse().find(m => !m.id.startsWith('temp-'));
+                if (!lastMsg) return;
+
+                const res = await fetchWithAuth(
+                    `/api/conversations/${conversationId}/messages?after=${lastMsg.createdAt}&limit=20`
+                );
                 if (res.ok) {
                     const data = await res.json();
                     if (data.messages && data.messages.length > 0) {
@@ -543,7 +547,7 @@ export default function DiscussionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversationId, loading]);
 
-    // Load More History
+    // Load More History - 20 older messages at a time
     const loadMoreHistory = async () => {
         if (!conversationId || loadingMore || !hasMore || messages.length === 0) return;
 
@@ -551,14 +555,27 @@ export default function DiscussionPage() {
         const scrollContainer = scrollRef.current;
         const oldScrollHeight = scrollContainer?.scrollHeight || 0;
 
-        const firstMessage = messages[0];
+        const firstMessage = messages.find(m => !m.id.startsWith('temp-'));
+        if (!firstMessage) {
+            setLoadingMore(false);
+            return;
+        }
+
         try {
-            const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages?cursor=${firstMessage.id}&limit=50`);
+            const res = await fetchWithAuth(
+                `/api/conversations/${conversationId}/messages?cursor=${firstMessage.id}&limit=20`
+            );
             if (res.ok) {
                 const data = await res.json();
                 if (data.messages && data.messages.length > 0) {
-                    setMessages(prev => [...data.messages, ...prev]);
+                    // Deduplicate before prepending
+                    setMessages(prev => {
+                        const existingIds = new Set(prev.map(m => m.id));
+                        const unique = data.messages.filter((m: Message) => !existingIds.has(m.id));
+                        return [...unique, ...prev];
+                    });
 
+                    // Preserve scroll position
                     requestAnimationFrame(() => {
                         if (scrollContainer) {
                             const newScrollHeight = scrollContainer.scrollHeight;
@@ -566,7 +583,7 @@ export default function DiscussionPage() {
                         }
                     });
 
-                    if (data.messages.length < 50) setHasMore(false);
+                    setHasMore(data.hasMore !== false);
                 } else {
                     setHasMore(false);
                 }
