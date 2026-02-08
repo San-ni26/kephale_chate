@@ -148,10 +148,14 @@ export async function POST(
             data: { updatedAt: new Date() },
         });
 
-        // Send notifications (fire-and-forget to not block API response)
-        notifyNewMessage(message, conversationId).catch(err =>
-            console.error('Error sending notifications:', err)
-        );
+        // Send notifications - await to catch errors in dev
+        try {
+            await notifyNewMessage(message, conversationId);
+            console.log('[Messages API] Notifications sent for message:', message.id);
+        } catch (notifErr) {
+            console.error('[Messages API] Notification error:', notifErr);
+            // Don't fail the message send if notifications fail
+        }
 
         return NextResponse.json({ message }, { status: 201 });
 

@@ -12,13 +12,12 @@ export function NotificationListener() {
     const { userChannel, isConnected } = useWebSocket();
     const pushRegistered = useRef(false);
 
-    // Use refs for pathname/router so listeners always have latest values
     const pathnameRef = useRef(pathname);
     const routerRef = useRef(router);
     pathnameRef.current = pathname;
     routerRef.current = router;
 
-    // Listen for in-app notifications on the user's private Pusher channel
+    // Listen for in-app notifications via Pusher
     useEffect(() => {
         if (!userChannel || !isConnected) return;
 
@@ -30,14 +29,10 @@ export function NotificationListener() {
             senderName: string;
             createdAt: string;
         }) => {
-            console.log('[Notification] Received notification:new', data);
+            console.log('[Notification] Received:', data.senderName);
 
             const currentPath = pathnameRef.current;
-            const isViewingConversation =
-                currentPath?.includes(`/chat/discussion/${data.conversationId}`) ||
-                currentPath?.includes(`/chat/groups/${data.conversationId}`);
-
-            if (isViewingConversation) return;
+            if (currentPath?.includes(`/chat/discussion/${data.conversationId}`)) return;
 
             toast(data.senderName, {
                 description: data.content,
@@ -47,6 +42,19 @@ export function NotificationListener() {
                 },
                 duration: 5000,
             });
+
+            // Also try to show a native browser notification (for when tab is not focused)
+            if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                try {
+                    new Notification(data.senderName, {
+                        body: data.content,
+                        icon: '/icons/icon-192x192.png',
+                        tag: 'msg-' + data.conversationId,
+                    });
+                } catch (e) {
+                    // Silently fail - native notifications may not work in all contexts
+                }
+            }
         };
 
         const handleIncomingCall = (data: {
@@ -56,12 +64,11 @@ export function NotificationListener() {
             conversationId: string;
         }) => {
             const currentPath = pathnameRef.current;
-            const isOnConversation = currentPath?.includes(`/chat/discussion/${data.conversationId}`);
-            if (isOnConversation) return;
+            if (currentPath?.includes(`/chat/discussion/${data.conversationId}`)) return;
 
             const callerDisplay = data.callerName || 'Quelqu\'un';
 
-            toast(`Appel entrant de ${callerDisplay}`, {
+            toast(`Appel de ${callerDisplay}`, {
                 description: 'Cliquez pour repondre',
                 action: {
                     label: 'Repondre',
@@ -69,6 +76,18 @@ export function NotificationListener() {
                 },
                 duration: 30000,
             });
+
+            // Native notification for call
+            if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                try {
+                    new Notification(`Appel de ${callerDisplay}`, {
+                        body: 'Appuyez pour repondre',
+                        icon: '/icons/icon-192x192.png',
+                        tag: 'call-' + data.conversationId,
+                        requireInteraction: true,
+                    });
+                } catch (e) {}
+            }
         };
 
         userChannel.bind('notification:new', handleNewNotification);
@@ -80,65 +99,75 @@ export function NotificationListener() {
         };
     }, [userChannel, isConnected]);
 
-    // Register Web Push Notifications
+    // Register Web Push + request permission
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        if (pushRegistered.current) return; // Only register once
-        if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-            console.warn('[Push] Not supported in this browser');
-            return;
-        }
+        if (pushRegistered.current) return;
 
         const registerPush = async () => {
-            try {
-                console.log('[Push] Starting registration...');
+            // Step 1: Check browser support
+            const hasSW = 'serviceWorker' in navigator;
+            const hasPush = 'PushManager' in window;
+            const hasNotif = typeof Notification !== 'undefined';
 
-                // Request notification permission
-                let permission = Notification.permission;
-                if (permission === 'default') {
+            console.log('[Push] Support check - SW:', hasSW, 'Push:', hasPush, 'Notification:', hasNotif);
+
+            if (!hasNotif) {
+                console.warn('[Push] Notifications API not available (Safari needs PWA installed on Home Screen)');
+                return;
+            }
+
+            // Step 2: Request permission
+            let permission = Notification.permission;
+            console.log('[Push] Current permission:', permission);
+
+            if (permission === 'default') {
+                try {
                     permission = await Notification.requestPermission();
-                }
-                console.log('[Push] Permission:', permission);
-
-                if (permission !== 'granted') {
-                    console.warn('[Push] Permission denied');
+                    console.log('[Push] Permission after request:', permission);
+                } catch (e) {
+                    console.error('[Push] Permission request failed:', e);
                     return;
                 }
+            }
 
-                // Wait for ANY service worker to be ready
-                // This will be either next-pwa's sw.js or our custom-sw.js
+            if (permission !== 'granted') {
+                console.warn('[Push] Permission denied by user');
+                return;
+            }
+
+            // Step 3: Register push subscription if SW + Push are available
+            if (!hasSW || !hasPush) {
+                console.log('[Push] SW/Push not available, using in-app notifications only');
+                return;
+            }
+
+            try {
+                // Wait for SW to be ready
                 const registration = await navigator.serviceWorker.ready;
-                console.log('[Push] Service Worker ready, scope:', registration.scope);
-                console.log('[Push] Active SW:', registration.active?.scriptURL);
+                console.log('[Push] SW ready:', registration.active?.scriptURL);
 
-                // Check existing subscription
+                // Get or create subscription
                 let subscription = await registration.pushManager.getSubscription();
-                console.log('[Push] Existing subscription:', !!subscription);
 
                 if (!subscription) {
-                    const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-                    if (!publicKey) {
-                        console.error('[Push] VAPID Public Key missing');
+                    const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+                    if (!vapidKey) {
+                        console.error('[Push] Missing NEXT_PUBLIC_VAPID_PUBLIC_KEY');
                         return;
                     }
 
-                    console.log('[Push] Creating new subscription...');
-                    try {
-                        subscription = await registration.pushManager.subscribe({
-                            userVisibleOnly: true,
-                            applicationServerKey: urlBase64ToUint8Array(publicKey),
-                        });
-                        console.log('[Push] New subscription created:', subscription.endpoint.substring(0, 60) + '...');
-                    } catch (subError: any) {
-                        console.error('[Push] Subscribe failed:', subError.message);
-                        return;
-                    }
+                    subscription = await registration.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlBase64ToUint8Array(vapidKey),
+                    });
+                    console.log('[Push] New subscription created');
+                } else {
+                    console.log('[Push] Existing subscription found');
                 }
 
-                // Send subscription to server WITH authentication
-                console.log('[Push] Saving subscription to server...');
+                // Step 4: Send to server with auth
                 const subJson = subscription.toJSON();
-                
                 const res = await fetchWithAuth('/api/push/subscribe', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -151,19 +180,18 @@ export function NotificationListener() {
                 });
 
                 if (res.ok) {
-                    console.log('[Push] Subscription saved successfully!');
+                    console.log('[Push] Subscription saved to server');
                     pushRegistered.current = true;
                 } else {
-                    const errText = await res.text();
-                    console.error('[Push] Failed to save subscription:', res.status, errText);
+                    console.error('[Push] Server save failed:', res.status);
                 }
             } catch (error) {
                 console.error('[Push] Registration error:', error);
             }
         };
 
-        // Delay to ensure auth token is available
-        const timeout = setTimeout(registerPush, 3000);
+        // Delay to ensure everything is loaded
+        const timeout = setTimeout(registerPush, 2000);
         return () => clearTimeout(timeout);
     }, []);
 
@@ -172,13 +200,9 @@ export function NotificationListener() {
 
 function urlBase64ToUint8Array(base64String: string) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
-
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
-
     for (let i = 0; i < rawData.length; ++i) {
         outputArray[i] = rawData.charCodeAt(i);
     }

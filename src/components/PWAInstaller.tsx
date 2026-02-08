@@ -8,58 +8,92 @@ export function PWAInstaller() {
     const [showInstallButton, setShowInstallButton] = useState(false);
 
     useEffect(() => {
-        // Register the correct Service Worker
-        // In production: next-pwa auto-registers sw.js (which imports custom-sw.js for push)
-        // In development: we manually register custom-sw.js directly for push notifications
-        if ('serviceWorker' in navigator) {
-            const registerSW = async () => {
+        if (!('serviceWorker' in navigator)) return;
+
+        const setupServiceWorker = async () => {
+            try {
+                // First: unregister any old/wrong service workers
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (const reg of registrations) {
+                    const swUrl = reg.active?.scriptURL || reg.installing?.scriptURL || '';
+                    // If this is the old service-worker.js, kill it
+                    if (swUrl.includes('service-worker.js') && !swUrl.includes('custom-sw.js')) {
+                        console.log('[SW] Unregistering old SW:', swUrl);
+                        await reg.unregister();
+                    }
+                }
+
+                // Determine which SW to register
+                // In production build: next-pwa generates sw.js which includes custom-sw.js
+                // In dev mode: sw.js may not exist, so register custom-sw.js directly
+                let swPath = '/sw.js';
+                
+                // Check if sw.js exists (production build)
                 try {
-                    // Check if next-pwa's sw.js already registered (production)
-                    const existingReg = await navigator.serviceWorker.getRegistration('/');
-                    
-                    if (existingReg) {
-                        console.log('[SW] Already registered:', existingReg.scope);
-                        
-                        // Check for updates every hour
-                        setInterval(() => existingReg.update(), 60 * 60 * 1000);
-                        
-                        existingReg.addEventListener('updatefound', () => {
-                            const newWorker = existingReg.installing;
-                            if (newWorker) {
-                                newWorker.addEventListener('statechange', () => {
-                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                        toast.info('Nouvelle version disponible', {
-                                            description: 'Rechargez la page pour mettre a jour',
-                                            action: {
-                                                label: 'Recharger',
-                                                onClick: () => window.location.reload(),
-                                            },
-                                            duration: 10000,
-                                        });
-                                    }
-                                });
+                    const resp = await fetch('/sw.js', { method: 'HEAD' });
+                    if (!resp.ok) {
+                        swPath = '/custom-sw.js';
+                    }
+                } catch {
+                    swPath = '/custom-sw.js';
+                }
+
+                console.log('[SW] Registering:', swPath);
+                const registration = await navigator.serviceWorker.register(swPath, {
+                    updateViaCache: 'none', // Always check for updates
+                });
+                console.log('[SW] Registered successfully, scope:', registration.scope);
+
+                // Force update check
+                await registration.update();
+
+                // If there's a waiting worker, activate it immediately
+                if (registration.waiting) {
+                    console.log('[SW] New SW waiting, activating...');
+                    registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                }
+
+                // Listen for future updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    if (newWorker) {
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed') {
+                                if (navigator.serviceWorker.controller) {
+                                    // New SW ready, activate it
+                                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                    toast.info('Mise a jour disponible', {
+                                        description: 'Rechargez pour appliquer',
+                                        action: {
+                                            label: 'Recharger',
+                                            onClick: () => window.location.reload(),
+                                        },
+                                        duration: 10000,
+                                    });
+                                } else {
+                                    console.log('[SW] SW installed for the first time');
+                                }
                             }
                         });
-                    } else {
-                        // No SW registered yet - register custom-sw.js for push support
-                        // This handles the dev case and the case before next-pwa kicks in
-                        const reg = await navigator.serviceWorker.register('/custom-sw.js');
-                        console.log('[SW] Registered custom-sw.js:', reg.scope);
                     }
-                } catch (error) {
-                    console.error('[SW] Registration failed:', error);
-                }
-            };
+                });
 
-            // Wait for page load to not compete with other resources
-            if (document.readyState === 'complete') {
-                registerSW();
-            } else {
-                window.addEventListener('load', () => registerSW());
+                // Check updates every 30 minutes
+                setInterval(() => registration.update(), 30 * 60 * 1000);
+
+            } catch (error) {
+                console.error('[SW] Setup failed:', error);
             }
+        };
+
+        // Run after page load
+        if (document.readyState === 'complete') {
+            setupServiceWorker();
+        } else {
+            window.addEventListener('load', setupServiceWorker, { once: true });
         }
 
-        // Handle PWA install prompt
+        // PWA install prompt
         const handleBeforeInstallPrompt = (e: Event) => {
             e.preventDefault();
             setDeferredPrompt(e);
@@ -67,17 +101,13 @@ export function PWAInstaller() {
         };
 
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
         window.addEventListener('appinstalled', () => {
-            console.log('[PWA] Installed');
             setShowInstallButton(false);
-            toast.success('Application installee avec succes!');
+            toast.success('Application installee!');
         });
 
         const handleOnline = () => toast.success('Connexion retablie');
-        const handleOffline = () => toast.error('Vous etes hors ligne', {
-            description: 'Certaines fonctionnalites peuvent etre limitees',
-        });
+        const handleOffline = () => toast.error('Hors ligne');
 
         window.addEventListener('online', handleOnline);
         window.addEventListener('offline', handleOffline);
@@ -91,14 +121,9 @@ export function PWAInstaller() {
 
     const handleInstallClick = async () => {
         if (!deferredPrompt) return;
-
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-
-        if (outcome === 'accepted') {
-            console.log('[PWA] User accepted install');
-        }
-
+        if (outcome === 'accepted') console.log('[PWA] Installed');
         setDeferredPrompt(null);
         setShowInstallButton(false);
     };
