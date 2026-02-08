@@ -19,7 +19,7 @@ let io: SocketIOServer | null = null;
 export function initializeWebSocket(httpServer: HTTPServer) {
     io = new SocketIOServer(httpServer, {
         cors: {
-            origin: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+            origin: process.env.NEXT_PUBLIC_APP_URL,
             methods: ['GET', 'POST'],
             credentials: true,
         },
