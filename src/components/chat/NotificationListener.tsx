@@ -10,6 +10,7 @@ export function NotificationListener() {
     const pathname = usePathname();
     const router = useRouter();
     const { userChannel, isConnected } = useWebSocket();
+    const pushRegistered = useRef(false);
 
     // Use refs for pathname/router so listeners always have latest values
     const pathnameRef = useRef(pathname);
@@ -29,16 +30,14 @@ export function NotificationListener() {
             senderName: string;
             createdAt: string;
         }) => {
-            console.log('[NotificationListener] Received notification:new event', data);
+            console.log('[Notification] Received notification:new', data);
 
             const currentPath = pathnameRef.current;
             const isViewingConversation =
                 currentPath?.includes(`/chat/discussion/${data.conversationId}`) ||
                 currentPath?.includes(`/chat/groups/${data.conversationId}`);
 
-            if (isViewingConversation) {
-                return;
-            }
+            if (isViewingConversation) return;
 
             toast(data.senderName, {
                 description: data.content,
@@ -81,80 +80,90 @@ export function NotificationListener() {
         };
     }, [userChannel, isConnected]);
 
-    // Register Push Notifications - uses fetchWithAuth for authentication
+    // Register Web Push Notifications
     useEffect(() => {
         if (typeof window === 'undefined') return;
+        if (pushRegistered.current) return; // Only register once
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-            console.warn('Service Worker or PushManager not supported in this browser');
+            console.warn('[Push] Not supported in this browser');
             return;
         }
 
         const registerPush = async () => {
             try {
-                console.log('[Push] Initializing Push Notification registration...');
+                console.log('[Push] Starting registration...');
 
+                // Request notification permission
                 let permission = Notification.permission;
-                console.log('[Push] Current notification permission:', permission);
-
                 if (permission === 'default') {
                     permission = await Notification.requestPermission();
-                    console.log('[Push] Notification permission requested, result:', permission);
                 }
+                console.log('[Push] Permission:', permission);
 
                 if (permission !== 'granted') {
-                    console.warn('[Push] Notification permission rejected');
+                    console.warn('[Push] Permission denied');
                     return;
                 }
 
+                // Wait for ANY service worker to be ready
+                // This will be either next-pwa's sw.js or our custom-sw.js
                 const registration = await navigator.serviceWorker.ready;
-                console.log('[Push] Service Worker ready');
+                console.log('[Push] Service Worker ready, scope:', registration.scope);
+                console.log('[Push] Active SW:', registration.active?.scriptURL);
 
+                // Check existing subscription
                 let subscription = await registration.pushManager.getSubscription();
+                console.log('[Push] Existing subscription:', !!subscription);
 
                 if (!subscription) {
                     const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
                     if (!publicKey) {
-                        console.error('[Push] VAPID Public Key missing in environment variables');
+                        console.error('[Push] VAPID Public Key missing');
                         return;
                     }
 
-                    console.log('[Push] Subscribing to PushManager...');
-
+                    console.log('[Push] Creating new subscription...');
                     try {
                         subscription = await registration.pushManager.subscribe({
                             userVisibleOnly: true,
-                            applicationServerKey: urlBase64ToUint8Array(publicKey)
+                            applicationServerKey: urlBase64ToUint8Array(publicKey),
                         });
-                        console.log('[Push] New push subscription created');
-                    } catch (subError) {
-                        console.error('[Push] Failed to subscribe to PushManager:', subError);
+                        console.log('[Push] New subscription created:', subscription.endpoint.substring(0, 60) + '...');
+                    } catch (subError: any) {
+                        console.error('[Push] Subscribe failed:', subError.message);
                         return;
                     }
                 }
 
-                console.log('[Push] Sending subscription to server...');
-
-                // CRITICAL: Use fetchWithAuth to include JWT token
-                // Without auth, the server can't associate this subscription with a user
+                // Send subscription to server WITH authentication
+                console.log('[Push] Saving subscription to server...');
+                const subJson = subscription.toJSON();
+                
                 const res = await fetchWithAuth('/api/push/subscribe', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ subscription: subscription.toJSON() }),
+                    body: JSON.stringify({
+                        subscription: {
+                            endpoint: subJson.endpoint,
+                            keys: subJson.keys,
+                        }
+                    }),
                 });
 
-                if (!res.ok) {
-                    const errorText = await res.text();
-                    console.error('[Push] Failed to save subscription on server:', errorText);
+                if (res.ok) {
+                    console.log('[Push] Subscription saved successfully!');
+                    pushRegistered.current = true;
                 } else {
-                    console.log('[Push] Push subscription successfully saved on server');
+                    const errText = await res.text();
+                    console.error('[Push] Failed to save subscription:', res.status, errText);
                 }
             } catch (error) {
-                console.error('[Push] Service Worker / Push Error:', error);
+                console.error('[Push] Registration error:', error);
             }
         };
 
-        // Small delay to ensure auth token is available after login
-        const timeout = setTimeout(registerPush, 2000);
+        // Delay to ensure auth token is available
+        const timeout = setTimeout(registerPush, 3000);
         return () => clearTimeout(timeout);
     }, []);
 

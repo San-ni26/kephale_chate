@@ -10,7 +10,8 @@ const pwaConfig = withPWA({
   dest: 'public',
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
+  // DO NOT disable in development - push notifications need the SW to work
+  disable: false,
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/fonts\.(?:gstatic)\.com\/.*/i,
@@ -34,23 +35,17 @@ const pwaConfig = withPWA({
         }
       }
     },
+    // DO NOT cache API routes - they must always be fresh for real-time features
     {
       urlPattern: /\/api\/.*/i,
-      handler: 'StaleWhileRevalidate',
-      options: {
-        cacheName: 'api-cache',
-        expiration: {
-          maxEntries: 100,
-          maxAgeSeconds: 24 * 60 * 60 // 24 hours
-        }
-      }
+      handler: 'NetworkOnly',
     },
     {
       urlPattern: ({ url }: { url: URL }) => {
         const isSameOrigin = self.origin === url.origin;
         if (!isSameOrigin) return false;
         const pathname = url.pathname;
-        if (pathname.startsWith('/api/')) return false; // Already handled above
+        if (pathname.startsWith('/api/')) return false;
         return true;
       },
       handler: 'NetworkFirst',
@@ -63,8 +58,8 @@ const pwaConfig = withPWA({
       }
     }
   ],
-  // @ts-expect-error - importScripts is supported by next-pwa but missing from types
-  importScripts: ['/custom-sw.js'],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ...({ importScripts: ['/custom-sw.js'] } as any),
 });
 
 export default pwaConfig(nextConfig);

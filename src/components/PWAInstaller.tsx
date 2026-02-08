@@ -8,27 +8,28 @@ export function PWAInstaller() {
     const [showInstallButton, setShowInstallButton] = useState(false);
 
     useEffect(() => {
-        // Enregistrer le Service Worker
+        // Register the correct Service Worker
+        // In production: next-pwa auto-registers sw.js (which imports custom-sw.js for push)
+        // In development: we manually register custom-sw.js directly for push notifications
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker
-                    .register('/service-worker.js')
-                    .then((registration) => {
-                        console.log('SW registered:', registration);
-
-                        // Vérifier les mises à jour toutes les heures
-                        setInterval(() => {
-                            registration.update();
-                        }, 60 * 60 * 1000);
-
-                        // Écouter les mises à jour
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
+            const registerSW = async () => {
+                try {
+                    // Check if next-pwa's sw.js already registered (production)
+                    const existingReg = await navigator.serviceWorker.getRegistration('/');
+                    
+                    if (existingReg) {
+                        console.log('[SW] Already registered:', existingReg.scope);
+                        
+                        // Check for updates every hour
+                        setInterval(() => existingReg.update(), 60 * 60 * 1000);
+                        
+                        existingReg.addEventListener('updatefound', () => {
+                            const newWorker = existingReg.installing;
                             if (newWorker) {
                                 newWorker.addEventListener('statechange', () => {
                                     if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                         toast.info('Nouvelle version disponible', {
-                                            description: 'Rechargez la page pour mettre à jour',
+                                            description: 'Rechargez la page pour mettre a jour',
                                             action: {
                                                 label: 'Recharger',
                                                 onClick: () => window.location.reload(),
@@ -39,14 +40,26 @@ export function PWAInstaller() {
                                 });
                             }
                         });
-                    })
-                    .catch((error) => {
-                        console.error('SW registration failed:', error);
-                    });
-            });
+                    } else {
+                        // No SW registered yet - register custom-sw.js for push support
+                        // This handles the dev case and the case before next-pwa kicks in
+                        const reg = await navigator.serviceWorker.register('/custom-sw.js');
+                        console.log('[SW] Registered custom-sw.js:', reg.scope);
+                    }
+                } catch (error) {
+                    console.error('[SW] Registration failed:', error);
+                }
+            };
+
+            // Wait for page load to not compete with other resources
+            if (document.readyState === 'complete') {
+                registerSW();
+            } else {
+                window.addEventListener('load', () => registerSW());
+            }
         }
 
-        // Gérer l'événement beforeinstallprompt pour l'installation PWA
+        // Handle PWA install prompt
         const handleBeforeInstallPrompt = (e: Event) => {
             e.preventDefault();
             setDeferredPrompt(e);
@@ -55,23 +68,16 @@ export function PWAInstaller() {
 
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-        // Détecter si l'app est déjà installée
         window.addEventListener('appinstalled', () => {
-            console.log('PWA installed');
+            console.log('[PWA] Installed');
             setShowInstallButton(false);
-            toast.success('Application installée avec succès!');
+            toast.success('Application installee avec succes!');
         });
 
-        // Vérifier le statut de connexion
-        const handleOnline = () => {
-            toast.success('Connexion rétablie');
-        };
-
-        const handleOffline = () => {
-            toast.error('Vous êtes hors ligne', {
-                description: 'Certaines fonctionnalités peuvent être limitées',
-            });
-        };
+        const handleOnline = () => toast.success('Connexion retablie');
+        const handleOffline = () => toast.error('Vous etes hors ligne', {
+            description: 'Certaines fonctionnalites peuvent etre limitees',
+        });
 
         window.addEventListener('online', handleOnline);
         window.addEventListener('offline', handleOffline);
@@ -90,21 +96,18 @@ export function PWAInstaller() {
         const { outcome } = await deferredPrompt.userChoice;
 
         if (outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-        } else {
-            console.log('User dismissed the install prompt');
+            console.log('[PWA] User accepted install');
         }
 
         setDeferredPrompt(null);
         setShowInstallButton(false);
     };
 
-    // Bouton d'installation (optionnel, peut être affiché dans l'UI)
     if (showInstallButton) {
         return (
             <button
                 onClick={handleInstallClick}
-                className="fixed bottom-4 right-4 bg-primary text-primary-foreground px-4 py-2 rounded-lg shadow-lg hover:bg-primary/90 transition-colors z-50"
+                className="fixed bottom-20 right-4 bg-primary text-primary-foreground px-4 py-2 rounded-lg shadow-lg hover:bg-primary/90 transition-colors z-50 md:bottom-4"
             >
                 Installer l'application
             </button>
