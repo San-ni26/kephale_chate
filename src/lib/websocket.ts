@@ -310,91 +310,109 @@ export async function notifyNewMessage(message: any, conversationId: string) {
             conversationId,
             message,
         });
+    }
 
-        // Notify other group members
-        const groupMembers = await prisma.groupMember.findMany({
-            where: {
-                groupId: conversationId,
-                userId: { not: message.senderId } // Exclude sender
-            },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        name: true
+    // Notify other group members
+    const groupMembers = await prisma.groupMember.findMany({
+        where: {
+            groupId: conversationId,
+            userId: { not: message.senderId } // Exclude sender
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
+    });
+
+    // Create notifications for each member
+    // valid for both socket and api route usage
+    const notificationPromises = groupMembers.map(async (member) => {
+        const notificationContent = `Nouveau message de ${message.sender.name}`;
+
+        // Create DB notification
+        const notification = await prisma.notification.create({
+            data: {
+                userId: member.userId,
+                content: notificationContent,
+                isRead: false,
+            }
+        });
+
+        // Emit to user's personal room if connected
+        if (socketIO) {
+            socketIO.to(`user:${member.userId}`).emit('notification:new', {
+                id: notification.id,
+                content: notificationContent,
+                messageId: message.id,
+                conversationId: conversationId,
+                senderName: message.sender.name,
+                createdAt: notification.createdAt
+            });
+        }
+
+        // Check if user is active in this conversation
+        let isUserInConversation = false;
+        if (socketIO) {
+            const userSockets = socketIO.sockets.adapter.rooms.get(`user:${member.userId}`);
+            const conversationSockets = socketIO.sockets.adapter.rooms.get(`conversation:${conversationId}`);
+
+            if (userSockets && conversationSockets) {
+                for (const socketId of userSockets) {
+                    if (conversationSockets.has(socketId)) {
+                        isUserInConversation = true;
+                        break;
                     }
                 }
             }
-        });
+        }
 
-        // Create notifications for each member
-        // valid for both socket and api route usage
-        const notificationPromises = groupMembers.map(async (member) => {
-            const notificationContent = `Nouveau message de ${message.sender.name}`;
+        // Send Web Push Notification only if user is NOT in conversation
+        try {
+            if (isUserInConversation) return;
 
-            // Create DB notification
-            const notification = await prisma.notification.create({
-                data: {
-                    userId: member.userId,
-                    content: notificationContent,
-                    isRead: false,
-                }
+            const subscriptions = await prisma.pushSubscription.findMany({
+                where: { userId: member.userId }
             });
 
-            // Emit to user's personal room if connected
-            if (socketIO) {
-                socketIO.to(`user:${member.userId}`).emit('notification:new', {
-                    id: notification.id,
-                    content: notificationContent,
-                    messageId: message.id,
-                    conversationId: conversationId,
-                    senderName: message.sender.name,
-                    createdAt: notification.createdAt
-                });
-            }
-
-            // Send Web Push Notification
-            try {
-                const subscriptions = await prisma.pushSubscription.findMany({
-                    where: { userId: member.userId }
+            if (subscriptions.length > 0) {
+                const payload = JSON.stringify({
+                    title: `Nouveau message de ${message.sender.name}`,
+                    body: message.content ? (message.content.length > 50 ? message.content.substring(0, 50) + '...' : message.content) : 'Pièce jointe',
+                    icon: '/icons/icon-192x192.png', // Adjust path based on your PWA icons
+                    url: `/chat/discussion/${conversationId}`,
+                    data: {
+                        conversationId,
+                        messageId: message.id
+                    }
                 });
 
-                if (subscriptions.length > 0) {
-                    const payload = JSON.stringify({
-                        title: `Nouveau message de ${message.sender.name}`,
-                        body: message.content ? (message.content.length > 50 ? message.content.substring(0, 50) + '...' : message.content) : 'Pièce jointe',
-                        icon: '/icons/icon-192x192.png', // Adjust path based on your PWA icons
-                        url: `/chat/discussion/${conversationId}`,
-                        data: {
-                            conversationId,
-                            messageId: message.id
-                        }
-                    });
-
-                    await Promise.all(subscriptions.map(async (sub) => {
-                        try {
-                            await sendPushNotification({
-                                endpoint: sub.endpoint,
-                                keys: {
-                                    p256dh: sub.p256dh,
-                                    auth: sub.auth
-                                }
-                            }, payload);
-                        } catch (err: any) {
-                            if (err.statusCode === 410 || err.statusCode === 404) {
-                                // Subscription is invalid or expired, remove it
-                                await prisma.pushSubscription.delete({
-                                    where: { endpoint: sub.endpoint }
-                                });
+                await Promise.all(subscriptions.map(async (sub) => {
+                    try {
+                        await sendPushNotification({
+                            endpoint: sub.endpoint,
+                            keys: {
+                                p256dh: sub.p256dh,
+                                auth: sub.auth
                             }
+                        }, payload);
+                    } catch (err: any) {
+                        if (err.statusCode === 410 || err.statusCode === 404) {
+                            // Subscription is invalid or expired, remove it
+                            await prisma.pushSubscription.delete({
+                                where: { endpoint: sub.endpoint }
+                            });
                         }
-                    }));
-                }
-            } catch (pushError) {
-                console.error('Failed to send push notification:', pushError);
+                    }
+                }));
             }
-        });
+        } catch (pushError) {
+            console.error('Failed to send push notification:', pushError);
+        }
+    });
 
-        await Promise.all(notificationPromises);
-    }
+    await Promise.all(notificationPromises);
 }

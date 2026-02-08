@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { notifyNewMessage } from '@/src/lib/websocket';
 
 // GET: Get all messages for a conversation
 export async function GET(
@@ -146,6 +147,9 @@ export async function POST(
             where: { id: conversationId },
             data: { updatedAt: new Date() },
         });
+
+        // Send notifications (async, don't block response too much, or await if critical)
+        await notifyNewMessage(message, conversationId);
 
         return NextResponse.json({ message }, { status: 201 });
 
