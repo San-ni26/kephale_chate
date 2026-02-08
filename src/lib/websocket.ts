@@ -27,21 +27,27 @@ export function initializeWebSocket(httpServer: HTTPServer) {
 
     io.use(async (socket: AuthenticatedSocket, next) => {
         try {
+            console.log('Socket middleware: New connection attempt', socket.id);
             const token = socket.handshake.auth.token;
 
             if (!token) {
-                return next(new Error('Authentication error'));
+                console.error('Socket middleware: No token provided');
+                return next(new Error('Authentication error: No token'));
             }
 
+            // console.log('Socket middleware: Verifying token...', token.substring(0, 10) + '...');
             const decoded = verifyToken(token);
             if (!decoded || !decoded.userId) {
+                console.error('Socket middleware: Invalid token');
                 return next(new Error('Invalid token'));
             }
 
+            console.log('Socket middleware: Token verified for user', decoded.userId);
             socket.userId = decoded.userId;
             socket.userEmail = decoded.email;
             next();
         } catch (error) {
+            console.error('Socket middleware: Error', error);
             next(new Error('Authentication error'));
         }
     });
@@ -280,15 +286,73 @@ export function initializeWebSocket(httpServer: HTTPServer) {
         // --- Voice Call Signaling ---
 
         // Handle call invite
-        socket.on('call:invite', (data: { recipientId: string; offer: any; conversationId: string }) => {
+        socket.on('call:invite', async (data: { recipientId: string; offer: any; conversationId: string }) => {
             console.log(`Call invite from ${socket.userId} to ${data.recipientId}`);
-            // Forward the offer to the specific user
+
+            // Fetch caller name from DB for proper display
+            let callerName = socket.userEmail || 'Utilisateur';
+            try {
+                const caller = await prisma.user.findUnique({
+                    where: { id: socket.userId! },
+                    select: { name: true, email: true }
+                });
+                if (caller) {
+                    callerName = caller.name || caller.email;
+                }
+            } catch (e) {
+                console.error('Error fetching caller name:', e);
+            }
+
+            // Forward the offer to the specific user via WebSocket
             io?.to(`user:${data.recipientId}`).emit('call:incoming', {
                 callerId: socket.userId,
-                callerName: socket.userEmail, // Or fetch name if available in socket
+                callerName: callerName,
                 offer: data.offer,
                 conversationId: data.conversationId,
             });
+
+            // Also send push notification for the call in case user is not connected
+            try {
+                const recipientSockets = io?.sockets.adapter.rooms.get(`user:${data.recipientId}`);
+                const isRecipientOnline = recipientSockets && recipientSockets.size > 0;
+
+                if (!isRecipientOnline) {
+                    const subscriptions = await prisma.pushSubscription.findMany({
+                        where: { userId: data.recipientId }
+                    });
+
+                    if (subscriptions.length > 0) {
+                        const payload = JSON.stringify({
+                            title: `Appel entrant de ${callerName}`,
+                            body: 'Appuyez pour répondre',
+                            icon: '/icons/icon-192x192.png',
+                            url: `/chat/discussion/${data.conversationId}`,
+                            type: 'call',
+                            data: {
+                                conversationId: data.conversationId,
+                                callerId: socket.userId
+                            }
+                        });
+
+                        await Promise.all(subscriptions.map(async (sub) => {
+                            try {
+                                await sendPushNotification({
+                                    endpoint: sub.endpoint,
+                                    keys: { p256dh: sub.p256dh, auth: sub.auth }
+                                }, payload);
+                            } catch (err: any) {
+                                if (err.statusCode === 410 || err.statusCode === 404) {
+                                    await prisma.pushSubscription.delete({
+                                        where: { endpoint: sub.endpoint }
+                                    });
+                                }
+                            }
+                        }));
+                    }
+                }
+            } catch (pushError) {
+                console.error('Failed to send call push notification:', pushError);
+            }
         });
 
         // Handle call answer

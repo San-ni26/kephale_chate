@@ -2,29 +2,43 @@
 self.addEventListener('push', function (event) {
     if (event.data) {
         const data = event.data.json();
+        const isCall = data.type === 'call';
+
         const options = {
             body: data.body,
             icon: data.icon || '/icons/icon-192x192.png',
             badge: '/icons/icon-192x192.png',
-            vibrate: [100, 50, 100],
+            vibrate: isCall ? [200, 100, 200, 100, 200] : [100, 50, 100],
+            tag: isCall ? 'incoming-call' : ('message-' + (data.data?.messageId || Date.now())),
+            renotify: true,
+            requireInteraction: isCall, // Keep call notifications until user interacts
             data: {
                 dateOfArrival: Date.now(),
                 primaryKey: '2',
-                url: data.url || '/'
-            }
+                url: data.url || '/',
+                type: data.type || 'message',
+                conversationId: data.data?.conversationId,
+                messageId: data.data?.messageId
+            },
+            actions: isCall ? [
+                { action: 'answer', title: 'Répondre' },
+                { action: 'reject', title: 'Refuser' }
+            ] : [
+                { action: 'view', title: 'Voir' }
+            ]
         };
+
         event.waitUntil(
             clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
-                // Check if user has a window open and focused on the conversation
-                // The data.url typically contains the conversation path
                 const urlToOpen = data.url || '/';
 
-                for (let i = 0; i < clientList.length; i++) {
-                    const client = clientList[i];
-                    // If client is focused and on the same URL path (or close enough)
-                    if (client.focused && 'url' in client && client.url.includes(urlToOpen)) {
-                        // User is looking at the conversation, no need for notification
-                        return;
+                // For messages: check if user has a focused window on this conversation
+                if (!isCall) {
+                    for (let i = 0; i < clientList.length; i++) {
+                        const client = clientList[i];
+                        if (client.focused && 'url' in client && client.url.includes(urlToOpen)) {
+                            return; // User is looking at the conversation, skip notification
+                        }
                     }
                 }
 
@@ -35,19 +49,31 @@ self.addEventListener('push', function (event) {
 });
 
 self.addEventListener('notificationclick', function (event) {
-    event.notification.close();
+    const notification = event.notification;
+    const action = event.action;
+    const url = notification.data.url || '/';
+
+    notification.close();
+
+    if (action === 'reject') {
+        // Just close the notification, nothing else
+        return;
+    }
+
+    // For 'answer', 'view', or default click: navigate to the conversation
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
-            if (clientList.length > 0) {
-                let client = clientList[0];
-                for (let i = 0; i < clientList.length; i++) {
-                    if (clientList[i].focused) {
-                        client = clientList[i];
-                    }
+            // Try to find an existing window and navigate it
+            for (let i = 0; i < clientList.length; i++) {
+                const client = clientList[i];
+                if ('navigate' in client) {
+                    return client.focus().then(function () {
+                        return client.navigate(url);
+                    });
                 }
-                return client.focus();
             }
-            return clients.openWindow(event.notification.data.url || '/');
+            // No existing window, open a new one
+            return clients.openWindow(url);
         })
     );
 });

@@ -114,18 +114,6 @@ export default function DiscussionPage() {
     const localVideoRef = useRef<HTMLVideoElement>(null); // Even for audio, useful to attach stream
     const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
-    const { socket, isConnected } = useWebSocket(
-        (data) => {
-            // On new message via socket - update messages
-            // This replaces/augments the polling
-            setMessages(prev => {
-                if (prev.some(m => m.id === data.message.id)) return prev;
-                return [...prev, data.message];
-            });
-            scrollToBottom();
-        }
-    );
-
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false); // For history
@@ -135,8 +123,43 @@ export default function DiscussionPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
+    const scrollToBottom = useCallback(() => {
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+    }, []);
+
+    const { socket, isConnected, joinConversation, leaveConversation } = useWebSocket(
+        // onNewMessage
+        useCallback((data: { conversationId: string; message: Message }) => {
+            if (data.conversationId !== conversationId) return;
+            setMessages(prev => {
+                if (prev.some(m => m.id === data.message.id)) return prev;
+                return [...prev, data.message];
+            });
+            scrollToBottom();
+        }, [conversationId, scrollToBottom]),
+    );
+
     const currentUser = getUser();
     const otherUser = conversation?.members.find(m => m.user.id !== currentUser?.id)?.user;
+
+    // Refs for call state so socket listeners always see latest values
+    const isCallActiveRef = useRef(isCallActive);
+    isCallActiveRef.current = isCallActive;
+
+    // Join/leave conversation room for real-time updates
+    useEffect(() => {
+        if (!conversationId || !isConnected) return;
+
+        joinConversation(conversationId);
+        console.log('Joined conversation room:', conversationId);
+
+        return () => {
+            leaveConversation(conversationId);
+            console.log('Left conversation room:', conversationId);
+        };
+    }, [conversationId, isConnected, joinConversation, leaveConversation]);
 
     // Initial Fetch
     useEffect(() => {
@@ -164,58 +187,9 @@ export default function DiscussionPage() {
         loadInitialMessages();
     }, [conversationId]);
 
+    // --- Call functions (defined before useEffects that reference them) ---
 
-    // WebRTC Logic
-    useEffect(() => {
-        if (!socket) return;
-
-        socket.on('call:incoming', async (data) => {
-            if (isCallActive) {
-                socket.emit('call:reject', { callerId: data.callerId });
-                return;
-            }
-            setIncomingCallData(data);
-            setIsIncomingCall(true);
-            setCallStatus('ringing');
-
-            // Play ringtone if desired
-        });
-
-        socket.on('call:answered', async (data) => {
-            if (!peerConnectionRef.current) return;
-            await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(data.answer));
-            setCallStatus('connected');
-        });
-
-        socket.on('call:rejected', () => {
-            toast.info('Appel rejeté');
-            endCall();
-        });
-
-        socket.on('call:ended', () => {
-            toast.info('Appel terminé');
-            endCall();
-        });
-
-        socket.on('call:ice-candidate', async (data) => {
-            if (!peerConnectionRef.current) return;
-            try {
-                await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(data.candidate));
-            } catch (e) {
-                console.error('Error adding received ice candidate', e);
-            }
-        });
-
-        return () => {
-            socket.off('call:incoming');
-            socket.off('call:answered');
-            socket.off('call:rejected');
-            socket.off('call:ended');
-            socket.off('call:ice-candidate');
-        };
-    }, [socket, isCallActive]);
-
-    const initializePeerConnection = () => {
+    const initializePeerConnection = useCallback(() => {
         const pc = new RTCPeerConnection({
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
@@ -241,10 +215,37 @@ export default function DiscussionPage() {
 
         peerConnectionRef.current = pc;
         return pc;
-    };
+    }, [otherUser, socket]);
 
-    const startCall = async () => {
-        if (!otherUser) return;
+    // cleanupCall: resets local state WITHOUT emitting to server
+    // Used when we receive call:ended or call:rejected from the remote side
+    const cleanupCall = useCallback(() => {
+        if (localStream) {
+            localStream.getTracks().forEach(track => track.stop());
+        }
+        if (peerConnectionRef.current) {
+            peerConnectionRef.current.close();
+            peerConnectionRef.current = null;
+        }
+
+        setLocalStream(null);
+        setIsCallActive(false);
+        setIsIncomingCall(false);
+        setCallStatus('idle');
+        setIncomingCallData(null);
+        setRemoteStream(null);
+    }, [localStream]);
+
+    // endCall: actively ends the call and notifies the remote user
+    const endCall = useCallback(() => {
+        if (isCallActiveRef.current && otherUser) {
+            socket?.emit('call:end', { targetUserId: otherUser.id });
+        }
+        cleanupCall();
+    }, [socket, otherUser, cleanupCall]);
+
+    const startCall = useCallback(async () => {
+        if (!otherUser || !socket) return;
         setIsCallActive(true);
         setCallStatus('dialing');
 
@@ -258,7 +259,7 @@ export default function DiscussionPage() {
             const offer = await pc.createOffer();
             await pc.setLocalDescription(offer);
 
-            socket?.emit('call:invite', {
+            socket.emit('call:invite', {
                 recipientId: otherUser.id,
                 offer: offer,
                 conversationId: conversationId
@@ -267,12 +268,12 @@ export default function DiscussionPage() {
         } catch (err) {
             console.error('Error starting call:', err);
             toast.error('Impossible d\'accéder au microphone');
-            endCall();
+            cleanupCall();
         }
-    };
+    }, [otherUser, socket, conversationId, initializePeerConnection, cleanupCall]);
 
-    const answerCall = async () => {
-        if (!incomingCallData) return;
+    const answerCall = useCallback(async () => {
+        if (!incomingCallData || !socket) return;
         setIsIncomingCall(false);
         setIsCallActive(true);
         setCallStatus('connected');
@@ -288,7 +289,7 @@ export default function DiscussionPage() {
             const answer = await pc.createAnswer();
             await pc.setLocalDescription(answer);
 
-            socket?.emit('call:answer', {
+            socket.emit('call:answer', {
                 callerId: incomingCallData.callerId,
                 answer: answer
             });
@@ -296,49 +297,85 @@ export default function DiscussionPage() {
         } catch (err) {
             console.error('Error answering call:', err);
             toast.error('Erreur lors de la réponse');
-            endCall();
+            cleanupCall();
         }
-    };
+    }, [incomingCallData, socket, initializePeerConnection, cleanupCall]);
 
-    const rejectCall = () => {
-        if (incomingCallData) {
-            socket?.emit('call:reject', { callerId: incomingCallData.callerId });
+    const rejectCall = useCallback(() => {
+        if (incomingCallData && socket) {
+            socket.emit('call:reject', { callerId: incomingCallData.callerId });
         }
         setIsIncomingCall(false);
         setIncomingCallData(null);
         setCallStatus('idle');
-    };
+    }, [incomingCallData, socket]);
 
-    const endCall = () => {
-        if (localStream) {
-            localStream.getTracks().forEach(track => track.stop());
-            setLocalStream(null);
-        }
-        if (peerConnectionRef.current) {
-            peerConnectionRef.current.close();
-            peerConnectionRef.current = null;
-        }
-
-        if (isCallActive && otherUser) {
-            // Only emit if we were actually in a call/dialing
-            socket?.emit('call:end', { targetUserId: otherUser.id });
-        }
-
-        setIsCallActive(false);
-        setIsIncomingCall(false);
-        setCallStatus('idle');
-        setIncomingCallData(null);
-        setRemoteStream(null);
-    };
-
-    const toggleMute = () => {
+    const toggleMute = useCallback(() => {
         if (localStream) {
             localStream.getAudioTracks().forEach(track => {
                 track.enabled = !track.enabled;
             });
-            setIsMuted(!isMuted);
+            setIsMuted(prev => !prev);
         }
-    };
+    }, [localStream]);
+
+    // WebRTC Call Signaling - must be after cleanupCall definition
+    useEffect(() => {
+        if (!socket || !isConnected) return;
+
+        const handleIncomingCall = async (data: { callerId: string; offer: any; conversationId: string }) => {
+            if (isCallActiveRef.current) {
+                socket.emit('call:reject', { callerId: data.callerId });
+                return;
+            }
+            setIncomingCallData(data);
+            setIsIncomingCall(true);
+            setCallStatus('ringing');
+        };
+
+        const handleCallAnswered = async (data: { answer: any; responderId: string }) => {
+            if (!peerConnectionRef.current) return;
+            try {
+                await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(data.answer));
+                setCallStatus('connected');
+            } catch (e) {
+                console.error('Error setting remote description:', e);
+            }
+        };
+
+        const handleCallRejected = () => {
+            toast.info('Appel rejeté');
+            cleanupCall();
+        };
+
+        const handleCallEnded = () => {
+            toast.info('Appel terminé');
+            cleanupCall();
+        };
+
+        const handleIceCandidate = async (data: { candidate: any; senderId: string }) => {
+            if (!peerConnectionRef.current) return;
+            try {
+                await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(data.candidate));
+            } catch (e) {
+                console.error('Error adding received ice candidate', e);
+            }
+        };
+
+        socket.on('call:incoming', handleIncomingCall);
+        socket.on('call:answered', handleCallAnswered);
+        socket.on('call:rejected', handleCallRejected);
+        socket.on('call:ended', handleCallEnded);
+        socket.on('call:ice-candidate', handleIceCandidate);
+
+        return () => {
+            socket.off('call:incoming', handleIncomingCall);
+            socket.off('call:answered', handleCallAnswered);
+            socket.off('call:rejected', handleCallRejected);
+            socket.off('call:ended', handleCallEnded);
+            socket.off('call:ice-candidate', handleIceCandidate);
+        };
+    }, [socket, isConnected, cleanupCall]);
 
     // Auto-play remote audio
     useEffect(() => {
@@ -346,6 +383,16 @@ export default function DiscussionPage() {
             remoteVideoRef.current.srcObject = remoteStream;
         }
     }, [remoteStream]);
+
+    // Cleanup call on unmount
+    useEffect(() => {
+        return () => {
+            if (peerConnectionRef.current) {
+                peerConnectionRef.current.close();
+                peerConnectionRef.current = null;
+            }
+        };
+    }, []);
 
 
     // Polling for new messages (Delta updates)
@@ -447,13 +494,7 @@ export default function DiscussionPage() {
             }
         }
         lastMessageCount.current = messages.length;
-    }, [messages, loading, currentUser?.id]);
-
-    const scrollToBottom = () => {
-        setTimeout(() => {
-            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-    };
+    }, [messages, loading, currentUser?.id, scrollToBottom]);
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
