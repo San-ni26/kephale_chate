@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
@@ -11,22 +11,27 @@ import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
 import { Input } from '@/src/components/ui/input';
 import { Button } from '@/src/components/ui/button';
+import { useWebSocket } from '@/src/hooks/useWebSocket';
 
 interface Conversation {
     id: string;
     name?: string;
     isDirect: boolean;
+    updatedAt: string;
+    unreadCount: number;
     members: {
         user: {
             id: string;
             name: string;
             email: string;
+            isOnline?: boolean;
         };
     }[];
     messages: {
         content: string;
         sender: {
             id: string;
+            name?: string;
         };
         createdAt: string;
     }[];
@@ -35,12 +40,37 @@ interface Conversation {
 export function ConversationSidebar() {
     const pathname = usePathname();
     const { data: profileData } = useSWR('/api/users/profile', fetcher);
-    const { data: conversationsData } = useSWR('/api/conversations', fetcher);
+    const { data: conversationsData, mutate: mutateConversations } = useSWR('/api/conversations', fetcher, {
+        refreshInterval: 30000, // Refresh every 30s as fallback
+    });
     const [searchQuery, setSearchQuery] = useState('');
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     const conversations: Conversation[] = conversationsData?.conversations || [];
     const currentUserId = profileData?.profile?.id;
+
+    // Listen for real-time new messages to refresh unread counts
+    const { userChannel, isConnected } = useWebSocket();
+
+    useEffect(() => {
+        if (!userChannel || !isConnected) return;
+
+        const handleNewNotification = () => {
+            // Refresh conversation list when a notification arrives (new message in another conversation)
+            mutateConversations();
+        };
+
+        userChannel.bind('notification:new', handleNewNotification);
+
+        return () => {
+            userChannel.unbind('notification:new', handleNewNotification);
+        };
+    }, [userChannel, isConnected, mutateConversations]);
+
+    // Also refresh when navigating to a conversation (mark-as-read will update counts)
+    useEffect(() => {
+        mutateConversations();
+    }, [pathname, mutateConversations]);
 
     const filteredConversations = conversations
         .filter(c => c.isDirect)
@@ -49,10 +79,19 @@ export function ConversationSidebar() {
             return name.includes(searchQuery.toLowerCase());
         });
 
+    // Total unread across all conversations
+    const totalUnread = conversations
+        .filter(c => c.isDirect)
+        .reduce((sum, c) => sum + (c.unreadCount || 0), 0);
+
     function getConversationName(chat: Conversation) {
         if (!chat.isDirect) return chat.name || 'Discussion';
         const otherMember = chat.members.find(m => m.user.id !== currentUserId);
         return otherMember ? otherMember.user.name : 'Utilisateur inconnu';
+    }
+
+    function getOtherMember(chat: Conversation) {
+        return chat.members.find(m => m.user.id !== currentUserId)?.user;
     }
 
     return (
@@ -110,6 +149,8 @@ export function ConversationSidebar() {
                             const chatName = getConversationName(chat);
                             const lastMessage = chat.messages[0];
                             const isActive = pathname === `/chat/discussion/${chat.id}`;
+                            const unread = chat.unreadCount || 0;
+                            const otherMember = getOtherMember(chat);
 
                             return (
                                 <Link href={`/chat/discussion/${chat.id}`} key={chat.id}>
@@ -125,29 +166,50 @@ export function ConversationSidebar() {
                                                     <User className="w-5 h-5" />
                                                 </AvatarFallback>
                                             </Avatar>
-                                            {/* Tooltip on hover if collapsed could be nice, usually handled by ShadCN Tooltip */}
+                                            {/* Online indicator */}
+                                            {otherMember?.isOnline && (
+                                                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-card rounded-full" />
+                                            )}
+                                            {/* Collapsed mode unread badge */}
+                                            {isCollapsed && unread > 0 && (
+                                                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center px-1">
+                                                    {unread > 99 ? '99+' : unread}
+                                                </span>
+                                            )}
                                         </div>
 
                                         {!isCollapsed && (
                                             <div className="ml-3 flex-1 min-w-0 transition-opacity duration-200">
                                                 <div className="flex justify-between items-baseline mb-1">
-                                                    <h3 className="font-semibold text-sm truncate">{chatName}</h3>
-                                                    {lastMessage && (
-                                                        <span className="text-[10px] text-muted-foreground shrink-0 ml-2">
-                                                            {formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr })}
+                                                    <h3 className={`text-sm truncate ${unread > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground'}`}>
+                                                        {chatName}
+                                                    </h3>
+                                                    <div className="flex items-center gap-2 shrink-0 ml-2">
+                                                        {lastMessage && (
+                                                            <span className={`text-[10px] ${unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
+                                                                {formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr })}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <p className={`text-xs truncate pr-2 ${unread > 0 ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
+                                                        {lastMessage ? (
+                                                            <span>
+                                                                {lastMessage.sender.id === currentUserId && "Vous: "}
+                                                                {lastMessage.content ? "Message chiffre" : "Fichier"}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="italic opacity-50">Aucun message</span>
+                                                        )}
+                                                    </p>
+                                                    {/* Unread badge */}
+                                                    {unread > 0 && (
+                                                        <span className="min-w-[20px] h-[20px] bg-primary text-primary-foreground text-[11px] font-bold rounded-full flex items-center justify-center px-1.5 shrink-0">
+                                                            {unread > 99 ? '99+' : unread}
                                                         </span>
                                                     )}
                                                 </div>
-                                                <p className="text-xs text-muted-foreground truncate">
-                                                    {lastMessage ? (
-                                                        <span>
-                                                            {lastMessage.sender.id === currentUserId && "Vous: "}
-                                                            {lastMessage.content ? "Message chiffré" : "Fichier"}
-                                                        </span>
-                                                    ) : (
-                                                        <span className="italic opacity-50">Aucun message</span>
-                                                    )}
-                                                </p>
                                             </div>
                                         )}
                                     </div>
@@ -167,13 +229,18 @@ export function ConversationSidebar() {
                     <Link href="/chat/groups" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/groups') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Groupes">
                         <Users className="w-5 h-5" />
                     </Link>
-                    <Link href="/chat" className={`p-2 rounded-lg transition-colors ${pathname === '/chat' || pathname?.startsWith('/chat/discussion') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Chats">
+                    <Link href="/chat" className={`relative p-2 rounded-lg transition-colors ${pathname === '/chat' || pathname?.startsWith('/chat/discussion') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Chats">
                         <MessageSquare className="w-5 h-5" />
+                        {totalUnread > 0 && (
+                            <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] bg-primary text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center px-1">
+                                {totalUnread > 99 ? '99+' : totalUnread}
+                            </span>
+                        )}
                     </Link>
-                    <Link href="/chat/notifications" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/notifications') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Actualités">
+                    <Link href="/chat/notifications" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/notifications') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Actualites">
                         <Bell className="w-5 h-5" />
                     </Link>
-                    <Link href="/chat/settings" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/settings') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Réglages">
+                    <Link href="/chat/settings" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/settings') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Reglages">
                         <Settings className="w-5 h-5" />
                     </Link>
                 </div>

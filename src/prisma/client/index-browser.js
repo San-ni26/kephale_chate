@@ -227,7 +227,8 @@ exports.Prisma.GroupMemberScalarFieldEnum = {
   id: 'id',
   groupId: 'groupId',
   userId: 'userId',
-  joinedAt: 'joinedAt'
+  joinedAt: 'joinedAt',
+  lastReadAt: 'lastReadAt'
 };
 
 exports.Prisma.MessageScalarFieldEnum = {

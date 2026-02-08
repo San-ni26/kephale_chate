@@ -1,22 +1,10 @@
-import { NextApiRequest } from 'next';
-import { NextApiResponseServerIO } from '../../src/types/socket';
-import { initializeWebSocket } from '../../src/lib/websocket';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
-
-export default function handler(req: NextApiRequest, res: NextApiResponseServerIO) {
-    if (!(res.socket.server as any).io) {
-        console.log('Initializing Socket.IO server...');
-        const io = initializeWebSocket(res.socket.server as any);
-        (res.socket.server as any).io = io;
-        console.log('Socket.IO server initialized successfully');
-    } else {
-        console.log('Socket.IO server already running');
-    }
-
-    res.end();
+/**
+ * Legacy Socket.IO endpoint - no longer needed.
+ * Real-time communication now uses Pusher.
+ * This endpoint is kept for backward compatibility (returns 200).
+ */
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+    res.status(200).json({ message: 'Real-time is now handled via Pusher' });
 }

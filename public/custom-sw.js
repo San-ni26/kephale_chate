@@ -8,21 +8,22 @@ self.addEventListener('push', function (event) {
             body: data.body,
             icon: data.icon || '/icons/icon-192x192.png',
             badge: '/icons/icon-192x192.png',
-            vibrate: isCall ? [200, 100, 200, 100, 200] : [100, 50, 100],
-            tag: isCall ? 'incoming-call' : ('message-' + (data.data?.messageId || Date.now())),
+            vibrate: isCall ? [200, 100, 200, 100, 200, 100, 200] : [100, 50, 100],
+            tag: isCall ? 'incoming-call' : ('message-' + (data.data?.conversationId || Date.now())),
             renotify: true,
-            requireInteraction: isCall, // Keep call notifications until user interacts
+            requireInteraction: isCall,
+            silent: false,
             data: {
                 dateOfArrival: Date.now(),
-                primaryKey: '2',
                 url: data.url || '/',
                 type: data.type || 'message',
                 conversationId: data.data?.conversationId,
-                messageId: data.data?.messageId
+                messageId: data.data?.messageId,
+                callerId: data.data?.callerId,
             },
             actions: isCall ? [
-                { action: 'answer', title: 'Répondre' },
-                { action: 'reject', title: 'Refuser' }
+                { action: 'answer', title: 'Repondre', icon: '/icons/icon-192x192.png' },
+                { action: 'reject', title: 'Refuser', icon: '/icons/icon-192x192.png' }
             ] : [
                 { action: 'view', title: 'Voir' }
             ]
@@ -34,8 +35,8 @@ self.addEventListener('push', function (event) {
 
                 // For messages: check if user has a focused window on this conversation
                 if (!isCall) {
-                    for (let i = 0; i < clientList.length; i++) {
-                        const client = clientList[i];
+                    for (var i = 0; i < clientList.length; i++) {
+                        var client = clientList[i];
                         if (client.focused && 'url' in client && client.url.includes(urlToOpen)) {
                             return; // User is looking at the conversation, skip notification
                         }
@@ -49,14 +50,29 @@ self.addEventListener('push', function (event) {
 });
 
 self.addEventListener('notificationclick', function (event) {
-    const notification = event.notification;
-    const action = event.action;
-    const url = notification.data.url || '/';
+    var notification = event.notification;
+    var action = event.action;
+    var url = notification.data.url || '/';
 
     notification.close();
 
     if (action === 'reject') {
-        // Just close the notification, nothing else
+        // Send rejection signal to the server via fetch
+        var callerId = notification.data.callerId;
+        if (callerId) {
+            event.waitUntil(
+                fetch('/api/call/signal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        event: 'call:reject',
+                        callerId: callerId,
+                    }),
+                }).catch(function (err) {
+                    console.error('Failed to send call rejection from SW:', err);
+                })
+            );
+        }
         return;
     }
 
@@ -64,8 +80,8 @@ self.addEventListener('notificationclick', function (event) {
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
             // Try to find an existing window and navigate it
-            for (let i = 0; i < clientList.length; i++) {
-                const client = clientList[i];
+            for (var i = 0; i < clientList.length; i++) {
+                var client = clientList[i];
                 if ('navigate' in client) {
                     return client.focus().then(function () {
                         return client.navigate(url);
@@ -76,4 +92,9 @@ self.addEventListener('notificationclick', function (event) {
             return clients.openWindow(url);
         })
     );
+});
+
+// Handle service worker activation
+self.addEventListener('activate', function (event) {
+    event.waitUntil(self.clients.claim());
 });

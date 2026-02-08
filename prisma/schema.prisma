@@ -191,12 +191,13 @@ model Group {
 }
 
 model GroupMember {
-  id       String   @id @default(cuid())
-  groupId  String
-  userId   String
-  joinedAt DateTime @default(now())
-  group    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "GroupMember_userId_fk")
+  id         String   @id @default(cuid())
+  groupId    String
+  userId     String
+  joinedAt   DateTime @default(now())
+  lastReadAt DateTime @default(now())
+  group      Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "GroupMember_userId_fk")
 
   @@unique([groupId, userId])
   @@index([userId], map: "GroupMember_userId_idx")

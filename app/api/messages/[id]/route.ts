@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { emitToConversation } from '@/src/lib/pusher-server';
 
 // PATCH: Edit a message
 export async function PATCH(
@@ -63,7 +64,7 @@ export async function PATCH(
             where: { id: messageId },
             data: {
                 content,
-                //  isEdited: true,
+                isEdited: true,
             },
             include: {
                 sender: {
@@ -71,10 +72,18 @@ export async function PATCH(
                         id: true,
                         name: true,
                         email: true,
+                        publicKey: true,
                     },
                 },
+                attachments: true,
             },
         });
+
+        // Broadcast edit to conversation channel in real-time
+        emitToConversation(message.groupId, 'message:edited', {
+            conversationId: message.groupId,
+            message: updatedMessage,
+        }).catch(err => console.error('Error broadcasting message edit:', err));
 
         return NextResponse.json({ message: updatedMessage }, { status: 200 });
 
@@ -134,10 +143,18 @@ export async function DELETE(
             );
         }
 
+        const groupId = message.groupId;
+
         // Delete message
         await prisma.message.delete({
             where: { id: messageId },
         });
+
+        // Broadcast deletion to conversation channel in real-time
+        emitToConversation(groupId, 'message:deleted', {
+            conversationId: groupId,
+            messageId,
+        }).catch(err => console.error('Error broadcasting message delete:', err));
 
         return NextResponse.json(
             { message: 'Message supprimé' },

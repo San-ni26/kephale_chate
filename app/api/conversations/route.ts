@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
         }
 
-        // Get all groups where user is a member
+        // Get all groups where user is a member, with unread counts
         const conversations = await prisma.group.findMany({
             where: {
                 members: {
@@ -64,7 +64,28 @@ export async function GET(request: NextRequest) {
             },
         });
 
-        return NextResponse.json({ conversations }, { status: 200 });
+        // Calculate unread counts for each conversation
+        const conversationsWithUnread = await Promise.all(
+            conversations.map(async (conv) => {
+                const membership = conv.members.find(m => m.userId === user.userId);
+                const lastReadAt = membership?.lastReadAt || membership?.joinedAt || new Date(0);
+
+                const unreadCount = await prisma.message.count({
+                    where: {
+                        groupId: conv.id,
+                        createdAt: { gt: lastReadAt },
+                        senderId: { not: user.userId },
+                    },
+                });
+
+                return {
+                    ...conv,
+                    unreadCount,
+                };
+            })
+        );
+
+        return NextResponse.json({ conversations: conversationsWithUnread }, { status: 200 });
 
     } catch (error) {
         console.error('Get conversations error:', error);

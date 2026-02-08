@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, PhoneIncoming, PhoneOff, Mic, MicOff } from 'lucide-react';
+import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, PhoneIncoming, PhoneOff, Mic, MicOff, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import useSWR from 'swr';
@@ -45,7 +45,6 @@ interface Message {
     createdAt: string;
     updatedAt: string;
     isEdited: boolean;
-
     attachments?: {
         filename: string;
         type: string;
@@ -80,6 +79,30 @@ const fetcher = async (url: string) => {
     return res.json();
 };
 
+// TURN/STUN servers for reliable WebRTC
+const ICE_SERVERS: RTCIceServer[] = [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' },
+    { urls: 'stun:stun3.l.google.com:19302' },
+    // Free TURN servers for better connectivity
+    {
+        urls: 'turn:openrelay.metered.ca:80',
+        username: 'openrelayproject',
+        credential: 'openrelayproject',
+    },
+    {
+        urls: 'turn:openrelay.metered.ca:443',
+        username: 'openrelayproject',
+        credential: 'openrelayproject',
+    },
+    {
+        urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+        username: 'openrelayproject',
+        credential: 'openrelayproject',
+    },
+];
+
 export default function DiscussionPage() {
     const params = useParams();
     const router = useRouter();
@@ -107,16 +130,25 @@ export default function DiscussionPage() {
     const [callStatus, setCallStatus] = useState<'idle' | 'dialing' | 'ringing' | 'connected' | 'ended'>('idle');
     const [localStream, setLocalStream] = useState<MediaStream | null>(null);
     const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-    const [incomingCallData, setIncomingCallData] = useState<{ callerId: string; offer: any; conversationId: string } | null>(null);
+    const [incomingCallData, setIncomingCallData] = useState<{ callerId: string; callerName?: string; offer: any; conversationId: string } | null>(null);
     const [isMuted, setIsMuted] = useState(false);
+    const [callDuration, setCallDuration] = useState(0);
+    const callTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const callTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
-    const localVideoRef = useRef<HTMLVideoElement>(null); // Even for audio, useful to attach stream
-    const remoteVideoRef = useRef<HTMLVideoElement>(null);
+    const localAudioRef = useRef<HTMLAudioElement>(null);
+    const remoteAudioRef = useRef<HTMLAudioElement>(null);
+    const localStreamRef = useRef<MediaStream | null>(null);
+
+    // Keep localStreamRef in sync
+    useEffect(() => {
+        localStreamRef.current = localStream;
+    }, [localStream]);
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
-    const [loadingMore, setLoadingMore] = useState(false); // For history
+    const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -129,35 +161,70 @@ export default function DiscussionPage() {
         }, 100);
     }, []);
 
-    const { socket, isConnected, joinConversation, leaveConversation } = useWebSocket(
-        // onNewMessage
-        useCallback((data: { conversationId: string; message: Message }) => {
-            if (data.conversationId !== conversationId) return;
-            setMessages(prev => {
-                if (prev.some(m => m.id === data.message.id)) return prev;
-                return [...prev, data.message];
-            });
-            scrollToBottom();
-        }, [conversationId, scrollToBottom]),
+    // Real-time message handlers
+    const handleNewMessage = useCallback((data: { conversationId: string; message: Message }) => {
+        if (data.conversationId !== conversationId) return;
+        setMessages(prev => {
+            if (prev.some(m => m.id === data.message.id)) return prev;
+            return [...prev, data.message];
+        });
+        scrollToBottom();
+    }, [conversationId, scrollToBottom]);
+
+    const handleMessageEdited = useCallback((data: { conversationId: string; message: Message }) => {
+        if (data.conversationId !== conversationId) return;
+        setMessages(prev => prev.map(m => m.id === data.message.id ? data.message : m));
+    }, [conversationId]);
+
+    const handleMessageDeleted = useCallback((data: { conversationId: string; messageId: string }) => {
+        if (data.conversationId !== conversationId) return;
+        setMessages(prev => prev.filter(m => m.id !== data.messageId));
+    }, [conversationId]);
+
+    const { socket: pusher, isConnected, joinConversation, leaveConversation, userChannel } = useWebSocket(
+        handleNewMessage,
+        handleMessageEdited,
+        handleMessageDeleted,
     );
 
     const currentUser = getUser();
     const otherUser = conversation?.members.find(m => m.user.id !== currentUser?.id)?.user;
 
-    // Refs for call state so socket listeners always see latest values
+    // Refs for call state
     const isCallActiveRef = useRef(isCallActive);
     isCallActiveRef.current = isCallActive;
+
+    // --- Mark as read when viewing conversation ---
+    useEffect(() => {
+        if (!conversationId || loading) return;
+
+        // Mark as read on entering conversation
+        fetchWithAuth(`/api/conversations/${conversationId}/read`, {
+            method: 'POST',
+        }).catch(() => {});
+    }, [conversationId, loading]);
+
+    // Also mark as read when new messages arrive while viewing
+    useEffect(() => {
+        if (!conversationId || loading || messages.length === 0) return;
+
+        const lastMsg = messages[messages.length - 1];
+        if (lastMsg && lastMsg.senderId !== currentUser?.id) {
+            fetchWithAuth(`/api/conversations/${conversationId}/read`, {
+                method: 'POST',
+            }).catch(() => {});
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [messages.length]);
 
     // Join/leave conversation room for real-time updates
     useEffect(() => {
         if (!conversationId || !isConnected) return;
 
         joinConversation(conversationId);
-        console.log('Joined conversation room:', conversationId);
 
         return () => {
             leaveConversation(conversationId);
-            console.log('Left conversation room:', conversationId);
         };
     }, [conversationId, isConnected, joinConversation, leaveConversation]);
 
@@ -171,7 +238,6 @@ export default function DiscussionPage() {
                 if (res.ok) {
                     const data = await res.json();
                     setMessages(data.messages);
-                    // If we got fewer than limit, assume no more history
                     if (data.messages.length < 50) {
                         setHasMore(false);
                     }
@@ -187,45 +253,69 @@ export default function DiscussionPage() {
         loadInitialMessages();
     }, [conversationId]);
 
-    // --- Call functions (defined before useEffects that reference them) ---
+    // --- Call functions ---
+
+    const emitCallSignal = useCallback(async (event: string, data: any) => {
+        try {
+            await fetchWithAuth('/api/call/signal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ event, ...data }),
+            });
+        } catch (err) {
+            console.error(`Error sending call signal ${event}:`, err);
+        }
+    }, []);
 
     const initializePeerConnection = useCallback(() => {
-        const pc = new RTCPeerConnection({
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' },
-            ]
-        });
+        const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
 
         pc.onicecandidate = (event) => {
             if (event.candidate && otherUser) {
-                socket?.emit('call:ice-candidate', {
+                emitCallSignal('call:ice-candidate', {
                     targetUserId: otherUser.id,
-                    candidate: event.candidate
+                    candidate: event.candidate,
                 });
             }
         };
 
         pc.ontrack = (event) => {
             setRemoteStream(event.streams[0]);
-            if (remoteVideoRef.current) {
-                remoteVideoRef.current.srcObject = event.streams[0];
+            if (remoteAudioRef.current) {
+                remoteAudioRef.current.srcObject = event.streams[0];
+            }
+        };
+
+        pc.oniceconnectionstatechange = () => {
+            console.log('[WebRTC] ICE connection state:', pc.iceConnectionState);
+            if (pc.iceConnectionState === 'failed' || pc.iceConnectionState === 'disconnected') {
+                toast.error('Connexion instable...');
             }
         };
 
         peerConnectionRef.current = pc;
         return pc;
-    }, [otherUser, socket]);
+    }, [otherUser, emitCallSignal]);
 
     // cleanupCall: resets local state WITHOUT emitting to server
-    // Used when we receive call:ended or call:rejected from the remote side
     const cleanupCall = useCallback(() => {
-        if (localStream) {
-            localStream.getTracks().forEach(track => track.stop());
+        // Use ref to always get the latest localStream
+        if (localStreamRef.current) {
+            localStreamRef.current.getTracks().forEach(track => track.stop());
         }
         if (peerConnectionRef.current) {
             peerConnectionRef.current.close();
             peerConnectionRef.current = null;
+        }
+
+        // Clear call timer
+        if (callTimerRef.current) {
+            clearInterval(callTimerRef.current);
+            callTimerRef.current = null;
+        }
+        if (callTimeoutRef.current) {
+            clearTimeout(callTimeoutRef.current);
+            callTimeoutRef.current = null;
         }
 
         setLocalStream(null);
@@ -234,20 +324,38 @@ export default function DiscussionPage() {
         setCallStatus('idle');
         setIncomingCallData(null);
         setRemoteStream(null);
-    }, [localStream]);
+        setCallDuration(0);
+        setIsMuted(false);
+    }, []);
 
     // endCall: actively ends the call and notifies the remote user
     const endCall = useCallback(() => {
         if (isCallActiveRef.current && otherUser) {
-            socket?.emit('call:end', { targetUserId: otherUser.id });
+            emitCallSignal('call:end', { targetUserId: otherUser.id });
         }
         cleanupCall();
-    }, [socket, otherUser, cleanupCall]);
+    }, [otherUser, emitCallSignal, cleanupCall]);
+
+    // Start call duration timer
+    const startCallTimer = useCallback(() => {
+        setCallDuration(0);
+        callTimerRef.current = setInterval(() => {
+            setCallDuration(prev => prev + 1);
+        }, 1000);
+    }, []);
 
     const startCall = useCallback(async () => {
-        if (!otherUser || !socket) return;
+        if (!otherUser) return;
         setIsCallActive(true);
         setCallStatus('dialing');
+
+        // Auto-timeout after 45 seconds if no answer
+        callTimeoutRef.current = setTimeout(() => {
+            if (isCallActiveRef.current && callStatus === 'dialing') {
+                toast.info('Pas de reponse');
+                endCall();
+            }
+        }, 45000);
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
@@ -259,24 +367,26 @@ export default function DiscussionPage() {
             const offer = await pc.createOffer();
             await pc.setLocalDescription(offer);
 
-            socket.emit('call:invite', {
+            await emitCallSignal('call:invite', {
                 recipientId: otherUser.id,
                 offer: offer,
-                conversationId: conversationId
+                conversationId: conversationId,
             });
 
         } catch (err) {
             console.error('Error starting call:', err);
-            toast.error('Impossible d\'accéder au microphone');
+            toast.error("Impossible d'acceder au microphone");
             cleanupCall();
         }
-    }, [otherUser, socket, conversationId, initializePeerConnection, cleanupCall]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [otherUser, conversationId, initializePeerConnection, cleanupCall, emitCallSignal, endCall]);
 
     const answerCall = useCallback(async () => {
-        if (!incomingCallData || !socket) return;
+        if (!incomingCallData) return;
         setIsIncomingCall(false);
         setIsCallActive(true);
         setCallStatus('connected');
+        startCallTimer();
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
@@ -289,43 +399,44 @@ export default function DiscussionPage() {
             const answer = await pc.createAnswer();
             await pc.setLocalDescription(answer);
 
-            socket.emit('call:answer', {
+            await emitCallSignal('call:answer', {
                 callerId: incomingCallData.callerId,
-                answer: answer
+                answer: answer,
             });
 
         } catch (err) {
             console.error('Error answering call:', err);
-            toast.error('Erreur lors de la réponse');
+            toast.error("Erreur lors de la reponse");
             cleanupCall();
         }
-    }, [incomingCallData, socket, initializePeerConnection, cleanupCall]);
+    }, [incomingCallData, initializePeerConnection, cleanupCall, emitCallSignal, startCallTimer]);
 
     const rejectCall = useCallback(() => {
-        if (incomingCallData && socket) {
-            socket.emit('call:reject', { callerId: incomingCallData.callerId });
+        if (incomingCallData) {
+            emitCallSignal('call:reject', { callerId: incomingCallData.callerId });
         }
         setIsIncomingCall(false);
         setIncomingCallData(null);
         setCallStatus('idle');
-    }, [incomingCallData, socket]);
+    }, [incomingCallData, emitCallSignal]);
 
     const toggleMute = useCallback(() => {
-        if (localStream) {
-            localStream.getAudioTracks().forEach(track => {
+        if (localStreamRef.current) {
+            localStreamRef.current.getAudioTracks().forEach(track => {
                 track.enabled = !track.enabled;
             });
             setIsMuted(prev => !prev);
         }
-    }, [localStream]);
+    }, []);
 
-    // WebRTC Call Signaling - must be after cleanupCall definition
+    // WebRTC Call Signaling via Pusher userChannel
     useEffect(() => {
-        if (!socket || !isConnected) return;
+        if (!userChannel || !isConnected) return;
 
-        const handleIncomingCall = async (data: { callerId: string; offer: any; conversationId: string }) => {
+        const handleIncomingCall = (data: { callerId: string; callerName?: string; offer: any; conversationId: string }) => {
             if (isCallActiveRef.current) {
-                socket.emit('call:reject', { callerId: data.callerId });
+                // Already in a call - auto-reject
+                emitCallSignal('call:reject', { callerId: data.callerId });
                 return;
             }
             setIncomingCallData(data);
@@ -333,54 +444,56 @@ export default function DiscussionPage() {
             setCallStatus('ringing');
         };
 
-        const handleCallAnswered = async (data: { answer: any; responderId: string }) => {
+        const handleCallAnswered = (data: { answer: any; responderId: string }) => {
             if (!peerConnectionRef.current) return;
-            try {
-                await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(data.answer));
-                setCallStatus('connected');
-            } catch (e) {
-                console.error('Error setting remote description:', e);
+            // Clear timeout
+            if (callTimeoutRef.current) {
+                clearTimeout(callTimeoutRef.current);
+                callTimeoutRef.current = null;
             }
+            peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(data.answer))
+                .then(() => {
+                    setCallStatus('connected');
+                    startCallTimer();
+                })
+                .catch(e => console.error('Error setting remote description:', e));
         };
 
         const handleCallRejected = () => {
-            toast.info('Appel rejeté');
+            toast.info('Appel rejete');
             cleanupCall();
         };
 
         const handleCallEnded = () => {
-            toast.info('Appel terminé');
+            toast.info('Appel termine');
             cleanupCall();
         };
 
-        const handleIceCandidate = async (data: { candidate: any; senderId: string }) => {
+        const handleIceCandidate = (data: { candidate: any; senderId: string }) => {
             if (!peerConnectionRef.current) return;
-            try {
-                await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(data.candidate));
-            } catch (e) {
-                console.error('Error adding received ice candidate', e);
-            }
+            peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(data.candidate))
+                .catch(e => console.error('Error adding received ice candidate', e));
         };
 
-        socket.on('call:incoming', handleIncomingCall);
-        socket.on('call:answered', handleCallAnswered);
-        socket.on('call:rejected', handleCallRejected);
-        socket.on('call:ended', handleCallEnded);
-        socket.on('call:ice-candidate', handleIceCandidate);
+        userChannel.bind('call:incoming', handleIncomingCall);
+        userChannel.bind('call:answered', handleCallAnswered);
+        userChannel.bind('call:rejected', handleCallRejected);
+        userChannel.bind('call:ended', handleCallEnded);
+        userChannel.bind('call:ice-candidate', handleIceCandidate);
 
         return () => {
-            socket.off('call:incoming', handleIncomingCall);
-            socket.off('call:answered', handleCallAnswered);
-            socket.off('call:rejected', handleCallRejected);
-            socket.off('call:ended', handleCallEnded);
-            socket.off('call:ice-candidate', handleIceCandidate);
+            userChannel.unbind('call:incoming', handleIncomingCall);
+            userChannel.unbind('call:answered', handleCallAnswered);
+            userChannel.unbind('call:rejected', handleCallRejected);
+            userChannel.unbind('call:ended', handleCallEnded);
+            userChannel.unbind('call:ice-candidate', handleIceCandidate);
         };
-    }, [socket, isConnected, cleanupCall]);
+    }, [userChannel, isConnected, cleanupCall, emitCallSignal, startCallTimer]);
 
     // Auto-play remote audio
     useEffect(() => {
-        if (remoteVideoRef.current && remoteStream) {
-            remoteVideoRef.current.srcObject = remoteStream;
+        if (remoteAudioRef.current && remoteStream) {
+            remoteAudioRef.current.srcObject = remoteStream;
         }
     }, [remoteStream]);
 
@@ -391,53 +504,50 @@ export default function DiscussionPage() {
                 peerConnectionRef.current.close();
                 peerConnectionRef.current = null;
             }
+            if (localStreamRef.current) {
+                localStreamRef.current.getTracks().forEach(track => track.stop());
+            }
+            if (callTimerRef.current) {
+                clearInterval(callTimerRef.current);
+            }
+            if (callTimeoutRef.current) {
+                clearTimeout(callTimeoutRef.current);
+            }
         };
     }, []);
 
-
-    // Polling for new messages (Delta updates)
+    // Fallback polling for missed messages (30s interval)
     useEffect(() => {
         if (!conversationId || loading) return;
 
         const interval = setInterval(async () => {
-            const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
-            const lastRealMessage = [...messages].reverse().find(m => !m.id.startsWith('temp-'));
-            const queryParam = lastRealMessage ? `?after=${lastRealMessage.createdAt}` : '?limit=50';
-
             try {
-                const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages${queryParam}`);
+                const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages?limit=50`);
                 if (res.ok) {
                     const data = await res.json();
                     if (data.messages && data.messages.length > 0) {
-                        // Filter out any duplicates just in case
                         setMessages(prev => {
                             const existingIds = new Set(prev.map(m => m.id));
                             const newUnique = data.messages.filter((m: Message) => !existingIds.has(m.id));
                             if (newUnique.length === 0) return prev;
-
-                            // If user is at bottom, auto-scroll? Handled by useEffect dependency
                             return [...prev, ...newUnique];
                         });
                     }
                 }
             } catch (error) {
-                // Silent fail for polling
                 console.error("Polling error", error);
             }
-        }, 3000);
+        }, 30000);
 
         return () => clearInterval(interval);
-    }, [conversationId, loading, messages.length]); // Re-create interval when length changes to get closure over latest messages? OR use functional state updates.
-    // Actually, accessing `messages` inside interval needs it to be in dependency or use functional update.
-    // Optimal: Use a ref for `messages` or functional update logic. Functional update logic is safer but we need `lastMessage` for the query URL.
-    // So we need `messages` in dependency array. It will reset interval on every new message. This is fine.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [conversationId, loading]);
 
     // Load More History
     const loadMoreHistory = async () => {
         if (!conversationId || loadingMore || !hasMore || messages.length === 0) return;
 
         setLoadingMore(true);
-        // Save scroll position
         const scrollContainer = scrollRef.current;
         const oldScrollHeight = scrollContainer?.scrollHeight || 0;
 
@@ -449,7 +559,6 @@ export default function DiscussionPage() {
                 if (data.messages && data.messages.length > 0) {
                     setMessages(prev => [...data.messages, ...prev]);
 
-                    // Restore scroll position after render
                     requestAnimationFrame(() => {
                         if (scrollContainer) {
                             const newScrollHeight = scrollContainer.scrollHeight;
@@ -469,28 +578,31 @@ export default function DiscussionPage() {
         }
     };
 
-    // Auto scroll to bottom only on initial load or when sending own message
+    // Auto scroll
     const isFirstLoad = useRef(true);
     const lastMessageCount = useRef(0);
 
     useEffect(() => {
         if (loading) return;
 
-        // Initial load scroll
         if (isFirstLoad.current && messages.length > 0) {
             scrollToBottom();
             isFirstLoad.current = false;
         }
 
-        // Auto scroll on new message IF it is mine OR user is already near bottom
         if (messages.length > lastMessageCount.current) {
             const lastMsg = messages[messages.length - 1];
             const isMine = lastMsg?.senderId === currentUser?.id;
 
-            // Simple logic: Always scroll if mine. If others, check position? 
-            // For now, let's scroll if mine.
             if (isMine) {
                 scrollToBottom();
+            } else {
+                // Scroll if near bottom
+                const container = scrollRef.current;
+                if (container) {
+                    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 150;
+                    if (isNearBottom) scrollToBottom();
+                }
             }
         }
         lastMessageCount.current = messages.length;
@@ -502,7 +614,7 @@ export default function DiscussionPage() {
             const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf',
                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
             if (!validTypes.includes(file.type)) {
-                toast.error(`Type de fichier non autorisé: ${file.name}`);
+                toast.error(`Type de fichier non autorise: ${file.name}`);
                 return false;
             }
             if (file.size > 10 * 1024 * 1024) {
@@ -521,9 +633,7 @@ export default function DiscussionPage() {
     const fileToBase64 = async (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.onload = () => {
-                resolve(reader.result as string);
-            };
+            reader.onload = () => resolve(reader.result as string);
             reader.onerror = reject;
             reader.readAsDataURL(file);
         });
@@ -541,29 +651,17 @@ export default function DiscussionPage() {
 
     const sendAudioMessage = async (audioFile: File) => {
         if (!currentUser || !otherUser || !privateKey) {
-            toast.error("Clé de chiffrement manquante");
+            toast.error("Cle de chiffrement manquante");
             return;
         }
 
         setSending(true);
+        const tempId = `temp-${Date.now()}`;
 
         try {
             const base64Data = await fileToBase64(audioFile);
-
-            const attachment = {
-                filename: audioFile.name,
-                type: 'AUDIO',
-                data: base64Data,
-            };
-
-            const encryptedContent = encryptMessage(
-                '',
-                privateKey,
-                otherUser.publicKey
-            );
-
-            // Optimistic update
-            const tempId = `temp-${Date.now()}`;
+            const attachment = { filename: audioFile.name, type: 'AUDIO', data: base64Data };
+            const encryptedContent = encryptMessage('', privateKey, otherUser.publicKey);
             const optimisticMessage: Message = {
                 id: tempId,
                 content: encryptedContent,
@@ -572,30 +670,18 @@ export default function DiscussionPage() {
                 updatedAt: new Date().toISOString(),
                 isEdited: false,
                 attachments: [attachment],
-                sender: {
-                    id: currentUser.id,
-                    name: currentUser.name || '',
-                    email: currentUser.email || '',
-                    publicKey: currentUser.publicKey || '',
-                }
+                sender: { id: currentUser.id, name: currentUser.name || '', email: currentUser.email || '', publicKey: currentUser.publicKey || '' }
             };
 
-            // Update local state immediately
             setMessages(prev => [...prev, optimisticMessage]);
 
             const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: encryptedContent,
-                    attachments: [attachment],
-                }),
+                body: JSON.stringify({ content: encryptedContent, attachments: [attachment] }),
             });
 
             if (response.ok) {
-                // The polling will technically pick this up eventually, but we can also replace the temp ID if the server returned the real object
-                // For simplicity in this logic, we might just let polling handle the "real" one and dedup logic handle it
-                // Or we can manually fetch the latest message to confirm success
                 const data = await response.json();
                 if (data.message) {
                     setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
@@ -603,13 +689,12 @@ export default function DiscussionPage() {
                 scrollToBottom();
             } else {
                 toast.error("Erreur d'envoi du message vocal");
-                // Remove optimistic message
                 setMessages(prev => prev.filter(m => m.id !== tempId));
             }
         } catch (error) {
             console.error('Send audio error:', error);
             toast.error("Erreur d'envoi du message vocal");
-            setMessages(prev => prev.filter(m => m.id.startsWith('temp-') === false)); // Rough cleanup
+            setMessages(prev => prev.filter(m => m.id !== tempId));
         } finally {
             setSending(false);
         }
@@ -626,7 +711,8 @@ export default function DiscussionPage() {
                 setShowPasswordDialog(true);
             }
         }
-    }, [currentUser, privateKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentUser]);
 
     const handleUnlock = () => {
         if (!currentUser || !password) return;
@@ -637,7 +723,7 @@ export default function DiscussionPage() {
             sessionStorage.setItem(`privateKey_${currentUser.id}`, decrypted);
             setShowPasswordDialog(false);
             setPassword('');
-            toast.success('Clé de chiffrement déverrouillée');
+            toast.success('Cle de chiffrement deverrouillee');
         } catch (error) {
             toast.error('Mot de passe incorrect');
         }
@@ -654,7 +740,6 @@ export default function DiscussionPage() {
         const currentMessage = newMessage;
         const currentFiles = [...selectedFiles];
 
-        // Clear UI immediately for better UX
         setNewMessage('');
         setSelectedFiles([]);
 
@@ -670,11 +755,7 @@ export default function DiscussionPage() {
                     else if (['doc', 'docx'].includes(ext)) fileType = 'WORD';
                     else if (['webm', 'mp3', 'ogg', 'm4a', 'wav'].includes(ext)) fileType = 'AUDIO';
 
-                    attachments.push({
-                        filename: file.name,
-                        type: fileType,
-                        data: base64Data,
-                    });
+                    attachments.push({ filename: file.name, type: fileType, data: base64Data });
                 }
             }
 
@@ -684,7 +765,6 @@ export default function DiscussionPage() {
                 otherUser.publicKey
             );
 
-            // Optimistic update
             const tempId = `temp-${Date.now()}`;
             const optimisticMessage: Message = {
                 id: tempId,
@@ -694,15 +774,9 @@ export default function DiscussionPage() {
                 updatedAt: new Date().toISOString(),
                 isEdited: false,
                 attachments: attachments,
-                sender: {
-                    id: currentUser.id,
-                    name: currentUser.name || '',
-                    email: currentUser.email || '',
-                    publicKey: currentUser.publicKey || '',
-                }
+                sender: { id: currentUser.id, name: currentUser.name || '', email: currentUser.email || '', publicKey: currentUser.publicKey || '' }
             };
 
-            // Add optimistic message
             setMessages(prev => [...prev, optimisticMessage]);
             scrollToBottom();
 
@@ -722,17 +796,14 @@ export default function DiscussionPage() {
                 }
             } else {
                 const error = await response.json();
-                console.error('HTTP error:', error);
-                toast.error(error.error || 'Erreur d\'envoi');
-                // Rollback
+                toast.error(error.error || "Erreur d'envoi");
                 setMessages(prev => prev.filter(m => m.id !== tempId));
-                // Restore input
                 setNewMessage(currentMessage);
                 setSelectedFiles(currentFiles);
             }
         } catch (error) {
             console.error('Send message error:', error);
-            toast.error('Erreur d\'envoi du message');
+            toast.error("Erreur d'envoi du message");
             setMessages(prev => prev.filter(m => m.id.startsWith('temp-') === false));
             setNewMessage(currentMessage);
             setSelectedFiles(currentFiles);
@@ -744,16 +815,9 @@ export default function DiscussionPage() {
     const handleEditMessage = async (messageId: string) => {
         if (!editContent.trim() || !currentUser || !otherUser || !privateKey) return;
 
-        const originalMessages = messages;
-
         try {
-            const encryptedContent = encryptMessage(
-                editContent.trim(),
-                privateKey,
-                otherUser.publicKey
-            );
+            const encryptedContent = encryptMessage(editContent.trim(), privateKey, otherUser.publicKey);
 
-            // Optimistic update
             setMessages(prev => prev.map(msg =>
                 msg.id === messageId ? { ...msg, content: encryptedContent, isEdited: true } : msg
             ));
@@ -768,11 +832,9 @@ export default function DiscussionPage() {
             });
 
             if (response.ok) {
-                toast.success('Message modifié');
+                toast.success('Message modifie');
             } else {
-                // Rollback requires storing original message content to revert - for now just generic error toast
                 toast.error('Erreur de modification');
-                // Could re-fetch all to sync
             }
         } catch (error) {
             toast.error('Erreur de modification');
@@ -785,17 +847,13 @@ export default function DiscussionPage() {
         const originalMessages = messages;
 
         try {
-            // Optimistic update
             setMessages(prev => prev.filter(msg => msg.id !== messageId));
 
-            const response = await fetchWithAuth(`/api/messages/${messageId}`, {
-                method: 'DELETE',
-            });
+            const response = await fetchWithAuth(`/api/messages/${messageId}`, { method: 'DELETE' });
 
             if (response.ok) {
-                toast.success('Message supprimé');
+                toast.success('Message supprime');
             } else {
-                // Rollback
                 setMessages(originalMessages);
                 toast.error('Erreur de suppression');
             }
@@ -806,28 +864,23 @@ export default function DiscussionPage() {
     };
 
     const decryptMessageContent = (message: Message): string => {
-        if (!currentUser || !otherUser || !privateKey) return '[Chiffré]';
+        if (!currentUser || !otherUser || !privateKey) return '[Chiffre]';
 
         try {
             const senderPublicKey = message.senderId === currentUser.id
                 ? otherUser.publicKey
                 : (message.sender.publicKey || otherUser.publicKey);
 
-            return decryptMessage(
-                message.content,
-                privateKey,
-                senderPublicKey
-            ) || '';
+            return decryptMessage(message.content, privateKey, senderPublicKey) || '';
         } catch (error) {
-            return '[Erreur de déchiffrement]';
+            return '[Erreur de dechiffrement]';
         }
     };
 
     const canEditOrDelete = (message: Message): boolean => {
         if (message.senderId !== currentUser?.id) return false;
         const messageTime = new Date(message.createdAt).getTime();
-        const now = Date.now();
-        return (now - messageTime) < 5 * 60 * 1000; // 5 minutes
+        return (Date.now() - messageTime) < 5 * 60 * 1000;
     };
 
     const getConversationName = () => {
@@ -836,6 +889,13 @@ export default function DiscussionPage() {
             return otherUser.name || otherUser.email;
         }
         return conversation.name || 'Discussion';
+    };
+
+    // Format call duration as mm:ss
+    const formatCallDuration = (seconds: number) => {
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
     };
 
     if (loading) {
@@ -851,84 +911,136 @@ export default function DiscussionPage() {
             <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Déverrouiller la discussion</DialogTitle>
+                        <DialogTitle>Deverrouiller la discussion</DialogTitle>
                     </DialogHeader>
                     <div className="py-4">
                         <p className="text-sm text-muted-foreground mb-4">
-                            Entrez votre mot de passe pour déchiffrer votre clé privée et accéder aux messages.
+                            Entrez votre mot de passe pour dechiffrer votre cle privee et acceder aux messages.
                         </p>
                         <Input
                             type="password"
                             placeholder="Votre mot de passe"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleUnlock()}
+                            onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
                         />
                     </div>
                     <DialogFooter>
-                        <Button onClick={handleUnlock}>Déverrouiller</Button>
+                        <Button onClick={handleUnlock}>Deverrouiller</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-            {/* Call Overlay */}
+
+            {/* Call Overlay - WhatsApp style */}
             {(isCallActive || isIncomingCall) && (
-                <div className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-sm flex items-center justify-center flex-col">
-                    <div className="bg-card p-6 rounded-full w-32 h-32 flex items-center justify-center mb-8 animate-pulse border-4 border-primary/20">
-                        <Avatar className="w-24 h-24">
-                            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${getConversationName()}`} />
-                            <AvatarFallback>{getConversationName()[0]}</AvatarFallback>
-                        </Avatar>
-                    </div>
-
-                    <h3 className="text-2xl font-bold mb-2">
-                        {isIncomingCall ? 'Appel entrant...' : (callStatus === 'connected' ? 'En appel' : 'Appel en cours...')}
-                    </h3>
-                    <p className="text-muted-foreground mb-8 text-lg">
-                        {isIncomingCall ? incomingCallData?.callerId : (otherUser?.name || 'Utilisateur')}
-                    </p>
-
-                    <div className="flex items-center gap-8">
-                        {isIncomingCall ? (
+                <div className="fixed inset-0 z-[100] bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center flex-col">
+                    {/* Animated circles background */}
+                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+                        {callStatus === 'connected' && (
                             <>
-                                <Button
-                                    size="lg"
-                                    className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600"
-                                    onClick={rejectCall}
-                                >
-                                    <PhoneOff className="w-8 h-8 text-white" />
-                                </Button>
-                                <Button
-                                    size="lg"
-                                    className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 animate-bounce"
-                                    onClick={answerCall}
-                                >
-                                    <PhoneIncoming className="w-8 h-8 text-white" />
-                                </Button>
+                                <div className="absolute w-64 h-64 rounded-full border border-white/5 animate-ping" style={{ animationDuration: '3s' }} />
+                                <div className="absolute w-48 h-48 rounded-full border border-white/10 animate-ping" style={{ animationDuration: '2s' }} />
                             </>
-                        ) : (
+                        )}
+                        {(callStatus === 'dialing' || callStatus === 'ringing') && (
                             <>
-                                <Button
-                                    size="lg"
-                                    variant="outline"
-                                    className={`rounded-full w-14 h-14 ${isMuted ? 'bg-muted text-muted-foreground' : ''}`}
-                                    onClick={toggleMute}
-                                >
-                                    {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-                                </Button>
-                                <Button
-                                    size="lg"
-                                    className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600"
-                                    onClick={endCall}
-                                >
-                                    <PhoneOff className="w-8 h-8 text-white" />
-                                </Button>
+                                <div className="absolute w-40 h-40 rounded-full bg-primary/10 animate-pulse" />
+                                <div className="absolute w-56 h-56 rounded-full bg-primary/5 animate-pulse" style={{ animationDelay: '0.5s' }} />
                             </>
                         )}
                     </div>
 
+                    <div className="relative z-10 flex flex-col items-center">
+                        {/* Avatar */}
+                        <div className={`relative mb-6 ${callStatus === 'ringing' ? 'animate-bounce' : ''}`}>
+                            <div className={`bg-white/10 p-1 rounded-full ${callStatus === 'connected' ? 'ring-4 ring-green-500/30' : 'ring-4 ring-white/10'}`}>
+                                <Avatar className="w-28 h-28 border-2 border-white/20">
+                                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${getConversationName()}`} />
+                                    <AvatarFallback className="text-3xl bg-primary/20 text-white">{getConversationName()[0]}</AvatarFallback>
+                                </Avatar>
+                            </div>
+                            {callStatus === 'connected' && (
+                                <span className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-gray-800 rounded-full" />
+                            )}
+                        </div>
+
+                        {/* Name */}
+                        <h3 className="text-2xl font-bold text-white mb-1">
+                            {isIncomingCall ? (incomingCallData?.callerName || otherUser?.name || 'Utilisateur') : (otherUser?.name || 'Utilisateur')}
+                        </h3>
+
+                        {/* Status */}
+                        <p className="text-white/60 mb-2 text-sm">
+                            {isIncomingCall && 'Appel vocal entrant...'}
+                            {callStatus === 'dialing' && 'Appel en cours...'}
+                            {callStatus === 'connected' && 'Appel vocal'}
+                        </p>
+
+                        {/* Timer */}
+                        {callStatus === 'connected' && (
+                            <div className="flex items-center gap-1.5 text-white/80 mb-8">
+                                <Clock className="w-4 h-4" />
+                                <span className="text-lg font-mono">{formatCallDuration(callDuration)}</span>
+                            </div>
+                        )}
+
+                        {callStatus !== 'connected' && <div className="mb-8" />}
+
+                        {/* Action buttons */}
+                        <div className="flex items-center gap-6">
+                            {isIncomingCall ? (
+                                <>
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Button
+                                            size="lg"
+                                            className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
+                                            onClick={rejectCall}
+                                        >
+                                            <PhoneOff className="w-7 h-7 text-white" />
+                                        </Button>
+                                        <span className="text-white/60 text-xs">Refuser</span>
+                                    </div>
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Button
+                                            size="lg"
+                                            className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/30 animate-pulse"
+                                            onClick={answerCall}
+                                        >
+                                            <PhoneIncoming className="w-7 h-7 text-white" />
+                                        </Button>
+                                        <span className="text-white/60 text-xs">Repondre</span>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Button
+                                            size="lg"
+                                            className={`rounded-full w-14 h-14 shadow-lg ${isMuted ? 'bg-white/20 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                                            onClick={toggleMute}
+                                        >
+                                            {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+                                        </Button>
+                                        <span className="text-white/60 text-xs">{isMuted ? 'Unmute' : 'Mute'}</span>
+                                    </div>
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Button
+                                            size="lg"
+                                            className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
+                                            onClick={endCall}
+                                        >
+                                            <PhoneOff className="w-7 h-7 text-white" />
+                                        </Button>
+                                        <span className="text-white/60 text-xs">Raccrocher</span>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
                     {/* Hidden Audio Elements */}
-                    <audio ref={remoteVideoRef} autoPlay playsInline className="hidden" />
-                    <audio ref={localVideoRef} autoPlay playsInline muted className="hidden" />
+                    <audio ref={remoteAudioRef} autoPlay playsInline className="hidden" />
+                    <audio ref={localAudioRef} autoPlay playsInline muted className="hidden" />
                 </div>
             )}
 
@@ -952,19 +1064,24 @@ export default function DiscussionPage() {
                     <h2 className="font-semibold text-foreground">{getConversationName()}</h2>
                     {otherUser && (
                         <p className="text-xs text-muted-foreground">
-                            {otherUser.isOnline ? 'En ligne' : 'Hors ligne'}
+                            {otherUser.isOnline ? (
+                                <span className="text-green-500 font-medium">En ligne</span>
+                            ) : (
+                                'Hors ligne'
+                            )}
                         </p>
                     )}
                 </div>
 
-                {/* Call Buttons */}
+                {/* Call Button */}
                 <div className="flex items-center gap-1 md:mr-4">
                     <Button
                         variant="ghost"
                         size="icon"
                         onClick={startCall}
-                        disabled={isCallActive || !otherUser?.isOnline}
+                        disabled={isCallActive}
                         title="Appel vocal"
+                        className="hover:bg-primary/10"
                     >
                         <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
                     </Button>
@@ -991,7 +1108,9 @@ export default function DiscussionPage() {
                         </Button>
                     </div>
                 )}
-                {messages.map((message) => {
+                {messages.filter((message, index, self) =>
+                    self.findIndex(m => m.id === message.id) === index
+                ).map((message) => {
                     const isOwn = message.senderId === currentUser?.id;
                     const decryptedContent = decryptMessageContent(message);
                     const canEdit = canEditOrDelete(message);
@@ -1012,27 +1131,16 @@ export default function DiscussionPage() {
                                             autoFocus
                                         />
                                         <div className="flex gap-2">
-                                            <Button
-                                                size="sm"
-                                                onClick={() => handleEditMessage(message.id)}
-                                            >
+                                            <Button size="sm" onClick={() => handleEditMessage(message.id)}>
                                                 Enregistrer
                                             </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="ghost"
-                                                onClick={() => {
-                                                    setEditingMessageId(null);
-                                                    setEditContent('');
-                                                }}
-                                            >
+                                            <Button size="sm" variant="ghost" onClick={() => { setEditingMessageId(null); setEditContent(''); }}>
                                                 Annuler
                                             </Button>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="group relative">
-                                        {/* Only show text bubble if there's actual content */}
                                         {decryptedContent && decryptedContent.trim() && (
                                             <div
                                                 className={`rounded-2xl px-4 py-2 border ${isOwn
@@ -1042,66 +1150,39 @@ export default function DiscussionPage() {
                                             >
                                                 <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
                                                 {message.isEdited && (
-                                                    <p className="text-xs opacity-70 mt-1">Modifié</p>
+                                                    <p className="text-xs opacity-70 mt-1">Modifie</p>
                                                 )}
                                             </div>
                                         )}
 
-                                        {/* Attachments - shown with transparent background if no text */}
                                         {message.attachments && message.attachments.length > 0 && (
                                             <div className={`${decryptedContent && decryptedContent.trim() ? 'mt-2' : ''} space-y-2`}>
-                                                {message.attachments.map((att, idx) => {
-                                                    const senderKey = message.senderId === currentUser?.id
-                                                        ? otherUser?.publicKey
-                                                        : (message.sender.publicKey || otherUser?.publicKey);
-
-                                                    if (!senderKey) return null;
-
-                                                    return (
-                                                        <EncryptedAttachment
-                                                            key={idx}
-                                                            attachment={att}
-                                                        />
-                                                    );
-                                                })}
+                                                {message.attachments.map((att, idx) => (
+                                                    <EncryptedAttachment key={idx} attachment={att} />
+                                                ))}
                                             </div>
                                         )}
 
                                         <div className="flex items-center gap-2 mt-1">
                                             <span className="text-xs text-muted-foreground">
-                                                {formatDistanceToNow(new Date(message.createdAt), {
-                                                    addSuffix: true,
-                                                    locale: fr,
-                                                })}
-                                                {isTemp && ' • Envoi...'}
+                                                {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true, locale: fr })}
+                                                {isTemp && ' - Envoi...'}
                                             </span>
 
                                             {isOwn && canEdit && !isTemp && (
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-                                                        >
+                                                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground">
                                                             <MoreVertical className="w-4 h-4" />
                                                             <span className="sr-only">Actions</span>
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem
-                                                            onClick={() => {
-                                                                setEditingMessageId(message.id);
-                                                                setEditContent(decryptedContent);
-                                                            }}
-                                                        >
+                                                        <DropdownMenuItem onClick={() => { setEditingMessageId(message.id); setEditContent(decryptedContent); }}>
                                                             <Edit2 className="w-4 h-4 mr-2" />
                                                             Modifier
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleDeleteMessage(message.id)}
-                                                            className="text-destructive"
-                                                        >
+                                                        <DropdownMenuItem onClick={() => handleDeleteMessage(message.id)} className="text-destructive">
                                                             <Trash2 className="w-4 h-4 mr-2" />
                                                             Supprimer
                                                         </DropdownMenuItem>
@@ -1124,22 +1205,14 @@ export default function DiscussionPage() {
                 {selectedFiles.length > 0 && (
                     <div className="mb-3 flex gap-2 flex-wrap">
                         {selectedFiles.map((file, idx) => (
-                            <div
-                                key={idx}
-                                className="bg-muted rounded px-3 py-2 flex items-center gap-2 text-sm border border-border"
-                            >
+                            <div key={idx} className="bg-muted rounded px-3 py-2 flex items-center gap-2 text-sm border border-border">
                                 {file.type.startsWith('image/') ? (
                                     <ImageIcon className="w-4 h-4 text-muted-foreground" />
                                 ) : (
                                     <FileText className="w-4 h-4 text-muted-foreground" />
                                 )}
                                 <span className="max-w-[150px] truncate text-foreground">{file.name}</span>
-                                <button
-                                    onClick={() => removeFile(idx)}
-                                    className="text-destructive hover:text-red-300"
-                                >
-                                    ×
-                                </button>
+                                <button onClick={() => removeFile(idx)} className="text-destructive hover:text-red-300">x</button>
                             </div>
                         ))}
                     </div>
@@ -1170,10 +1243,10 @@ export default function DiscussionPage() {
                             <Input
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
-                                placeholder="Message chiffré..."
+                                placeholder="Message chiffre..."
                                 className="flex-1"
                                 disabled={sending}
-                                onKeyPress={(e) => {
+                                onKeyDown={(e) => {
                                     if (e.key === 'Enter' && !e.shiftKey) {
                                         e.preventDefault();
                                         handleSendMessage();

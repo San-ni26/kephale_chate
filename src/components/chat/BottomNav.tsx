@@ -4,16 +4,32 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MessageSquare, Building2, Users, Bell, Settings } from "lucide-react";
 import { cn } from "@/src/lib/utils";
+import useSWR from "swr";
+import { fetcher } from "@/src/lib/fetcher";
+
+interface ConversationData {
+    id: string;
+    isDirect: boolean;
+    unreadCount: number;
+}
 
 export function BottomNav() {
     const pathname = usePathname();
+    const { data: conversationsData } = useSWR('/api/conversations', fetcher, {
+        refreshInterval: 30000,
+    });
+
+    const conversations: ConversationData[] = conversationsData?.conversations || [];
+    const totalUnread = conversations
+        .filter(c => c.isDirect)
+        .reduce((sum, c) => sum + (c.unreadCount || 0), 0);
 
     const navItems = [
-        { label: "Orgs", icon: Building2, href: "/chat/organizations" },
-        { label: "Groupes", icon: Users, href: "/chat/groups" },
-        { label: "Chats", icon: MessageSquare, href: "/chat" },
-        { label: "Actu", icon: Bell, href: "/chat/notifications" },
-        { label: "Réglages", icon: Settings, href: "/chat/settings" },
+        { label: "Orgs", icon: Building2, href: "/chat/organizations", badge: 0 },
+        { label: "Groupes", icon: Users, href: "/chat/groups", badge: 0 },
+        { label: "Chats", icon: MessageSquare, href: "/chat", badge: totalUnread },
+        { label: "Actu", icon: Bell, href: "/chat/notifications", badge: 0 },
+        { label: "Reglages", icon: Settings, href: "/chat/settings", badge: 0 },
     ];
 
     return (
@@ -27,11 +43,18 @@ export function BottomNav() {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                "flex flex-col items-center justify-center w-full h-full text-[10px] space-y-1 transition-colors",
+                                "relative flex flex-col items-center justify-center w-full h-full text-[10px] space-y-1 transition-colors",
                                 isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                             )}
                         >
-                            <item.icon size={20} />
+                            <div className="relative">
+                                <item.icon size={20} />
+                                {item.badge > 0 && (
+                                    <span className="absolute -top-2 -right-3 min-w-[16px] h-[16px] bg-primary text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center px-1">
+                                        {item.badge > 99 ? '99+' : item.badge}
+                                    </span>
+                                )}
+                            </div>
                             <span>{item.label}</span>
                         </Link>
                     );

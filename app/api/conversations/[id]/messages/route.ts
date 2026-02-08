@@ -148,8 +148,10 @@ export async function POST(
             data: { updatedAt: new Date() },
         });
 
-        // Send notifications (async, don't block response too much, or await if critical)
-        await notifyNewMessage(message, conversationId);
+        // Send notifications (fire-and-forget to not block API response)
+        notifyNewMessage(message, conversationId).catch(err =>
+            console.error('Error sending notifications:', err)
+        );
 
         return NextResponse.json({ message }, { status: 201 });
 

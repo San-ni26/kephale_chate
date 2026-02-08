@@ -2,7 +2,6 @@ import 'dotenv/config';
 import { createServer } from 'http';
 import { parse } from 'url';
 import next from 'next';
-import { initializeWebSocket } from './src/lib/websocket';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
@@ -23,11 +22,8 @@ app.prepare().then(() => {
         }
     });
 
-    // Initialize WebSocket server
-    initializeWebSocket(server);
-
     server.listen(port, () => {
         console.log(`> Ready on http://${hostname}:${port}`);
-        console.log(`> WebSocket server initialized`);
+        console.log(`> Real-time via Pusher (no WebSocket server needed)`);
     });
 });

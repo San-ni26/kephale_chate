@@ -1,79 +1,16 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { io, Socket } from 'socket.io-client';
-import { getToken } from '@/src/lib/auth-client';
-
 /**
- * Singleton Socket.IO connection manager.
- * Ensures a single socket instance is shared across all components.
+ * useWebSocket hook - Pusher-based real-time communication
+ * 
+ * Channels:
+ * - private-user-{userId}: personal notifications, call signaling (SHARED/ref-counted)
+ * - presence-conversation-{conversationId}: conversation messages, typing (per-component)
  */
-let globalSocket: Socket | null = null;
-let globalSocketToken: string | null = null;
-let connectionRefCount = 0;
 
-function getOrCreateSocket(): Socket | null {
-    const token = getToken();
-    if (!token) {
-        console.warn('No authentication token found - WebSocket will not connect');
-        return null;
-    }
-
-    // If token changed (re-login), disconnect old socket
-    if (globalSocket && globalSocketToken !== token) {
-        console.log('Token changed, reconnecting WebSocket...');
-        globalSocket.disconnect();
-        globalSocket = null;
-        globalSocketToken = null;
-    }
-
-    // Return existing connected socket
-    if (globalSocket) {
-        return globalSocket;
-    }
-
-    // Create new socket
-    const url = process.env.NEXT_PUBLIC_APP_URL || undefined;
-    console.log('Creating Socket.IO connection to:', url);
-
-    globalSocket = io(url, {
-        auth: { token },
-        autoConnect: true,
-        transports: ['polling', 'websocket'],
-        path: '/socket.io/',
-        reconnectionAttempts: 10,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
-        timeout: 20000,
-    });
-
-    globalSocketToken = token;
-
-    globalSocket.on('connect', () => {
-        console.log('WebSocket connected, id:', globalSocket?.id);
-    });
-
-    globalSocket.on('disconnect', (reason) => {
-        console.log('WebSocket disconnected:', reason);
-    });
-
-    globalSocket.on('connect_error', (error) => {
-        console.error('WebSocket connection error:', error.message);
-    });
-
-    return globalSocket;
-}
-
-function releaseSocket() {
-    connectionRefCount--;
-    if (connectionRefCount <= 0) {
-        connectionRefCount = 0;
-        if (globalSocket) {
-            console.log('All components unmounted, disconnecting WebSocket');
-            globalSocket.disconnect();
-            globalSocket = null;
-            globalSocketToken = null;
-        }
-    }
-}
+import { useEffect, useRef, useState, useCallback } from 'react';
+import type PusherClient from 'pusher-js';
+import type { Channel, PresenceChannel } from 'pusher-js';
+import { getPusherClient, acquireUserChannel, releaseUserChannel } from '@/src/lib/pusher-client';
+import { getUser, getToken, fetchWithAuth } from '@/src/lib/auth-client';
 
 // ---- Type definitions ----
 
@@ -94,7 +31,7 @@ export interface SocketMessage {
 }
 
 export interface UseWebSocketReturn {
-    socket: Socket | null;
+    socket: PusherClient | null;
     isConnected: boolean;
     sendMessage: (conversationId: string, content: string, attachments?: any[]) => void;
     editMessage: (messageId: string, content: string) => void;
@@ -103,13 +40,14 @@ export interface UseWebSocketReturn {
     leaveConversation: (conversationId: string) => void;
     startTyping: (conversationId: string) => void;
     stopTyping: (conversationId: string) => void;
+    userChannel: Channel | null;
+    conversationChannel: Channel | null;
 }
 
 /**
- * React hook for WebSocket real-time communication.
- * Uses a singleton pattern to share a single socket connection.
- * 
- * Callbacks are stored in refs to avoid reconnection on every render.
+ * React hook for real-time communication via Pusher.
+ * The user's private channel is SHARED across all component instances (ref-counted).
+ * Conversation channels are per-component.
  */
 export function useWebSocket(
     onNewMessage?: (data: { conversationId: string; message: SocketMessage }) => void,
@@ -120,9 +58,12 @@ export function useWebSocket(
     onError?: (error: { message: string }) => void
 ): UseWebSocketReturn {
     const [isConnected, setIsConnected] = useState(false);
-    const [socket, setSocket] = useState<Socket | null>(null);
+    const [pusher, setPusher] = useState<PusherClient | null>(null);
+    const [userChannel, setUserChannel] = useState<Channel | null>(null);
+    const [conversationChannel, setConversationChannel] = useState<Channel | null>(null);
+    const currentConversationRef = useRef<string | null>(null);
 
-    // Store callbacks in refs to prevent useEffect re-runs
+    // Store callbacks in refs to avoid re-subscriptions
     const onNewMessageRef = useRef(onNewMessage);
     const onMessageEditedRef = useRef(onMessageEdited);
     const onMessageDeletedRef = useRef(onMessageDeleted);
@@ -130,7 +71,6 @@ export function useWebSocket(
     const onUserStatusChangedRef = useRef(onUserStatusChanged);
     const onErrorRef = useRef(onError);
 
-    // Update refs on each render (no re-render triggered)
     onNewMessageRef.current = onNewMessage;
     onMessageEditedRef.current = onMessageEdited;
     onMessageDeletedRef.current = onMessageDeleted;
@@ -138,131 +78,173 @@ export function useWebSocket(
     onUserStatusChangedRef.current = onUserStatusChanged;
     onErrorRef.current = onError;
 
+    // Initialize Pusher and acquire user channel
     useEffect(() => {
-        const sock = getOrCreateSocket();
-        if (!sock) return;
+        const user = getUser();
+        if (!user) return;
 
-        connectionRefCount++;
-        setSocket(sock);
+        const client = getPusherClient();
+        if (!client) return;
+
+        setPusher(client);
 
         // Connection state handlers
-        const handleConnect = () => setIsConnected(true);
-        const handleDisconnect = () => setIsConnected(false);
-        const handleConnectError = () => setIsConnected(false);
+        const onConnected = () => {
+            console.log('[Pusher] Connected');
+            setIsConnected(true);
+        };
 
-        // If already connected, set state immediately
-        if (sock.connected) {
+        const onDisconnected = () => {
+            console.log('[Pusher] Disconnected');
+            setIsConnected(false);
+        };
+
+        const onErr = (err: any) => {
+            console.error('[Pusher] Connection error:', err);
+            setIsConnected(false);
+            onErrorRef.current?.({ message: err?.message || err?.data?.message || 'Connection error' });
+        };
+
+        client.connection.bind('connected', onConnected);
+        client.connection.bind('disconnected', onDisconnected);
+        client.connection.bind('error', onErr);
+
+        if (client.connection.state === 'connected') {
             setIsConnected(true);
         }
 
-        sock.on('connect', handleConnect);
-        sock.on('disconnect', handleDisconnect);
-        sock.on('connect_error', handleConnectError);
+        // Acquire shared user channel (ref-counted)
+        const uChannel = acquireUserChannel();
+        if (uChannel) {
+            setUserChannel(uChannel);
+        }
 
-        // Message events - use ref-based callbacks so they always call the latest version
-        const handleNewMessage = (data: { conversationId: string; message: SocketMessage }) => {
-            onNewMessageRef.current?.(data);
-        };
-
-        const handleMessageEdited = (data: { conversationId: string; message: SocketMessage }) => {
-            onMessageEditedRef.current?.(data);
-        };
-
-        const handleMessageDeleted = (data: { conversationId: string; messageId: string }) => {
-            onMessageDeletedRef.current?.(data);
-        };
-
-        const handleUserTyping = (data: { conversationId: string; userId: string; isTyping: boolean }) => {
-            onUserTypingRef.current?.(data);
-        };
-
-        const handleUserOnline = (data: { userId: string }) => {
-            onUserStatusChangedRef.current?.({ userId: data.userId, isOnline: true });
-        };
-
-        const handleUserOffline = (data: { userId: string }) => {
-            onUserStatusChangedRef.current?.({ userId: data.userId, isOnline: false });
-        };
-
-        const handleError = (error: { message: string }) => {
-            console.error('WebSocket error:', error);
-            onErrorRef.current?.(error);
-        };
-
-        sock.on('message:new', handleNewMessage);
-        sock.on('message:edited', handleMessageEdited);
-        sock.on('message:deleted', handleMessageDeleted);
-        sock.on('typing:user', handleUserTyping);
-        sock.on('user:online', handleUserOnline);
-        sock.on('user:offline', handleUserOffline);
-        sock.on('error', handleError);
-
-        // Cleanup: remove THIS component's listeners, not the socket itself
         return () => {
-            sock.off('connect', handleConnect);
-            sock.off('disconnect', handleDisconnect);
-            sock.off('connect_error', handleConnectError);
-            sock.off('message:new', handleNewMessage);
-            sock.off('message:edited', handleMessageEdited);
-            sock.off('message:deleted', handleMessageDeleted);
-            sock.off('typing:user', handleUserTyping);
-            sock.off('user:online', handleUserOnline);
-            sock.off('user:offline', handleUserOffline);
-            sock.off('error', handleError);
-            releaseSocket();
+            client.connection.unbind('connected', onConnected);
+            client.connection.unbind('disconnected', onDisconnected);
+            client.connection.unbind('error', onErr);
+            // Release our ref to the user channel (won't unsubscribe if others still use it)
+            releaseUserChannel();
         };
-    // No dependencies on callbacks - they are stored in refs
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // ---- Action functions (stable references via useCallback) ----
+    // Re-subscribe to conversation channel on reconnect
+    useEffect(() => {
+        if (!pusher || !isConnected || !currentConversationRef.current) return;
 
-    const sendMessage = useCallback((conversationId: string, content: string, attachments?: any[]) => {
-        if (globalSocket?.connected) {
-            globalSocket.emit('message:send', { conversationId, content, attachments });
+        const convId = currentConversationRef.current;
+        const channelName = `presence-conversation-${convId}`;
+        const existingChannel = pusher.channel(channelName);
+
+        if (!existingChannel || !existingChannel.subscribed) {
+            console.log('[Pusher] Re-subscribing to conversation after reconnect:', convId);
+            joinConversationInternal(convId);
         }
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isConnected, pusher]);
 
-    const editMessage = useCallback((messageId: string, content: string) => {
-        if (globalSocket?.connected) {
-            globalSocket.emit('message:edit', { messageId, content });
-        }
-    }, []);
+    // Internal join logic
+    const joinConversationInternal = useCallback((conversationId: string) => {
+        if (!pusher) return;
 
-    const deleteMessage = useCallback((messageId: string) => {
-        if (globalSocket?.connected) {
-            globalSocket.emit('message:delete', messageId);
-        }
-    }, []);
+        const channelName = `presence-conversation-${conversationId}`;
+        const channel = pusher.subscribe(channelName) as PresenceChannel;
 
+        channel.bind('pusher:subscription_succeeded', () => {
+            console.log('[Pusher] Joined conversation:', conversationId);
+        });
+
+        channel.bind('pusher:subscription_error', (err: any) => {
+            console.error('[Pusher] Conversation subscription error:', conversationId, err);
+        });
+
+        // Message events
+        channel.bind('message:new', (data: { conversationId: string; message: SocketMessage }) => {
+            onNewMessageRef.current?.(data);
+        });
+
+        channel.bind('message:edited', (data: { conversationId: string; message: SocketMessage }) => {
+            onMessageEditedRef.current?.(data);
+        });
+
+        channel.bind('message:deleted', (data: { conversationId: string; messageId: string }) => {
+            onMessageDeletedRef.current?.(data);
+        });
+
+        // Typing events (ignore own typing echo)
+        channel.bind('typing:user', (data: { conversationId: string; userId: string; isTyping: boolean }) => {
+            const user = getUser();
+            if (data.userId === user?.id) return;
+            onUserTypingRef.current?.(data);
+        });
+
+        // User presence events
+        channel.bind('pusher:member_added', (member: { id: string }) => {
+            onUserStatusChangedRef.current?.({ userId: member.id, isOnline: true });
+        });
+
+        channel.bind('pusher:member_removed', (member: { id: string }) => {
+            onUserStatusChangedRef.current?.({ userId: member.id, isOnline: false });
+        });
+
+        setConversationChannel(channel);
+    }, [pusher]);
+
+    // Join/leave conversation channel
     const joinConversation = useCallback((conversationId: string) => {
-        if (globalSocket?.connected) {
-            globalSocket.emit('join:conversation', conversationId);
-            console.log('Joined conversation room:', conversationId);
+        if (!pusher) return;
+
+        // Leave previous conversation if any
+        if (currentConversationRef.current && currentConversationRef.current !== conversationId) {
+            pusher.unsubscribe(`presence-conversation-${currentConversationRef.current}`);
         }
-    }, []);
+
+        currentConversationRef.current = conversationId;
+        joinConversationInternal(conversationId);
+    }, [pusher, joinConversationInternal]);
 
     const leaveConversation = useCallback((conversationId: string) => {
-        if (globalSocket?.connected) {
-            globalSocket.emit('leave:conversation', conversationId);
-            console.log('Left conversation room:', conversationId);
+        if (!pusher) return;
+        pusher.unsubscribe(`presence-conversation-${conversationId}`);
+        if (currentConversationRef.current === conversationId) {
+            currentConversationRef.current = null;
+            setConversationChannel(null);
         }
+    }, [pusher]);
+
+    // ---- Action functions ----
+
+    const sendMessage = useCallback((_conversationId: string, _content: string, _attachments?: any[]) => {
+        // Messages sent via POST /api/conversations/[id]/messages
+    }, []);
+
+    const editMessage = useCallback((_messageId: string, _content: string) => {
+        // Edits sent via PATCH /api/messages/[id]
+    }, []);
+
+    const deleteMessage = useCallback((_messageId: string) => {
+        // Deletes sent via DELETE /api/messages/[id]
     }, []);
 
     const startTyping = useCallback((conversationId: string) => {
-        if (globalSocket?.connected) {
-            globalSocket.emit('typing:start', conversationId);
-        }
+        fetchWithAuth('/api/pusher/typing', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ conversationId, isTyping: true }),
+        }).catch(() => {});
     }, []);
 
     const stopTyping = useCallback((conversationId: string) => {
-        if (globalSocket?.connected) {
-            globalSocket.emit('typing:stop', conversationId);
-        }
+        fetchWithAuth('/api/pusher/typing', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ conversationId, isTyping: false }),
+        }).catch(() => {});
     }, []);
 
     return {
-        socket,
+        socket: pusher,
         isConnected,
         sendMessage,
         editMessage,
@@ -271,5 +253,7 @@ export function useWebSocket(
         leaveConversation,
         startTyping,
         stopTyping,
+        userChannel,
+        conversationChannel,
     };
 }

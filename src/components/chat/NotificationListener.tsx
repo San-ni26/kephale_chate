@@ -4,21 +4,22 @@ import { useEffect, useRef } from 'react';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { toast } from 'sonner';
 import { usePathname, useRouter } from 'next/navigation';
+import { fetchWithAuth } from '@/src/lib/auth-client';
 
 export function NotificationListener() {
     const pathname = usePathname();
     const router = useRouter();
-    const { socket, isConnected } = useWebSocket();
+    const { userChannel, isConnected } = useWebSocket();
 
-    // Use refs for pathname/router so the socket listener always has latest values
+    // Use refs for pathname/router so listeners always have latest values
     const pathnameRef = useRef(pathname);
     const routerRef = useRef(router);
     pathnameRef.current = pathname;
     routerRef.current = router;
 
-    // Listen for in-app notifications
+    // Listen for in-app notifications on the user's private Pusher channel
     useEffect(() => {
-        if (!socket || !isConnected) return;
+        if (!userChannel || !isConnected) return;
 
         const handleNewNotification = (data: {
             id: string;
@@ -26,11 +27,10 @@ export function NotificationListener() {
             messageId: string;
             conversationId: string;
             senderName: string;
-            createdAt: Date;
+            createdAt: string;
         }) => {
-            console.log('Received notification:new event', data);
+            console.log('[NotificationListener] Received notification:new event', data);
 
-            // Check if user is currently viewing the conversation
             const currentPath = pathnameRef.current;
             const isViewingConversation =
                 currentPath?.includes(`/chat/discussion/${data.conversationId}`) ||
@@ -50,7 +50,6 @@ export function NotificationListener() {
             });
         };
 
-        // Listen for incoming call notifications (global - works on any page)
         const handleIncomingCall = (data: {
             callerId: string;
             callerName?: string;
@@ -58,32 +57,31 @@ export function NotificationListener() {
             conversationId: string;
         }) => {
             const currentPath = pathnameRef.current;
-            // Only show toast if NOT already on the conversation page (page handles it directly)
             const isOnConversation = currentPath?.includes(`/chat/discussion/${data.conversationId}`);
             if (isOnConversation) return;
 
             const callerDisplay = data.callerName || 'Quelqu\'un';
 
             toast(`Appel entrant de ${callerDisplay}`, {
-                description: 'Cliquez pour répondre',
+                description: 'Cliquez pour repondre',
                 action: {
-                    label: 'Répondre',
+                    label: 'Repondre',
                     onClick: () => routerRef.current.push(`/chat/discussion/${data.conversationId}`)
                 },
                 duration: 30000,
             });
         };
 
-        socket.on('notification:new', handleNewNotification);
-        socket.on('call:incoming', handleIncomingCall);
+        userChannel.bind('notification:new', handleNewNotification);
+        userChannel.bind('call:incoming', handleIncomingCall);
 
         return () => {
-            socket.off('notification:new', handleNewNotification);
-            socket.off('call:incoming', handleIncomingCall);
+            userChannel.unbind('notification:new', handleNewNotification);
+            userChannel.unbind('call:incoming', handleIncomingCall);
         };
-    }, [socket, isConnected]);
+    }, [userChannel, isConnected]);
 
-    // Register Push Notifications
+    // Register Push Notifications - uses fetchWithAuth for authentication
     useEffect(() => {
         if (typeof window === 'undefined') return;
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
@@ -93,70 +91,71 @@ export function NotificationListener() {
 
         const registerPush = async () => {
             try {
-                console.log('Initializing Push Notification registration...');
+                console.log('[Push] Initializing Push Notification registration...');
 
-                // Check permission
                 let permission = Notification.permission;
-                console.log('Current notification permission:', permission);
+                console.log('[Push] Current notification permission:', permission);
 
                 if (permission === 'default') {
                     permission = await Notification.requestPermission();
-                    console.log('Notification permission requested, result:', permission);
+                    console.log('[Push] Notification permission requested, result:', permission);
                 }
 
                 if (permission !== 'granted') {
-                    console.warn('Notification permission rejected');
+                    console.warn('[Push] Notification permission rejected');
                     return;
                 }
 
                 const registration = await navigator.serviceWorker.ready;
-                console.log('Service Worker ready');
+                console.log('[Push] Service Worker ready');
 
-                // Check if already subscribed
                 let subscription = await registration.pushManager.getSubscription();
 
                 if (!subscription) {
                     const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
                     if (!publicKey) {
-                        console.error('VAPID Public Key missing in environment variables');
+                        console.error('[Push] VAPID Public Key missing in environment variables');
                         return;
                     }
 
-                    console.log('Subscribing to PushManager...');
+                    console.log('[Push] Subscribing to PushManager...');
 
                     try {
                         subscription = await registration.pushManager.subscribe({
                             userVisibleOnly: true,
                             applicationServerKey: urlBase64ToUint8Array(publicKey)
                         });
-                        console.log('New push subscription created');
+                        console.log('[Push] New push subscription created');
                     } catch (subError) {
-                        console.error('Failed to subscribe to PushManager:', subError);
+                        console.error('[Push] Failed to subscribe to PushManager:', subError);
                         return;
                     }
                 }
 
-                // Send subscription to server
-                console.log('Sending subscription to server...');
-                const res = await fetch('/api/push/subscribe', {
+                console.log('[Push] Sending subscription to server...');
+
+                // CRITICAL: Use fetchWithAuth to include JWT token
+                // Without auth, the server can't associate this subscription with a user
+                const res = await fetchWithAuth('/api/push/subscribe', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ subscription }),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subscription: subscription.toJSON() }),
                 });
 
                 if (!res.ok) {
-                    console.error('Failed to save subscription on server:', await res.text());
+                    const errorText = await res.text();
+                    console.error('[Push] Failed to save subscription on server:', errorText);
                 } else {
-                    console.log('Push subscription successfully saved on server');
+                    console.log('[Push] Push subscription successfully saved on server');
                 }
             } catch (error) {
-                console.error('Service Worker / Push Error:', error);
+                console.error('[Push] Service Worker / Push Error:', error);
             }
         };
 
-        registerPush();
+        // Small delay to ensure auth token is available after login
+        const timeout = setTimeout(registerPush, 2000);
+        return () => clearTimeout(timeout);
     }, []);
 
     return null;
