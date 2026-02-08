@@ -21,6 +21,8 @@ export function NotificationListener() {
             senderName: string;
             createdAt: Date;
         }) => {
+            console.log('Received notification:new event', data);
+
             // Check if user is currently viewing the conversation
             // Assuming chat URL pattern is /chat/discussion/[id] or similar
             // Also handle groups if different URL
@@ -53,18 +55,34 @@ export function NotificationListener() {
         if ('serviceWorker' in navigator && 'PushManager' in window) {
             const registerPush = async () => {
                 try {
+                    console.log('Initializing Push Notification registration...');
+
+                    if (!('serviceWorker' in navigator)) {
+                        console.error('Service Worker not supported');
+                        return;
+                    }
+
+                    if (!('PushManager' in window)) {
+                        console.error('Push API not supported');
+                        return;
+                    }
+
                     // Check logic for permission
                     let permission = Notification.permission;
+                    console.log('Current notification permission:', permission);
+
                     if (permission === 'default') {
                         permission = await Notification.requestPermission();
+                        console.log('Notification permission requested, result:', permission);
                     }
 
                     if (permission !== 'granted') {
-                        console.log('Notification permission rejected');
+                        console.warn('Notification permission rejected');
                         return;
                     }
 
                     const registration = await navigator.serviceWorker.ready;
+                    console.log('Service Worker ready:', registration);
 
                     // Check if already subscribed
                     let subscription = await registration.pushManager.getSubscription();
@@ -73,18 +91,26 @@ export function NotificationListener() {
                     if (!subscription) {
                         const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
                         if (!publicKey) {
-                            console.error('VAPID Public Key missing');
+                            console.error('VAPID Public Key missing in environment variables');
                             return;
                         }
 
-                        subscription = await registration.pushManager.subscribe({
-                            userVisibleOnly: true,
-                            applicationServerKey: urlBase64ToUint8Array(publicKey)
-                        });
-                        console.log('New subscription created:', subscription);
+                        console.log('Subscribing to PushManager with key:', publicKey.substring(0, 10) + '...');
+
+                        try {
+                            subscription = await registration.pushManager.subscribe({
+                                userVisibleOnly: true,
+                                applicationServerKey: urlBase64ToUint8Array(publicKey)
+                            });
+                            console.log('New subscription created:', subscription);
+                        } catch (subError) {
+                            console.error('Failed to subscribe to PushManager:', subError);
+                            return;
+                        }
                     }
 
                     // Send subscription to server
+                    console.log('Sending subscription to server...');
                     const res = await fetch('/api/push/subscribe', {
                         method: 'POST',
                         headers: {
@@ -94,9 +120,9 @@ export function NotificationListener() {
                     });
 
                     if (!res.ok) {
-                        console.error('Failed to save subscription on server', await res.text());
+                        console.error('Failed to save subscription on server:', await res.text());
                     } else {
-                        console.log('Push subscription saved on server');
+                        console.log('Push subscription successfully saved on server');
                     }
 
                 } catch (error) {
@@ -105,6 +131,8 @@ export function NotificationListener() {
             };
 
             registerPush();
+        } else {
+            console.warn('Service Worker or PushManager not supported in this browser');
         }
     }, []);
 
