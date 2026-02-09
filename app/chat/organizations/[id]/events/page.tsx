@@ -2,14 +2,29 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Calendar, Plus, ArrowLeft, Users, Copy, Check, Trash2, Edit } from "lucide-react";
+import { Calendar, Plus, Users, Copy, Check, Trash2, MessageSquare, Building2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/src/components/ui/card";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/src/components/ui/dialog";
+import { Label } from "@/src/components/ui/label";
 import { toast } from "sonner";
 import EventCreationDialog from "@/src/components/events/EventCreationDialog";
+import { fetchWithAuth } from "@/src/lib/auth-client";
 
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
+
+interface Department {
+    id: string;
+    name: string;
+    _count?: { members: number };
+}
 
 interface Event {
     id: string;
@@ -40,8 +55,55 @@ export default function EventsManagementPage() {
 
     const [showCreateDialog, setShowCreateDialog] = useState(false);
     const [copiedToken, setCopiedToken] = useState<string | null>(null);
+    const [broadcastEventId, setBroadcastEventId] = useState<string | null>(null);
+    const [broadcastTarget, setBroadcastTarget] = useState<'all' | 'selected'>('all');
+    const [broadcastDepartmentIds, setBroadcastDepartmentIds] = useState<string[]>([]);
+    const [departments, setDepartments] = useState<Department[]>([]);
+    const [broadcastLoading, setBroadcastLoading] = useState(false);
 
     const refreshEvents = () => mutateEvents();
+
+    useEffect(() => {
+        if (!broadcastEventId || !orgId) return;
+        fetcher(`/api/organizations/${orgId}/departments`)
+            .then((res: { departments?: Department[] }) => setDepartments(res?.departments ?? []))
+            .catch(() => toast.error('Impossible de charger les départements'));
+    }, [broadcastEventId, orgId]);
+
+    const handleBroadcastSubmit = async () => {
+        if (!broadcastEventId) return;
+        if (broadcastTarget === 'selected' && broadcastDepartmentIds.length === 0) {
+            toast.error('Sélectionnez au moins un département');
+            return;
+        }
+        setBroadcastLoading(true);
+        try {
+            const res = await fetchWithAuth(
+                `/api/organizations/${orgId}/events/${broadcastEventId}/broadcast`,
+                {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        target: broadcastTarget,
+                        ...(broadcastTarget === 'selected' ? { departmentIds: broadcastDepartmentIds } : {}),
+                    }),
+                }
+            );
+            const data = await res.json();
+            if (!res.ok) {
+                toast.error(data.error || 'Erreur lors de la diffusion');
+                return;
+            }
+            toast.success(`Événement diffusé dans ${data.broadcastCount ?? 0} département(s)`);
+            setBroadcastEventId(null);
+            setBroadcastDepartmentIds([]);
+            setBroadcastTarget('all');
+        } catch {
+            toast.error('Erreur lors de la diffusion');
+        } finally {
+            setBroadcastLoading(false);
+        }
+    };
 
     const handleCreateSuccess = () => {
         setShowCreateDialog(false);
@@ -106,32 +168,7 @@ export default function EventsManagementPage() {
     }
 
     return (
-        <div className="p-4 space-y-6 mt-15 bg-background min-h-screen">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => router.push(`/chat/organizations/${orgId}`)}
-                        className="hover:bg-muted"
-                    >
-                        <ArrowLeft className="w-5 h-5" />
-                    </Button>
-                    <h1 className="text-2xl font-bold text-foreground">
-                        Événements
-                    </h1>
-                </div>
-
-                <Button
-                    className="bg-primary text-primary-foreground hover:bg-primary/90"
-                    onClick={() => setShowCreateDialog(true)}
-                >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Nouvel Événement
-                </Button>
-            </div>
-
+        <div className="p-4 pt-20 mb-15 space-y-6 bg-background min-h-screen">
             {/* Events Grid */}
             {events.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -187,11 +224,11 @@ export default function EventsManagementPage() {
                                     />
                                 </div>
                             </CardContent>
-                            <CardFooter className="flex gap-2">
+                            <CardFooter className="flex flex-wrap gap-2">
                                 <Button
                                     variant="outline"
                                     size="sm"
-                                    className="flex-1 border-border hover:bg-muted"
+                                    className="border-border hover:bg-muted"
                                     onClick={() => handleCopyLink(event.token)}
                                 >
                                     {copiedToken === event.token ? (
@@ -202,9 +239,19 @@ export default function EventsManagementPage() {
                                     ) : (
                                         <>
                                             <Copy className="w-4 h-4 mr-2" />
-                                            Copier le lien
+                                            Lien
                                         </>
                                     )}
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="border-border hover:bg-muted"
+                                    onClick={() => setBroadcastEventId(event.id)}
+                                    title="Diffuser dans les discussions des départements"
+                                >
+                                    <MessageSquare className="w-4 h-4 mr-1" />
+                                    Diffuser
                                 </Button>
                                 <Button
                                     variant="outline"
@@ -240,6 +287,84 @@ export default function EventsManagementPage() {
                 orgId={orgId}
                 onSuccess={handleCreateSuccess}
             />
+
+            {/* Dialog Diffuser l'événement dans les discussions */}
+            <Dialog open={!!broadcastEventId} onOpenChange={(open) => !open && setBroadcastEventId(null)}>
+                <DialogContent className="bg-card border-border text-foreground max-w-md">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <MessageSquare className="w-5 h-5" />
+                            Diffuser dans les discussions
+                        </DialogTitle>
+                    </DialogHeader>
+                    <p className="text-sm text-muted-foreground">
+                        L'événement sera affiché en haut de la discussion des départements choisis jusqu'à sa date de fin ou sa suppression.
+                    </p>
+                    <div className="space-y-3 py-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="broadcastTarget"
+                                checked={broadcastTarget === 'all'}
+                                onChange={() => setBroadcastTarget('all')}
+                                className="h-4 w-4"
+                            />
+                            <Building2 className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm">Tous les départements</span>
+                            {departments.length > 0 && (
+                                <span className="text-xs text-muted-foreground">({departments.length})</span>
+                            )}
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="broadcastTarget"
+                                checked={broadcastTarget === 'selected'}
+                                onChange={() => setBroadcastTarget('selected')}
+                                className="h-4 w-4"
+                            />
+                            <span className="text-sm">Sélectionner les départements</span>
+                        </label>
+                        {broadcastTarget === 'selected' && departments.length > 0 && (
+                            <div className="max-h-36 overflow-y-auto rounded border border-border bg-muted/30 p-2 space-y-1">
+                                {departments.map((d) => (
+                                    <label
+                                        key={d.id}
+                                        className="flex items-center gap-2 cursor-pointer py-1.5 px-2 rounded hover:bg-muted"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={broadcastDepartmentIds.includes(d.id)}
+                                            onChange={(e) =>
+                                                setBroadcastDepartmentIds((prev) =>
+                                                    e.target.checked ? [...prev, d.id] : prev.filter((id) => id !== d.id)
+                                                )
+                                            }
+                                            className="h-4 w-4 rounded border-border"
+                                        />
+                                        <span className="text-sm">{d.name}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => setBroadcastEventId(null)}
+                            disabled={broadcastLoading}
+                        >
+                            Annuler
+                        </Button>
+                        <Button
+                            onClick={handleBroadcastSubmit}
+                            disabled={broadcastLoading || (broadcastTarget === 'selected' && broadcastDepartmentIds.length === 0)}
+                        >
+                            {broadcastLoading ? 'Envoi...' : 'Diffuser'}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

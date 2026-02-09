@@ -12,7 +12,8 @@ import { Loader2, Check, Upload, Building2, MapPin, CreditCard } from "lucide-re
 interface OrganizationCompletionWizardProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    requestId: string;
+    /** Si fourni, complète une demande approuvée ; sinon création directe (code auto-généré). */
+    requestId?: string;
     onSuccess: () => void;
 }
 
@@ -100,6 +101,8 @@ export default function OrganizationCompletionWizard({
         }
     };
 
+    const isDirectCreate = !requestId;
+
     const handleSubmit = async () => {
         if (!name) {
             toast.error("Le nom de l'organisation est requis");
@@ -109,16 +112,15 @@ export default function OrganizationCompletionWizard({
         setLoading(true);
 
         try {
-            const res = await fetch('/api/organizations/complete', {
+            const url = isDirectCreate ? '/api/organizations/create' : '/api/organizations/complete';
+            const body = isDirectCreate
+                ? { name, logo, address, plan: selectedPlan }
+                : { requestId, name, logo, address, plan: selectedPlan };
+
+            const res = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    requestId,
-                    name,
-                    logo,
-                    address,
-                    plan: selectedPlan,
-                }),
+                body: JSON.stringify(body),
             });
 
             const data = await res.json();
@@ -128,7 +130,9 @@ export default function OrganizationCompletionWizard({
                 return;
             }
 
-            toast.success(`Organisation créée avec succès ! Code d'accès: ${data.code}`);
+            toast.success(data.code
+                ? `Organisation créée avec succès ! Code d'accès: ${data.code}`
+                : 'Organisation créée avec succès !');
 
             // Reset form
             setStep(1);

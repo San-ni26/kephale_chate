@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
@@ -15,7 +15,9 @@ import {
     MoreVertical,
     Edit2,
     Trash2,
-    Settings
+    Settings,
+    Calendar,
+    ExternalLink
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
@@ -27,8 +29,16 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/src/components/ui/dropdown-menu';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from '@/src/components/ui/dialog';
 import { EncryptedAttachment } from '@/app/chat/discussion/[id]/EncryptedAttachment';
 import { AudioRecorderComponent } from '@/src/components/AudioRecorder';
+import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 
 interface Message {
     id: string;
@@ -53,9 +63,21 @@ interface Message {
 interface Department {
     id: string;
     name: string;
+    publicKey: string;
     _count: {
         members: number;
     };
+}
+
+interface PinnedEvent {
+    id: string;
+    title: string;
+    description?: string | null;
+    eventType: string;
+    eventDate: string;
+    maxAttendees: number;
+    imageUrl?: string | null;
+    token: string;
 }
 
 export default function DepartmentChatPage() {
@@ -65,7 +87,9 @@ export default function DepartmentChatPage() {
     const deptId = params?.deptId as string;
 
     const [department, setDepartment] = useState<Department | null>(null);
+    const [currentMemberEncryptedDeptKey, setCurrentMemberEncryptedDeptKey] = useState<string | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
+    const [pinnedEvents, setPinnedEvents] = useState<PinnedEvent[]>([]);
     const [newMessage, setNewMessage] = useState('');
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
@@ -73,9 +97,14 @@ export default function DepartmentChatPage() {
     const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
     const [editContent, setEditContent] = useState('');
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
+    const [privateKey, setPrivateKey] = useState<string | null>(null);
+    const [departmentPrivateKey, setDepartmentPrivateKey] = useState<string | null>(null);
+    const [password, setPassword] = useState('');
+    const [showPasswordDialog, setShowPasswordDialog] = useState(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     const currentUser = getUser();
 
@@ -101,9 +130,39 @@ export default function DepartmentChatPage() {
             if (response.ok) {
                 const data = await response.json();
                 setDepartment(data.department);
+                setCurrentMemberEncryptedDeptKey(data.currentMemberEncryptedDeptKey ?? null);
+                // Pour le créateur du département, encryptedDeptKey est la clé privée du département (stockée telle quelle)
+                if (data.currentMemberEncryptedDeptKey && data.department?.publicKey) {
+                    setDepartmentPrivateKey(data.currentMemberEncryptedDeptKey);
+                }
             }
         } catch (error) {
             console.error('Load department error:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (!currentUser) return;
+        const storedKey = sessionStorage.getItem(`privateKey_${currentUser.id}`);
+        if (storedKey) {
+            setPrivateKey(storedKey);
+            setShowPasswordDialog(false);
+        } else {
+            setShowPasswordDialog(true);
+        }
+    }, [currentUser?.id]);
+
+    const handleUnlock = () => {
+        if (!currentUser || !password) return;
+        try {
+            const decrypted = decryptPrivateKey(currentUser.encryptedPrivateKey, password);
+            setPrivateKey(decrypted);
+            sessionStorage.setItem(`privateKey_${currentUser.id}`, decrypted);
+            setShowPasswordDialog(false);
+            setPassword('');
+            toast.success('Clé de chiffrement déverrouillée');
+        } catch {
+            toast.error('Mot de passe incorrect');
         }
     };
 
@@ -114,6 +173,7 @@ export default function DepartmentChatPage() {
             if (response.ok) {
                 const data = await response.json();
                 setMessages(data.messages || []);
+                setPinnedEvents(data.pinnedEvents || []);
                 if (!silent) scrollToBottom();
             }
         } catch (error) {
@@ -174,29 +234,26 @@ export default function DepartmentChatPage() {
     };
 
     const sendAudioMessage = async (audioFile: File) => {
-        if (!currentUser) {
-            toast.error("Utilisateur non connecté");
+        if (!currentUser || !department?.publicKey) {
+            toast.error("Utilisateur ou département non chargé");
+            return;
+        }
+        if (!privateKey) {
+            setShowPasswordDialog(true);
             return;
         }
 
         setSending(true);
+        const encryptedContent = encryptMessage('', privateKey, department.publicKey);
 
         try {
             const base64Data = await fileToBase64(audioFile);
-
-            const attachment = {
-                filename: audioFile.name,
-                type: 'AUDIO',
-                data: base64Data,
-            };
+            const attachment = { filename: audioFile.name, type: 'AUDIO', data: base64Data };
 
             const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/messages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: '',
-                    attachments: [attachment],
-                }),
+                body: JSON.stringify({ content: encryptedContent, attachments: [attachment] }),
             });
 
             if (response.ok) {
@@ -216,39 +273,41 @@ export default function DepartmentChatPage() {
 
     const handleSendMessage = async () => {
         if (!newMessage.trim() && selectedFiles.length === 0) return;
-        if (!currentUser) {
-            toast.error("Utilisateur non connecté");
+        if (!currentUser || !department?.publicKey) {
+            toast.error("Utilisateur ou département non chargé");
+            return;
+        }
+        if (!privateKey) {
+            setShowPasswordDialog(true);
             return;
         }
 
         setSending(true);
+        const plainContent = newMessage.trim() || '';
+        setNewMessage('');
+        setSelectedFiles([]);
 
         try {
-            let attachments = [];
-
+            let attachments: { filename: string; type: string; data: string }[] = [];
             if (selectedFiles.length > 0) {
                 for (const file of selectedFiles) {
                     const base64Data = await fileToBase64(file);
-
                     const ext = file.name.split('.').pop()?.toLowerCase() || '';
                     let fileType = 'IMAGE';
                     if (['pdf'].includes(ext)) fileType = 'PDF';
                     else if (['doc', 'docx'].includes(ext)) fileType = 'WORD';
                     else if (['webm', 'mp3', 'ogg', 'm4a', 'wav'].includes(ext)) fileType = 'AUDIO';
-
-                    attachments.push({
-                        filename: file.name,
-                        type: fileType,
-                        data: base64Data,
-                    });
+                    attachments.push({ filename: file.name, type: fileType, data: base64Data });
                 }
             }
+
+            const encryptedContent = encryptMessage(plainContent, privateKey, department.publicKey);
 
             const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/messages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    content: newMessage.trim() || '',
+                    content: encryptedContent,
                     attachments: attachments.length > 0 ? attachments : undefined,
                 }),
             });
@@ -256,8 +315,6 @@ export default function DepartmentChatPage() {
             if (response.ok) {
                 const data = await response.json();
                 setMessages(prev => [...prev, data.message]);
-                setNewMessage('');
-                setSelectedFiles([]);
                 scrollToBottom();
             } else {
                 const error = await response.json();
@@ -272,13 +329,14 @@ export default function DepartmentChatPage() {
     };
 
     const handleEditMessage = async (messageId: string) => {
-        if (!editContent.trim() || !currentUser) return;
+        if (!editContent.trim() || !currentUser || !department?.publicKey || !privateKey) return;
 
         try {
+            const encryptedContent = encryptMessage(editContent.trim(), privateKey, department.publicKey);
             const response = await fetchWithAuth(`/api/messages/${messageId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: editContent.trim() }),
+                body: JSON.stringify({ content: encryptedContent }),
             });
 
             if (response.ok) {
@@ -315,13 +373,21 @@ export default function DepartmentChatPage() {
     const canEditOrDelete = (message: Message): boolean => {
         if (message.senderId !== currentUser?.id) return false;
         const messageTime = new Date(message.createdAt).getTime();
-        const now = Date.now();
-        return (now - messageTime) < 5 * 60 * 1000; // 5 minutes
+        return (Date.now() - messageTime) < 5 * 60 * 1000; // 5 minutes
     };
+
+    const decryptMessageContent = useCallback((message: Message): string => {
+        if (!departmentPrivateKey || !message.sender?.publicKey) return '[Chiffré]';
+        try {
+            return decryptMessage(message.content, departmentPrivateKey, message.sender.publicKey) || '';
+        } catch {
+            return '[Erreur de déchiffrement]';
+        }
+    }, [departmentPrivateKey]);
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen bg-background">
+            <div className="flex justify-center items-center min-h-screen bg-background">
                 <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
             </div>
         );
@@ -329,21 +395,42 @@ export default function DepartmentChatPage() {
 
     if (!department) {
         return (
-            <div className="flex justify-center items-center h-screen bg-background">
+            <div className="flex justify-center items-center min-h-screen bg-background">
                 <div className="text-muted-foreground">Département non trouvé</div>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col h-screen bg-background text-foreground pt-2">
-            {/* Header */}
-            <div className="fixed top-0 left-0 right-0 bg-background border-b border-border z-40 h-16 flex items-center px-4">
+        <div className="flex flex-col min-h-screen md:h-screen bg-background text-foreground pt-2 md:pt-0">
+            <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+                <DialogContent className="bg-card border-border">
+                    <DialogHeader>
+                        <DialogTitle>Déverrouiller le chat</DialogTitle>
+                    </DialogHeader>
+                    <p className="text-sm text-muted-foreground py-2">
+                        Entrez votre mot de passe pour déchiffrer vos messages.
+                    </p>
+                    <Input
+                        type="password"
+                        placeholder="Votre mot de passe"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
+                    />
+                    <DialogFooter>
+                        <Button onClick={handleUnlock}>Déverrouiller</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Header : masqué sur mobile (même barre que TopNav), visible sur web */}
+            <div className="hidden md:flex fixed top-0 left-0 right-0 md:static bg-background border-b border-border z-40 h-14 md:h-16 items-center px-3 md:px-4 shrink-0">
                 <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => router.push(`/chat/organizations/${orgId}/departments/${deptId}`)}
-                    className="mr-3"
+                    className="mr-2 md:mr-3 shrink-0"
                 >
                     <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
                 </Button>
@@ -372,18 +459,55 @@ export default function DepartmentChatPage() {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto pt-16 pb-40 px-4 space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div
+                ref={scrollRef}
+                className="flex-1 overflow-y-auto pt-16 pb-36 md:pb-40 px-3 md:px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            >
+                {/* Événements épinglés — une seule ligne, fixe en haut */}
+                {pinnedEvents.length > 0 && (
+                    <div className="sticky top-0 z-10 -mx-3 px-3 md:-mx-4 md:px-4 py-2 mb-2 bg-background border-b border-border shrink-0 flex items-center gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide shrink-0">
+                            Événements
+                        </span>
+                        {pinnedEvents
+                            .filter((ev) => new Date(ev.eventDate) >= new Date())
+                            .map((ev) => (
+                                <a
+                                    key={ev.id}
+                                    href={`${typeof window !== 'undefined' ? window.location.origin : ''}/events/${ev.token}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-shrink-0 inline-flex items-center gap-2 rounded-lg border border-border bg-card px-2.5 py-1.5 hover:border-primary/50 transition min-w-0 max-w-[220px]"
+                                >
+                                    {ev.imageUrl ? (
+                                        <div className="w-8 h-8 rounded overflow-hidden bg-muted shrink-0">
+                                            <img src={ev.imageUrl} alt="" className="w-full h-full object-cover" />
+                                        </div>
+                                    ) : (
+                                        <Calendar className="w-4 h-4 shrink-0 text-muted-foreground" />
+                                    )}
+                                    <span className="text-sm font-medium text-foreground truncate">{ev.title}</span>
+                                    <span className="text-xs text-muted-foreground shrink-0">
+                                        {new Date(ev.eventDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                    </span>
+                                    <ExternalLink className="w-3.5 h-3.5 shrink-0 text-muted-foreground" />
+                                </a>
+                            ))}
+                    </div>
+                )}
+
+                <div className="space-y-2">
                 {messages.map((message) => {
                     const isOwn = message.senderId === currentUser?.id;
                     const canEdit = canEditOrDelete(message);
+                    const decryptedContent = decryptMessageContent(message);
 
                     return (
                         <div
                             key={message.id}
                             className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
                         >
-                            <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
-                                {/* Afficher le nom de l'utilisateur qui a envoyé le message */}
+                            <div className={`max-w-[85%] md:max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
                                 {!isOwn && (
                                     <span className="text-xs text-muted-foreground mb-1 px-2">
                                         {message.sender.name || message.sender.email}
@@ -399,19 +523,13 @@ export default function DepartmentChatPage() {
                                             autoFocus
                                         />
                                         <div className="flex gap-2">
-                                            <Button
-                                                size="sm"
-                                                onClick={() => handleEditMessage(message.id)}
-                                            >
+                                            <Button size="sm" onClick={() => handleEditMessage(message.id)}>
                                                 Enregistrer
                                             </Button>
                                             <Button
                                                 size="sm"
                                                 variant="ghost"
-                                                onClick={() => {
-                                                    setEditingMessageId(null);
-                                                    setEditContent('');
-                                                }}
+                                                onClick={() => { setEditingMessageId(null); setEditContent(''); }}
                                             >
                                                 Annuler
                                             </Button>
@@ -419,29 +537,24 @@ export default function DepartmentChatPage() {
                                     </div>
                                 ) : (
                                     <div className="group relative">
-                                        {/* Text bubble */}
-                                        {message.content && message.content.trim() && (
+                                        {decryptedContent && decryptedContent.trim() && (
                                             <div
                                                 className={`rounded-2xl px-4 py-2 border ${isOwn
                                                     ? 'bg-primary text-primary-foreground border-primary'
                                                     : 'bg-muted text-foreground border-border'
                                                     }`}
                                             >
-                                                <p className="break-words whitespace-pre-wrap">{message.content}</p>
+                                                <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
                                                 {message.isEdited && (
                                                     <p className="text-xs opacity-70 mt-1">Modifié</p>
                                                 )}
                                             </div>
                                         )}
 
-                                        {/* Attachments */}
                                         {message.attachments && message.attachments.length > 0 && (
-                                            <div className={`${message.content && message.content.trim() ? 'mt-2' : ''} space-y-2`}>
+                                            <div className={`${decryptedContent?.trim() ? 'mt-2' : ''} space-y-2`}>
                                                 {message.attachments.map((att, idx) => (
-                                                    <EncryptedAttachment
-                                                        key={idx}
-                                                        attachment={att}
-                                                    />
+                                                    <EncryptedAttachment key={idx} attachment={att} />
                                                 ))}
                                             </div>
                                         )}
@@ -453,7 +566,6 @@ export default function DepartmentChatPage() {
                                                     locale: fr,
                                                 })}
                                             </span>
-
                                             {isOwn && canEdit && (
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
@@ -470,7 +582,7 @@ export default function DepartmentChatPage() {
                                                         <DropdownMenuItem
                                                             onClick={() => {
                                                                 setEditingMessageId(message.id);
-                                                                setEditContent(message.content);
+                                                                setEditContent(decryptedContent || '');
                                                             }}
                                                         >
                                                             <Edit2 className="w-4 h-4 mr-2" />
@@ -494,10 +606,11 @@ export default function DepartmentChatPage() {
                     );
                 })}
                 <div ref={messagesEndRef} />
+                </div>
             </div>
 
-            {/* Input */}
-            <div className="fixed bottom-16 left-0 right-0 bg-background border-t border-border p-4">
+            {/* Input: sur petit écran au-dessus de la BottomNav (h-16) pour rester visible */}
+            <div className="fixed left-0 right-0 bottom-16 md:bottom-auto md:static md:border-t md:border-border bg-background p-3 md:p-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:pb-4 z-40 md:shrink-0 border-t border-border">
                 {selectedFiles.length > 0 && (
                     <div className="mb-3 flex gap-2 flex-wrap">
                         {selectedFiles.map((file, idx) => (
@@ -547,9 +660,9 @@ export default function DepartmentChatPage() {
                             <Input
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
-                                placeholder="Votre message..."
-                                className="flex-1 bg-muted border-border text-foreground placeholder:text-muted-foreground"
+                                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSendMessage())}
+                                placeholder="Message chiffré..."
+                                className="flex-1 min-w-0 bg-muted border-border text-foreground placeholder:text-muted-foreground"
                                 disabled={sending}
                             />
 

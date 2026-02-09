@@ -143,9 +143,8 @@ export default function OrganizationsPage() {
     }
 
     return (
-        <div className="p-5 space-y-6 bg-background min-h-screen mt-15">
-            {/* Header removed as it is now in TopNav */}
-
+        <div className="min-h-screen bg-background mt-14 md:mt-16 pb-20 md:pb-6">
+            <div className="mx-auto w-full max-w-6xl px-4 md:px-6 lg:px-8 py-6 space-y-8">
             {/* Pending/Approved Requests */}
             {requests.filter(r => r.status !== 'COMPLETED').length > 0 && (
                 <div className="space-y-3">
@@ -190,11 +189,11 @@ export default function OrganizationsPage() {
             {orgs.length > 0 && (
                 <div className="space-y-3">
                     <h3 className="text-sm font-semibold text-muted-foreground px-2">Mes Organisations</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         {orgs.map((org) => (
                             <Card
                                 key={org.id}
-                                className="bg-card border-border hover:border-foreground transition cursor-pointer"
+                                className="bg-card border-border hover:border-foreground/50 transition cursor-pointer active:scale-[0.99]"
                                 onClick={() => router.push(`/chat/organizations/${org.id}`)}
                             >
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -269,13 +268,35 @@ export default function OrganizationsPage() {
                     </p>
                     <Button
                         className="bg-primary text-primary-foreground hover:bg-primary/90"
-                        onClick={() => setShowRequestDialog(true)}
+                        onClick={() => {
+                            setSelectedRequest(null);
+                            setShowCompletionWizard(true);
+                        }}
                     >
                         <Plus className="w-4 h-4 mr-2" />
                         Créer une Organisation
                     </Button>
                 </div>
             )}
+
+            {/* Bouton créer une organisation quand l'utilisateur a déjà des orgs ou des demandes */}
+            {(orgs.length > 0 || requests.length > 0) && (
+                <div className="flex justify-center pt-4">
+                    <Button
+                        variant="outline"
+                        className="border-border hover:bg-muted"
+                        onClick={() => {
+                            setSelectedRequest(null);
+                            setShowCompletionWizard(true);
+                        }}
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Créer une Organisation
+                    </Button>
+                </div>
+            )}
+
+            </div>
 
             {/* Dialogs */}
             <OrganizationRequestDialog
@@ -287,7 +308,7 @@ export default function OrganizationsPage() {
             <OrganizationCompletionWizard
                 open={showCompletionWizard}
                 onOpenChange={setShowCompletionWizard}
-                requestId={selectedRequest?.id || ''}
+                requestId={selectedRequest?.id}
                 onSuccess={handleCompletionSuccess}
             />
         </div>

@@ -32,7 +32,7 @@ export async function GET(
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
-        // Get department with members
+        // Get department with members (sans exposer encryptedDeptKey dans la liste)
         const department = await prisma.department.findUnique({
             where: { id: deptId },
             include: {
@@ -44,6 +44,7 @@ export async function GET(
                                 name: true,
                                 email: true,
                                 isOnline: true,
+                                publicKey: true,
                             },
                         },
                     },
@@ -60,7 +61,19 @@ export async function GET(
             return NextResponse.json({ error: 'Département non trouvé' }, { status: 404 });
         }
 
-        return NextResponse.json({ department });
+        // Clé chiffrée du département pour l'utilisateur courant (pour le chat E2E)
+        const currentMember = await prisma.departmentMember.findFirst({
+            where: { deptId, userId },
+            select: { encryptedDeptKey: true },
+        });
+
+        return NextResponse.json({
+            department: {
+                ...department,
+                publicKey: department.publicKey,
+            },
+            currentMemberEncryptedDeptKey: currentMember?.encryptedDeptKey ?? null,
+        });
     } catch (error) {
         console.error('Get department error:', error);
         return NextResponse.json(

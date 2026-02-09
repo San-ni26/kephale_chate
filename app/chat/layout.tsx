@@ -11,10 +11,8 @@ export default function ChatLayout({
 }) {
     return (
         <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-            {/* Mobile Top Nav */}
-            <div className="md:hidden">
-                <TopNav />
-            </div>
+            {/* Top Bar : visible sur mobile et desktop */}
+            <TopNav />
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Desktop Sidebar (Conversation List) */}

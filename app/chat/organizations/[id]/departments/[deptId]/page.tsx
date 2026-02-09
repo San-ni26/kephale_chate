@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
@@ -12,7 +12,13 @@ import {
     UserPlus,
     X,
     MessageSquare,
-    Users as UsersIcon
+    Users as UsersIcon,
+    Paperclip,
+    Image as ImageIcon,
+    FileText,
+    MoreVertical,
+    Pencil,
+    Trash2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
@@ -26,6 +32,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
 import { Textarea } from "@/src/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/components/ui/select";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/src/components/ui/dropdown-menu";
 import { CheckCircle2, Clock, AlertCircle, Calendar as CalendarIcon, ClipboardList } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -99,7 +111,22 @@ export default function DepartmentDetailPage() {
         dueDate: ''
     });
     const [creatingTask, setCreatingTask] = useState(false);
+    const [taskAttachments, setTaskAttachments] = useState<{ url: string; filename: string; fileType?: string; size?: number }[]>([]);
+    const [uploadingTaskFile, setUploadingTaskFile] = useState(false);
+    const taskFileInputRef = useRef<HTMLInputElement>(null);
     const [activeTab, setActiveTab] = useState('members');
+
+    const [editingTask, setEditingTask] = useState<Task | null>(null);
+    const [editTaskForm, setEditTaskForm] = useState({
+        title: '',
+        description: '',
+        assigneeId: '',
+        priority: 'MEDIUM' as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT',
+        startDate: '',
+        dueDate: ''
+    });
+    const [updatingTask, setUpdatingTask] = useState(false);
+    const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
     const currentUser = getUser();
 
@@ -108,7 +135,7 @@ export default function DepartmentDetailPage() {
         deptId ? `/api/organizations/${orgId}/departments/${deptId}` : null,
         fetcher
     );
-    const department: Department | null = deptData?.department || null;
+    const department: Department | null = deptData?.department ?? null;
     const loading = !deptData && !deptError;
 
     // 2. Fetch Tasks (conditionally)
@@ -122,6 +149,40 @@ export default function DepartmentDetailPage() {
     const refreshDepartment = () => mutateDepartment();
     const refreshTasks = () => mutateTasks();
 
+    const handleTaskFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (!files?.length) return;
+        setUploadingTaskFile(true);
+        try {
+            for (const file of Array.from(files)) {
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!validTypes.includes(file.type)) {
+                    toast.error(`Type non autorisé: ${file.name}`);
+                    continue;
+                }
+                if (file.size > 10 * 1024 * 1024) {
+                    toast.error(`${file.name} trop volumineux (max 10 Mo)`);
+                    continue;
+                }
+                const formData = new FormData();
+                formData.append('file', file);
+                const res = await fetchWithAuth('/api/upload', { method: 'POST', body: formData });
+                if (res.ok) {
+                    const data = await res.json();
+                    setTaskAttachments(prev => [...prev, { url: data.url, filename: data.filename, fileType: data.fileType, size: data.size }]);
+                } else toast.error(`Échec upload: ${file.name}`);
+            }
+        } finally {
+            setUploadingTaskFile(false);
+            if (taskFileInputRef.current) taskFileInputRef.current.value = '';
+        }
+    };
+
+    const removeTaskAttachment = (index: number) => {
+        setTaskAttachments(prev => prev.filter((_, i) => i !== index));
+    };
+
     const handleCreateTask = async () => {
         if (!newTask.title || !newTask.assigneeId) {
             toast.error('Titre et assigné requis');
@@ -133,7 +194,10 @@ export default function DepartmentDetailPage() {
             const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/tasks`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newTask),
+                body: JSON.stringify({
+                    ...newTask,
+                    attachments: taskAttachments.length > 0 ? taskAttachments : undefined,
+                }),
             });
 
             if (response.ok) {
@@ -147,6 +211,7 @@ export default function DepartmentDetailPage() {
                     startDate: '',
                     dueDate: ''
                 });
+                setTaskAttachments([]);
                 refreshTasks();
             } else {
                 const error = await response.json();
@@ -157,6 +222,79 @@ export default function DepartmentDetailPage() {
             toast.error('Erreur serveur');
         } finally {
             setCreatingTask(false);
+        }
+    };
+
+    const openEditTaskDialog = (task: Task) => {
+        setEditingTask(task);
+        setEditTaskForm({
+            title: task.title,
+            description: task.description || '',
+            assigneeId: task.assignee.id,
+            priority: task.priority,
+            startDate: task.startDate ? format(new Date(task.startDate), 'yyyy-MM-dd') : '',
+            dueDate: task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd') : ''
+        });
+    };
+
+    const handleUpdateTask = async () => {
+        if (!editingTask || !editTaskForm.title || !editTaskForm.assigneeId) {
+            toast.error('Titre et assigné requis');
+            return;
+        }
+        setUpdatingTask(true);
+        try {
+            const res = await fetchWithAuth(
+                `/api/organizations/${orgId}/departments/${deptId}/tasks/${editingTask.id}`,
+                {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: editTaskForm.title,
+                        description: editTaskForm.description || null,
+                        assigneeId: editTaskForm.assigneeId,
+                        priority: editTaskForm.priority,
+                        startDate: editTaskForm.startDate || null,
+                        dueDate: editTaskForm.dueDate || null,
+                    }),
+                }
+            );
+            if (res.ok) {
+                toast.success('Tâche mise à jour');
+                setEditingTask(null);
+                refreshTasks();
+            } else {
+                const err = await res.json();
+                toast.error(err.error || 'Erreur lors de la mise à jour');
+            }
+        } catch (e) {
+            console.error('Update task error:', e);
+            toast.error('Erreur serveur');
+        } finally {
+            setUpdatingTask(false);
+        }
+    };
+
+    const handleDeleteTask = async (task: Task) => {
+        if (!confirm(`Supprimer la tâche « ${task.title } » ?`)) return;
+        setDeletingTaskId(task.id);
+        try {
+            const res = await fetchWithAuth(
+                `/api/organizations/${orgId}/departments/${deptId}/tasks/${task.id}`,
+                { method: 'DELETE' }
+            );
+            if (res.ok) {
+                toast.success('Tâche supprimée');
+                refreshTasks();
+            } else {
+                const err = await res.json();
+                toast.error(err.error || 'Erreur lors de la suppression');
+            }
+        } catch (e) {
+            console.error('Delete task error:', e);
+            toast.error('Erreur serveur');
+        } finally {
+            setDeletingTaskId(null);
         }
     };
 
@@ -251,7 +389,7 @@ export default function DepartmentDetailPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background p-4 space-y-6 mt-16">
+        <div className="min-h-screen bg-background p-4 md:p-6 space-y-6 mt-16 md:mt-16 pb-20 md:pb-6">
             {/* Add Member Dialog */}
             <Dialog open={showAddMemberDialog} onOpenChange={setShowAddMemberDialog}>
                 <DialogContent>
@@ -290,36 +428,34 @@ export default function DepartmentDetailPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+            {/* Header : masqué sur mobile (même barre que TopNav avec icône chat), visible sur web */}
+            <div className="hidden md:flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-3 md:gap-4 min-w-0">
                     <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => router.push(`/chat/organizations/${orgId}`)}
+                        className="shrink-0"
                     >
                         <ArrowLeft className="w-5 h-5" />
                     </Button>
 
-                    <Avatar className="h-12 w-12 border border-border">
+                    <Avatar className="h-11 w-11 md:h-12 md:w-12 border border-border shrink-0">
                         <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${department.name}`} />
                         <AvatarFallback>{department.name[0]}</AvatarFallback>
                     </Avatar>
 
-                    <div>
-                        <h1 className="text-1xl font-bold text-foreground">{department.name}</h1>
+                    <div className="min-w-0">
+                        <h1 className="text-lg md:text-xl font-bold text-foreground truncate">{department.name}</h1>
                         <p className="text-sm text-muted-foreground">
                             {department._count.members} membre{department._count.members > 1 ? 's' : ''}
                         </p>
                     </div>
                 </div>
 
-            </div>
-            <div>
-
                 <Button
                     onClick={() => router.push(`/chat/organizations/${orgId}/departments/${deptId}/chat`)}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto shrink-0"
                 >
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Ouvrir le chat
@@ -447,8 +583,8 @@ export default function DepartmentDetailPage() {
                                     onClick={() => setShowCreateTaskDialog(true)}
                                     className="bg-primary hover:bg-primary/90 text-primary-foreground"
                                 >
-                                    <UserPlus className="w-4 h-4 mr-2" />
-                                    Attribuer une tâche
+                                    <ClipboardList className="w-4 h-4 mr-2" />
+                                    Nouvelle tâche
                                 </Button>
                             </div>
                         </CardHeader>
@@ -495,6 +631,41 @@ export default function DepartmentDetailPage() {
                                                         </div>
                                                     </div>
                                                     <div className="flex flex-col items-end gap-2">
+                                                        <div
+                                                            className="flex items-center gap-1"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        >
+                                                            <DropdownMenu>
+                                                                <DropdownMenuTrigger asChild>
+                                                                    <Button
+                                                                        variant="outline"
+                                                                        size="icon"
+                                                                        className="h-8 w-8 shrink-0 border-border bg-background hover:bg-muted"
+                                                                        aria-label="Modifier ou supprimer la tâche"
+                                                                    >
+                                                                        <MoreVertical className="w-4 h-4" />
+                                                                    </Button>
+                                                                </DropdownMenuTrigger>
+                                                                <DropdownMenuContent align="end">
+                                                                    <DropdownMenuItem onClick={() => openEditTaskDialog(task)}>
+                                                                        <Pencil className="w-4 h-4 mr-2" />
+                                                                        Modifier
+                                                                    </DropdownMenuItem>
+                                                                    <DropdownMenuItem
+                                                                        className="text-destructive focus:text-destructive"
+                                                                        onClick={() => handleDeleteTask(task)}
+                                                                        disabled={deletingTaskId === task.id}
+                                                                    >
+                                                                        {deletingTaskId === task.id ? (
+                                                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                                        ) : (
+                                                                            <Trash2 className="w-4 h-4 mr-2" />
+                                                                        )}
+                                                                        Supprimer
+                                                                    </DropdownMenuItem>
+                                                                </DropdownMenuContent>
+                                                            </DropdownMenu>
+                                                        </div>
                                                         <div className="flex items-center gap-1">
                                                             {getStatusIcon(task.status)}
                                                             <span className="text-xs">{task.status}</span>
@@ -519,7 +690,7 @@ export default function DepartmentDetailPage() {
             </Tabs>
 
             {/* Create Task Dialog */}
-            <Dialog open={showCreateTaskDialog} onOpenChange={setShowCreateTaskDialog}>
+            <Dialog open={showCreateTaskDialog} onOpenChange={(open) => { setShowCreateTaskDialog(open); if (!open) setTaskAttachments([]); }}>
                 <DialogContent className="max-w-lg">
                     <DialogHeader>
                         <DialogTitle>Nouvelle Tâche</DialogTitle>
@@ -600,12 +771,138 @@ export default function DepartmentDetailPage() {
                                 />
                             </div>
                         </div>
+
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Documents / images (optionnel)</label>
+                            <input
+                                ref={taskFileInputRef}
+                                type="file"
+                                multiple
+                                accept="image/*,.pdf,.doc,.docx"
+                                onChange={handleTaskFileSelect}
+                                className="hidden"
+                            />
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => taskFileInputRef.current?.click()}
+                                    disabled={uploadingTaskFile}
+                                >
+                                    {uploadingTaskFile ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Paperclip className="w-4 h-4 mr-2" />}
+                                    Joindre des fichiers
+                                </Button>
+                            </div>
+                            {taskAttachments.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                    {taskAttachments.map((att, i) => (
+                                        <div key={i} className="bg-muted rounded-lg px-3 py-2 flex items-center gap-2 text-sm border border-border">
+                                            {att.fileType === 'IMAGE' ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                                            <span className="max-w-[140px] truncate">{att.filename}</span>
+                                            <button type="button" onClick={() => removeTaskAttachment(i)} className="text-destructive hover:text-red-600">
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <DialogFooter>
                         <Button variant="ghost" onClick={() => setShowCreateTaskDialog(false)}>Annuler</Button>
                         <Button onClick={handleCreateTask} disabled={creatingTask}>
                             {creatingTask && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                             Créer
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Edit Task Dialog */}
+            <Dialog open={!!editingTask} onOpenChange={(open) => { if (!open) setEditingTask(null); }}>
+                <DialogContent className="max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>Modifier la tâche</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Titre</label>
+                            <Input
+                                value={editTaskForm.title}
+                                onChange={(e) => setEditTaskForm({ ...editTaskForm, title: e.target.value })}
+                                placeholder="Titre de la tâche"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Description</label>
+                            <Textarea
+                                value={editTaskForm.description}
+                                onChange={(e) => setEditTaskForm({ ...editTaskForm, description: e.target.value })}
+                                placeholder="Détails de la tâche..."
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Assigné à</label>
+                                <Select
+                                    value={editTaskForm.assigneeId}
+                                    onValueChange={(val) => setEditTaskForm({ ...editTaskForm, assigneeId: val })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Choisir un membre" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {department?.members.map((member) => (
+                                            <SelectItem key={member.user.id} value={member.user.id}>
+                                                {member.user.name || member.user.email}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Priorité</label>
+                                <Select
+                                    value={editTaskForm.priority}
+                                    onValueChange={(val) => setEditTaskForm({ ...editTaskForm, priority: val as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT' })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="LOW">Basse</SelectItem>
+                                        <SelectItem value="MEDIUM">Moyenne</SelectItem>
+                                        <SelectItem value="HIGH">Haute</SelectItem>
+                                        <SelectItem value="URGENT">Urgente</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Date de début</label>
+                                <Input
+                                    type="date"
+                                    value={editTaskForm.startDate}
+                                    onChange={(e) => setEditTaskForm({ ...editTaskForm, startDate: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Date limite</label>
+                                <Input
+                                    type="date"
+                                    value={editTaskForm.dueDate}
+                                    onChange={(e) => setEditTaskForm({ ...editTaskForm, dueDate: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={() => setEditingTask(null)}>Annuler</Button>
+                        <Button onClick={handleUpdateTask} disabled={updatingTask}>
+                            {updatingTask && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                            Enregistrer
                         </Button>
                     </DialogFooter>
                 </DialogContent>

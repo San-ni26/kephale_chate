@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, Menu } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2 } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
@@ -11,6 +11,9 @@ import { toast } from 'sonner';
 import { useRouter, usePathname } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/auth-client';
 import OrganizationRequestDialog from '@/src/components/organizations/OrganizationRequestDialog';
+import useSWR from 'swr';
+
+const fetcher = (url: string) => fetchWithAuth(url).then((r) => (r.ok ? r.json() : null));
 
 export function TopNav() {
     const router = useRouter();
@@ -21,6 +24,68 @@ export function TopNav() {
     const [showOrgRequestDialog, setShowOrgRequestDialog] = useState(false);
 
     const isOrganizationsPage = pathname?.startsWith('/chat/organizations');
+    // Page événements : /chat/organizations/[id]/events
+    const eventsMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/events\/?$/);
+    const eventsOrgId = eventsMatch?.[1];
+    const isEventsPage = Boolean(eventsOrgId);
+    const eventsBackUrl = eventsOrgId ? `/chat/organizations/${eventsOrgId}` : '';
+    // Page détail organisation : /chat/organizations/[id] (sans /departments)
+    const orgDetailMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)$/);
+    const orgDetailId = orgDetailMatch?.[1];
+    const { data: orgDetailData } = useSWR(
+        orgDetailId ? `/api/organizations/${orgDetailId}` : null,
+        fetcher
+    );
+    const orgDetail = orgDetailData?.organization ?? null;
+    const isOrgDetailPage = Boolean(orgDetailId && orgDetail);
+
+    // Page département ou chat département : même top bar avec retour, avatar, nom, membres
+    const deptMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)(?:\/chat\/?)?$/);
+    const orgId = deptMatch?.[1];
+    const deptId = deptMatch?.[2];
+    const { data: deptData } = useSWR(
+        orgId && deptId ? `/api/organizations/${orgId}/departments/${deptId}` : null,
+        fetcher
+    );
+    const department = deptData?.department;
+    const departmentName = department?.name ?? null;
+    const memberCount = department?._count?.members ?? 0;
+    const isDeptChatPage = pathname?.endsWith('/chat') || pathname?.endsWith('/chat/');
+    const isDeptDetailPage = Boolean(orgId && deptId && !isDeptChatPage);
+    const deptUrl = orgId && deptId ? `/chat/organizations/${orgId}/departments/${deptId}` : '';
+    const deptChatUrl = orgId && deptId ? `${deptUrl}/chat` : '';
+
+    // Page tâche : titre + statut + actions dans la top bar
+    const taskMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)\/tasks\/([^/]+)\/?$/);
+    const taskOrgId = taskMatch?.[1];
+    const taskDeptId = taskMatch?.[2];
+    const taskId = taskMatch?.[3];
+    const taskBackUrl = taskOrgId && taskDeptId ? `/chat/organizations/${taskOrgId}/departments/${taskDeptId}` : '';
+    const { data: taskData, mutate: mutateTask } = useSWR(
+        taskId && taskOrgId && taskDeptId
+            ? `/api/organizations/${taskOrgId}/departments/${taskDeptId}/tasks/${taskId}`
+            : null,
+        fetcher
+    );
+    const task = taskData?.task;
+    const isTaskPage = Boolean(taskId && taskOrgId && taskDeptId);
+    const taskCanManage = task && user && (task.assignee?.id === user.id || task.creator?.id === user.id);
+
+    const handleTaskStatusUpdate = async (status: string) => {
+        if (!taskId || !taskOrgId || !taskDeptId) return;
+        try {
+            const res = await fetchWithAuth(
+                `/api/organizations/${taskOrgId}/departments/${taskDeptId}/tasks/${taskId}`,
+                { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) }
+            );
+            if (res.ok) {
+                toast.success('Statut mis à jour');
+                mutateTask();
+            } else toast.error('Erreur');
+        } catch {
+            toast.error('Erreur');
+        }
+    };
 
     useEffect(() => {
         let mounted = true;
@@ -78,9 +143,119 @@ export function TopNav() {
     };
 
     return (
-        <header className="fixed top-0 w-full left-0 bg-background border-b border-border z-50 h-16 flex items-center justify-between px-4">
-            {isOrganizationsPage ? (
-                // Organizations Header View
+        <header className="fixed top-0 w-full left-0 bg-background border-b border-border z-50 h-16 flex items-center justify-between px-3 md:px-4">
+            {isEventsPage && eventsBackUrl ? (
+                /* Top bar page Événements : retour, titre, Nouvel Événement */
+                <>
+                    <Button variant="ghost" size="icon" onClick={() => router.push(eventsBackUrl)} className="mr-2 shrink-0">
+                        <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                    </Button>
+                    <h2 className="font-semibold text-foreground truncate flex-1 min-w-0">Événements</h2>
+                    <Button
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 shrink-0"
+                        onClick={() => window.dispatchEvent(new CustomEvent('events-open-create'))}
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Nouvel Événement
+                    </Button>
+                </>
+            ) : isTaskPage && task && taskBackUrl ? (
+                /* Top bar page tâche : retour, titre, statut, Terminer/Rouvrir */
+                <>
+                    <Button variant="ghost" size="icon" onClick={() => router.push(taskBackUrl)} className="mr-2 shrink-0">
+                        <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                    </Button>
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <ClipboardList className="w-5 h-5 text-muted-foreground shrink-0" />
+                        <div className="min-w-0">
+                            <h2 className="font-semibold text-foreground truncate">{task.title}</h2>
+                            <p className="text-xs text-muted-foreground truncate">
+                                {task.assignee?.name} • {task.status}
+                            </p>
+                        </div>
+                    </div>
+                    {taskCanManage && (
+                        <div className="flex gap-1 shrink-0">
+                            {task.status !== 'COMPLETED' && (
+                                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white h-8" onClick={() => handleTaskStatusUpdate('COMPLETED')}>
+                                    <CheckCircle2 className="w-4 h-4" />
+                                </Button>
+                            )}
+                            {task.status === 'COMPLETED' && task.creator?.id === user?.id && (
+                                <Button size="sm" variant="outline" className="h-8" onClick={() => handleTaskStatusUpdate('IN_PROGRESS')}>
+                                    <XCircle className="w-4 h-4" />
+                                </Button>
+                            )}
+                        </div>
+                    )}
+                </>
+            ) : (isDeptChatPage || isDeptDetailPage) && departmentName && deptUrl ? (
+                /* Même top bar que la vue web : retour, avatar, nom + membres ; chat → paramètres, détail → chat */
+                <>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push(isDeptChatPage ? deptUrl : `/chat/organizations/${orgId}`)}
+                        className="mr-2 shrink-0"
+                    >
+                        <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                    </Button>
+                    <Avatar className="h-10 w-10 border border-border shrink-0">
+                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(departmentName)}`} />
+                        <AvatarFallback>{departmentName[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3 flex-1 min-w-0">
+                        <h2 className="font-semibold text-foreground truncate">{departmentName}</h2>
+                        <p className="text-xs text-muted-foreground">
+                            {memberCount} membre{memberCount > 1 ? 's' : ''}
+                        </p>
+                    </div>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push(isDeptChatPage ? deptUrl : deptChatUrl)}
+                        className="text-muted-foreground hover:text-foreground shrink-0"
+                        title={isDeptChatPage ? 'Gérer les membres' : 'Ouvrir le chat'}
+                    >
+                        {isDeptChatPage ? <Settings className="w-5 h-5" /> : <MessageSquare className="w-5 h-5" />}
+                    </Button>
+                </>
+            ) : isOrgDetailPage && orgDetail ? (
+                /* Top bar page organisation : retour, logo/icône, nom, code */
+                <div className="flex items-center justify-between gap-3 flex-wrap flex-1 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => router.push('/chat/organizations')}
+                            className="hover:bg-muted shrink-0"
+                        >
+                            <ArrowLeft className="w-5 h-5" />
+                        </Button>
+                        {orgDetail.logo ? (
+                            <img
+                                src={orgDetail.logo}
+                                alt={orgDetail.name}
+                                className="w-10 h-10 rounded-full object-cover shrink-0"
+                            />
+                        ) : (
+                            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center shrink-0">
+                                <Building2 className="w-5 h-5 text-muted-foreground" />
+                            </div>
+                        )}
+                        <div className="min-w-0">
+                            <h2 className="font-semibold text-foreground truncate">{orgDetail.name}</h2>
+                            <p className="text-xs text-muted-foreground truncate">Code: {orgDetail.code}</p>
+                        </div>
+                    </div>
+                    {orgDetail.subscription && (
+                        <span className="px-2 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary shrink-0">
+                            {orgDetail.subscription.plan}
+                        </span>
+                    )}
+                </div>
+            ) : isOrganizationsPage ? (
+                // Organizations list: simple title
                 <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-3">
                         <span className="font-semibold text-lg text-foreground">Organisations</span>
@@ -97,6 +272,7 @@ export function TopNav() {
                 </div>
             )}
 
+            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && (
             <div className="flex items-center gap-2">
                 {!isOrganizationsPage && <UserSearch />}
 
@@ -149,6 +325,7 @@ export function TopNav() {
                     }}
                 />
             </div>
+            )}
         </header>
     );
 }

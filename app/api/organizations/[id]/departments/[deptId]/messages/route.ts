@@ -93,7 +93,39 @@ export async function GET(
             },
         });
 
-        return NextResponse.json({ messages });
+        // Événements épinglés (optionnel : ne pas faire échouer le GET si la table ou la requête échoue)
+        let events: Array<Record<string, unknown>> = [];
+        try {
+            const now = new Date();
+            const pinnedEvents = await prisma.eventDepartmentBroadcast.findMany({
+                where: {
+                    deptId,
+                    event: {
+                        eventDate: { gte: now },
+                    },
+                },
+                include: {
+                    event: {
+                        select: {
+                            id: true,
+                            title: true,
+                            description: true,
+                            eventType: true,
+                            eventDate: true,
+                            maxAttendees: true,
+                            imageUrl: true,
+                            token: true,
+                        },
+                    },
+                },
+                orderBy: { createdAt: 'desc' },
+            });
+            events = pinnedEvents.map((b) => ({ ...b.event, eventDate: (b.event.eventDate as Date).toISOString() }));
+        } catch (pinnedErr) {
+            console.warn('Pinned events fetch failed (table may be missing):', pinnedErr);
+        }
+
+        return NextResponse.json({ messages, pinnedEvents: events });
     } catch (error) {
         console.error('Get department messages error:', error);
         return NextResponse.json(

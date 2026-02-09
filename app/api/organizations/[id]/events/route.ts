@@ -3,6 +3,18 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { z } from 'zod';
 import { generateEventToken } from '@/src/lib/subscription';
+import { sendEventInvitationEmail } from '@/src/lib/email';
+
+const sendInvitationsSchema = z.object({
+    target: z.enum(['all', 'department', 'selected']),
+    departmentId: z.string().optional(),
+    userIds: z.array(z.string()).optional(),
+}).optional();
+
+const broadcastToDepartmentsSchema = z.union([
+    z.literal('all'),
+    z.array(z.string()).min(1, 'Au moins un département requis'),
+]).optional();
 
 const createEventSchema = z.object({
     title: z.string().min(3, 'Le titre doit contenir au moins 3 caractères'),
@@ -11,6 +23,8 @@ const createEventSchema = z.object({
     eventDate: z.string(), // ISO date string
     maxAttendees: z.number().min(1, 'Le nombre minimum de participants est 1'),
     imageUrl: z.string().nullable().optional(),
+    sendInvitations: sendInvitationsSchema,
+    broadcastToDepartments: broadcastToDepartmentsSchema,
 });
 
 // GET: List all events for organization
@@ -150,15 +164,99 @@ export async function POST(
             },
         });
 
+        // Broadcast event to department discussions (affichage jusqu'à fin d'événement ou suppression)
+        const broadcastToDepartments = validatedData.broadcastToDepartments;
+        if (broadcastToDepartments) {
+            const deptIds =
+                broadcastToDepartments === 'all'
+                    ? (await prisma.department.findMany({ where: { orgId }, select: { id: true } })).map((d) => d.id)
+                    : broadcastToDepartments;
+            const validDeptIds = await prisma.department.findMany({
+                where: { id: { in: deptIds }, orgId },
+                select: { id: true },
+            });
+            if (validDeptIds.length > 0) {
+                await prisma.eventDepartmentBroadcast.createMany({
+                    data: validDeptIds.map((d) => ({ eventId: event.id, deptId: d.id })),
+                    skipDuplicates: true,
+                });
+            }
+        }
+
         // Generate invitation link
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
         const invitationLink = `${baseUrl}/events/${token}`;
+
+        let invitationsSent = 0;
+        const sendInvitations = validatedData.sendInvitations;
+        if (sendInvitations?.target) {
+            const org = await prisma.organization.findUnique({
+                where: { id: orgId },
+                select: { name: true },
+            });
+            const orgName = org?.name ?? 'Organisation';
+
+            type Recipient = { email: string; name: string | null };
+            let recipients: Recipient[] = [];
+
+            if (sendInvitations.target === 'all') {
+                const members = await prisma.organizationMember.findMany({
+                    where: { orgId },
+                    include: { user: { select: { email: true, name: true } } },
+                });
+                recipients = members.map((m) => ({ email: m.user.email, name: m.user.name }));
+            } else if (sendInvitations.target === 'department' && sendInvitations.departmentId) {
+                const dept = await prisma.department.findFirst({
+                    where: { id: sendInvitations.departmentId, orgId },
+                    include: {
+                        members: {
+                            include: { user: { select: { email: true, name: true } } },
+                        },
+                    },
+                });
+                if (dept) {
+                    recipients = dept.members.map((m) => ({
+                        email: m.user.email,
+                        name: m.user.name,
+                    }));
+                }
+            } else if (sendInvitations.target === 'selected' && sendInvitations.userIds?.length) {
+                const users = await prisma.user.findMany({
+                    where: {
+                        id: { in: sendInvitations.userIds },
+                        orgMemberships: { some: { orgId } },
+                    },
+                    select: { email: true, name: true },
+                });
+                recipients = users.map((u) => ({ email: u.email, name: u.name }));
+            }
+
+            const eventDetails = {
+                title: event.title,
+                description: event.description,
+                eventType: event.eventType,
+                eventDate: event.eventDate,
+                maxAttendees: event.maxAttendees,
+            };
+
+            for (const r of recipients) {
+                const ok = await sendEventInvitationEmail(
+                    r.email,
+                    r.name,
+                    orgName,
+                    eventDetails,
+                    invitationLink
+                );
+                if (ok) invitationsSent++;
+            }
+        }
 
         return NextResponse.json(
             {
                 message: 'Événement créé avec succès',
                 event,
                 invitationLink,
+                ...(sendInvitations?.target ? { invitationsSent } : {}),
             },
             { status: 201 }
         );

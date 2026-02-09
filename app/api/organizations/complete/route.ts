@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
         const plan = validatedData.plan as SubscriptionPlan;
         const limits = getSubscriptionLimits(plan);
         const startDate = new Date();
-        const endDate = plan === 'FREE' ? calculateSubscriptionEndDate(startDate, plan) : null;
+        const endDate = calculateSubscriptionEndDate(startDate, plan); // 1 mois pour tous les plans
 
         // Create organization with subscription in a transaction
         const result = await prisma.$transaction(async (tx) => {

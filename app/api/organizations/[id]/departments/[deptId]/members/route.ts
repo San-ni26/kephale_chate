@@ -96,7 +96,14 @@ export async function POST(
 
         // Check subscription limits
         if (department.organization.subscription) {
-            const maxMembers = department.organization.subscription.maxMembersPerDept;
+            const sub = department.organization.subscription;
+            if (sub.endDate && new Date() > new Date(sub.endDate)) {
+                return NextResponse.json(
+                    { error: 'Abonnement expiré. Mettez à jour votre abonnement dans Paramètres pour ajouter des membres.' },
+                    { status: 403 }
+                );
+            }
+            const maxMembers = sub.maxMembersPerDept;
             if (department._count.members >= maxMembers) {
                 return NextResponse.json(
                     { error: `Limite de membres atteinte (${maxMembers})` },

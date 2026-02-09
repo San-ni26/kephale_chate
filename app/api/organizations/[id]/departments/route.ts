@@ -160,6 +160,14 @@ export async function POST(
             );
         }
 
+        const sub = organization.subscription;
+        if (sub.endDate && new Date() > new Date(sub.endDate)) {
+            return NextResponse.json(
+                { error: 'Abonnement expiré. Mettez à jour votre abonnement dans Paramètres pour créer des départements.' },
+                { status: 403 }
+            );
+        }
+
         // Check if department limit reached
         if (organization._count.departments >= organization.subscription.maxDepartments) {
             return NextResponse.json(

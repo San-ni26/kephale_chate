@@ -104,6 +104,11 @@ export type Subscription = $Result.DefaultSelection<Prisma.$SubscriptionPayload>
  */
 export type EventInvitation = $Result.DefaultSelection<Prisma.$EventInvitationPayload>
 /**
+ * Model EventDepartmentBroadcast
+ * 
+ */
+export type EventDepartmentBroadcast = $Result.DefaultSelection<Prisma.$EventDepartmentBroadcastPayload>
+/**
  * Model InvitationRSVP
  * 
  */
@@ -604,6 +609,16 @@ export class PrismaClient<
     * ```
     */
   get eventInvitation(): Prisma.EventInvitationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.eventDepartmentBroadcast`: Exposes CRUD operations for the **EventDepartmentBroadcast** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EventDepartmentBroadcasts
+    * const eventDepartmentBroadcasts = await prisma.eventDepartmentBroadcast.findMany()
+    * ```
+    */
+  get eventDepartmentBroadcast(): Prisma.EventDepartmentBroadcastDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.invitationRSVP`: Exposes CRUD operations for the **InvitationRSVP** model.
@@ -1146,6 +1161,7 @@ export namespace Prisma {
     OrganizationRequest: 'OrganizationRequest',
     Subscription: 'Subscription',
     EventInvitation: 'EventInvitation',
+    EventDepartmentBroadcast: 'EventDepartmentBroadcast',
     InvitationRSVP: 'InvitationRSVP',
     UserPage: 'UserPage',
     Post: 'Post',
@@ -1170,7 +1186,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "subscription" | "eventInvitation" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "task" | "taskMessage" | "taskAttachment" | "pushSubscription"
+      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "task" | "taskMessage" | "taskAttachment" | "pushSubscription"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2506,6 +2522,80 @@ export namespace Prisma {
           }
         }
       }
+      EventDepartmentBroadcast: {
+        payload: Prisma.$EventDepartmentBroadcastPayload<ExtArgs>
+        fields: Prisma.EventDepartmentBroadcastFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EventDepartmentBroadcastFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EventDepartmentBroadcastFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload>
+          }
+          findFirst: {
+            args: Prisma.EventDepartmentBroadcastFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EventDepartmentBroadcastFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload>
+          }
+          findMany: {
+            args: Prisma.EventDepartmentBroadcastFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload>[]
+          }
+          create: {
+            args: Prisma.EventDepartmentBroadcastCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload>
+          }
+          createMany: {
+            args: Prisma.EventDepartmentBroadcastCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.EventDepartmentBroadcastCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload>[]
+          }
+          delete: {
+            args: Prisma.EventDepartmentBroadcastDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload>
+          }
+          update: {
+            args: Prisma.EventDepartmentBroadcastUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload>
+          }
+          deleteMany: {
+            args: Prisma.EventDepartmentBroadcastDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EventDepartmentBroadcastUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.EventDepartmentBroadcastUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload>[]
+          }
+          upsert: {
+            args: Prisma.EventDepartmentBroadcastUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EventDepartmentBroadcastPayload>
+          }
+          aggregate: {
+            args: Prisma.EventDepartmentBroadcastAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEventDepartmentBroadcast>
+          }
+          groupBy: {
+            args: Prisma.EventDepartmentBroadcastGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EventDepartmentBroadcastGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EventDepartmentBroadcastCountArgs<ExtArgs>
+            result: $Utils.Optional<EventDepartmentBroadcastCountAggregateOutputType> | number
+          }
+        }
+      }
       InvitationRSVP: {
         payload: Prisma.$InvitationRSVPPayload<ExtArgs>
         fields: Prisma.InvitationRSVPFieldRefs
@@ -3298,6 +3388,7 @@ export namespace Prisma {
     organizationRequest?: OrganizationRequestOmit
     subscription?: SubscriptionOmit
     eventInvitation?: EventInvitationOmit
+    eventDepartmentBroadcast?: EventDepartmentBroadcastOmit
     invitationRSVP?: InvitationRSVPOmit
     userPage?: UserPageOmit
     post?: PostOmit
@@ -3627,12 +3718,14 @@ export namespace Prisma {
     members: number
     conversations: number
     tasks: number
+    eventBroadcasts: number
   }
 
   export type DepartmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | DepartmentCountOutputTypeCountMembersArgs
     conversations?: boolean | DepartmentCountOutputTypeCountConversationsArgs
     tasks?: boolean | DepartmentCountOutputTypeCountTasksArgs
+    eventBroadcasts?: boolean | DepartmentCountOutputTypeCountEventBroadcastsArgs
   }
 
   // Custom InputTypes
@@ -3665,6 +3758,13 @@ export namespace Prisma {
    */
   export type DepartmentCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TaskWhereInput
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountEventBroadcastsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EventDepartmentBroadcastWhereInput
   }
 
 
@@ -3776,10 +3876,12 @@ export namespace Prisma {
 
   export type EventInvitationCountOutputType = {
     rsvps: number
+    departmentBroadcasts: number
   }
 
   export type EventInvitationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rsvps?: boolean | EventInvitationCountOutputTypeCountRsvpsArgs
+    departmentBroadcasts?: boolean | EventInvitationCountOutputTypeCountDepartmentBroadcastsArgs
   }
 
   // Custom InputTypes
@@ -3798,6 +3900,13 @@ export namespace Prisma {
    */
   export type EventInvitationCountOutputTypeCountRsvpsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InvitationRSVPWhereInput
+  }
+
+  /**
+   * EventInvitationCountOutputType without action
+   */
+  export type EventInvitationCountOutputTypeCountDepartmentBroadcastsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EventDepartmentBroadcastWhereInput
   }
 
 
@@ -11478,6 +11587,7 @@ export namespace Prisma {
     members?: boolean | Department$membersArgs<ExtArgs>
     conversations?: boolean | Department$conversationsArgs<ExtArgs>
     tasks?: boolean | Department$tasksArgs<ExtArgs>
+    eventBroadcasts?: boolean | Department$eventBroadcastsArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["department"]>
 
@@ -11516,6 +11626,7 @@ export namespace Prisma {
     members?: boolean | Department$membersArgs<ExtArgs>
     conversations?: boolean | Department$conversationsArgs<ExtArgs>
     tasks?: boolean | Department$tasksArgs<ExtArgs>
+    eventBroadcasts?: boolean | Department$eventBroadcastsArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11532,6 +11643,7 @@ export namespace Prisma {
       members: Prisma.$DepartmentMemberPayload<ExtArgs>[]
       conversations: Prisma.$GroupPayload<ExtArgs>[]
       tasks: Prisma.$TaskPayload<ExtArgs>[]
+      eventBroadcasts: Prisma.$EventDepartmentBroadcastPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11938,6 +12050,7 @@ export namespace Prisma {
     members<T extends Department$membersArgs<ExtArgs> = {}>(args?: Subset<T, Department$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     conversations<T extends Department$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, Department$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tasks<T extends Department$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Department$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    eventBroadcasts<T extends Department$eventBroadcastsArgs<ExtArgs> = {}>(args?: Subset<T, Department$eventBroadcastsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12438,6 +12551,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
+   * Department.eventBroadcasts
+   */
+  export type Department$eventBroadcastsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    where?: EventDepartmentBroadcastWhereInput
+    orderBy?: EventDepartmentBroadcastOrderByWithRelationInput | EventDepartmentBroadcastOrderByWithRelationInput[]
+    cursor?: EventDepartmentBroadcastWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EventDepartmentBroadcastScalarFieldEnum | EventDepartmentBroadcastScalarFieldEnum[]
   }
 
   /**
@@ -23632,6 +23769,7 @@ export namespace Prisma {
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     rsvps?: boolean | EventInvitation$rsvpsArgs<ExtArgs>
+    departmentBroadcasts?: boolean | EventInvitation$departmentBroadcastsArgs<ExtArgs>
     _count?: boolean | EventInvitationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["eventInvitation"]>
 
@@ -23686,6 +23824,7 @@ export namespace Prisma {
   export type EventInvitationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     rsvps?: boolean | EventInvitation$rsvpsArgs<ExtArgs>
+    departmentBroadcasts?: boolean | EventInvitation$departmentBroadcastsArgs<ExtArgs>
     _count?: boolean | EventInvitationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type EventInvitationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -23700,6 +23839,7 @@ export namespace Prisma {
     objects: {
       organization: Prisma.$OrganizationPayload<ExtArgs>
       rsvps: Prisma.$InvitationRSVPPayload<ExtArgs>[]
+      departmentBroadcasts: Prisma.$EventDepartmentBroadcastPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -24110,6 +24250,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     rsvps<T extends EventInvitation$rsvpsArgs<ExtArgs> = {}>(args?: Subset<T, EventInvitation$rsvpsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvitationRSVPPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    departmentBroadcasts<T extends EventInvitation$departmentBroadcastsArgs<ExtArgs> = {}>(args?: Subset<T, EventInvitation$departmentBroadcastsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24571,6 +24712,30 @@ export namespace Prisma {
   }
 
   /**
+   * EventInvitation.departmentBroadcasts
+   */
+  export type EventInvitation$departmentBroadcastsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    where?: EventDepartmentBroadcastWhereInput
+    orderBy?: EventDepartmentBroadcastOrderByWithRelationInput | EventDepartmentBroadcastOrderByWithRelationInput[]
+    cursor?: EventDepartmentBroadcastWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EventDepartmentBroadcastScalarFieldEnum | EventDepartmentBroadcastScalarFieldEnum[]
+  }
+
+  /**
    * EventInvitation without action
    */
   export type EventInvitationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24586,6 +24751,1059 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: EventInvitationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model EventDepartmentBroadcast
+   */
+
+  export type AggregateEventDepartmentBroadcast = {
+    _count: EventDepartmentBroadcastCountAggregateOutputType | null
+    _min: EventDepartmentBroadcastMinAggregateOutputType | null
+    _max: EventDepartmentBroadcastMaxAggregateOutputType | null
+  }
+
+  export type EventDepartmentBroadcastMinAggregateOutputType = {
+    id: string | null
+    eventId: string | null
+    deptId: string | null
+    createdAt: Date | null
+  }
+
+  export type EventDepartmentBroadcastMaxAggregateOutputType = {
+    id: string | null
+    eventId: string | null
+    deptId: string | null
+    createdAt: Date | null
+  }
+
+  export type EventDepartmentBroadcastCountAggregateOutputType = {
+    id: number
+    eventId: number
+    deptId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type EventDepartmentBroadcastMinAggregateInputType = {
+    id?: true
+    eventId?: true
+    deptId?: true
+    createdAt?: true
+  }
+
+  export type EventDepartmentBroadcastMaxAggregateInputType = {
+    id?: true
+    eventId?: true
+    deptId?: true
+    createdAt?: true
+  }
+
+  export type EventDepartmentBroadcastCountAggregateInputType = {
+    id?: true
+    eventId?: true
+    deptId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type EventDepartmentBroadcastAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EventDepartmentBroadcast to aggregate.
+     */
+    where?: EventDepartmentBroadcastWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EventDepartmentBroadcasts to fetch.
+     */
+    orderBy?: EventDepartmentBroadcastOrderByWithRelationInput | EventDepartmentBroadcastOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EventDepartmentBroadcastWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EventDepartmentBroadcasts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EventDepartmentBroadcasts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EventDepartmentBroadcasts
+    **/
+    _count?: true | EventDepartmentBroadcastCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EventDepartmentBroadcastMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EventDepartmentBroadcastMaxAggregateInputType
+  }
+
+  export type GetEventDepartmentBroadcastAggregateType<T extends EventDepartmentBroadcastAggregateArgs> = {
+        [P in keyof T & keyof AggregateEventDepartmentBroadcast]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEventDepartmentBroadcast[P]>
+      : GetScalarType<T[P], AggregateEventDepartmentBroadcast[P]>
+  }
+
+
+
+
+  export type EventDepartmentBroadcastGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EventDepartmentBroadcastWhereInput
+    orderBy?: EventDepartmentBroadcastOrderByWithAggregationInput | EventDepartmentBroadcastOrderByWithAggregationInput[]
+    by: EventDepartmentBroadcastScalarFieldEnum[] | EventDepartmentBroadcastScalarFieldEnum
+    having?: EventDepartmentBroadcastScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EventDepartmentBroadcastCountAggregateInputType | true
+    _min?: EventDepartmentBroadcastMinAggregateInputType
+    _max?: EventDepartmentBroadcastMaxAggregateInputType
+  }
+
+  export type EventDepartmentBroadcastGroupByOutputType = {
+    id: string
+    eventId: string
+    deptId: string
+    createdAt: Date
+    _count: EventDepartmentBroadcastCountAggregateOutputType | null
+    _min: EventDepartmentBroadcastMinAggregateOutputType | null
+    _max: EventDepartmentBroadcastMaxAggregateOutputType | null
+  }
+
+  type GetEventDepartmentBroadcastGroupByPayload<T extends EventDepartmentBroadcastGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EventDepartmentBroadcastGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EventDepartmentBroadcastGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EventDepartmentBroadcastGroupByOutputType[P]>
+            : GetScalarType<T[P], EventDepartmentBroadcastGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EventDepartmentBroadcastSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    eventId?: boolean
+    deptId?: boolean
+    createdAt?: boolean
+    event?: boolean | EventInvitationDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["eventDepartmentBroadcast"]>
+
+  export type EventDepartmentBroadcastSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    eventId?: boolean
+    deptId?: boolean
+    createdAt?: boolean
+    event?: boolean | EventInvitationDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["eventDepartmentBroadcast"]>
+
+  export type EventDepartmentBroadcastSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    eventId?: boolean
+    deptId?: boolean
+    createdAt?: boolean
+    event?: boolean | EventInvitationDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["eventDepartmentBroadcast"]>
+
+  export type EventDepartmentBroadcastSelectScalar = {
+    id?: boolean
+    eventId?: boolean
+    deptId?: boolean
+    createdAt?: boolean
+  }
+
+  export type EventDepartmentBroadcastOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "deptId" | "createdAt", ExtArgs["result"]["eventDepartmentBroadcast"]>
+  export type EventDepartmentBroadcastInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    event?: boolean | EventInvitationDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }
+  export type EventDepartmentBroadcastIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    event?: boolean | EventInvitationDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }
+  export type EventDepartmentBroadcastIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    event?: boolean | EventInvitationDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }
+
+  export type $EventDepartmentBroadcastPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EventDepartmentBroadcast"
+    objects: {
+      event: Prisma.$EventInvitationPayload<ExtArgs>
+      department: Prisma.$DepartmentPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      eventId: string
+      deptId: string
+      createdAt: Date
+    }, ExtArgs["result"]["eventDepartmentBroadcast"]>
+    composites: {}
+  }
+
+  type EventDepartmentBroadcastGetPayload<S extends boolean | null | undefined | EventDepartmentBroadcastDefaultArgs> = $Result.GetResult<Prisma.$EventDepartmentBroadcastPayload, S>
+
+  type EventDepartmentBroadcastCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EventDepartmentBroadcastFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EventDepartmentBroadcastCountAggregateInputType | true
+    }
+
+  export interface EventDepartmentBroadcastDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EventDepartmentBroadcast'], meta: { name: 'EventDepartmentBroadcast' } }
+    /**
+     * Find zero or one EventDepartmentBroadcast that matches the filter.
+     * @param {EventDepartmentBroadcastFindUniqueArgs} args - Arguments to find a EventDepartmentBroadcast
+     * @example
+     * // Get one EventDepartmentBroadcast
+     * const eventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EventDepartmentBroadcastFindUniqueArgs>(args: SelectSubset<T, EventDepartmentBroadcastFindUniqueArgs<ExtArgs>>): Prisma__EventDepartmentBroadcastClient<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one EventDepartmentBroadcast that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EventDepartmentBroadcastFindUniqueOrThrowArgs} args - Arguments to find a EventDepartmentBroadcast
+     * @example
+     * // Get one EventDepartmentBroadcast
+     * const eventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EventDepartmentBroadcastFindUniqueOrThrowArgs>(args: SelectSubset<T, EventDepartmentBroadcastFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EventDepartmentBroadcastClient<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EventDepartmentBroadcast that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EventDepartmentBroadcastFindFirstArgs} args - Arguments to find a EventDepartmentBroadcast
+     * @example
+     * // Get one EventDepartmentBroadcast
+     * const eventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EventDepartmentBroadcastFindFirstArgs>(args?: SelectSubset<T, EventDepartmentBroadcastFindFirstArgs<ExtArgs>>): Prisma__EventDepartmentBroadcastClient<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EventDepartmentBroadcast that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EventDepartmentBroadcastFindFirstOrThrowArgs} args - Arguments to find a EventDepartmentBroadcast
+     * @example
+     * // Get one EventDepartmentBroadcast
+     * const eventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EventDepartmentBroadcastFindFirstOrThrowArgs>(args?: SelectSubset<T, EventDepartmentBroadcastFindFirstOrThrowArgs<ExtArgs>>): Prisma__EventDepartmentBroadcastClient<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more EventDepartmentBroadcasts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EventDepartmentBroadcastFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EventDepartmentBroadcasts
+     * const eventDepartmentBroadcasts = await prisma.eventDepartmentBroadcast.findMany()
+     * 
+     * // Get first 10 EventDepartmentBroadcasts
+     * const eventDepartmentBroadcasts = await prisma.eventDepartmentBroadcast.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const eventDepartmentBroadcastWithIdOnly = await prisma.eventDepartmentBroadcast.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EventDepartmentBroadcastFindManyArgs>(args?: SelectSubset<T, EventDepartmentBroadcastFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a EventDepartmentBroadcast.
+     * @param {EventDepartmentBroadcastCreateArgs} args - Arguments to create a EventDepartmentBroadcast.
+     * @example
+     * // Create one EventDepartmentBroadcast
+     * const EventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.create({
+     *   data: {
+     *     // ... data to create a EventDepartmentBroadcast
+     *   }
+     * })
+     * 
+     */
+    create<T extends EventDepartmentBroadcastCreateArgs>(args: SelectSubset<T, EventDepartmentBroadcastCreateArgs<ExtArgs>>): Prisma__EventDepartmentBroadcastClient<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many EventDepartmentBroadcasts.
+     * @param {EventDepartmentBroadcastCreateManyArgs} args - Arguments to create many EventDepartmentBroadcasts.
+     * @example
+     * // Create many EventDepartmentBroadcasts
+     * const eventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EventDepartmentBroadcastCreateManyArgs>(args?: SelectSubset<T, EventDepartmentBroadcastCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many EventDepartmentBroadcasts and returns the data saved in the database.
+     * @param {EventDepartmentBroadcastCreateManyAndReturnArgs} args - Arguments to create many EventDepartmentBroadcasts.
+     * @example
+     * // Create many EventDepartmentBroadcasts
+     * const eventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many EventDepartmentBroadcasts and only return the `id`
+     * const eventDepartmentBroadcastWithIdOnly = await prisma.eventDepartmentBroadcast.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends EventDepartmentBroadcastCreateManyAndReturnArgs>(args?: SelectSubset<T, EventDepartmentBroadcastCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a EventDepartmentBroadcast.
+     * @param {EventDepartmentBroadcastDeleteArgs} args - Arguments to delete one EventDepartmentBroadcast.
+     * @example
+     * // Delete one EventDepartmentBroadcast
+     * const EventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.delete({
+     *   where: {
+     *     // ... filter to delete one EventDepartmentBroadcast
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EventDepartmentBroadcastDeleteArgs>(args: SelectSubset<T, EventDepartmentBroadcastDeleteArgs<ExtArgs>>): Prisma__EventDepartmentBroadcastClient<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one EventDepartmentBroadcast.
+     * @param {EventDepartmentBroadcastUpdateArgs} args - Arguments to update one EventDepartmentBroadcast.
+     * @example
+     * // Update one EventDepartmentBroadcast
+     * const eventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EventDepartmentBroadcastUpdateArgs>(args: SelectSubset<T, EventDepartmentBroadcastUpdateArgs<ExtArgs>>): Prisma__EventDepartmentBroadcastClient<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more EventDepartmentBroadcasts.
+     * @param {EventDepartmentBroadcastDeleteManyArgs} args - Arguments to filter EventDepartmentBroadcasts to delete.
+     * @example
+     * // Delete a few EventDepartmentBroadcasts
+     * const { count } = await prisma.eventDepartmentBroadcast.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EventDepartmentBroadcastDeleteManyArgs>(args?: SelectSubset<T, EventDepartmentBroadcastDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EventDepartmentBroadcasts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EventDepartmentBroadcastUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EventDepartmentBroadcasts
+     * const eventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EventDepartmentBroadcastUpdateManyArgs>(args: SelectSubset<T, EventDepartmentBroadcastUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EventDepartmentBroadcasts and returns the data updated in the database.
+     * @param {EventDepartmentBroadcastUpdateManyAndReturnArgs} args - Arguments to update many EventDepartmentBroadcasts.
+     * @example
+     * // Update many EventDepartmentBroadcasts
+     * const eventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more EventDepartmentBroadcasts and only return the `id`
+     * const eventDepartmentBroadcastWithIdOnly = await prisma.eventDepartmentBroadcast.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends EventDepartmentBroadcastUpdateManyAndReturnArgs>(args: SelectSubset<T, EventDepartmentBroadcastUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one EventDepartmentBroadcast.
+     * @param {EventDepartmentBroadcastUpsertArgs} args - Arguments to update or create a EventDepartmentBroadcast.
+     * @example
+     * // Update or create a EventDepartmentBroadcast
+     * const eventDepartmentBroadcast = await prisma.eventDepartmentBroadcast.upsert({
+     *   create: {
+     *     // ... data to create a EventDepartmentBroadcast
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EventDepartmentBroadcast we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EventDepartmentBroadcastUpsertArgs>(args: SelectSubset<T, EventDepartmentBroadcastUpsertArgs<ExtArgs>>): Prisma__EventDepartmentBroadcastClient<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of EventDepartmentBroadcasts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EventDepartmentBroadcastCountArgs} args - Arguments to filter EventDepartmentBroadcasts to count.
+     * @example
+     * // Count the number of EventDepartmentBroadcasts
+     * const count = await prisma.eventDepartmentBroadcast.count({
+     *   where: {
+     *     // ... the filter for the EventDepartmentBroadcasts we want to count
+     *   }
+     * })
+    **/
+    count<T extends EventDepartmentBroadcastCountArgs>(
+      args?: Subset<T, EventDepartmentBroadcastCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EventDepartmentBroadcastCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EventDepartmentBroadcast.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EventDepartmentBroadcastAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EventDepartmentBroadcastAggregateArgs>(args: Subset<T, EventDepartmentBroadcastAggregateArgs>): Prisma.PrismaPromise<GetEventDepartmentBroadcastAggregateType<T>>
+
+    /**
+     * Group by EventDepartmentBroadcast.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EventDepartmentBroadcastGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EventDepartmentBroadcastGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EventDepartmentBroadcastGroupByArgs['orderBy'] }
+        : { orderBy?: EventDepartmentBroadcastGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EventDepartmentBroadcastGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEventDepartmentBroadcastGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EventDepartmentBroadcast model
+   */
+  readonly fields: EventDepartmentBroadcastFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EventDepartmentBroadcast.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EventDepartmentBroadcastClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    event<T extends EventInvitationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EventInvitationDefaultArgs<ExtArgs>>): Prisma__EventInvitationClient<$Result.GetResult<Prisma.$EventInvitationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EventDepartmentBroadcast model
+   */
+  interface EventDepartmentBroadcastFieldRefs {
+    readonly id: FieldRef<"EventDepartmentBroadcast", 'String'>
+    readonly eventId: FieldRef<"EventDepartmentBroadcast", 'String'>
+    readonly deptId: FieldRef<"EventDepartmentBroadcast", 'String'>
+    readonly createdAt: FieldRef<"EventDepartmentBroadcast", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EventDepartmentBroadcast findUnique
+   */
+  export type EventDepartmentBroadcastFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    /**
+     * Filter, which EventDepartmentBroadcast to fetch.
+     */
+    where: EventDepartmentBroadcastWhereUniqueInput
+  }
+
+  /**
+   * EventDepartmentBroadcast findUniqueOrThrow
+   */
+  export type EventDepartmentBroadcastFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    /**
+     * Filter, which EventDepartmentBroadcast to fetch.
+     */
+    where: EventDepartmentBroadcastWhereUniqueInput
+  }
+
+  /**
+   * EventDepartmentBroadcast findFirst
+   */
+  export type EventDepartmentBroadcastFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    /**
+     * Filter, which EventDepartmentBroadcast to fetch.
+     */
+    where?: EventDepartmentBroadcastWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EventDepartmentBroadcasts to fetch.
+     */
+    orderBy?: EventDepartmentBroadcastOrderByWithRelationInput | EventDepartmentBroadcastOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EventDepartmentBroadcasts.
+     */
+    cursor?: EventDepartmentBroadcastWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EventDepartmentBroadcasts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EventDepartmentBroadcasts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EventDepartmentBroadcasts.
+     */
+    distinct?: EventDepartmentBroadcastScalarFieldEnum | EventDepartmentBroadcastScalarFieldEnum[]
+  }
+
+  /**
+   * EventDepartmentBroadcast findFirstOrThrow
+   */
+  export type EventDepartmentBroadcastFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    /**
+     * Filter, which EventDepartmentBroadcast to fetch.
+     */
+    where?: EventDepartmentBroadcastWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EventDepartmentBroadcasts to fetch.
+     */
+    orderBy?: EventDepartmentBroadcastOrderByWithRelationInput | EventDepartmentBroadcastOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EventDepartmentBroadcasts.
+     */
+    cursor?: EventDepartmentBroadcastWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EventDepartmentBroadcasts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EventDepartmentBroadcasts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EventDepartmentBroadcasts.
+     */
+    distinct?: EventDepartmentBroadcastScalarFieldEnum | EventDepartmentBroadcastScalarFieldEnum[]
+  }
+
+  /**
+   * EventDepartmentBroadcast findMany
+   */
+  export type EventDepartmentBroadcastFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    /**
+     * Filter, which EventDepartmentBroadcasts to fetch.
+     */
+    where?: EventDepartmentBroadcastWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EventDepartmentBroadcasts to fetch.
+     */
+    orderBy?: EventDepartmentBroadcastOrderByWithRelationInput | EventDepartmentBroadcastOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EventDepartmentBroadcasts.
+     */
+    cursor?: EventDepartmentBroadcastWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EventDepartmentBroadcasts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EventDepartmentBroadcasts.
+     */
+    skip?: number
+    distinct?: EventDepartmentBroadcastScalarFieldEnum | EventDepartmentBroadcastScalarFieldEnum[]
+  }
+
+  /**
+   * EventDepartmentBroadcast create
+   */
+  export type EventDepartmentBroadcastCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    /**
+     * The data needed to create a EventDepartmentBroadcast.
+     */
+    data: XOR<EventDepartmentBroadcastCreateInput, EventDepartmentBroadcastUncheckedCreateInput>
+  }
+
+  /**
+   * EventDepartmentBroadcast createMany
+   */
+  export type EventDepartmentBroadcastCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EventDepartmentBroadcasts.
+     */
+    data: EventDepartmentBroadcastCreateManyInput | EventDepartmentBroadcastCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EventDepartmentBroadcast createManyAndReturn
+   */
+  export type EventDepartmentBroadcastCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * The data used to create many EventDepartmentBroadcasts.
+     */
+    data: EventDepartmentBroadcastCreateManyInput | EventDepartmentBroadcastCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EventDepartmentBroadcast update
+   */
+  export type EventDepartmentBroadcastUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    /**
+     * The data needed to update a EventDepartmentBroadcast.
+     */
+    data: XOR<EventDepartmentBroadcastUpdateInput, EventDepartmentBroadcastUncheckedUpdateInput>
+    /**
+     * Choose, which EventDepartmentBroadcast to update.
+     */
+    where: EventDepartmentBroadcastWhereUniqueInput
+  }
+
+  /**
+   * EventDepartmentBroadcast updateMany
+   */
+  export type EventDepartmentBroadcastUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EventDepartmentBroadcasts.
+     */
+    data: XOR<EventDepartmentBroadcastUpdateManyMutationInput, EventDepartmentBroadcastUncheckedUpdateManyInput>
+    /**
+     * Filter which EventDepartmentBroadcasts to update
+     */
+    where?: EventDepartmentBroadcastWhereInput
+    /**
+     * Limit how many EventDepartmentBroadcasts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EventDepartmentBroadcast updateManyAndReturn
+   */
+  export type EventDepartmentBroadcastUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * The data used to update EventDepartmentBroadcasts.
+     */
+    data: XOR<EventDepartmentBroadcastUpdateManyMutationInput, EventDepartmentBroadcastUncheckedUpdateManyInput>
+    /**
+     * Filter which EventDepartmentBroadcasts to update
+     */
+    where?: EventDepartmentBroadcastWhereInput
+    /**
+     * Limit how many EventDepartmentBroadcasts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EventDepartmentBroadcast upsert
+   */
+  export type EventDepartmentBroadcastUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    /**
+     * The filter to search for the EventDepartmentBroadcast to update in case it exists.
+     */
+    where: EventDepartmentBroadcastWhereUniqueInput
+    /**
+     * In case the EventDepartmentBroadcast found by the `where` argument doesn't exist, create a new EventDepartmentBroadcast with this data.
+     */
+    create: XOR<EventDepartmentBroadcastCreateInput, EventDepartmentBroadcastUncheckedCreateInput>
+    /**
+     * In case the EventDepartmentBroadcast was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EventDepartmentBroadcastUpdateInput, EventDepartmentBroadcastUncheckedUpdateInput>
+  }
+
+  /**
+   * EventDepartmentBroadcast delete
+   */
+  export type EventDepartmentBroadcastDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
+    /**
+     * Filter which EventDepartmentBroadcast to delete.
+     */
+    where: EventDepartmentBroadcastWhereUniqueInput
+  }
+
+  /**
+   * EventDepartmentBroadcast deleteMany
+   */
+  export type EventDepartmentBroadcastDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EventDepartmentBroadcasts to delete
+     */
+    where?: EventDepartmentBroadcastWhereInput
+    /**
+     * Limit how many EventDepartmentBroadcasts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EventDepartmentBroadcast without action
+   */
+  export type EventDepartmentBroadcastDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventDepartmentBroadcast
+     */
+    select?: EventDepartmentBroadcastSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EventDepartmentBroadcast
+     */
+    omit?: EventDepartmentBroadcastOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventDepartmentBroadcastInclude<ExtArgs> | null
   }
 
 
@@ -34982,6 +36200,16 @@ export namespace Prisma {
   export type EventInvitationScalarFieldEnum = (typeof EventInvitationScalarFieldEnum)[keyof typeof EventInvitationScalarFieldEnum]
 
 
+  export const EventDepartmentBroadcastScalarFieldEnum: {
+    id: 'id',
+    eventId: 'eventId',
+    deptId: 'deptId',
+    createdAt: 'createdAt'
+  };
+
+  export type EventDepartmentBroadcastScalarFieldEnum = (typeof EventDepartmentBroadcastScalarFieldEnum)[keyof typeof EventDepartmentBroadcastScalarFieldEnum]
+
+
   export const InvitationRSVPScalarFieldEnum: {
     id: 'id',
     eventId: 'eventId',
@@ -35943,6 +37171,7 @@ export namespace Prisma {
     members?: DepartmentMemberListRelationFilter
     conversations?: GroupListRelationFilter
     tasks?: TaskListRelationFilter
+    eventBroadcasts?: EventDepartmentBroadcastListRelationFilter
   }
 
   export type DepartmentOrderByWithRelationInput = {
@@ -35956,6 +37185,7 @@ export namespace Prisma {
     members?: DepartmentMemberOrderByRelationAggregateInput
     conversations?: GroupOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
+    eventBroadcasts?: EventDepartmentBroadcastOrderByRelationAggregateInput
   }
 
   export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
@@ -35972,6 +37202,7 @@ export namespace Prisma {
     members?: DepartmentMemberListRelationFilter
     conversations?: GroupListRelationFilter
     tasks?: TaskListRelationFilter
+    eventBroadcasts?: EventDepartmentBroadcastListRelationFilter
   }, "id">
 
   export type DepartmentOrderByWithAggregationInput = {
@@ -36659,6 +37890,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"EventInvitation"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     rsvps?: InvitationRSVPListRelationFilter
+    departmentBroadcasts?: EventDepartmentBroadcastListRelationFilter
   }
 
   export type EventInvitationOrderByWithRelationInput = {
@@ -36676,6 +37908,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
     rsvps?: InvitationRSVPOrderByRelationAggregateInput
+    departmentBroadcasts?: EventDepartmentBroadcastOrderByRelationAggregateInput
   }
 
   export type EventInvitationWhereUniqueInput = Prisma.AtLeast<{
@@ -36696,6 +37929,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"EventInvitation"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     rsvps?: InvitationRSVPListRelationFilter
+    departmentBroadcasts?: EventDepartmentBroadcastListRelationFilter
   }, "id" | "token">
 
   export type EventInvitationOrderByWithAggregationInput = {
@@ -36734,6 +37968,60 @@ export namespace Prisma {
     createdBy?: StringWithAggregatesFilter<"EventInvitation"> | string
     createdAt?: DateTimeWithAggregatesFilter<"EventInvitation"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"EventInvitation"> | Date | string
+  }
+
+  export type EventDepartmentBroadcastWhereInput = {
+    AND?: EventDepartmentBroadcastWhereInput | EventDepartmentBroadcastWhereInput[]
+    OR?: EventDepartmentBroadcastWhereInput[]
+    NOT?: EventDepartmentBroadcastWhereInput | EventDepartmentBroadcastWhereInput[]
+    id?: StringFilter<"EventDepartmentBroadcast"> | string
+    eventId?: StringFilter<"EventDepartmentBroadcast"> | string
+    deptId?: StringFilter<"EventDepartmentBroadcast"> | string
+    createdAt?: DateTimeFilter<"EventDepartmentBroadcast"> | Date | string
+    event?: XOR<EventInvitationScalarRelationFilter, EventInvitationWhereInput>
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+  }
+
+  export type EventDepartmentBroadcastOrderByWithRelationInput = {
+    id?: SortOrder
+    eventId?: SortOrder
+    deptId?: SortOrder
+    createdAt?: SortOrder
+    event?: EventInvitationOrderByWithRelationInput
+    department?: DepartmentOrderByWithRelationInput
+  }
+
+  export type EventDepartmentBroadcastWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    eventId_deptId?: EventDepartmentBroadcastEventIdDeptIdCompoundUniqueInput
+    AND?: EventDepartmentBroadcastWhereInput | EventDepartmentBroadcastWhereInput[]
+    OR?: EventDepartmentBroadcastWhereInput[]
+    NOT?: EventDepartmentBroadcastWhereInput | EventDepartmentBroadcastWhereInput[]
+    eventId?: StringFilter<"EventDepartmentBroadcast"> | string
+    deptId?: StringFilter<"EventDepartmentBroadcast"> | string
+    createdAt?: DateTimeFilter<"EventDepartmentBroadcast"> | Date | string
+    event?: XOR<EventInvitationScalarRelationFilter, EventInvitationWhereInput>
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+  }, "id" | "eventId_deptId">
+
+  export type EventDepartmentBroadcastOrderByWithAggregationInput = {
+    id?: SortOrder
+    eventId?: SortOrder
+    deptId?: SortOrder
+    createdAt?: SortOrder
+    _count?: EventDepartmentBroadcastCountOrderByAggregateInput
+    _max?: EventDepartmentBroadcastMaxOrderByAggregateInput
+    _min?: EventDepartmentBroadcastMinOrderByAggregateInput
+  }
+
+  export type EventDepartmentBroadcastScalarWhereWithAggregatesInput = {
+    AND?: EventDepartmentBroadcastScalarWhereWithAggregatesInput | EventDepartmentBroadcastScalarWhereWithAggregatesInput[]
+    OR?: EventDepartmentBroadcastScalarWhereWithAggregatesInput[]
+    NOT?: EventDepartmentBroadcastScalarWhereWithAggregatesInput | EventDepartmentBroadcastScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"EventDepartmentBroadcast"> | string
+    eventId?: StringWithAggregatesFilter<"EventDepartmentBroadcast"> | string
+    deptId?: StringWithAggregatesFilter<"EventDepartmentBroadcast"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"EventDepartmentBroadcast"> | Date | string
   }
 
   export type InvitationRSVPWhereInput = {
@@ -38015,6 +39303,7 @@ export namespace Prisma {
     members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateInput = {
@@ -38027,6 +39316,7 @@ export namespace Prisma {
     members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUpdateInput = {
@@ -38039,6 +39329,7 @@ export namespace Prisma {
     members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateInput = {
@@ -38051,6 +39342,7 @@ export namespace Prisma {
     members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentCreateManyInput = {
@@ -38755,6 +40047,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutEventsInput
     rsvps?: InvitationRSVPCreateNestedManyWithoutEventInput
+    departmentBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutEventInput
   }
 
   export type EventInvitationUncheckedCreateInput = {
@@ -38771,6 +40064,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     rsvps?: InvitationRSVPUncheckedCreateNestedManyWithoutEventInput
+    departmentBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutEventInput
   }
 
   export type EventInvitationUpdateInput = {
@@ -38787,6 +40081,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutEventsNestedInput
     rsvps?: InvitationRSVPUpdateManyWithoutEventNestedInput
+    departmentBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutEventNestedInput
   }
 
   export type EventInvitationUncheckedUpdateInput = {
@@ -38803,6 +40098,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rsvps?: InvitationRSVPUncheckedUpdateManyWithoutEventNestedInput
+    departmentBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type EventInvitationCreateManyInput = {
@@ -38847,6 +40143,53 @@ export namespace Prisma {
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EventDepartmentBroadcastCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    event: EventInvitationCreateNestedOneWithoutDepartmentBroadcastsInput
+    department: DepartmentCreateNestedOneWithoutEventBroadcastsInput
+  }
+
+  export type EventDepartmentBroadcastUncheckedCreateInput = {
+    id?: string
+    eventId: string
+    deptId: string
+    createdAt?: Date | string
+  }
+
+  export type EventDepartmentBroadcastUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    event?: EventInvitationUpdateOneRequiredWithoutDepartmentBroadcastsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutEventBroadcastsNestedInput
+  }
+
+  export type EventDepartmentBroadcastUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EventDepartmentBroadcastCreateManyInput = {
+    id?: string
+    eventId: string
+    deptId: string
+    createdAt?: Date | string
+  }
+
+  export type EventDepartmentBroadcastUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EventDepartmentBroadcastUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InvitationRSVPCreateInput = {
@@ -40227,7 +41570,17 @@ export namespace Prisma {
     none?: GroupWhereInput
   }
 
+  export type EventDepartmentBroadcastListRelationFilter = {
+    every?: EventDepartmentBroadcastWhereInput
+    some?: EventDepartmentBroadcastWhereInput
+    none?: EventDepartmentBroadcastWhereInput
+  }
+
   export type GroupOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type EventDepartmentBroadcastOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -40776,6 +42129,32 @@ export namespace Prisma {
   export type EventInvitationScalarRelationFilter = {
     is?: EventInvitationWhereInput
     isNot?: EventInvitationWhereInput
+  }
+
+  export type EventDepartmentBroadcastEventIdDeptIdCompoundUniqueInput = {
+    eventId: string
+    deptId: string
+  }
+
+  export type EventDepartmentBroadcastCountOrderByAggregateInput = {
+    id?: SortOrder
+    eventId?: SortOrder
+    deptId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EventDepartmentBroadcastMaxOrderByAggregateInput = {
+    id?: SortOrder
+    eventId?: SortOrder
+    deptId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EventDepartmentBroadcastMinOrderByAggregateInput = {
+    id?: SortOrder
+    eventId?: SortOrder
+    deptId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type InvitationRSVPCountOrderByAggregateInput = {
@@ -42183,6 +43562,13 @@ export namespace Prisma {
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
+  export type EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<EventDepartmentBroadcastCreateWithoutDepartmentInput, EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput> | EventDepartmentBroadcastCreateWithoutDepartmentInput[] | EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput | EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput[]
+    createMany?: EventDepartmentBroadcastCreateManyDepartmentInputEnvelope
+    connect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+  }
+
   export type DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput = {
     create?: XOR<DepartmentMemberCreateWithoutDepartmentInput, DepartmentMemberUncheckedCreateWithoutDepartmentInput> | DepartmentMemberCreateWithoutDepartmentInput[] | DepartmentMemberUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: DepartmentMemberCreateOrConnectWithoutDepartmentInput | DepartmentMemberCreateOrConnectWithoutDepartmentInput[]
@@ -42202,6 +43588,13 @@ export namespace Prisma {
     connectOrCreate?: TaskCreateOrConnectWithoutDepartmentInput | TaskCreateOrConnectWithoutDepartmentInput[]
     createMany?: TaskCreateManyDepartmentInputEnvelope
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<EventDepartmentBroadcastCreateWithoutDepartmentInput, EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput> | EventDepartmentBroadcastCreateWithoutDepartmentInput[] | EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput | EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput[]
+    createMany?: EventDepartmentBroadcastCreateManyDepartmentInputEnvelope
+    connect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
   }
 
   export type OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput = {
@@ -42254,6 +43647,20 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
+  export type EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<EventDepartmentBroadcastCreateWithoutDepartmentInput, EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput> | EventDepartmentBroadcastCreateWithoutDepartmentInput[] | EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput | EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput[]
+    upsert?: EventDepartmentBroadcastUpsertWithWhereUniqueWithoutDepartmentInput | EventDepartmentBroadcastUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: EventDepartmentBroadcastCreateManyDepartmentInputEnvelope
+    set?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    disconnect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    delete?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    connect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    update?: EventDepartmentBroadcastUpdateWithWhereUniqueWithoutDepartmentInput | EventDepartmentBroadcastUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: EventDepartmentBroadcastUpdateManyWithWhereWithoutDepartmentInput | EventDepartmentBroadcastUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: EventDepartmentBroadcastScalarWhereInput | EventDepartmentBroadcastScalarWhereInput[]
+  }
+
   export type DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput = {
     create?: XOR<DepartmentMemberCreateWithoutDepartmentInput, DepartmentMemberUncheckedCreateWithoutDepartmentInput> | DepartmentMemberCreateWithoutDepartmentInput[] | DepartmentMemberUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: DepartmentMemberCreateOrConnectWithoutDepartmentInput | DepartmentMemberCreateOrConnectWithoutDepartmentInput[]
@@ -42294,6 +43701,20 @@ export namespace Prisma {
     update?: TaskUpdateWithWhereUniqueWithoutDepartmentInput | TaskUpdateWithWhereUniqueWithoutDepartmentInput[]
     updateMany?: TaskUpdateManyWithWhereWithoutDepartmentInput | TaskUpdateManyWithWhereWithoutDepartmentInput[]
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<EventDepartmentBroadcastCreateWithoutDepartmentInput, EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput> | EventDepartmentBroadcastCreateWithoutDepartmentInput[] | EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput | EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput[]
+    upsert?: EventDepartmentBroadcastUpsertWithWhereUniqueWithoutDepartmentInput | EventDepartmentBroadcastUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: EventDepartmentBroadcastCreateManyDepartmentInputEnvelope
+    set?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    disconnect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    delete?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    connect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    update?: EventDepartmentBroadcastUpdateWithWhereUniqueWithoutDepartmentInput | EventDepartmentBroadcastUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: EventDepartmentBroadcastUpdateManyWithWhereWithoutDepartmentInput | EventDepartmentBroadcastUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: EventDepartmentBroadcastScalarWhereInput | EventDepartmentBroadcastScalarWhereInput[]
   }
 
   export type DepartmentCreateNestedOneWithoutMembersInput = {
@@ -42669,11 +44090,25 @@ export namespace Prisma {
     connect?: InvitationRSVPWhereUniqueInput | InvitationRSVPWhereUniqueInput[]
   }
 
+  export type EventDepartmentBroadcastCreateNestedManyWithoutEventInput = {
+    create?: XOR<EventDepartmentBroadcastCreateWithoutEventInput, EventDepartmentBroadcastUncheckedCreateWithoutEventInput> | EventDepartmentBroadcastCreateWithoutEventInput[] | EventDepartmentBroadcastUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: EventDepartmentBroadcastCreateOrConnectWithoutEventInput | EventDepartmentBroadcastCreateOrConnectWithoutEventInput[]
+    createMany?: EventDepartmentBroadcastCreateManyEventInputEnvelope
+    connect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+  }
+
   export type InvitationRSVPUncheckedCreateNestedManyWithoutEventInput = {
     create?: XOR<InvitationRSVPCreateWithoutEventInput, InvitationRSVPUncheckedCreateWithoutEventInput> | InvitationRSVPCreateWithoutEventInput[] | InvitationRSVPUncheckedCreateWithoutEventInput[]
     connectOrCreate?: InvitationRSVPCreateOrConnectWithoutEventInput | InvitationRSVPCreateOrConnectWithoutEventInput[]
     createMany?: InvitationRSVPCreateManyEventInputEnvelope
     connect?: InvitationRSVPWhereUniqueInput | InvitationRSVPWhereUniqueInput[]
+  }
+
+  export type EventDepartmentBroadcastUncheckedCreateNestedManyWithoutEventInput = {
+    create?: XOR<EventDepartmentBroadcastCreateWithoutEventInput, EventDepartmentBroadcastUncheckedCreateWithoutEventInput> | EventDepartmentBroadcastCreateWithoutEventInput[] | EventDepartmentBroadcastUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: EventDepartmentBroadcastCreateOrConnectWithoutEventInput | EventDepartmentBroadcastCreateOrConnectWithoutEventInput[]
+    createMany?: EventDepartmentBroadcastCreateManyEventInputEnvelope
+    connect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
   }
 
   export type EnumEventTypeFieldUpdateOperationsInput = {
@@ -42702,6 +44137,20 @@ export namespace Prisma {
     deleteMany?: InvitationRSVPScalarWhereInput | InvitationRSVPScalarWhereInput[]
   }
 
+  export type EventDepartmentBroadcastUpdateManyWithoutEventNestedInput = {
+    create?: XOR<EventDepartmentBroadcastCreateWithoutEventInput, EventDepartmentBroadcastUncheckedCreateWithoutEventInput> | EventDepartmentBroadcastCreateWithoutEventInput[] | EventDepartmentBroadcastUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: EventDepartmentBroadcastCreateOrConnectWithoutEventInput | EventDepartmentBroadcastCreateOrConnectWithoutEventInput[]
+    upsert?: EventDepartmentBroadcastUpsertWithWhereUniqueWithoutEventInput | EventDepartmentBroadcastUpsertWithWhereUniqueWithoutEventInput[]
+    createMany?: EventDepartmentBroadcastCreateManyEventInputEnvelope
+    set?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    disconnect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    delete?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    connect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    update?: EventDepartmentBroadcastUpdateWithWhereUniqueWithoutEventInput | EventDepartmentBroadcastUpdateWithWhereUniqueWithoutEventInput[]
+    updateMany?: EventDepartmentBroadcastUpdateManyWithWhereWithoutEventInput | EventDepartmentBroadcastUpdateManyWithWhereWithoutEventInput[]
+    deleteMany?: EventDepartmentBroadcastScalarWhereInput | EventDepartmentBroadcastScalarWhereInput[]
+  }
+
   export type InvitationRSVPUncheckedUpdateManyWithoutEventNestedInput = {
     create?: XOR<InvitationRSVPCreateWithoutEventInput, InvitationRSVPUncheckedCreateWithoutEventInput> | InvitationRSVPCreateWithoutEventInput[] | InvitationRSVPUncheckedCreateWithoutEventInput[]
     connectOrCreate?: InvitationRSVPCreateOrConnectWithoutEventInput | InvitationRSVPCreateOrConnectWithoutEventInput[]
@@ -42714,6 +44163,48 @@ export namespace Prisma {
     update?: InvitationRSVPUpdateWithWhereUniqueWithoutEventInput | InvitationRSVPUpdateWithWhereUniqueWithoutEventInput[]
     updateMany?: InvitationRSVPUpdateManyWithWhereWithoutEventInput | InvitationRSVPUpdateManyWithWhereWithoutEventInput[]
     deleteMany?: InvitationRSVPScalarWhereInput | InvitationRSVPScalarWhereInput[]
+  }
+
+  export type EventDepartmentBroadcastUncheckedUpdateManyWithoutEventNestedInput = {
+    create?: XOR<EventDepartmentBroadcastCreateWithoutEventInput, EventDepartmentBroadcastUncheckedCreateWithoutEventInput> | EventDepartmentBroadcastCreateWithoutEventInput[] | EventDepartmentBroadcastUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: EventDepartmentBroadcastCreateOrConnectWithoutEventInput | EventDepartmentBroadcastCreateOrConnectWithoutEventInput[]
+    upsert?: EventDepartmentBroadcastUpsertWithWhereUniqueWithoutEventInput | EventDepartmentBroadcastUpsertWithWhereUniqueWithoutEventInput[]
+    createMany?: EventDepartmentBroadcastCreateManyEventInputEnvelope
+    set?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    disconnect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    delete?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    connect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+    update?: EventDepartmentBroadcastUpdateWithWhereUniqueWithoutEventInput | EventDepartmentBroadcastUpdateWithWhereUniqueWithoutEventInput[]
+    updateMany?: EventDepartmentBroadcastUpdateManyWithWhereWithoutEventInput | EventDepartmentBroadcastUpdateManyWithWhereWithoutEventInput[]
+    deleteMany?: EventDepartmentBroadcastScalarWhereInput | EventDepartmentBroadcastScalarWhereInput[]
+  }
+
+  export type EventInvitationCreateNestedOneWithoutDepartmentBroadcastsInput = {
+    create?: XOR<EventInvitationCreateWithoutDepartmentBroadcastsInput, EventInvitationUncheckedCreateWithoutDepartmentBroadcastsInput>
+    connectOrCreate?: EventInvitationCreateOrConnectWithoutDepartmentBroadcastsInput
+    connect?: EventInvitationWhereUniqueInput
+  }
+
+  export type DepartmentCreateNestedOneWithoutEventBroadcastsInput = {
+    create?: XOR<DepartmentCreateWithoutEventBroadcastsInput, DepartmentUncheckedCreateWithoutEventBroadcastsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutEventBroadcastsInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
+  export type EventInvitationUpdateOneRequiredWithoutDepartmentBroadcastsNestedInput = {
+    create?: XOR<EventInvitationCreateWithoutDepartmentBroadcastsInput, EventInvitationUncheckedCreateWithoutDepartmentBroadcastsInput>
+    connectOrCreate?: EventInvitationCreateOrConnectWithoutDepartmentBroadcastsInput
+    upsert?: EventInvitationUpsertWithoutDepartmentBroadcastsInput
+    connect?: EventInvitationWhereUniqueInput
+    update?: XOR<XOR<EventInvitationUpdateToOneWithWhereWithoutDepartmentBroadcastsInput, EventInvitationUpdateWithoutDepartmentBroadcastsInput>, EventInvitationUncheckedUpdateWithoutDepartmentBroadcastsInput>
+  }
+
+  export type DepartmentUpdateOneRequiredWithoutEventBroadcastsNestedInput = {
+    create?: XOR<DepartmentCreateWithoutEventBroadcastsInput, DepartmentUncheckedCreateWithoutEventBroadcastsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutEventBroadcastsInput
+    upsert?: DepartmentUpsertWithoutEventBroadcastsInput
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutEventBroadcastsInput, DepartmentUpdateWithoutEventBroadcastsInput>, DepartmentUncheckedUpdateWithoutEventBroadcastsInput>
   }
 
   export type EventInvitationCreateNestedOneWithoutRsvpsInput = {
@@ -45249,6 +46740,7 @@ export namespace Prisma {
     members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutOrganizationInput = {
@@ -45260,6 +46752,7 @@ export namespace Prisma {
     members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutOrganizationInput = {
@@ -45338,6 +46831,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     rsvps?: InvitationRSVPCreateNestedManyWithoutEventInput
+    departmentBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutEventInput
   }
 
   export type EventInvitationUncheckedCreateWithoutOrganizationInput = {
@@ -45353,6 +46847,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     rsvps?: InvitationRSVPUncheckedCreateNestedManyWithoutEventInput
+    departmentBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutEventInput
   }
 
   export type EventInvitationCreateOrConnectWithoutOrganizationInput = {
@@ -45869,6 +47364,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type EventDepartmentBroadcastCreateWithoutDepartmentInput = {
+    id?: string
+    createdAt?: Date | string
+    event: EventInvitationCreateNestedOneWithoutDepartmentBroadcastsInput
+  }
+
+  export type EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput = {
+    id?: string
+    eventId: string
+    createdAt?: Date | string
+  }
+
+  export type EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput = {
+    where: EventDepartmentBroadcastWhereUniqueInput
+    create: XOR<EventDepartmentBroadcastCreateWithoutDepartmentInput, EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type EventDepartmentBroadcastCreateManyDepartmentInputEnvelope = {
+    data: EventDepartmentBroadcastCreateManyDepartmentInput | EventDepartmentBroadcastCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutDepartmentsInput = {
     update: XOR<OrganizationUpdateWithoutDepartmentsInput, OrganizationUncheckedUpdateWithoutDepartmentsInput>
     create: XOR<OrganizationCreateWithoutDepartmentsInput, OrganizationUncheckedCreateWithoutDepartmentsInput>
@@ -45970,6 +47487,32 @@ export namespace Prisma {
     data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutDepartmentInput>
   }
 
+  export type EventDepartmentBroadcastUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: EventDepartmentBroadcastWhereUniqueInput
+    update: XOR<EventDepartmentBroadcastUpdateWithoutDepartmentInput, EventDepartmentBroadcastUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<EventDepartmentBroadcastCreateWithoutDepartmentInput, EventDepartmentBroadcastUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type EventDepartmentBroadcastUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: EventDepartmentBroadcastWhereUniqueInput
+    data: XOR<EventDepartmentBroadcastUpdateWithoutDepartmentInput, EventDepartmentBroadcastUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type EventDepartmentBroadcastUpdateManyWithWhereWithoutDepartmentInput = {
+    where: EventDepartmentBroadcastScalarWhereInput
+    data: XOR<EventDepartmentBroadcastUpdateManyMutationInput, EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
+  export type EventDepartmentBroadcastScalarWhereInput = {
+    AND?: EventDepartmentBroadcastScalarWhereInput | EventDepartmentBroadcastScalarWhereInput[]
+    OR?: EventDepartmentBroadcastScalarWhereInput[]
+    NOT?: EventDepartmentBroadcastScalarWhereInput | EventDepartmentBroadcastScalarWhereInput[]
+    id?: StringFilter<"EventDepartmentBroadcast"> | string
+    eventId?: StringFilter<"EventDepartmentBroadcast"> | string
+    deptId?: StringFilter<"EventDepartmentBroadcast"> | string
+    createdAt?: DateTimeFilter<"EventDepartmentBroadcast"> | Date | string
+  }
+
   export type DepartmentCreateWithoutMembersInput = {
     id?: string
     name: string
@@ -45979,6 +47522,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutDepartmentsInput
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutMembersInput = {
@@ -45990,6 +47534,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutMembersInput = {
@@ -46106,6 +47651,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutMembersInput = {
@@ -46117,6 +47663,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutDeptMembershipsInput = {
@@ -46223,6 +47770,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutDepartmentsInput
     members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutConversationsInput = {
@@ -46234,6 +47782,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutConversationsInput = {
@@ -46315,6 +47864,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
     members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutConversationsInput = {
@@ -46326,6 +47876,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type GroupMemberUpsertWithWhereUniqueWithoutGroupInput = {
@@ -47557,6 +49108,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type EventDepartmentBroadcastCreateWithoutEventInput = {
+    id?: string
+    createdAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutEventBroadcastsInput
+  }
+
+  export type EventDepartmentBroadcastUncheckedCreateWithoutEventInput = {
+    id?: string
+    deptId: string
+    createdAt?: Date | string
+  }
+
+  export type EventDepartmentBroadcastCreateOrConnectWithoutEventInput = {
+    where: EventDepartmentBroadcastWhereUniqueInput
+    create: XOR<EventDepartmentBroadcastCreateWithoutEventInput, EventDepartmentBroadcastUncheckedCreateWithoutEventInput>
+  }
+
+  export type EventDepartmentBroadcastCreateManyEventInputEnvelope = {
+    data: EventDepartmentBroadcastCreateManyEventInput | EventDepartmentBroadcastCreateManyEventInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutEventsInput = {
     update: XOR<OrganizationUpdateWithoutEventsInput, OrganizationUncheckedUpdateWithoutEventsInput>
     create: XOR<OrganizationCreateWithoutEventsInput, OrganizationUncheckedCreateWithoutEventsInput>
@@ -47625,6 +49198,166 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"InvitationRSVP"> | Date | string
   }
 
+  export type EventDepartmentBroadcastUpsertWithWhereUniqueWithoutEventInput = {
+    where: EventDepartmentBroadcastWhereUniqueInput
+    update: XOR<EventDepartmentBroadcastUpdateWithoutEventInput, EventDepartmentBroadcastUncheckedUpdateWithoutEventInput>
+    create: XOR<EventDepartmentBroadcastCreateWithoutEventInput, EventDepartmentBroadcastUncheckedCreateWithoutEventInput>
+  }
+
+  export type EventDepartmentBroadcastUpdateWithWhereUniqueWithoutEventInput = {
+    where: EventDepartmentBroadcastWhereUniqueInput
+    data: XOR<EventDepartmentBroadcastUpdateWithoutEventInput, EventDepartmentBroadcastUncheckedUpdateWithoutEventInput>
+  }
+
+  export type EventDepartmentBroadcastUpdateManyWithWhereWithoutEventInput = {
+    where: EventDepartmentBroadcastScalarWhereInput
+    data: XOR<EventDepartmentBroadcastUpdateManyMutationInput, EventDepartmentBroadcastUncheckedUpdateManyWithoutEventInput>
+  }
+
+  export type EventInvitationCreateWithoutDepartmentBroadcastsInput = {
+    id?: string
+    title: string
+    description?: string | null
+    eventType?: $Enums.EventType
+    eventDate: Date | string
+    maxAttendees: number
+    imageUrl?: string | null
+    token: string
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutEventsInput
+    rsvps?: InvitationRSVPCreateNestedManyWithoutEventInput
+  }
+
+  export type EventInvitationUncheckedCreateWithoutDepartmentBroadcastsInput = {
+    id?: string
+    orgId: string
+    title: string
+    description?: string | null
+    eventType?: $Enums.EventType
+    eventDate: Date | string
+    maxAttendees: number
+    imageUrl?: string | null
+    token: string
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rsvps?: InvitationRSVPUncheckedCreateNestedManyWithoutEventInput
+  }
+
+  export type EventInvitationCreateOrConnectWithoutDepartmentBroadcastsInput = {
+    where: EventInvitationWhereUniqueInput
+    create: XOR<EventInvitationCreateWithoutDepartmentBroadcastsInput, EventInvitationUncheckedCreateWithoutDepartmentBroadcastsInput>
+  }
+
+  export type DepartmentCreateWithoutEventBroadcastsInput = {
+    id?: string
+    name: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutEventBroadcastsInput = {
+    id?: string
+    name: string
+    orgId: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutEventBroadcastsInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutEventBroadcastsInput, DepartmentUncheckedCreateWithoutEventBroadcastsInput>
+  }
+
+  export type EventInvitationUpsertWithoutDepartmentBroadcastsInput = {
+    update: XOR<EventInvitationUpdateWithoutDepartmentBroadcastsInput, EventInvitationUncheckedUpdateWithoutDepartmentBroadcastsInput>
+    create: XOR<EventInvitationCreateWithoutDepartmentBroadcastsInput, EventInvitationUncheckedCreateWithoutDepartmentBroadcastsInput>
+    where?: EventInvitationWhereInput
+  }
+
+  export type EventInvitationUpdateToOneWithWhereWithoutDepartmentBroadcastsInput = {
+    where?: EventInvitationWhereInput
+    data: XOR<EventInvitationUpdateWithoutDepartmentBroadcastsInput, EventInvitationUncheckedUpdateWithoutDepartmentBroadcastsInput>
+  }
+
+  export type EventInvitationUpdateWithoutDepartmentBroadcastsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    eventDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    maxAttendees?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutEventsNestedInput
+    rsvps?: InvitationRSVPUpdateManyWithoutEventNestedInput
+  }
+
+  export type EventInvitationUncheckedUpdateWithoutDepartmentBroadcastsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    eventDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    maxAttendees?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rsvps?: InvitationRSVPUncheckedUpdateManyWithoutEventNestedInput
+  }
+
+  export type DepartmentUpsertWithoutEventBroadcastsInput = {
+    update: XOR<DepartmentUpdateWithoutEventBroadcastsInput, DepartmentUncheckedUpdateWithoutEventBroadcastsInput>
+    create: XOR<DepartmentCreateWithoutEventBroadcastsInput, DepartmentUncheckedCreateWithoutEventBroadcastsInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutEventBroadcastsInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutEventBroadcastsInput, DepartmentUncheckedUpdateWithoutEventBroadcastsInput>
+  }
+
+  export type DepartmentUpdateWithoutEventBroadcastsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutEventBroadcastsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
   export type EventInvitationCreateWithoutRsvpsInput = {
     id?: string
     title: string
@@ -47638,6 +49371,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutEventsInput
+    departmentBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutEventInput
   }
 
   export type EventInvitationUncheckedCreateWithoutRsvpsInput = {
@@ -47653,6 +49387,7 @@ export namespace Prisma {
     createdBy: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    departmentBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutEventInput
   }
 
   export type EventInvitationCreateOrConnectWithoutRsvpsInput = {
@@ -47684,6 +49419,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutEventsNestedInput
+    departmentBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutEventNestedInput
   }
 
   export type EventInvitationUncheckedUpdateWithoutRsvpsInput = {
@@ -47699,6 +49435,7 @@ export namespace Prisma {
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    departmentBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type UserCreateWithoutUserPageInput = {
@@ -48703,6 +50440,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutDepartmentsInput
     members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutTasksInput = {
@@ -48714,6 +50452,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutTasksInput = {
@@ -48979,6 +50718,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
     members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutTasksInput = {
@@ -48990,6 +50730,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedTasksInput = {
@@ -50489,6 +52230,7 @@ export namespace Prisma {
     members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutOrganizationInput = {
@@ -50500,6 +52242,7 @@ export namespace Prisma {
     members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutOrganizationInput = {
@@ -50544,6 +52287,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rsvps?: InvitationRSVPUpdateManyWithoutEventNestedInput
+    departmentBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutEventNestedInput
   }
 
   export type EventInvitationUncheckedUpdateWithoutOrganizationInput = {
@@ -50559,6 +52303,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rsvps?: InvitationRSVPUncheckedUpdateManyWithoutEventNestedInput
+    departmentBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type EventInvitationUncheckedUpdateManyWithoutOrganizationInput = {
@@ -50602,6 +52347,12 @@ export namespace Prisma {
     assigneeId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type EventDepartmentBroadcastCreateManyDepartmentInput = {
+    id?: string
+    eventId: string
+    createdAt?: Date | string
   }
 
   export type DepartmentMemberUpdateWithoutDepartmentInput = {
@@ -50697,6 +52448,24 @@ export namespace Prisma {
     assigneeId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EventDepartmentBroadcastUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    event?: EventInvitationUpdateOneRequiredWithoutDepartmentBroadcastsNestedInput
+  }
+
+  export type EventDepartmentBroadcastUncheckedUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GroupMemberCreateManyGroupInput = {
@@ -50828,6 +52597,12 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type EventDepartmentBroadcastCreateManyEventInput = {
+    id?: string
+    deptId: string
+    createdAt?: Date | string
+  }
+
   export type InvitationRSVPUpdateWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -50846,6 +52621,24 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EventDepartmentBroadcastUpdateWithoutEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutEventBroadcastsNestedInput
+  }
+
+  export type EventDepartmentBroadcastUncheckedUpdateWithoutEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EventDepartmentBroadcastUncheckedUpdateManyWithoutEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

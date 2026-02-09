@@ -17,7 +17,7 @@ export async function POST(
         const { id: orgId, deptId } = await params;
 
         const body = await request.json();
-        const { title, description, assigneeId, priority, dueDate, startDate } = body;
+        const { title, description, assigneeId, priority, dueDate, startDate, attachments } = body;
 
         if (!title || !assigneeId) {
             return NextResponse.json({ error: 'Titre et assigné requis' }, { status: 400 });
@@ -59,6 +59,17 @@ export async function POST(
                 deptId,
                 creatorId: userId,
                 assigneeId,
+                attachments: Array.isArray(attachments) && attachments.length > 0
+                    ? {
+                        create: attachments.map((att: { url: string; filename: string; fileType?: string; size?: number }) => ({
+                            uploaderId: userId,
+                            filename: att.filename,
+                            url: att.url,
+                            fileType: att.fileType ?? undefined,
+                            size: att.size ?? undefined,
+                        })),
+                    }
+                    : undefined,
             },
             include: {
                 assignee: {
@@ -73,7 +84,8 @@ export async function POST(
                         id: true,
                         name: true
                     }
-                }
+                },
+                attachments: true,
             }
         });
 

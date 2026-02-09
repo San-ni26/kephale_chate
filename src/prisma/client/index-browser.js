@@ -316,6 +316,13 @@ exports.Prisma.EventInvitationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.EventDepartmentBroadcastScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  deptId: 'deptId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.InvitationRSVPScalarFieldEnum = {
   id: 'id',
   eventId: 'eventId',
@@ -530,6 +537,7 @@ exports.Prisma.ModelName = {
   OrganizationRequest: 'OrganizationRequest',
   Subscription: 'Subscription',
   EventInvitation: 'EventInvitation',
+  EventDepartmentBroadcast: 'EventDepartmentBroadcast',
   InvitationRSVP: 'InvitationRSVP',
   UserPage: 'UserPage',
   Post: 'Post',
