@@ -94,6 +94,11 @@ export type AnnouncementRead = $Result.DefaultSelection<Prisma.$AnnouncementRead
  */
 export type OrganizationRequest = $Result.DefaultSelection<Prisma.$OrganizationRequestPayload>
 /**
+ * Model PendingSubscriptionPayment
+ * 
+ */
+export type PendingSubscriptionPayment = $Result.DefaultSelection<Prisma.$PendingSubscriptionPaymentPayload>
+/**
  * Model Subscription
  * 
  */
@@ -134,6 +139,11 @@ export type Like = $Result.DefaultSelection<Prisma.$LikePayload>
  */
 export type Comment = $Result.DefaultSelection<Prisma.$CommentPayload>
 /**
+ * Model PostRead
+ * 
+ */
+export type PostRead = $Result.DefaultSelection<Prisma.$PostReadPayload>
+/**
  * Model Task
  * 
  */
@@ -148,6 +158,11 @@ export type TaskMessage = $Result.DefaultSelection<Prisma.$TaskMessagePayload>
  * 
  */
 export type TaskAttachment = $Result.DefaultSelection<Prisma.$TaskAttachmentPayload>
+/**
+ * Model DepartmentMonthlyReport
+ * 
+ */
+export type DepartmentMonthlyReport = $Result.DefaultSelection<Prisma.$DepartmentMonthlyReportPayload>
 /**
  * Model PushSubscription
  * 
@@ -591,6 +606,16 @@ export class PrismaClient<
   get organizationRequest(): Prisma.OrganizationRequestDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.pendingSubscriptionPayment`: Exposes CRUD operations for the **PendingSubscriptionPayment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PendingSubscriptionPayments
+    * const pendingSubscriptionPayments = await prisma.pendingSubscriptionPayment.findMany()
+    * ```
+    */
+  get pendingSubscriptionPayment(): Prisma.PendingSubscriptionPaymentDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.subscription`: Exposes CRUD operations for the **Subscription** model.
     * Example usage:
     * ```ts
@@ -671,6 +696,16 @@ export class PrismaClient<
   get comment(): Prisma.CommentDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.postRead`: Exposes CRUD operations for the **PostRead** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PostReads
+    * const postReads = await prisma.postRead.findMany()
+    * ```
+    */
+  get postRead(): Prisma.PostReadDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.task`: Exposes CRUD operations for the **Task** model.
     * Example usage:
     * ```ts
@@ -699,6 +734,16 @@ export class PrismaClient<
     * ```
     */
   get taskAttachment(): Prisma.TaskAttachmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.departmentMonthlyReport`: Exposes CRUD operations for the **DepartmentMonthlyReport** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DepartmentMonthlyReports
+    * const departmentMonthlyReports = await prisma.departmentMonthlyReport.findMany()
+    * ```
+    */
+  get departmentMonthlyReport(): Prisma.DepartmentMonthlyReportDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.pushSubscription`: Exposes CRUD operations for the **PushSubscription** model.
@@ -1159,6 +1204,7 @@ export namespace Prisma {
     Announcement: 'Announcement',
     AnnouncementRead: 'AnnouncementRead',
     OrganizationRequest: 'OrganizationRequest',
+    PendingSubscriptionPayment: 'PendingSubscriptionPayment',
     Subscription: 'Subscription',
     EventInvitation: 'EventInvitation',
     EventDepartmentBroadcast: 'EventDepartmentBroadcast',
@@ -1167,9 +1213,11 @@ export namespace Prisma {
     Post: 'Post',
     Like: 'Like',
     Comment: 'Comment',
+    PostRead: 'PostRead',
     Task: 'Task',
     TaskMessage: 'TaskMessage',
     TaskAttachment: 'TaskAttachment',
+    DepartmentMonthlyReport: 'DepartmentMonthlyReport',
     PushSubscription: 'PushSubscription'
   };
 
@@ -1186,7 +1234,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "task" | "taskMessage" | "taskAttachment" | "pushSubscription"
+      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2374,6 +2422,80 @@ export namespace Prisma {
           }
         }
       }
+      PendingSubscriptionPayment: {
+        payload: Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>
+        fields: Prisma.PendingSubscriptionPaymentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PendingSubscriptionPaymentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PendingSubscriptionPaymentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload>
+          }
+          findFirst: {
+            args: Prisma.PendingSubscriptionPaymentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PendingSubscriptionPaymentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload>
+          }
+          findMany: {
+            args: Prisma.PendingSubscriptionPaymentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload>[]
+          }
+          create: {
+            args: Prisma.PendingSubscriptionPaymentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload>
+          }
+          createMany: {
+            args: Prisma.PendingSubscriptionPaymentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PendingSubscriptionPaymentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload>[]
+          }
+          delete: {
+            args: Prisma.PendingSubscriptionPaymentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload>
+          }
+          update: {
+            args: Prisma.PendingSubscriptionPaymentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload>
+          }
+          deleteMany: {
+            args: Prisma.PendingSubscriptionPaymentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PendingSubscriptionPaymentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PendingSubscriptionPaymentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload>[]
+          }
+          upsert: {
+            args: Prisma.PendingSubscriptionPaymentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PendingSubscriptionPaymentPayload>
+          }
+          aggregate: {
+            args: Prisma.PendingSubscriptionPaymentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePendingSubscriptionPayment>
+          }
+          groupBy: {
+            args: Prisma.PendingSubscriptionPaymentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PendingSubscriptionPaymentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PendingSubscriptionPaymentCountArgs<ExtArgs>
+            result: $Utils.Optional<PendingSubscriptionPaymentCountAggregateOutputType> | number
+          }
+        }
+      }
       Subscription: {
         payload: Prisma.$SubscriptionPayload<ExtArgs>
         fields: Prisma.SubscriptionFieldRefs
@@ -2966,6 +3088,80 @@ export namespace Prisma {
           }
         }
       }
+      PostRead: {
+        payload: Prisma.$PostReadPayload<ExtArgs>
+        fields: Prisma.PostReadFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PostReadFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PostReadFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload>
+          }
+          findFirst: {
+            args: Prisma.PostReadFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PostReadFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload>
+          }
+          findMany: {
+            args: Prisma.PostReadFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload>[]
+          }
+          create: {
+            args: Prisma.PostReadCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload>
+          }
+          createMany: {
+            args: Prisma.PostReadCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PostReadCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload>[]
+          }
+          delete: {
+            args: Prisma.PostReadDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload>
+          }
+          update: {
+            args: Prisma.PostReadUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload>
+          }
+          deleteMany: {
+            args: Prisma.PostReadDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PostReadUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PostReadUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload>[]
+          }
+          upsert: {
+            args: Prisma.PostReadUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostReadPayload>
+          }
+          aggregate: {
+            args: Prisma.PostReadAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePostRead>
+          }
+          groupBy: {
+            args: Prisma.PostReadGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PostReadGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PostReadCountArgs<ExtArgs>
+            result: $Utils.Optional<PostReadCountAggregateOutputType> | number
+          }
+        }
+      }
       Task: {
         payload: Prisma.$TaskPayload<ExtArgs>
         fields: Prisma.TaskFieldRefs
@@ -3188,6 +3384,80 @@ export namespace Prisma {
           }
         }
       }
+      DepartmentMonthlyReport: {
+        payload: Prisma.$DepartmentMonthlyReportPayload<ExtArgs>
+        fields: Prisma.DepartmentMonthlyReportFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepartmentMonthlyReportFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepartmentMonthlyReportFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload>
+          }
+          findFirst: {
+            args: Prisma.DepartmentMonthlyReportFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepartmentMonthlyReportFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload>
+          }
+          findMany: {
+            args: Prisma.DepartmentMonthlyReportFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload>[]
+          }
+          create: {
+            args: Prisma.DepartmentMonthlyReportCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload>
+          }
+          createMany: {
+            args: Prisma.DepartmentMonthlyReportCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DepartmentMonthlyReportCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload>[]
+          }
+          delete: {
+            args: Prisma.DepartmentMonthlyReportDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload>
+          }
+          update: {
+            args: Prisma.DepartmentMonthlyReportUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload>
+          }
+          deleteMany: {
+            args: Prisma.DepartmentMonthlyReportDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepartmentMonthlyReportUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DepartmentMonthlyReportUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload>[]
+          }
+          upsert: {
+            args: Prisma.DepartmentMonthlyReportUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMonthlyReportPayload>
+          }
+          aggregate: {
+            args: Prisma.DepartmentMonthlyReportAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepartmentMonthlyReport>
+          }
+          groupBy: {
+            args: Prisma.DepartmentMonthlyReportGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentMonthlyReportGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepartmentMonthlyReportCountArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentMonthlyReportCountAggregateOutputType> | number
+          }
+        }
+      }
       PushSubscription: {
         payload: Prisma.$PushSubscriptionPayload<ExtArgs>
         fields: Prisma.PushSubscriptionFieldRefs
@@ -3386,6 +3656,7 @@ export namespace Prisma {
     announcement?: AnnouncementOmit
     announcementRead?: AnnouncementReadOmit
     organizationRequest?: OrganizationRequestOmit
+    pendingSubscriptionPayment?: PendingSubscriptionPaymentOmit
     subscription?: SubscriptionOmit
     eventInvitation?: EventInvitationOmit
     eventDepartmentBroadcast?: EventDepartmentBroadcastOmit
@@ -3394,9 +3665,11 @@ export namespace Prisma {
     post?: PostOmit
     like?: LikeOmit
     comment?: CommentOmit
+    postRead?: PostReadOmit
     task?: TaskOmit
     taskMessage?: TaskMessageOmit
     taskAttachment?: TaskAttachmentOmit
+    departmentMonthlyReport?: DepartmentMonthlyReportOmit
     pushSubscription?: PushSubscriptionOmit
   }
 
@@ -3486,9 +3759,12 @@ export namespace Prisma {
     orgMemberships: number
     likes: number
     comments: number
+    postReads: number
     assignedTasks: number
     createdTasks: number
+    headedDepartments: number
     taskMessages: number
+    departmentMonthlyReports: number
     pushSubscriptions: number
     invitations: number
     followers: number
@@ -3504,9 +3780,12 @@ export namespace Prisma {
     orgMemberships?: boolean | UserCountOutputTypeCountOrgMembershipsArgs
     likes?: boolean | UserCountOutputTypeCountLikesArgs
     comments?: boolean | UserCountOutputTypeCountCommentsArgs
+    postReads?: boolean | UserCountOutputTypeCountPostReadsArgs
     assignedTasks?: boolean | UserCountOutputTypeCountAssignedTasksArgs
     createdTasks?: boolean | UserCountOutputTypeCountCreatedTasksArgs
+    headedDepartments?: boolean | UserCountOutputTypeCountHeadedDepartmentsArgs
     taskMessages?: boolean | UserCountOutputTypeCountTaskMessagesArgs
+    departmentMonthlyReports?: boolean | UserCountOutputTypeCountDepartmentMonthlyReportsArgs
     pushSubscriptions?: boolean | UserCountOutputTypeCountPushSubscriptionsArgs
     invitations?: boolean | UserCountOutputTypeCountInvitationsArgs
     followers?: boolean | UserCountOutputTypeCountFollowersArgs
@@ -3583,6 +3862,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountPostReadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PostReadWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountAssignedTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TaskWhereInput
   }
@@ -3597,8 +3883,22 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountHeadedDepartmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountTaskMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TaskMessageWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDepartmentMonthlyReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentMonthlyReportWhereInput
   }
 
   /**
@@ -3719,6 +4019,7 @@ export namespace Prisma {
     conversations: number
     tasks: number
     eventBroadcasts: number
+    monthlyReports: number
   }
 
   export type DepartmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3726,6 +4027,7 @@ export namespace Prisma {
     conversations?: boolean | DepartmentCountOutputTypeCountConversationsArgs
     tasks?: boolean | DepartmentCountOutputTypeCountTasksArgs
     eventBroadcasts?: boolean | DepartmentCountOutputTypeCountEventBroadcastsArgs
+    monthlyReports?: boolean | DepartmentCountOutputTypeCountMonthlyReportsArgs
   }
 
   // Custom InputTypes
@@ -3765,6 +4067,13 @@ export namespace Prisma {
    */
   export type DepartmentCountOutputTypeCountEventBroadcastsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EventDepartmentBroadcastWhereInput
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountMonthlyReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentMonthlyReportWhereInput
   }
 
 
@@ -3948,11 +4257,13 @@ export namespace Prisma {
   export type PostCountOutputType = {
     likes: number
     comments: number
+    postReads: number
   }
 
   export type PostCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     likes?: boolean | PostCountOutputTypeCountLikesArgs
     comments?: boolean | PostCountOutputTypeCountCommentsArgs
+    postReads?: boolean | PostCountOutputTypeCountPostReadsArgs
   }
 
   // Custom InputTypes
@@ -3978,6 +4289,13 @@ export namespace Prisma {
    */
   export type PostCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CommentWhereInput
+  }
+
+  /**
+   * PostCountOutputType without action
+   */
+  export type PostCountOutputTypeCountPostReadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PostReadWhereInput
   }
 
 
@@ -4400,9 +4718,12 @@ export namespace Prisma {
     userPage?: boolean | User$userPageArgs<ExtArgs>
     likes?: boolean | User$likesArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
+    postReads?: boolean | User$postReadsArgs<ExtArgs>
     assignedTasks?: boolean | User$assignedTasksArgs<ExtArgs>
     createdTasks?: boolean | User$createdTasksArgs<ExtArgs>
+    headedDepartments?: boolean | User$headedDepartmentsArgs<ExtArgs>
     taskMessages?: boolean | User$taskMessagesArgs<ExtArgs>
+    departmentMonthlyReports?: boolean | User$departmentMonthlyReportsArgs<ExtArgs>
     pushSubscriptions?: boolean | User$pushSubscriptionsArgs<ExtArgs>
     invitations?: boolean | User$invitationsArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
@@ -4502,9 +4823,12 @@ export namespace Prisma {
     userPage?: boolean | User$userPageArgs<ExtArgs>
     likes?: boolean | User$likesArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
+    postReads?: boolean | User$postReadsArgs<ExtArgs>
     assignedTasks?: boolean | User$assignedTasksArgs<ExtArgs>
     createdTasks?: boolean | User$createdTasksArgs<ExtArgs>
+    headedDepartments?: boolean | User$headedDepartmentsArgs<ExtArgs>
     taskMessages?: boolean | User$taskMessagesArgs<ExtArgs>
+    departmentMonthlyReports?: boolean | User$departmentMonthlyReportsArgs<ExtArgs>
     pushSubscriptions?: boolean | User$pushSubscriptionsArgs<ExtArgs>
     invitations?: boolean | User$invitationsArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
@@ -4526,9 +4850,12 @@ export namespace Prisma {
       userPage: Prisma.$UserPagePayload<ExtArgs> | null
       likes: Prisma.$LikePayload<ExtArgs>[]
       comments: Prisma.$CommentPayload<ExtArgs>[]
+      postReads: Prisma.$PostReadPayload<ExtArgs>[]
       assignedTasks: Prisma.$TaskPayload<ExtArgs>[]
       createdTasks: Prisma.$TaskPayload<ExtArgs>[]
+      headedDepartments: Prisma.$DepartmentPayload<ExtArgs>[]
       taskMessages: Prisma.$TaskMessagePayload<ExtArgs>[]
+      departmentMonthlyReports: Prisma.$DepartmentMonthlyReportPayload<ExtArgs>[]
       pushSubscriptions: Prisma.$PushSubscriptionPayload<ExtArgs>[]
       invitations: Prisma.$UserInvitationPayload<ExtArgs>[]
       followers: Prisma.$FollowPayload<ExtArgs>[]
@@ -4962,9 +5289,12 @@ export namespace Prisma {
     userPage<T extends User$userPageArgs<ExtArgs> = {}>(args?: Subset<T, User$userPageArgs<ExtArgs>>): Prisma__UserPageClient<$Result.GetResult<Prisma.$UserPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     likes<T extends User$likesArgs<ExtArgs> = {}>(args?: Subset<T, User$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends User$commentsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    postReads<T extends User$postReadsArgs<ExtArgs> = {}>(args?: Subset<T, User$postReadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assignedTasks<T extends User$assignedTasksArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdTasks<T extends User$createdTasksArgs<ExtArgs> = {}>(args?: Subset<T, User$createdTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    headedDepartments<T extends User$headedDepartmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$headedDepartmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     taskMessages<T extends User$taskMessagesArgs<ExtArgs> = {}>(args?: Subset<T, User$taskMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    departmentMonthlyReports<T extends User$departmentMonthlyReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$departmentMonthlyReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pushSubscriptions<T extends User$pushSubscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, User$pushSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PushSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invitations<T extends User$invitationsArgs<ExtArgs> = {}>(args?: Subset<T, User$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserInvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     followers<T extends User$followersArgs<ExtArgs> = {}>(args?: Subset<T, User$followersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5621,6 +5951,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.postReads
+   */
+  export type User$postReadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    where?: PostReadWhereInput
+    orderBy?: PostReadOrderByWithRelationInput | PostReadOrderByWithRelationInput[]
+    cursor?: PostReadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PostReadScalarFieldEnum | PostReadScalarFieldEnum[]
+  }
+
+  /**
    * User.assignedTasks
    */
   export type User$assignedTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5669,6 +6023,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.headedDepartments
+   */
+  export type User$headedDepartmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    where?: DepartmentWhereInput
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    cursor?: DepartmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentScalarFieldEnum | DepartmentScalarFieldEnum[]
+  }
+
+  /**
    * User.taskMessages
    */
   export type User$taskMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5690,6 +6068,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TaskMessageScalarFieldEnum | TaskMessageScalarFieldEnum[]
+  }
+
+  /**
+   * User.departmentMonthlyReports
+   */
+  export type User$departmentMonthlyReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    where?: DepartmentMonthlyReportWhereInput
+    orderBy?: DepartmentMonthlyReportOrderByWithRelationInput | DepartmentMonthlyReportOrderByWithRelationInput[]
+    cursor?: DepartmentMonthlyReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentMonthlyReportScalarFieldEnum | DepartmentMonthlyReportScalarFieldEnum[]
   }
 
   /**
@@ -11426,6 +11828,7 @@ export namespace Prisma {
     name: string | null
     orgId: string | null
     publicKey: string | null
+    headId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11435,6 +11838,7 @@ export namespace Prisma {
     name: string | null
     orgId: string | null
     publicKey: string | null
+    headId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11444,6 +11848,7 @@ export namespace Prisma {
     name: number
     orgId: number
     publicKey: number
+    headId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11455,6 +11860,7 @@ export namespace Prisma {
     name?: true
     orgId?: true
     publicKey?: true
+    headId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11464,6 +11870,7 @@ export namespace Prisma {
     name?: true
     orgId?: true
     publicKey?: true
+    headId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11473,6 +11880,7 @@ export namespace Prisma {
     name?: true
     orgId?: true
     publicKey?: true
+    headId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11555,6 +11963,7 @@ export namespace Prisma {
     name: string
     orgId: string
     publicKey: string
+    headId: string | null
     createdAt: Date
     updatedAt: Date
     _count: DepartmentCountAggregateOutputType | null
@@ -11581,13 +11990,16 @@ export namespace Prisma {
     name?: boolean
     orgId?: boolean
     publicKey?: boolean
+    headId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    head?: boolean | Department$headArgs<ExtArgs>
     members?: boolean | Department$membersArgs<ExtArgs>
     conversations?: boolean | Department$conversationsArgs<ExtArgs>
     tasks?: boolean | Department$tasksArgs<ExtArgs>
     eventBroadcasts?: boolean | Department$eventBroadcastsArgs<ExtArgs>
+    monthlyReports?: boolean | Department$monthlyReportsArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["department"]>
 
@@ -11596,9 +12008,11 @@ export namespace Prisma {
     name?: boolean
     orgId?: boolean
     publicKey?: boolean
+    headId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    head?: boolean | Department$headArgs<ExtArgs>
   }, ExtArgs["result"]["department"]>
 
   export type DepartmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11606,9 +12020,11 @@ export namespace Prisma {
     name?: boolean
     orgId?: boolean
     publicKey?: boolean
+    headId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    head?: boolean | Department$headArgs<ExtArgs>
   }, ExtArgs["result"]["department"]>
 
   export type DepartmentSelectScalar = {
@@ -11616,40 +12032,48 @@ export namespace Prisma {
     name?: boolean
     orgId?: boolean
     publicKey?: boolean
+    headId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type DepartmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "orgId" | "publicKey" | "createdAt" | "updatedAt", ExtArgs["result"]["department"]>
+  export type DepartmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "orgId" | "publicKey" | "headId" | "createdAt" | "updatedAt", ExtArgs["result"]["department"]>
   export type DepartmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    head?: boolean | Department$headArgs<ExtArgs>
     members?: boolean | Department$membersArgs<ExtArgs>
     conversations?: boolean | Department$conversationsArgs<ExtArgs>
     tasks?: boolean | Department$tasksArgs<ExtArgs>
     eventBroadcasts?: boolean | Department$eventBroadcastsArgs<ExtArgs>
+    monthlyReports?: boolean | Department$monthlyReportsArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    head?: boolean | Department$headArgs<ExtArgs>
   }
   export type DepartmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    head?: boolean | Department$headArgs<ExtArgs>
   }
 
   export type $DepartmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Department"
     objects: {
       organization: Prisma.$OrganizationPayload<ExtArgs>
+      head: Prisma.$UserPayload<ExtArgs> | null
       members: Prisma.$DepartmentMemberPayload<ExtArgs>[]
       conversations: Prisma.$GroupPayload<ExtArgs>[]
       tasks: Prisma.$TaskPayload<ExtArgs>[]
       eventBroadcasts: Prisma.$EventDepartmentBroadcastPayload<ExtArgs>[]
+      monthlyReports: Prisma.$DepartmentMonthlyReportPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
       orgId: string
       publicKey: string
+      headId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["department"]>
@@ -12047,10 +12471,12 @@ export namespace Prisma {
   export interface Prisma__DepartmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    head<T extends Department$headArgs<ExtArgs> = {}>(args?: Subset<T, Department$headArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     members<T extends Department$membersArgs<ExtArgs> = {}>(args?: Subset<T, Department$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     conversations<T extends Department$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, Department$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tasks<T extends Department$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Department$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     eventBroadcasts<T extends Department$eventBroadcastsArgs<ExtArgs> = {}>(args?: Subset<T, Department$eventBroadcastsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    monthlyReports<T extends Department$monthlyReportsArgs<ExtArgs> = {}>(args?: Subset<T, Department$monthlyReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12084,6 +12510,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Department", 'String'>
     readonly orgId: FieldRef<"Department", 'String'>
     readonly publicKey: FieldRef<"Department", 'String'>
+    readonly headId: FieldRef<"Department", 'String'>
     readonly createdAt: FieldRef<"Department", 'DateTime'>
     readonly updatedAt: FieldRef<"Department", 'DateTime'>
   }
@@ -12482,6 +12909,25 @@ export namespace Prisma {
   }
 
   /**
+   * Department.head
+   */
+  export type Department$headArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * Department.members
    */
   export type Department$membersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12575,6 +13021,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: EventDepartmentBroadcastScalarFieldEnum | EventDepartmentBroadcastScalarFieldEnum[]
+  }
+
+  /**
+   * Department.monthlyReports
+   */
+  export type Department$monthlyReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    where?: DepartmentMonthlyReportWhereInput
+    orderBy?: DepartmentMonthlyReportOrderByWithRelationInput | DepartmentMonthlyReportOrderByWithRelationInput[]
+    cursor?: DepartmentMonthlyReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentMonthlyReportScalarFieldEnum | DepartmentMonthlyReportScalarFieldEnum[]
   }
 
   /**
@@ -22353,6 +22823,1053 @@ export namespace Prisma {
 
 
   /**
+   * Model PendingSubscriptionPayment
+   */
+
+  export type AggregatePendingSubscriptionPayment = {
+    _count: PendingSubscriptionPaymentCountAggregateOutputType | null
+    _min: PendingSubscriptionPaymentMinAggregateOutputType | null
+    _max: PendingSubscriptionPaymentMaxAggregateOutputType | null
+  }
+
+  export type PendingSubscriptionPaymentMinAggregateOutputType = {
+    id: string | null
+    transactionId: string | null
+    userId: string | null
+    plan: string | null
+    name: string | null
+    logo: string | null
+    address: string | null
+    requestId: string | null
+    createdAt: Date | null
+  }
+
+  export type PendingSubscriptionPaymentMaxAggregateOutputType = {
+    id: string | null
+    transactionId: string | null
+    userId: string | null
+    plan: string | null
+    name: string | null
+    logo: string | null
+    address: string | null
+    requestId: string | null
+    createdAt: Date | null
+  }
+
+  export type PendingSubscriptionPaymentCountAggregateOutputType = {
+    id: number
+    transactionId: number
+    userId: number
+    plan: number
+    name: number
+    logo: number
+    address: number
+    requestId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PendingSubscriptionPaymentMinAggregateInputType = {
+    id?: true
+    transactionId?: true
+    userId?: true
+    plan?: true
+    name?: true
+    logo?: true
+    address?: true
+    requestId?: true
+    createdAt?: true
+  }
+
+  export type PendingSubscriptionPaymentMaxAggregateInputType = {
+    id?: true
+    transactionId?: true
+    userId?: true
+    plan?: true
+    name?: true
+    logo?: true
+    address?: true
+    requestId?: true
+    createdAt?: true
+  }
+
+  export type PendingSubscriptionPaymentCountAggregateInputType = {
+    id?: true
+    transactionId?: true
+    userId?: true
+    plan?: true
+    name?: true
+    logo?: true
+    address?: true
+    requestId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PendingSubscriptionPaymentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PendingSubscriptionPayment to aggregate.
+     */
+    where?: PendingSubscriptionPaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PendingSubscriptionPayments to fetch.
+     */
+    orderBy?: PendingSubscriptionPaymentOrderByWithRelationInput | PendingSubscriptionPaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PendingSubscriptionPaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PendingSubscriptionPayments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PendingSubscriptionPayments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PendingSubscriptionPayments
+    **/
+    _count?: true | PendingSubscriptionPaymentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PendingSubscriptionPaymentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PendingSubscriptionPaymentMaxAggregateInputType
+  }
+
+  export type GetPendingSubscriptionPaymentAggregateType<T extends PendingSubscriptionPaymentAggregateArgs> = {
+        [P in keyof T & keyof AggregatePendingSubscriptionPayment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePendingSubscriptionPayment[P]>
+      : GetScalarType<T[P], AggregatePendingSubscriptionPayment[P]>
+  }
+
+
+
+
+  export type PendingSubscriptionPaymentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PendingSubscriptionPaymentWhereInput
+    orderBy?: PendingSubscriptionPaymentOrderByWithAggregationInput | PendingSubscriptionPaymentOrderByWithAggregationInput[]
+    by: PendingSubscriptionPaymentScalarFieldEnum[] | PendingSubscriptionPaymentScalarFieldEnum
+    having?: PendingSubscriptionPaymentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PendingSubscriptionPaymentCountAggregateInputType | true
+    _min?: PendingSubscriptionPaymentMinAggregateInputType
+    _max?: PendingSubscriptionPaymentMaxAggregateInputType
+  }
+
+  export type PendingSubscriptionPaymentGroupByOutputType = {
+    id: string
+    transactionId: string
+    userId: string
+    plan: string
+    name: string
+    logo: string | null
+    address: string | null
+    requestId: string | null
+    createdAt: Date
+    _count: PendingSubscriptionPaymentCountAggregateOutputType | null
+    _min: PendingSubscriptionPaymentMinAggregateOutputType | null
+    _max: PendingSubscriptionPaymentMaxAggregateOutputType | null
+  }
+
+  type GetPendingSubscriptionPaymentGroupByPayload<T extends PendingSubscriptionPaymentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PendingSubscriptionPaymentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PendingSubscriptionPaymentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PendingSubscriptionPaymentGroupByOutputType[P]>
+            : GetScalarType<T[P], PendingSubscriptionPaymentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PendingSubscriptionPaymentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transactionId?: boolean
+    userId?: boolean
+    plan?: boolean
+    name?: boolean
+    logo?: boolean
+    address?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["pendingSubscriptionPayment"]>
+
+  export type PendingSubscriptionPaymentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transactionId?: boolean
+    userId?: boolean
+    plan?: boolean
+    name?: boolean
+    logo?: boolean
+    address?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["pendingSubscriptionPayment"]>
+
+  export type PendingSubscriptionPaymentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transactionId?: boolean
+    userId?: boolean
+    plan?: boolean
+    name?: boolean
+    logo?: boolean
+    address?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["pendingSubscriptionPayment"]>
+
+  export type PendingSubscriptionPaymentSelectScalar = {
+    id?: boolean
+    transactionId?: boolean
+    userId?: boolean
+    plan?: boolean
+    name?: boolean
+    logo?: boolean
+    address?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+  }
+
+  export type PendingSubscriptionPaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "transactionId" | "userId" | "plan" | "name" | "logo" | "address" | "requestId" | "createdAt", ExtArgs["result"]["pendingSubscriptionPayment"]>
+
+  export type $PendingSubscriptionPaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PendingSubscriptionPayment"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      transactionId: string
+      userId: string
+      plan: string
+      name: string
+      logo: string | null
+      address: string | null
+      requestId: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["pendingSubscriptionPayment"]>
+    composites: {}
+  }
+
+  type PendingSubscriptionPaymentGetPayload<S extends boolean | null | undefined | PendingSubscriptionPaymentDefaultArgs> = $Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload, S>
+
+  type PendingSubscriptionPaymentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PendingSubscriptionPaymentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PendingSubscriptionPaymentCountAggregateInputType | true
+    }
+
+  export interface PendingSubscriptionPaymentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PendingSubscriptionPayment'], meta: { name: 'PendingSubscriptionPayment' } }
+    /**
+     * Find zero or one PendingSubscriptionPayment that matches the filter.
+     * @param {PendingSubscriptionPaymentFindUniqueArgs} args - Arguments to find a PendingSubscriptionPayment
+     * @example
+     * // Get one PendingSubscriptionPayment
+     * const pendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PendingSubscriptionPaymentFindUniqueArgs>(args: SelectSubset<T, PendingSubscriptionPaymentFindUniqueArgs<ExtArgs>>): Prisma__PendingSubscriptionPaymentClient<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PendingSubscriptionPayment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PendingSubscriptionPaymentFindUniqueOrThrowArgs} args - Arguments to find a PendingSubscriptionPayment
+     * @example
+     * // Get one PendingSubscriptionPayment
+     * const pendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PendingSubscriptionPaymentFindUniqueOrThrowArgs>(args: SelectSubset<T, PendingSubscriptionPaymentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PendingSubscriptionPaymentClient<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PendingSubscriptionPayment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingSubscriptionPaymentFindFirstArgs} args - Arguments to find a PendingSubscriptionPayment
+     * @example
+     * // Get one PendingSubscriptionPayment
+     * const pendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PendingSubscriptionPaymentFindFirstArgs>(args?: SelectSubset<T, PendingSubscriptionPaymentFindFirstArgs<ExtArgs>>): Prisma__PendingSubscriptionPaymentClient<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PendingSubscriptionPayment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingSubscriptionPaymentFindFirstOrThrowArgs} args - Arguments to find a PendingSubscriptionPayment
+     * @example
+     * // Get one PendingSubscriptionPayment
+     * const pendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PendingSubscriptionPaymentFindFirstOrThrowArgs>(args?: SelectSubset<T, PendingSubscriptionPaymentFindFirstOrThrowArgs<ExtArgs>>): Prisma__PendingSubscriptionPaymentClient<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PendingSubscriptionPayments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingSubscriptionPaymentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PendingSubscriptionPayments
+     * const pendingSubscriptionPayments = await prisma.pendingSubscriptionPayment.findMany()
+     * 
+     * // Get first 10 PendingSubscriptionPayments
+     * const pendingSubscriptionPayments = await prisma.pendingSubscriptionPayment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pendingSubscriptionPaymentWithIdOnly = await prisma.pendingSubscriptionPayment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PendingSubscriptionPaymentFindManyArgs>(args?: SelectSubset<T, PendingSubscriptionPaymentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PendingSubscriptionPayment.
+     * @param {PendingSubscriptionPaymentCreateArgs} args - Arguments to create a PendingSubscriptionPayment.
+     * @example
+     * // Create one PendingSubscriptionPayment
+     * const PendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.create({
+     *   data: {
+     *     // ... data to create a PendingSubscriptionPayment
+     *   }
+     * })
+     * 
+     */
+    create<T extends PendingSubscriptionPaymentCreateArgs>(args: SelectSubset<T, PendingSubscriptionPaymentCreateArgs<ExtArgs>>): Prisma__PendingSubscriptionPaymentClient<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PendingSubscriptionPayments.
+     * @param {PendingSubscriptionPaymentCreateManyArgs} args - Arguments to create many PendingSubscriptionPayments.
+     * @example
+     * // Create many PendingSubscriptionPayments
+     * const pendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PendingSubscriptionPaymentCreateManyArgs>(args?: SelectSubset<T, PendingSubscriptionPaymentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PendingSubscriptionPayments and returns the data saved in the database.
+     * @param {PendingSubscriptionPaymentCreateManyAndReturnArgs} args - Arguments to create many PendingSubscriptionPayments.
+     * @example
+     * // Create many PendingSubscriptionPayments
+     * const pendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PendingSubscriptionPayments and only return the `id`
+     * const pendingSubscriptionPaymentWithIdOnly = await prisma.pendingSubscriptionPayment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PendingSubscriptionPaymentCreateManyAndReturnArgs>(args?: SelectSubset<T, PendingSubscriptionPaymentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PendingSubscriptionPayment.
+     * @param {PendingSubscriptionPaymentDeleteArgs} args - Arguments to delete one PendingSubscriptionPayment.
+     * @example
+     * // Delete one PendingSubscriptionPayment
+     * const PendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.delete({
+     *   where: {
+     *     // ... filter to delete one PendingSubscriptionPayment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PendingSubscriptionPaymentDeleteArgs>(args: SelectSubset<T, PendingSubscriptionPaymentDeleteArgs<ExtArgs>>): Prisma__PendingSubscriptionPaymentClient<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PendingSubscriptionPayment.
+     * @param {PendingSubscriptionPaymentUpdateArgs} args - Arguments to update one PendingSubscriptionPayment.
+     * @example
+     * // Update one PendingSubscriptionPayment
+     * const pendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PendingSubscriptionPaymentUpdateArgs>(args: SelectSubset<T, PendingSubscriptionPaymentUpdateArgs<ExtArgs>>): Prisma__PendingSubscriptionPaymentClient<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PendingSubscriptionPayments.
+     * @param {PendingSubscriptionPaymentDeleteManyArgs} args - Arguments to filter PendingSubscriptionPayments to delete.
+     * @example
+     * // Delete a few PendingSubscriptionPayments
+     * const { count } = await prisma.pendingSubscriptionPayment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PendingSubscriptionPaymentDeleteManyArgs>(args?: SelectSubset<T, PendingSubscriptionPaymentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PendingSubscriptionPayments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingSubscriptionPaymentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PendingSubscriptionPayments
+     * const pendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PendingSubscriptionPaymentUpdateManyArgs>(args: SelectSubset<T, PendingSubscriptionPaymentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PendingSubscriptionPayments and returns the data updated in the database.
+     * @param {PendingSubscriptionPaymentUpdateManyAndReturnArgs} args - Arguments to update many PendingSubscriptionPayments.
+     * @example
+     * // Update many PendingSubscriptionPayments
+     * const pendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PendingSubscriptionPayments and only return the `id`
+     * const pendingSubscriptionPaymentWithIdOnly = await prisma.pendingSubscriptionPayment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PendingSubscriptionPaymentUpdateManyAndReturnArgs>(args: SelectSubset<T, PendingSubscriptionPaymentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PendingSubscriptionPayment.
+     * @param {PendingSubscriptionPaymentUpsertArgs} args - Arguments to update or create a PendingSubscriptionPayment.
+     * @example
+     * // Update or create a PendingSubscriptionPayment
+     * const pendingSubscriptionPayment = await prisma.pendingSubscriptionPayment.upsert({
+     *   create: {
+     *     // ... data to create a PendingSubscriptionPayment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PendingSubscriptionPayment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PendingSubscriptionPaymentUpsertArgs>(args: SelectSubset<T, PendingSubscriptionPaymentUpsertArgs<ExtArgs>>): Prisma__PendingSubscriptionPaymentClient<$Result.GetResult<Prisma.$PendingSubscriptionPaymentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PendingSubscriptionPayments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingSubscriptionPaymentCountArgs} args - Arguments to filter PendingSubscriptionPayments to count.
+     * @example
+     * // Count the number of PendingSubscriptionPayments
+     * const count = await prisma.pendingSubscriptionPayment.count({
+     *   where: {
+     *     // ... the filter for the PendingSubscriptionPayments we want to count
+     *   }
+     * })
+    **/
+    count<T extends PendingSubscriptionPaymentCountArgs>(
+      args?: Subset<T, PendingSubscriptionPaymentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PendingSubscriptionPaymentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PendingSubscriptionPayment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingSubscriptionPaymentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PendingSubscriptionPaymentAggregateArgs>(args: Subset<T, PendingSubscriptionPaymentAggregateArgs>): Prisma.PrismaPromise<GetPendingSubscriptionPaymentAggregateType<T>>
+
+    /**
+     * Group by PendingSubscriptionPayment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingSubscriptionPaymentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PendingSubscriptionPaymentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PendingSubscriptionPaymentGroupByArgs['orderBy'] }
+        : { orderBy?: PendingSubscriptionPaymentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PendingSubscriptionPaymentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPendingSubscriptionPaymentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PendingSubscriptionPayment model
+   */
+  readonly fields: PendingSubscriptionPaymentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PendingSubscriptionPayment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PendingSubscriptionPaymentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PendingSubscriptionPayment model
+   */
+  interface PendingSubscriptionPaymentFieldRefs {
+    readonly id: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly transactionId: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly userId: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly plan: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly name: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly logo: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly address: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly requestId: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly createdAt: FieldRef<"PendingSubscriptionPayment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PendingSubscriptionPayment findUnique
+   */
+  export type PendingSubscriptionPaymentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * Filter, which PendingSubscriptionPayment to fetch.
+     */
+    where: PendingSubscriptionPaymentWhereUniqueInput
+  }
+
+  /**
+   * PendingSubscriptionPayment findUniqueOrThrow
+   */
+  export type PendingSubscriptionPaymentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * Filter, which PendingSubscriptionPayment to fetch.
+     */
+    where: PendingSubscriptionPaymentWhereUniqueInput
+  }
+
+  /**
+   * PendingSubscriptionPayment findFirst
+   */
+  export type PendingSubscriptionPaymentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * Filter, which PendingSubscriptionPayment to fetch.
+     */
+    where?: PendingSubscriptionPaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PendingSubscriptionPayments to fetch.
+     */
+    orderBy?: PendingSubscriptionPaymentOrderByWithRelationInput | PendingSubscriptionPaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PendingSubscriptionPayments.
+     */
+    cursor?: PendingSubscriptionPaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PendingSubscriptionPayments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PendingSubscriptionPayments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PendingSubscriptionPayments.
+     */
+    distinct?: PendingSubscriptionPaymentScalarFieldEnum | PendingSubscriptionPaymentScalarFieldEnum[]
+  }
+
+  /**
+   * PendingSubscriptionPayment findFirstOrThrow
+   */
+  export type PendingSubscriptionPaymentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * Filter, which PendingSubscriptionPayment to fetch.
+     */
+    where?: PendingSubscriptionPaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PendingSubscriptionPayments to fetch.
+     */
+    orderBy?: PendingSubscriptionPaymentOrderByWithRelationInput | PendingSubscriptionPaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PendingSubscriptionPayments.
+     */
+    cursor?: PendingSubscriptionPaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PendingSubscriptionPayments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PendingSubscriptionPayments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PendingSubscriptionPayments.
+     */
+    distinct?: PendingSubscriptionPaymentScalarFieldEnum | PendingSubscriptionPaymentScalarFieldEnum[]
+  }
+
+  /**
+   * PendingSubscriptionPayment findMany
+   */
+  export type PendingSubscriptionPaymentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * Filter, which PendingSubscriptionPayments to fetch.
+     */
+    where?: PendingSubscriptionPaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PendingSubscriptionPayments to fetch.
+     */
+    orderBy?: PendingSubscriptionPaymentOrderByWithRelationInput | PendingSubscriptionPaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PendingSubscriptionPayments.
+     */
+    cursor?: PendingSubscriptionPaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PendingSubscriptionPayments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PendingSubscriptionPayments.
+     */
+    skip?: number
+    distinct?: PendingSubscriptionPaymentScalarFieldEnum | PendingSubscriptionPaymentScalarFieldEnum[]
+  }
+
+  /**
+   * PendingSubscriptionPayment create
+   */
+  export type PendingSubscriptionPaymentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PendingSubscriptionPayment.
+     */
+    data: XOR<PendingSubscriptionPaymentCreateInput, PendingSubscriptionPaymentUncheckedCreateInput>
+  }
+
+  /**
+   * PendingSubscriptionPayment createMany
+   */
+  export type PendingSubscriptionPaymentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PendingSubscriptionPayments.
+     */
+    data: PendingSubscriptionPaymentCreateManyInput | PendingSubscriptionPaymentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PendingSubscriptionPayment createManyAndReturn
+   */
+  export type PendingSubscriptionPaymentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * The data used to create many PendingSubscriptionPayments.
+     */
+    data: PendingSubscriptionPaymentCreateManyInput | PendingSubscriptionPaymentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PendingSubscriptionPayment update
+   */
+  export type PendingSubscriptionPaymentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PendingSubscriptionPayment.
+     */
+    data: XOR<PendingSubscriptionPaymentUpdateInput, PendingSubscriptionPaymentUncheckedUpdateInput>
+    /**
+     * Choose, which PendingSubscriptionPayment to update.
+     */
+    where: PendingSubscriptionPaymentWhereUniqueInput
+  }
+
+  /**
+   * PendingSubscriptionPayment updateMany
+   */
+  export type PendingSubscriptionPaymentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PendingSubscriptionPayments.
+     */
+    data: XOR<PendingSubscriptionPaymentUpdateManyMutationInput, PendingSubscriptionPaymentUncheckedUpdateManyInput>
+    /**
+     * Filter which PendingSubscriptionPayments to update
+     */
+    where?: PendingSubscriptionPaymentWhereInput
+    /**
+     * Limit how many PendingSubscriptionPayments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PendingSubscriptionPayment updateManyAndReturn
+   */
+  export type PendingSubscriptionPaymentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * The data used to update PendingSubscriptionPayments.
+     */
+    data: XOR<PendingSubscriptionPaymentUpdateManyMutationInput, PendingSubscriptionPaymentUncheckedUpdateManyInput>
+    /**
+     * Filter which PendingSubscriptionPayments to update
+     */
+    where?: PendingSubscriptionPaymentWhereInput
+    /**
+     * Limit how many PendingSubscriptionPayments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PendingSubscriptionPayment upsert
+   */
+  export type PendingSubscriptionPaymentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PendingSubscriptionPayment to update in case it exists.
+     */
+    where: PendingSubscriptionPaymentWhereUniqueInput
+    /**
+     * In case the PendingSubscriptionPayment found by the `where` argument doesn't exist, create a new PendingSubscriptionPayment with this data.
+     */
+    create: XOR<PendingSubscriptionPaymentCreateInput, PendingSubscriptionPaymentUncheckedCreateInput>
+    /**
+     * In case the PendingSubscriptionPayment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PendingSubscriptionPaymentUpdateInput, PendingSubscriptionPaymentUncheckedUpdateInput>
+  }
+
+  /**
+   * PendingSubscriptionPayment delete
+   */
+  export type PendingSubscriptionPaymentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+    /**
+     * Filter which PendingSubscriptionPayment to delete.
+     */
+    where: PendingSubscriptionPaymentWhereUniqueInput
+  }
+
+  /**
+   * PendingSubscriptionPayment deleteMany
+   */
+  export type PendingSubscriptionPaymentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PendingSubscriptionPayments to delete
+     */
+    where?: PendingSubscriptionPaymentWhereInput
+    /**
+     * Limit how many PendingSubscriptionPayments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PendingSubscriptionPayment without action
+   */
+  export type PendingSubscriptionPaymentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingSubscriptionPayment
+     */
+    select?: PendingSubscriptionPaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PendingSubscriptionPayment
+     */
+    omit?: PendingSubscriptionPaymentOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model Subscription
    */
 
@@ -28165,6 +29682,7 @@ export namespace Prisma {
     page?: boolean | UserPageDefaultArgs<ExtArgs>
     likes?: boolean | Post$likesArgs<ExtArgs>
     comments?: boolean | Post$commentsArgs<ExtArgs>
+    postReads?: boolean | Post$postReadsArgs<ExtArgs>
     _count?: boolean | PostCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
 
@@ -28211,6 +29729,7 @@ export namespace Prisma {
     page?: boolean | UserPageDefaultArgs<ExtArgs>
     likes?: boolean | Post$likesArgs<ExtArgs>
     comments?: boolean | Post$commentsArgs<ExtArgs>
+    postReads?: boolean | Post$postReadsArgs<ExtArgs>
     _count?: boolean | PostCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PostIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -28226,6 +29745,7 @@ export namespace Prisma {
       page: Prisma.$UserPagePayload<ExtArgs>
       likes: Prisma.$LikePayload<ExtArgs>[]
       comments: Prisma.$CommentPayload<ExtArgs>[]
+      postReads: Prisma.$PostReadPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -28634,6 +30154,7 @@ export namespace Prisma {
     page<T extends UserPageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserPageDefaultArgs<ExtArgs>>): Prisma__UserPageClient<$Result.GetResult<Prisma.$UserPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     likes<T extends Post$likesArgs<ExtArgs> = {}>(args?: Subset<T, Post$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends Post$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Post$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    postReads<T extends Post$postReadsArgs<ExtArgs> = {}>(args?: Subset<T, Post$postReadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -29113,6 +30634,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CommentScalarFieldEnum | CommentScalarFieldEnum[]
+  }
+
+  /**
+   * Post.postReads
+   */
+  export type Post$postReadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    where?: PostReadWhereInput
+    orderBy?: PostReadOrderByWithRelationInput | PostReadOrderByWithRelationInput[]
+    cursor?: PostReadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PostReadScalarFieldEnum | PostReadScalarFieldEnum[]
   }
 
   /**
@@ -31333,6 +32878,1059 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CommentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PostRead
+   */
+
+  export type AggregatePostRead = {
+    _count: PostReadCountAggregateOutputType | null
+    _min: PostReadMinAggregateOutputType | null
+    _max: PostReadMaxAggregateOutputType | null
+  }
+
+  export type PostReadMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    postId: string | null
+    readAt: Date | null
+  }
+
+  export type PostReadMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    postId: string | null
+    readAt: Date | null
+  }
+
+  export type PostReadCountAggregateOutputType = {
+    id: number
+    userId: number
+    postId: number
+    readAt: number
+    _all: number
+  }
+
+
+  export type PostReadMinAggregateInputType = {
+    id?: true
+    userId?: true
+    postId?: true
+    readAt?: true
+  }
+
+  export type PostReadMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    postId?: true
+    readAt?: true
+  }
+
+  export type PostReadCountAggregateInputType = {
+    id?: true
+    userId?: true
+    postId?: true
+    readAt?: true
+    _all?: true
+  }
+
+  export type PostReadAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PostRead to aggregate.
+     */
+    where?: PostReadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PostReads to fetch.
+     */
+    orderBy?: PostReadOrderByWithRelationInput | PostReadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PostReadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PostReads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PostReads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PostReads
+    **/
+    _count?: true | PostReadCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PostReadMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PostReadMaxAggregateInputType
+  }
+
+  export type GetPostReadAggregateType<T extends PostReadAggregateArgs> = {
+        [P in keyof T & keyof AggregatePostRead]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePostRead[P]>
+      : GetScalarType<T[P], AggregatePostRead[P]>
+  }
+
+
+
+
+  export type PostReadGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PostReadWhereInput
+    orderBy?: PostReadOrderByWithAggregationInput | PostReadOrderByWithAggregationInput[]
+    by: PostReadScalarFieldEnum[] | PostReadScalarFieldEnum
+    having?: PostReadScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PostReadCountAggregateInputType | true
+    _min?: PostReadMinAggregateInputType
+    _max?: PostReadMaxAggregateInputType
+  }
+
+  export type PostReadGroupByOutputType = {
+    id: string
+    userId: string
+    postId: string
+    readAt: Date
+    _count: PostReadCountAggregateOutputType | null
+    _min: PostReadMinAggregateOutputType | null
+    _max: PostReadMaxAggregateOutputType | null
+  }
+
+  type GetPostReadGroupByPayload<T extends PostReadGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PostReadGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PostReadGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PostReadGroupByOutputType[P]>
+            : GetScalarType<T[P], PostReadGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PostReadSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    postId?: boolean
+    readAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    post?: boolean | PostDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["postRead"]>
+
+  export type PostReadSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    postId?: boolean
+    readAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    post?: boolean | PostDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["postRead"]>
+
+  export type PostReadSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    postId?: boolean
+    readAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    post?: boolean | PostDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["postRead"]>
+
+  export type PostReadSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    postId?: boolean
+    readAt?: boolean
+  }
+
+  export type PostReadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "postId" | "readAt", ExtArgs["result"]["postRead"]>
+  export type PostReadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    post?: boolean | PostDefaultArgs<ExtArgs>
+  }
+  export type PostReadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    post?: boolean | PostDefaultArgs<ExtArgs>
+  }
+  export type PostReadIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    post?: boolean | PostDefaultArgs<ExtArgs>
+  }
+
+  export type $PostReadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PostRead"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      post: Prisma.$PostPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      postId: string
+      readAt: Date
+    }, ExtArgs["result"]["postRead"]>
+    composites: {}
+  }
+
+  type PostReadGetPayload<S extends boolean | null | undefined | PostReadDefaultArgs> = $Result.GetResult<Prisma.$PostReadPayload, S>
+
+  type PostReadCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PostReadFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PostReadCountAggregateInputType | true
+    }
+
+  export interface PostReadDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PostRead'], meta: { name: 'PostRead' } }
+    /**
+     * Find zero or one PostRead that matches the filter.
+     * @param {PostReadFindUniqueArgs} args - Arguments to find a PostRead
+     * @example
+     * // Get one PostRead
+     * const postRead = await prisma.postRead.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PostReadFindUniqueArgs>(args: SelectSubset<T, PostReadFindUniqueArgs<ExtArgs>>): Prisma__PostReadClient<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PostRead that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PostReadFindUniqueOrThrowArgs} args - Arguments to find a PostRead
+     * @example
+     * // Get one PostRead
+     * const postRead = await prisma.postRead.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PostReadFindUniqueOrThrowArgs>(args: SelectSubset<T, PostReadFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PostReadClient<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PostRead that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostReadFindFirstArgs} args - Arguments to find a PostRead
+     * @example
+     * // Get one PostRead
+     * const postRead = await prisma.postRead.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PostReadFindFirstArgs>(args?: SelectSubset<T, PostReadFindFirstArgs<ExtArgs>>): Prisma__PostReadClient<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PostRead that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostReadFindFirstOrThrowArgs} args - Arguments to find a PostRead
+     * @example
+     * // Get one PostRead
+     * const postRead = await prisma.postRead.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PostReadFindFirstOrThrowArgs>(args?: SelectSubset<T, PostReadFindFirstOrThrowArgs<ExtArgs>>): Prisma__PostReadClient<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PostReads that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostReadFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PostReads
+     * const postReads = await prisma.postRead.findMany()
+     * 
+     * // Get first 10 PostReads
+     * const postReads = await prisma.postRead.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const postReadWithIdOnly = await prisma.postRead.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PostReadFindManyArgs>(args?: SelectSubset<T, PostReadFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PostRead.
+     * @param {PostReadCreateArgs} args - Arguments to create a PostRead.
+     * @example
+     * // Create one PostRead
+     * const PostRead = await prisma.postRead.create({
+     *   data: {
+     *     // ... data to create a PostRead
+     *   }
+     * })
+     * 
+     */
+    create<T extends PostReadCreateArgs>(args: SelectSubset<T, PostReadCreateArgs<ExtArgs>>): Prisma__PostReadClient<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PostReads.
+     * @param {PostReadCreateManyArgs} args - Arguments to create many PostReads.
+     * @example
+     * // Create many PostReads
+     * const postRead = await prisma.postRead.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PostReadCreateManyArgs>(args?: SelectSubset<T, PostReadCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PostReads and returns the data saved in the database.
+     * @param {PostReadCreateManyAndReturnArgs} args - Arguments to create many PostReads.
+     * @example
+     * // Create many PostReads
+     * const postRead = await prisma.postRead.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PostReads and only return the `id`
+     * const postReadWithIdOnly = await prisma.postRead.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PostReadCreateManyAndReturnArgs>(args?: SelectSubset<T, PostReadCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PostRead.
+     * @param {PostReadDeleteArgs} args - Arguments to delete one PostRead.
+     * @example
+     * // Delete one PostRead
+     * const PostRead = await prisma.postRead.delete({
+     *   where: {
+     *     // ... filter to delete one PostRead
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PostReadDeleteArgs>(args: SelectSubset<T, PostReadDeleteArgs<ExtArgs>>): Prisma__PostReadClient<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PostRead.
+     * @param {PostReadUpdateArgs} args - Arguments to update one PostRead.
+     * @example
+     * // Update one PostRead
+     * const postRead = await prisma.postRead.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PostReadUpdateArgs>(args: SelectSubset<T, PostReadUpdateArgs<ExtArgs>>): Prisma__PostReadClient<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PostReads.
+     * @param {PostReadDeleteManyArgs} args - Arguments to filter PostReads to delete.
+     * @example
+     * // Delete a few PostReads
+     * const { count } = await prisma.postRead.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PostReadDeleteManyArgs>(args?: SelectSubset<T, PostReadDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PostReads.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostReadUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PostReads
+     * const postRead = await prisma.postRead.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PostReadUpdateManyArgs>(args: SelectSubset<T, PostReadUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PostReads and returns the data updated in the database.
+     * @param {PostReadUpdateManyAndReturnArgs} args - Arguments to update many PostReads.
+     * @example
+     * // Update many PostReads
+     * const postRead = await prisma.postRead.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PostReads and only return the `id`
+     * const postReadWithIdOnly = await prisma.postRead.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PostReadUpdateManyAndReturnArgs>(args: SelectSubset<T, PostReadUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PostRead.
+     * @param {PostReadUpsertArgs} args - Arguments to update or create a PostRead.
+     * @example
+     * // Update or create a PostRead
+     * const postRead = await prisma.postRead.upsert({
+     *   create: {
+     *     // ... data to create a PostRead
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PostRead we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PostReadUpsertArgs>(args: SelectSubset<T, PostReadUpsertArgs<ExtArgs>>): Prisma__PostReadClient<$Result.GetResult<Prisma.$PostReadPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PostReads.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostReadCountArgs} args - Arguments to filter PostReads to count.
+     * @example
+     * // Count the number of PostReads
+     * const count = await prisma.postRead.count({
+     *   where: {
+     *     // ... the filter for the PostReads we want to count
+     *   }
+     * })
+    **/
+    count<T extends PostReadCountArgs>(
+      args?: Subset<T, PostReadCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PostReadCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PostRead.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostReadAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PostReadAggregateArgs>(args: Subset<T, PostReadAggregateArgs>): Prisma.PrismaPromise<GetPostReadAggregateType<T>>
+
+    /**
+     * Group by PostRead.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostReadGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PostReadGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PostReadGroupByArgs['orderBy'] }
+        : { orderBy?: PostReadGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PostReadGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPostReadGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PostRead model
+   */
+  readonly fields: PostReadFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PostRead.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PostReadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    post<T extends PostDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PostDefaultArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PostRead model
+   */
+  interface PostReadFieldRefs {
+    readonly id: FieldRef<"PostRead", 'String'>
+    readonly userId: FieldRef<"PostRead", 'String'>
+    readonly postId: FieldRef<"PostRead", 'String'>
+    readonly readAt: FieldRef<"PostRead", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PostRead findUnique
+   */
+  export type PostReadFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    /**
+     * Filter, which PostRead to fetch.
+     */
+    where: PostReadWhereUniqueInput
+  }
+
+  /**
+   * PostRead findUniqueOrThrow
+   */
+  export type PostReadFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    /**
+     * Filter, which PostRead to fetch.
+     */
+    where: PostReadWhereUniqueInput
+  }
+
+  /**
+   * PostRead findFirst
+   */
+  export type PostReadFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    /**
+     * Filter, which PostRead to fetch.
+     */
+    where?: PostReadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PostReads to fetch.
+     */
+    orderBy?: PostReadOrderByWithRelationInput | PostReadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PostReads.
+     */
+    cursor?: PostReadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PostReads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PostReads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PostReads.
+     */
+    distinct?: PostReadScalarFieldEnum | PostReadScalarFieldEnum[]
+  }
+
+  /**
+   * PostRead findFirstOrThrow
+   */
+  export type PostReadFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    /**
+     * Filter, which PostRead to fetch.
+     */
+    where?: PostReadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PostReads to fetch.
+     */
+    orderBy?: PostReadOrderByWithRelationInput | PostReadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PostReads.
+     */
+    cursor?: PostReadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PostReads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PostReads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PostReads.
+     */
+    distinct?: PostReadScalarFieldEnum | PostReadScalarFieldEnum[]
+  }
+
+  /**
+   * PostRead findMany
+   */
+  export type PostReadFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    /**
+     * Filter, which PostReads to fetch.
+     */
+    where?: PostReadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PostReads to fetch.
+     */
+    orderBy?: PostReadOrderByWithRelationInput | PostReadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PostReads.
+     */
+    cursor?: PostReadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PostReads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PostReads.
+     */
+    skip?: number
+    distinct?: PostReadScalarFieldEnum | PostReadScalarFieldEnum[]
+  }
+
+  /**
+   * PostRead create
+   */
+  export type PostReadCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PostRead.
+     */
+    data: XOR<PostReadCreateInput, PostReadUncheckedCreateInput>
+  }
+
+  /**
+   * PostRead createMany
+   */
+  export type PostReadCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PostReads.
+     */
+    data: PostReadCreateManyInput | PostReadCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PostRead createManyAndReturn
+   */
+  export type PostReadCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * The data used to create many PostReads.
+     */
+    data: PostReadCreateManyInput | PostReadCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PostRead update
+   */
+  export type PostReadUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PostRead.
+     */
+    data: XOR<PostReadUpdateInput, PostReadUncheckedUpdateInput>
+    /**
+     * Choose, which PostRead to update.
+     */
+    where: PostReadWhereUniqueInput
+  }
+
+  /**
+   * PostRead updateMany
+   */
+  export type PostReadUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PostReads.
+     */
+    data: XOR<PostReadUpdateManyMutationInput, PostReadUncheckedUpdateManyInput>
+    /**
+     * Filter which PostReads to update
+     */
+    where?: PostReadWhereInput
+    /**
+     * Limit how many PostReads to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PostRead updateManyAndReturn
+   */
+  export type PostReadUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * The data used to update PostReads.
+     */
+    data: XOR<PostReadUpdateManyMutationInput, PostReadUncheckedUpdateManyInput>
+    /**
+     * Filter which PostReads to update
+     */
+    where?: PostReadWhereInput
+    /**
+     * Limit how many PostReads to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PostRead upsert
+   */
+  export type PostReadUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PostRead to update in case it exists.
+     */
+    where: PostReadWhereUniqueInput
+    /**
+     * In case the PostRead found by the `where` argument doesn't exist, create a new PostRead with this data.
+     */
+    create: XOR<PostReadCreateInput, PostReadUncheckedCreateInput>
+    /**
+     * In case the PostRead was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PostReadUpdateInput, PostReadUncheckedUpdateInput>
+  }
+
+  /**
+   * PostRead delete
+   */
+  export type PostReadDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
+    /**
+     * Filter which PostRead to delete.
+     */
+    where: PostReadWhereUniqueInput
+  }
+
+  /**
+   * PostRead deleteMany
+   */
+  export type PostReadDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PostReads to delete
+     */
+    where?: PostReadWhereInput
+    /**
+     * Limit how many PostReads to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PostRead without action
+   */
+  export type PostReadDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostRead
+     */
+    select?: PostReadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostRead
+     */
+    omit?: PostReadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostReadInclude<ExtArgs> | null
   }
 
 
@@ -34853,6 +37451,1098 @@ export namespace Prisma {
 
 
   /**
+   * Model DepartmentMonthlyReport
+   */
+
+  export type AggregateDepartmentMonthlyReport = {
+    _count: DepartmentMonthlyReportCountAggregateOutputType | null
+    _min: DepartmentMonthlyReportMinAggregateOutputType | null
+    _max: DepartmentMonthlyReportMaxAggregateOutputType | null
+  }
+
+  export type DepartmentMonthlyReportMinAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    userId: string | null
+    month: string | null
+    content: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentMonthlyReportMaxAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    userId: string | null
+    month: string | null
+    content: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentMonthlyReportCountAggregateOutputType = {
+    id: number
+    deptId: number
+    userId: number
+    month: number
+    content: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DepartmentMonthlyReportMinAggregateInputType = {
+    id?: true
+    deptId?: true
+    userId?: true
+    month?: true
+    content?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentMonthlyReportMaxAggregateInputType = {
+    id?: true
+    deptId?: true
+    userId?: true
+    month?: true
+    content?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentMonthlyReportCountAggregateInputType = {
+    id?: true
+    deptId?: true
+    userId?: true
+    month?: true
+    content?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DepartmentMonthlyReportAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentMonthlyReport to aggregate.
+     */
+    where?: DepartmentMonthlyReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentMonthlyReports to fetch.
+     */
+    orderBy?: DepartmentMonthlyReportOrderByWithRelationInput | DepartmentMonthlyReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepartmentMonthlyReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentMonthlyReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentMonthlyReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DepartmentMonthlyReports
+    **/
+    _count?: true | DepartmentMonthlyReportCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepartmentMonthlyReportMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepartmentMonthlyReportMaxAggregateInputType
+  }
+
+  export type GetDepartmentMonthlyReportAggregateType<T extends DepartmentMonthlyReportAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepartmentMonthlyReport]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepartmentMonthlyReport[P]>
+      : GetScalarType<T[P], AggregateDepartmentMonthlyReport[P]>
+  }
+
+
+
+
+  export type DepartmentMonthlyReportGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentMonthlyReportWhereInput
+    orderBy?: DepartmentMonthlyReportOrderByWithAggregationInput | DepartmentMonthlyReportOrderByWithAggregationInput[]
+    by: DepartmentMonthlyReportScalarFieldEnum[] | DepartmentMonthlyReportScalarFieldEnum
+    having?: DepartmentMonthlyReportScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepartmentMonthlyReportCountAggregateInputType | true
+    _min?: DepartmentMonthlyReportMinAggregateInputType
+    _max?: DepartmentMonthlyReportMaxAggregateInputType
+  }
+
+  export type DepartmentMonthlyReportGroupByOutputType = {
+    id: string
+    deptId: string
+    userId: string
+    month: string
+    content: string
+    createdAt: Date
+    updatedAt: Date
+    _count: DepartmentMonthlyReportCountAggregateOutputType | null
+    _min: DepartmentMonthlyReportMinAggregateOutputType | null
+    _max: DepartmentMonthlyReportMaxAggregateOutputType | null
+  }
+
+  type GetDepartmentMonthlyReportGroupByPayload<T extends DepartmentMonthlyReportGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepartmentMonthlyReportGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepartmentMonthlyReportGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepartmentMonthlyReportGroupByOutputType[P]>
+            : GetScalarType<T[P], DepartmentMonthlyReportGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepartmentMonthlyReportSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    userId?: boolean
+    month?: boolean
+    content?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentMonthlyReport"]>
+
+  export type DepartmentMonthlyReportSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    userId?: boolean
+    month?: boolean
+    content?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentMonthlyReport"]>
+
+  export type DepartmentMonthlyReportSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    userId?: boolean
+    month?: boolean
+    content?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentMonthlyReport"]>
+
+  export type DepartmentMonthlyReportSelectScalar = {
+    id?: boolean
+    deptId?: boolean
+    userId?: boolean
+    month?: boolean
+    content?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DepartmentMonthlyReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deptId" | "userId" | "month" | "content" | "createdAt" | "updatedAt", ExtArgs["result"]["departmentMonthlyReport"]>
+  export type DepartmentMonthlyReportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DepartmentMonthlyReportIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DepartmentMonthlyReportIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $DepartmentMonthlyReportPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DepartmentMonthlyReport"
+    objects: {
+      department: Prisma.$DepartmentPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      deptId: string
+      userId: string
+      month: string
+      content: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["departmentMonthlyReport"]>
+    composites: {}
+  }
+
+  type DepartmentMonthlyReportGetPayload<S extends boolean | null | undefined | DepartmentMonthlyReportDefaultArgs> = $Result.GetResult<Prisma.$DepartmentMonthlyReportPayload, S>
+
+  type DepartmentMonthlyReportCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepartmentMonthlyReportFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepartmentMonthlyReportCountAggregateInputType | true
+    }
+
+  export interface DepartmentMonthlyReportDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepartmentMonthlyReport'], meta: { name: 'DepartmentMonthlyReport' } }
+    /**
+     * Find zero or one DepartmentMonthlyReport that matches the filter.
+     * @param {DepartmentMonthlyReportFindUniqueArgs} args - Arguments to find a DepartmentMonthlyReport
+     * @example
+     * // Get one DepartmentMonthlyReport
+     * const departmentMonthlyReport = await prisma.departmentMonthlyReport.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepartmentMonthlyReportFindUniqueArgs>(args: SelectSubset<T, DepartmentMonthlyReportFindUniqueArgs<ExtArgs>>): Prisma__DepartmentMonthlyReportClient<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DepartmentMonthlyReport that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepartmentMonthlyReportFindUniqueOrThrowArgs} args - Arguments to find a DepartmentMonthlyReport
+     * @example
+     * // Get one DepartmentMonthlyReport
+     * const departmentMonthlyReport = await prisma.departmentMonthlyReport.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepartmentMonthlyReportFindUniqueOrThrowArgs>(args: SelectSubset<T, DepartmentMonthlyReportFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepartmentMonthlyReportClient<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentMonthlyReport that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMonthlyReportFindFirstArgs} args - Arguments to find a DepartmentMonthlyReport
+     * @example
+     * // Get one DepartmentMonthlyReport
+     * const departmentMonthlyReport = await prisma.departmentMonthlyReport.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepartmentMonthlyReportFindFirstArgs>(args?: SelectSubset<T, DepartmentMonthlyReportFindFirstArgs<ExtArgs>>): Prisma__DepartmentMonthlyReportClient<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentMonthlyReport that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMonthlyReportFindFirstOrThrowArgs} args - Arguments to find a DepartmentMonthlyReport
+     * @example
+     * // Get one DepartmentMonthlyReport
+     * const departmentMonthlyReport = await prisma.departmentMonthlyReport.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepartmentMonthlyReportFindFirstOrThrowArgs>(args?: SelectSubset<T, DepartmentMonthlyReportFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepartmentMonthlyReportClient<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DepartmentMonthlyReports that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMonthlyReportFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DepartmentMonthlyReports
+     * const departmentMonthlyReports = await prisma.departmentMonthlyReport.findMany()
+     * 
+     * // Get first 10 DepartmentMonthlyReports
+     * const departmentMonthlyReports = await prisma.departmentMonthlyReport.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const departmentMonthlyReportWithIdOnly = await prisma.departmentMonthlyReport.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepartmentMonthlyReportFindManyArgs>(args?: SelectSubset<T, DepartmentMonthlyReportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DepartmentMonthlyReport.
+     * @param {DepartmentMonthlyReportCreateArgs} args - Arguments to create a DepartmentMonthlyReport.
+     * @example
+     * // Create one DepartmentMonthlyReport
+     * const DepartmentMonthlyReport = await prisma.departmentMonthlyReport.create({
+     *   data: {
+     *     // ... data to create a DepartmentMonthlyReport
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepartmentMonthlyReportCreateArgs>(args: SelectSubset<T, DepartmentMonthlyReportCreateArgs<ExtArgs>>): Prisma__DepartmentMonthlyReportClient<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DepartmentMonthlyReports.
+     * @param {DepartmentMonthlyReportCreateManyArgs} args - Arguments to create many DepartmentMonthlyReports.
+     * @example
+     * // Create many DepartmentMonthlyReports
+     * const departmentMonthlyReport = await prisma.departmentMonthlyReport.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepartmentMonthlyReportCreateManyArgs>(args?: SelectSubset<T, DepartmentMonthlyReportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DepartmentMonthlyReports and returns the data saved in the database.
+     * @param {DepartmentMonthlyReportCreateManyAndReturnArgs} args - Arguments to create many DepartmentMonthlyReports.
+     * @example
+     * // Create many DepartmentMonthlyReports
+     * const departmentMonthlyReport = await prisma.departmentMonthlyReport.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DepartmentMonthlyReports and only return the `id`
+     * const departmentMonthlyReportWithIdOnly = await prisma.departmentMonthlyReport.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DepartmentMonthlyReportCreateManyAndReturnArgs>(args?: SelectSubset<T, DepartmentMonthlyReportCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DepartmentMonthlyReport.
+     * @param {DepartmentMonthlyReportDeleteArgs} args - Arguments to delete one DepartmentMonthlyReport.
+     * @example
+     * // Delete one DepartmentMonthlyReport
+     * const DepartmentMonthlyReport = await prisma.departmentMonthlyReport.delete({
+     *   where: {
+     *     // ... filter to delete one DepartmentMonthlyReport
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepartmentMonthlyReportDeleteArgs>(args: SelectSubset<T, DepartmentMonthlyReportDeleteArgs<ExtArgs>>): Prisma__DepartmentMonthlyReportClient<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DepartmentMonthlyReport.
+     * @param {DepartmentMonthlyReportUpdateArgs} args - Arguments to update one DepartmentMonthlyReport.
+     * @example
+     * // Update one DepartmentMonthlyReport
+     * const departmentMonthlyReport = await prisma.departmentMonthlyReport.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepartmentMonthlyReportUpdateArgs>(args: SelectSubset<T, DepartmentMonthlyReportUpdateArgs<ExtArgs>>): Prisma__DepartmentMonthlyReportClient<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DepartmentMonthlyReports.
+     * @param {DepartmentMonthlyReportDeleteManyArgs} args - Arguments to filter DepartmentMonthlyReports to delete.
+     * @example
+     * // Delete a few DepartmentMonthlyReports
+     * const { count } = await prisma.departmentMonthlyReport.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepartmentMonthlyReportDeleteManyArgs>(args?: SelectSubset<T, DepartmentMonthlyReportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentMonthlyReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMonthlyReportUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DepartmentMonthlyReports
+     * const departmentMonthlyReport = await prisma.departmentMonthlyReport.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepartmentMonthlyReportUpdateManyArgs>(args: SelectSubset<T, DepartmentMonthlyReportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentMonthlyReports and returns the data updated in the database.
+     * @param {DepartmentMonthlyReportUpdateManyAndReturnArgs} args - Arguments to update many DepartmentMonthlyReports.
+     * @example
+     * // Update many DepartmentMonthlyReports
+     * const departmentMonthlyReport = await prisma.departmentMonthlyReport.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DepartmentMonthlyReports and only return the `id`
+     * const departmentMonthlyReportWithIdOnly = await prisma.departmentMonthlyReport.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DepartmentMonthlyReportUpdateManyAndReturnArgs>(args: SelectSubset<T, DepartmentMonthlyReportUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DepartmentMonthlyReport.
+     * @param {DepartmentMonthlyReportUpsertArgs} args - Arguments to update or create a DepartmentMonthlyReport.
+     * @example
+     * // Update or create a DepartmentMonthlyReport
+     * const departmentMonthlyReport = await prisma.departmentMonthlyReport.upsert({
+     *   create: {
+     *     // ... data to create a DepartmentMonthlyReport
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DepartmentMonthlyReport we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepartmentMonthlyReportUpsertArgs>(args: SelectSubset<T, DepartmentMonthlyReportUpsertArgs<ExtArgs>>): Prisma__DepartmentMonthlyReportClient<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DepartmentMonthlyReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMonthlyReportCountArgs} args - Arguments to filter DepartmentMonthlyReports to count.
+     * @example
+     * // Count the number of DepartmentMonthlyReports
+     * const count = await prisma.departmentMonthlyReport.count({
+     *   where: {
+     *     // ... the filter for the DepartmentMonthlyReports we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepartmentMonthlyReportCountArgs>(
+      args?: Subset<T, DepartmentMonthlyReportCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepartmentMonthlyReportCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DepartmentMonthlyReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMonthlyReportAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepartmentMonthlyReportAggregateArgs>(args: Subset<T, DepartmentMonthlyReportAggregateArgs>): Prisma.PrismaPromise<GetDepartmentMonthlyReportAggregateType<T>>
+
+    /**
+     * Group by DepartmentMonthlyReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMonthlyReportGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepartmentMonthlyReportGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepartmentMonthlyReportGroupByArgs['orderBy'] }
+        : { orderBy?: DepartmentMonthlyReportGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepartmentMonthlyReportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepartmentMonthlyReportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DepartmentMonthlyReport model
+   */
+  readonly fields: DepartmentMonthlyReportFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DepartmentMonthlyReport.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepartmentMonthlyReportClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DepartmentMonthlyReport model
+   */
+  interface DepartmentMonthlyReportFieldRefs {
+    readonly id: FieldRef<"DepartmentMonthlyReport", 'String'>
+    readonly deptId: FieldRef<"DepartmentMonthlyReport", 'String'>
+    readonly userId: FieldRef<"DepartmentMonthlyReport", 'String'>
+    readonly month: FieldRef<"DepartmentMonthlyReport", 'String'>
+    readonly content: FieldRef<"DepartmentMonthlyReport", 'String'>
+    readonly createdAt: FieldRef<"DepartmentMonthlyReport", 'DateTime'>
+    readonly updatedAt: FieldRef<"DepartmentMonthlyReport", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DepartmentMonthlyReport findUnique
+   */
+  export type DepartmentMonthlyReportFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentMonthlyReport to fetch.
+     */
+    where: DepartmentMonthlyReportWhereUniqueInput
+  }
+
+  /**
+   * DepartmentMonthlyReport findUniqueOrThrow
+   */
+  export type DepartmentMonthlyReportFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentMonthlyReport to fetch.
+     */
+    where: DepartmentMonthlyReportWhereUniqueInput
+  }
+
+  /**
+   * DepartmentMonthlyReport findFirst
+   */
+  export type DepartmentMonthlyReportFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentMonthlyReport to fetch.
+     */
+    where?: DepartmentMonthlyReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentMonthlyReports to fetch.
+     */
+    orderBy?: DepartmentMonthlyReportOrderByWithRelationInput | DepartmentMonthlyReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentMonthlyReports.
+     */
+    cursor?: DepartmentMonthlyReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentMonthlyReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentMonthlyReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentMonthlyReports.
+     */
+    distinct?: DepartmentMonthlyReportScalarFieldEnum | DepartmentMonthlyReportScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentMonthlyReport findFirstOrThrow
+   */
+  export type DepartmentMonthlyReportFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentMonthlyReport to fetch.
+     */
+    where?: DepartmentMonthlyReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentMonthlyReports to fetch.
+     */
+    orderBy?: DepartmentMonthlyReportOrderByWithRelationInput | DepartmentMonthlyReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentMonthlyReports.
+     */
+    cursor?: DepartmentMonthlyReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentMonthlyReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentMonthlyReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentMonthlyReports.
+     */
+    distinct?: DepartmentMonthlyReportScalarFieldEnum | DepartmentMonthlyReportScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentMonthlyReport findMany
+   */
+  export type DepartmentMonthlyReportFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentMonthlyReports to fetch.
+     */
+    where?: DepartmentMonthlyReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentMonthlyReports to fetch.
+     */
+    orderBy?: DepartmentMonthlyReportOrderByWithRelationInput | DepartmentMonthlyReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DepartmentMonthlyReports.
+     */
+    cursor?: DepartmentMonthlyReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentMonthlyReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentMonthlyReports.
+     */
+    skip?: number
+    distinct?: DepartmentMonthlyReportScalarFieldEnum | DepartmentMonthlyReportScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentMonthlyReport create
+   */
+  export type DepartmentMonthlyReportCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DepartmentMonthlyReport.
+     */
+    data: XOR<DepartmentMonthlyReportCreateInput, DepartmentMonthlyReportUncheckedCreateInput>
+  }
+
+  /**
+   * DepartmentMonthlyReport createMany
+   */
+  export type DepartmentMonthlyReportCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DepartmentMonthlyReports.
+     */
+    data: DepartmentMonthlyReportCreateManyInput | DepartmentMonthlyReportCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DepartmentMonthlyReport createManyAndReturn
+   */
+  export type DepartmentMonthlyReportCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * The data used to create many DepartmentMonthlyReports.
+     */
+    data: DepartmentMonthlyReportCreateManyInput | DepartmentMonthlyReportCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentMonthlyReport update
+   */
+  export type DepartmentMonthlyReportUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DepartmentMonthlyReport.
+     */
+    data: XOR<DepartmentMonthlyReportUpdateInput, DepartmentMonthlyReportUncheckedUpdateInput>
+    /**
+     * Choose, which DepartmentMonthlyReport to update.
+     */
+    where: DepartmentMonthlyReportWhereUniqueInput
+  }
+
+  /**
+   * DepartmentMonthlyReport updateMany
+   */
+  export type DepartmentMonthlyReportUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DepartmentMonthlyReports.
+     */
+    data: XOR<DepartmentMonthlyReportUpdateManyMutationInput, DepartmentMonthlyReportUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentMonthlyReports to update
+     */
+    where?: DepartmentMonthlyReportWhereInput
+    /**
+     * Limit how many DepartmentMonthlyReports to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentMonthlyReport updateManyAndReturn
+   */
+  export type DepartmentMonthlyReportUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * The data used to update DepartmentMonthlyReports.
+     */
+    data: XOR<DepartmentMonthlyReportUpdateManyMutationInput, DepartmentMonthlyReportUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentMonthlyReports to update
+     */
+    where?: DepartmentMonthlyReportWhereInput
+    /**
+     * Limit how many DepartmentMonthlyReports to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentMonthlyReport upsert
+   */
+  export type DepartmentMonthlyReportUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DepartmentMonthlyReport to update in case it exists.
+     */
+    where: DepartmentMonthlyReportWhereUniqueInput
+    /**
+     * In case the DepartmentMonthlyReport found by the `where` argument doesn't exist, create a new DepartmentMonthlyReport with this data.
+     */
+    create: XOR<DepartmentMonthlyReportCreateInput, DepartmentMonthlyReportUncheckedCreateInput>
+    /**
+     * In case the DepartmentMonthlyReport was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepartmentMonthlyReportUpdateInput, DepartmentMonthlyReportUncheckedUpdateInput>
+  }
+
+  /**
+   * DepartmentMonthlyReport delete
+   */
+  export type DepartmentMonthlyReportDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter which DepartmentMonthlyReport to delete.
+     */
+    where: DepartmentMonthlyReportWhereUniqueInput
+  }
+
+  /**
+   * DepartmentMonthlyReport deleteMany
+   */
+  export type DepartmentMonthlyReportDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentMonthlyReports to delete
+     */
+    where?: DepartmentMonthlyReportWhereInput
+    /**
+     * Limit how many DepartmentMonthlyReports to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentMonthlyReport without action
+   */
+  export type DepartmentMonthlyReportDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMonthlyReport
+     */
+    select?: DepartmentMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMonthlyReport
+     */
+    omit?: DepartmentMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMonthlyReportInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model PushSubscription
    */
 
@@ -36051,6 +39741,7 @@ export namespace Prisma {
     name: 'name',
     orgId: 'orgId',
     publicKey: 'publicKey',
+    headId: 'headId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -36166,6 +39857,21 @@ export namespace Prisma {
   export type OrganizationRequestScalarFieldEnum = (typeof OrganizationRequestScalarFieldEnum)[keyof typeof OrganizationRequestScalarFieldEnum]
 
 
+  export const PendingSubscriptionPaymentScalarFieldEnum: {
+    id: 'id',
+    transactionId: 'transactionId',
+    userId: 'userId',
+    plan: 'plan',
+    name: 'name',
+    logo: 'logo',
+    address: 'address',
+    requestId: 'requestId',
+    createdAt: 'createdAt'
+  };
+
+  export type PendingSubscriptionPaymentScalarFieldEnum = (typeof PendingSubscriptionPaymentScalarFieldEnum)[keyof typeof PendingSubscriptionPaymentScalarFieldEnum]
+
+
   export const SubscriptionScalarFieldEnum: {
     id: 'id',
     orgId: 'orgId',
@@ -36271,6 +39977,16 @@ export namespace Prisma {
   export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
+  export const PostReadScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    postId: 'postId',
+    readAt: 'readAt'
+  };
+
+  export type PostReadScalarFieldEnum = (typeof PostReadScalarFieldEnum)[keyof typeof PostReadScalarFieldEnum]
+
+
   export const TaskScalarFieldEnum: {
     id: 'id',
     title: 'title',
@@ -36315,6 +40031,19 @@ export namespace Prisma {
   };
 
   export type TaskAttachmentScalarFieldEnum = (typeof TaskAttachmentScalarFieldEnum)[keyof typeof TaskAttachmentScalarFieldEnum]
+
+
+  export const DepartmentMonthlyReportScalarFieldEnum: {
+    id: 'id',
+    deptId: 'deptId',
+    userId: 'userId',
+    month: 'month',
+    content: 'content',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DepartmentMonthlyReportScalarFieldEnum = (typeof DepartmentMonthlyReportScalarFieldEnum)[keyof typeof DepartmentMonthlyReportScalarFieldEnum]
 
 
   export const PushSubscriptionScalarFieldEnum: {
@@ -36647,9 +40376,12 @@ export namespace Prisma {
     userPage?: XOR<UserPageNullableScalarRelationFilter, UserPageWhereInput> | null
     likes?: LikeListRelationFilter
     comments?: CommentListRelationFilter
+    postReads?: PostReadListRelationFilter
     assignedTasks?: TaskListRelationFilter
     createdTasks?: TaskListRelationFilter
+    headedDepartments?: DepartmentListRelationFilter
     taskMessages?: TaskMessageListRelationFilter
+    departmentMonthlyReports?: DepartmentMonthlyReportListRelationFilter
     pushSubscriptions?: PushSubscriptionListRelationFilter
     invitations?: UserInvitationListRelationFilter
     followers?: FollowListRelationFilter
@@ -36690,9 +40422,12 @@ export namespace Prisma {
     userPage?: UserPageOrderByWithRelationInput
     likes?: LikeOrderByRelationAggregateInput
     comments?: CommentOrderByRelationAggregateInput
+    postReads?: PostReadOrderByRelationAggregateInput
     assignedTasks?: TaskOrderByRelationAggregateInput
     createdTasks?: TaskOrderByRelationAggregateInput
+    headedDepartments?: DepartmentOrderByRelationAggregateInput
     taskMessages?: TaskMessageOrderByRelationAggregateInput
+    departmentMonthlyReports?: DepartmentMonthlyReportOrderByRelationAggregateInput
     pushSubscriptions?: PushSubscriptionOrderByRelationAggregateInput
     invitations?: UserInvitationOrderByRelationAggregateInput
     followers?: FollowOrderByRelationAggregateInput
@@ -36736,9 +40471,12 @@ export namespace Prisma {
     userPage?: XOR<UserPageNullableScalarRelationFilter, UserPageWhereInput> | null
     likes?: LikeListRelationFilter
     comments?: CommentListRelationFilter
+    postReads?: PostReadListRelationFilter
     assignedTasks?: TaskListRelationFilter
     createdTasks?: TaskListRelationFilter
+    headedDepartments?: DepartmentListRelationFilter
     taskMessages?: TaskMessageListRelationFilter
+    departmentMonthlyReports?: DepartmentMonthlyReportListRelationFilter
     pushSubscriptions?: PushSubscriptionListRelationFilter
     invitations?: UserInvitationListRelationFilter
     followers?: FollowListRelationFilter
@@ -37165,13 +40903,16 @@ export namespace Prisma {
     name?: StringFilter<"Department"> | string
     orgId?: StringFilter<"Department"> | string
     publicKey?: StringFilter<"Department"> | string
+    headId?: StringNullableFilter<"Department"> | string | null
     createdAt?: DateTimeFilter<"Department"> | Date | string
     updatedAt?: DateTimeFilter<"Department"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    head?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     members?: DepartmentMemberListRelationFilter
     conversations?: GroupListRelationFilter
     tasks?: TaskListRelationFilter
     eventBroadcasts?: EventDepartmentBroadcastListRelationFilter
+    monthlyReports?: DepartmentMonthlyReportListRelationFilter
   }
 
   export type DepartmentOrderByWithRelationInput = {
@@ -37179,13 +40920,16 @@ export namespace Prisma {
     name?: SortOrder
     orgId?: SortOrder
     publicKey?: SortOrder
+    headId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
+    head?: UserOrderByWithRelationInput
     members?: DepartmentMemberOrderByRelationAggregateInput
     conversations?: GroupOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
     eventBroadcasts?: EventDepartmentBroadcastOrderByRelationAggregateInput
+    monthlyReports?: DepartmentMonthlyReportOrderByRelationAggregateInput
   }
 
   export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
@@ -37196,13 +40940,16 @@ export namespace Prisma {
     name?: StringFilter<"Department"> | string
     orgId?: StringFilter<"Department"> | string
     publicKey?: StringFilter<"Department"> | string
+    headId?: StringNullableFilter<"Department"> | string | null
     createdAt?: DateTimeFilter<"Department"> | Date | string
     updatedAt?: DateTimeFilter<"Department"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    head?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     members?: DepartmentMemberListRelationFilter
     conversations?: GroupListRelationFilter
     tasks?: TaskListRelationFilter
     eventBroadcasts?: EventDepartmentBroadcastListRelationFilter
+    monthlyReports?: DepartmentMonthlyReportListRelationFilter
   }, "id">
 
   export type DepartmentOrderByWithAggregationInput = {
@@ -37210,6 +40957,7 @@ export namespace Prisma {
     name?: SortOrder
     orgId?: SortOrder
     publicKey?: SortOrder
+    headId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: DepartmentCountOrderByAggregateInput
@@ -37225,6 +40973,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Department"> | string
     orgId?: StringWithAggregatesFilter<"Department"> | string
     publicKey?: StringWithAggregatesFilter<"Department"> | string
+    headId?: StringNullableWithAggregatesFilter<"Department"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
   }
@@ -37790,6 +41539,78 @@ export namespace Prisma {
     orgId?: StringNullableWithAggregatesFilter<"OrganizationRequest"> | string | null
   }
 
+  export type PendingSubscriptionPaymentWhereInput = {
+    AND?: PendingSubscriptionPaymentWhereInput | PendingSubscriptionPaymentWhereInput[]
+    OR?: PendingSubscriptionPaymentWhereInput[]
+    NOT?: PendingSubscriptionPaymentWhereInput | PendingSubscriptionPaymentWhereInput[]
+    id?: StringFilter<"PendingSubscriptionPayment"> | string
+    transactionId?: StringFilter<"PendingSubscriptionPayment"> | string
+    userId?: StringFilter<"PendingSubscriptionPayment"> | string
+    plan?: StringFilter<"PendingSubscriptionPayment"> | string
+    name?: StringFilter<"PendingSubscriptionPayment"> | string
+    logo?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    address?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    requestId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    createdAt?: DateTimeFilter<"PendingSubscriptionPayment"> | Date | string
+  }
+
+  export type PendingSubscriptionPaymentOrderByWithRelationInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    userId?: SortOrder
+    plan?: SortOrder
+    name?: SortOrder
+    logo?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    requestId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PendingSubscriptionPaymentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    transactionId?: string
+    AND?: PendingSubscriptionPaymentWhereInput | PendingSubscriptionPaymentWhereInput[]
+    OR?: PendingSubscriptionPaymentWhereInput[]
+    NOT?: PendingSubscriptionPaymentWhereInput | PendingSubscriptionPaymentWhereInput[]
+    userId?: StringFilter<"PendingSubscriptionPayment"> | string
+    plan?: StringFilter<"PendingSubscriptionPayment"> | string
+    name?: StringFilter<"PendingSubscriptionPayment"> | string
+    logo?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    address?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    requestId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    createdAt?: DateTimeFilter<"PendingSubscriptionPayment"> | Date | string
+  }, "id" | "transactionId">
+
+  export type PendingSubscriptionPaymentOrderByWithAggregationInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    userId?: SortOrder
+    plan?: SortOrder
+    name?: SortOrder
+    logo?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    requestId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: PendingSubscriptionPaymentCountOrderByAggregateInput
+    _max?: PendingSubscriptionPaymentMaxOrderByAggregateInput
+    _min?: PendingSubscriptionPaymentMinOrderByAggregateInput
+  }
+
+  export type PendingSubscriptionPaymentScalarWhereWithAggregatesInput = {
+    AND?: PendingSubscriptionPaymentScalarWhereWithAggregatesInput | PendingSubscriptionPaymentScalarWhereWithAggregatesInput[]
+    OR?: PendingSubscriptionPaymentScalarWhereWithAggregatesInput[]
+    NOT?: PendingSubscriptionPaymentScalarWhereWithAggregatesInput | PendingSubscriptionPaymentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PendingSubscriptionPayment"> | string
+    transactionId?: StringWithAggregatesFilter<"PendingSubscriptionPayment"> | string
+    userId?: StringWithAggregatesFilter<"PendingSubscriptionPayment"> | string
+    plan?: StringWithAggregatesFilter<"PendingSubscriptionPayment"> | string
+    name?: StringWithAggregatesFilter<"PendingSubscriptionPayment"> | string
+    logo?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
+    address?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
+    requestId?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PendingSubscriptionPayment"> | Date | string
+  }
+
   export type SubscriptionWhereInput = {
     AND?: SubscriptionWhereInput | SubscriptionWhereInput[]
     OR?: SubscriptionWhereInput[]
@@ -38158,6 +41979,7 @@ export namespace Prisma {
     page?: XOR<UserPageScalarRelationFilter, UserPageWhereInput>
     likes?: LikeListRelationFilter
     comments?: CommentListRelationFilter
+    postReads?: PostReadListRelationFilter
   }
 
   export type PostOrderByWithRelationInput = {
@@ -38173,6 +41995,7 @@ export namespace Prisma {
     page?: UserPageOrderByWithRelationInput
     likes?: LikeOrderByRelationAggregateInput
     comments?: CommentOrderByRelationAggregateInput
+    postReads?: PostReadOrderByRelationAggregateInput
   }
 
   export type PostWhereUniqueInput = Prisma.AtLeast<{
@@ -38191,6 +42014,7 @@ export namespace Prisma {
     page?: XOR<UserPageScalarRelationFilter, UserPageWhereInput>
     likes?: LikeListRelationFilter
     comments?: CommentListRelationFilter
+    postReads?: PostReadListRelationFilter
   }, "id">
 
   export type PostOrderByWithAggregationInput = {
@@ -38349,6 +42173,60 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Comment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Comment"> | Date | string
     parentId?: StringNullableWithAggregatesFilter<"Comment"> | string | null
+  }
+
+  export type PostReadWhereInput = {
+    AND?: PostReadWhereInput | PostReadWhereInput[]
+    OR?: PostReadWhereInput[]
+    NOT?: PostReadWhereInput | PostReadWhereInput[]
+    id?: StringFilter<"PostRead"> | string
+    userId?: StringFilter<"PostRead"> | string
+    postId?: StringFilter<"PostRead"> | string
+    readAt?: DateTimeFilter<"PostRead"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    post?: XOR<PostScalarRelationFilter, PostWhereInput>
+  }
+
+  export type PostReadOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    postId?: SortOrder
+    readAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    post?: PostOrderByWithRelationInput
+  }
+
+  export type PostReadWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_postId?: PostReadUserIdPostIdCompoundUniqueInput
+    AND?: PostReadWhereInput | PostReadWhereInput[]
+    OR?: PostReadWhereInput[]
+    NOT?: PostReadWhereInput | PostReadWhereInput[]
+    userId?: StringFilter<"PostRead"> | string
+    postId?: StringFilter<"PostRead"> | string
+    readAt?: DateTimeFilter<"PostRead"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    post?: XOR<PostScalarRelationFilter, PostWhereInput>
+  }, "id" | "userId_postId">
+
+  export type PostReadOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    postId?: SortOrder
+    readAt?: SortOrder
+    _count?: PostReadCountOrderByAggregateInput
+    _max?: PostReadMaxOrderByAggregateInput
+    _min?: PostReadMinOrderByAggregateInput
+  }
+
+  export type PostReadScalarWhereWithAggregatesInput = {
+    AND?: PostReadScalarWhereWithAggregatesInput | PostReadScalarWhereWithAggregatesInput[]
+    OR?: PostReadScalarWhereWithAggregatesInput[]
+    NOT?: PostReadScalarWhereWithAggregatesInput | PostReadScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PostRead"> | string
+    userId?: StringWithAggregatesFilter<"PostRead"> | string
+    postId?: StringWithAggregatesFilter<"PostRead"> | string
+    readAt?: DateTimeWithAggregatesFilter<"PostRead"> | Date | string
   }
 
   export type TaskWhereInput = {
@@ -38604,6 +42482,75 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"TaskAttachment"> | Date | string
   }
 
+  export type DepartmentMonthlyReportWhereInput = {
+    AND?: DepartmentMonthlyReportWhereInput | DepartmentMonthlyReportWhereInput[]
+    OR?: DepartmentMonthlyReportWhereInput[]
+    NOT?: DepartmentMonthlyReportWhereInput | DepartmentMonthlyReportWhereInput[]
+    id?: StringFilter<"DepartmentMonthlyReport"> | string
+    deptId?: StringFilter<"DepartmentMonthlyReport"> | string
+    userId?: StringFilter<"DepartmentMonthlyReport"> | string
+    month?: StringFilter<"DepartmentMonthlyReport"> | string
+    content?: StringFilter<"DepartmentMonthlyReport"> | string
+    createdAt?: DateTimeFilter<"DepartmentMonthlyReport"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentMonthlyReport"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type DepartmentMonthlyReportOrderByWithRelationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    userId?: SortOrder
+    month?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    department?: DepartmentOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type DepartmentMonthlyReportWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    deptId_userId_month?: DepartmentMonthlyReportDeptIdUserIdMonthCompoundUniqueInput
+    AND?: DepartmentMonthlyReportWhereInput | DepartmentMonthlyReportWhereInput[]
+    OR?: DepartmentMonthlyReportWhereInput[]
+    NOT?: DepartmentMonthlyReportWhereInput | DepartmentMonthlyReportWhereInput[]
+    deptId?: StringFilter<"DepartmentMonthlyReport"> | string
+    userId?: StringFilter<"DepartmentMonthlyReport"> | string
+    month?: StringFilter<"DepartmentMonthlyReport"> | string
+    content?: StringFilter<"DepartmentMonthlyReport"> | string
+    createdAt?: DateTimeFilter<"DepartmentMonthlyReport"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentMonthlyReport"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "deptId_userId_month">
+
+  export type DepartmentMonthlyReportOrderByWithAggregationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    userId?: SortOrder
+    month?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DepartmentMonthlyReportCountOrderByAggregateInput
+    _max?: DepartmentMonthlyReportMaxOrderByAggregateInput
+    _min?: DepartmentMonthlyReportMinOrderByAggregateInput
+  }
+
+  export type DepartmentMonthlyReportScalarWhereWithAggregatesInput = {
+    AND?: DepartmentMonthlyReportScalarWhereWithAggregatesInput | DepartmentMonthlyReportScalarWhereWithAggregatesInput[]
+    OR?: DepartmentMonthlyReportScalarWhereWithAggregatesInput[]
+    NOT?: DepartmentMonthlyReportScalarWhereWithAggregatesInput | DepartmentMonthlyReportScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DepartmentMonthlyReport"> | string
+    deptId?: StringWithAggregatesFilter<"DepartmentMonthlyReport"> | string
+    userId?: StringWithAggregatesFilter<"DepartmentMonthlyReport"> | string
+    month?: StringWithAggregatesFilter<"DepartmentMonthlyReport"> | string
+    content?: StringWithAggregatesFilter<"DepartmentMonthlyReport"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"DepartmentMonthlyReport"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DepartmentMonthlyReport"> | Date | string
+  }
+
   export type PushSubscriptionWhereInput = {
     AND?: PushSubscriptionWhereInput | PushSubscriptionWhereInput[]
     OR?: PushSubscriptionWhereInput[]
@@ -38703,9 +42650,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -38746,9 +42696,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -38789,9 +42742,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -38832,9 +42788,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -39300,10 +43259,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
     members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateInput = {
@@ -39311,12 +43272,14 @@ export namespace Prisma {
     name: string
     orgId: string
     publicKey: string
+    headId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUpdateInput = {
@@ -39326,10 +43289,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
     members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateInput = {
@@ -39337,12 +43302,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     orgId?: StringFieldUpdateOperationsInput | string
     publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentCreateManyInput = {
@@ -39350,6 +43317,7 @@ export namespace Prisma {
     name: string
     orgId: string
     publicKey: string
+    headId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39367,6 +43335,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     orgId?: StringFieldUpdateOperationsInput | string
     publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39943,6 +43912,90 @@ export namespace Prisma {
     orgId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type PendingSubscriptionPaymentCreateInput = {
+    id?: string
+    transactionId: string
+    userId: string
+    plan: string
+    name: string
+    logo?: string | null
+    address?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PendingSubscriptionPaymentUncheckedCreateInput = {
+    id?: string
+    transactionId: string
+    userId: string
+    plan: string
+    name: string
+    logo?: string | null
+    address?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PendingSubscriptionPaymentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PendingSubscriptionPaymentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PendingSubscriptionPaymentCreateManyInput = {
+    id?: string
+    transactionId: string
+    userId: string
+    plan: string
+    name: string
+    logo?: string | null
+    address?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PendingSubscriptionPaymentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PendingSubscriptionPaymentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type SubscriptionCreateInput = {
     id?: string
     plan?: $Enums.SubscriptionPlan
@@ -40325,6 +44378,7 @@ export namespace Prisma {
     page: UserPageCreateNestedOneWithoutPostsInput
     likes?: LikeCreateNestedManyWithoutPostInput
     comments?: CommentCreateNestedManyWithoutPostInput
+    postReads?: PostReadCreateNestedManyWithoutPostInput
   }
 
   export type PostUncheckedCreateInput = {
@@ -40339,6 +44393,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     likes?: LikeUncheckedCreateNestedManyWithoutPostInput
     comments?: CommentUncheckedCreateNestedManyWithoutPostInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutPostInput
   }
 
   export type PostUpdateInput = {
@@ -40353,6 +44408,7 @@ export namespace Prisma {
     page?: UserPageUpdateOneRequiredWithoutPostsNestedInput
     likes?: LikeUpdateManyWithoutPostNestedInput
     comments?: CommentUpdateManyWithoutPostNestedInput
+    postReads?: PostReadUpdateManyWithoutPostNestedInput
   }
 
   export type PostUncheckedUpdateInput = {
@@ -40367,6 +44423,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     likes?: LikeUncheckedUpdateManyWithoutPostNestedInput
     comments?: CommentUncheckedUpdateManyWithoutPostNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type PostCreateManyInput = {
@@ -40520,6 +44577,53 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type PostReadCreateInput = {
+    id?: string
+    readAt?: Date | string
+    user: UserCreateNestedOneWithoutPostReadsInput
+    post: PostCreateNestedOneWithoutPostReadsInput
+  }
+
+  export type PostReadUncheckedCreateInput = {
+    id?: string
+    userId: string
+    postId: string
+    readAt?: Date | string
+  }
+
+  export type PostReadUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    readAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPostReadsNestedInput
+    post?: PostUpdateOneRequiredWithoutPostReadsNestedInput
+  }
+
+  export type PostReadUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    postId?: StringFieldUpdateOperationsInput | string
+    readAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PostReadCreateManyInput = {
+    id?: string
+    userId: string
+    postId: string
+    readAt?: Date | string
+  }
+
+  export type PostReadUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    readAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PostReadUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    postId?: StringFieldUpdateOperationsInput | string
+    readAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskCreateInput = {
@@ -40786,6 +44890,74 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DepartmentMonthlyReportCreateInput = {
+    id?: string
+    month: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutMonthlyReportsInput
+    user: UserCreateNestedOneWithoutDepartmentMonthlyReportsInput
+  }
+
+  export type DepartmentMonthlyReportUncheckedCreateInput = {
+    id?: string
+    deptId: string
+    userId: string
+    month: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentMonthlyReportUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    month?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutMonthlyReportsNestedInput
+    user?: UserUpdateOneRequiredWithoutDepartmentMonthlyReportsNestedInput
+  }
+
+  export type DepartmentMonthlyReportUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    month?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMonthlyReportCreateManyInput = {
+    id?: string
+    deptId: string
+    userId: string
+    month: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentMonthlyReportUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    month?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMonthlyReportUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    month?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PushSubscriptionCreateInput = {
     id?: string
     endpoint: string
@@ -40995,16 +45167,34 @@ export namespace Prisma {
     none?: CommentWhereInput
   }
 
+  export type PostReadListRelationFilter = {
+    every?: PostReadWhereInput
+    some?: PostReadWhereInput
+    none?: PostReadWhereInput
+  }
+
   export type TaskListRelationFilter = {
     every?: TaskWhereInput
     some?: TaskWhereInput
     none?: TaskWhereInput
   }
 
+  export type DepartmentListRelationFilter = {
+    every?: DepartmentWhereInput
+    some?: DepartmentWhereInput
+    none?: DepartmentWhereInput
+  }
+
   export type TaskMessageListRelationFilter = {
     every?: TaskMessageWhereInput
     some?: TaskMessageWhereInput
     none?: TaskMessageWhereInput
+  }
+
+  export type DepartmentMonthlyReportListRelationFilter = {
+    every?: DepartmentMonthlyReportWhereInput
+    some?: DepartmentMonthlyReportWhereInput
+    none?: DepartmentMonthlyReportWhereInput
   }
 
   export type PushSubscriptionListRelationFilter = {
@@ -41062,11 +45252,23 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type PostReadOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type TaskOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
+  export type DepartmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type TaskMessageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DepartmentMonthlyReportOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -41452,12 +45654,6 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type DepartmentListRelationFilter = {
-    every?: DepartmentWhereInput
-    some?: DepartmentWhereInput
-    none?: DepartmentWhereInput
-  }
-
   export type SubscriptionNullableScalarRelationFilter = {
     is?: SubscriptionWhereInput | null
     isNot?: SubscriptionWhereInput | null
@@ -41467,10 +45663,6 @@ export namespace Prisma {
     every?: EventInvitationWhereInput
     some?: EventInvitationWhereInput
     none?: EventInvitationWhereInput
-  }
-
-  export type DepartmentOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type EventInvitationOrderByRelationAggregateInput = {
@@ -41564,6 +45756,11 @@ export namespace Prisma {
     _max?: NestedEnumOrgRoleFilter<$PrismaModel>
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type GroupListRelationFilter = {
     every?: GroupWhereInput
     some?: GroupWhereInput
@@ -41589,6 +45786,7 @@ export namespace Prisma {
     name?: SortOrder
     orgId?: SortOrder
     publicKey?: SortOrder
+    headId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -41598,6 +45796,7 @@ export namespace Prisma {
     name?: SortOrder
     orgId?: SortOrder
     publicKey?: SortOrder
+    headId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -41607,6 +45806,7 @@ export namespace Prisma {
     name?: SortOrder
     orgId?: SortOrder
     publicKey?: SortOrder
+    headId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -41797,11 +45997,6 @@ export namespace Prisma {
     _max?: NestedEnumFileTypeFilter<$PrismaModel>
   }
 
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
-  }
-
   export type NotificationCountOrderByAggregateInput = {
     id?: SortOrder
     content?: SortOrder
@@ -41951,6 +46146,42 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRequestStatusFilter<$PrismaModel>
     _max?: NestedEnumRequestStatusFilter<$PrismaModel>
+  }
+
+  export type PendingSubscriptionPaymentCountOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    userId?: SortOrder
+    plan?: SortOrder
+    name?: SortOrder
+    logo?: SortOrder
+    address?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PendingSubscriptionPaymentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    userId?: SortOrder
+    plan?: SortOrder
+    name?: SortOrder
+    logo?: SortOrder
+    address?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PendingSubscriptionPaymentMinOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    userId?: SortOrder
+    plan?: SortOrder
+    name?: SortOrder
+    logo?: SortOrder
+    address?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type EnumSubscriptionPlanFilter<$PrismaModel = never> = {
@@ -42342,6 +46573,32 @@ export namespace Prisma {
     parentId?: SortOrder
   }
 
+  export type PostReadUserIdPostIdCompoundUniqueInput = {
+    userId: string
+    postId: string
+  }
+
+  export type PostReadCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    postId?: SortOrder
+    readAt?: SortOrder
+  }
+
+  export type PostReadMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    postId?: SortOrder
+    readAt?: SortOrder
+  }
+
+  export type PostReadMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    postId?: SortOrder
+    readAt?: SortOrder
+  }
+
   export type EnumTaskStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
@@ -42515,6 +46772,42 @@ export namespace Prisma {
     size?: SortOrder
   }
 
+  export type DepartmentMonthlyReportDeptIdUserIdMonthCompoundUniqueInput = {
+    deptId: string
+    userId: string
+    month: string
+  }
+
+  export type DepartmentMonthlyReportCountOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    userId?: SortOrder
+    month?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentMonthlyReportMaxOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    userId?: SortOrder
+    month?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentMonthlyReportMinOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    userId?: SortOrder
+    month?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type PushSubscriptionCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -42607,6 +46900,13 @@ export namespace Prisma {
     connect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
   }
 
+  export type PostReadCreateNestedManyWithoutUserInput = {
+    create?: XOR<PostReadCreateWithoutUserInput, PostReadUncheckedCreateWithoutUserInput> | PostReadCreateWithoutUserInput[] | PostReadUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PostReadCreateOrConnectWithoutUserInput | PostReadCreateOrConnectWithoutUserInput[]
+    createMany?: PostReadCreateManyUserInputEnvelope
+    connect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+  }
+
   export type TaskCreateNestedManyWithoutAssigneeInput = {
     create?: XOR<TaskCreateWithoutAssigneeInput, TaskUncheckedCreateWithoutAssigneeInput> | TaskCreateWithoutAssigneeInput[] | TaskUncheckedCreateWithoutAssigneeInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutAssigneeInput | TaskCreateOrConnectWithoutAssigneeInput[]
@@ -42621,11 +46921,25 @@ export namespace Prisma {
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
+  export type DepartmentCreateNestedManyWithoutHeadInput = {
+    create?: XOR<DepartmentCreateWithoutHeadInput, DepartmentUncheckedCreateWithoutHeadInput> | DepartmentCreateWithoutHeadInput[] | DepartmentUncheckedCreateWithoutHeadInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutHeadInput | DepartmentCreateOrConnectWithoutHeadInput[]
+    createMany?: DepartmentCreateManyHeadInputEnvelope
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+  }
+
   export type TaskMessageCreateNestedManyWithoutSenderInput = {
     create?: XOR<TaskMessageCreateWithoutSenderInput, TaskMessageUncheckedCreateWithoutSenderInput> | TaskMessageCreateWithoutSenderInput[] | TaskMessageUncheckedCreateWithoutSenderInput[]
     connectOrCreate?: TaskMessageCreateOrConnectWithoutSenderInput | TaskMessageCreateOrConnectWithoutSenderInput[]
     createMany?: TaskMessageCreateManySenderInputEnvelope
     connect?: TaskMessageWhereUniqueInput | TaskMessageWhereUniqueInput[]
+  }
+
+  export type DepartmentMonthlyReportCreateNestedManyWithoutUserInput = {
+    create?: XOR<DepartmentMonthlyReportCreateWithoutUserInput, DepartmentMonthlyReportUncheckedCreateWithoutUserInput> | DepartmentMonthlyReportCreateWithoutUserInput[] | DepartmentMonthlyReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DepartmentMonthlyReportCreateOrConnectWithoutUserInput | DepartmentMonthlyReportCreateOrConnectWithoutUserInput[]
+    createMany?: DepartmentMonthlyReportCreateManyUserInputEnvelope
+    connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
   }
 
   export type PushSubscriptionCreateNestedManyWithoutUserInput = {
@@ -42718,6 +47032,13 @@ export namespace Prisma {
     connect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
   }
 
+  export type PostReadUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PostReadCreateWithoutUserInput, PostReadUncheckedCreateWithoutUserInput> | PostReadCreateWithoutUserInput[] | PostReadUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PostReadCreateOrConnectWithoutUserInput | PostReadCreateOrConnectWithoutUserInput[]
+    createMany?: PostReadCreateManyUserInputEnvelope
+    connect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+  }
+
   export type TaskUncheckedCreateNestedManyWithoutAssigneeInput = {
     create?: XOR<TaskCreateWithoutAssigneeInput, TaskUncheckedCreateWithoutAssigneeInput> | TaskCreateWithoutAssigneeInput[] | TaskUncheckedCreateWithoutAssigneeInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutAssigneeInput | TaskCreateOrConnectWithoutAssigneeInput[]
@@ -42732,11 +47053,25 @@ export namespace Prisma {
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
+  export type DepartmentUncheckedCreateNestedManyWithoutHeadInput = {
+    create?: XOR<DepartmentCreateWithoutHeadInput, DepartmentUncheckedCreateWithoutHeadInput> | DepartmentCreateWithoutHeadInput[] | DepartmentUncheckedCreateWithoutHeadInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutHeadInput | DepartmentCreateOrConnectWithoutHeadInput[]
+    createMany?: DepartmentCreateManyHeadInputEnvelope
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+  }
+
   export type TaskMessageUncheckedCreateNestedManyWithoutSenderInput = {
     create?: XOR<TaskMessageCreateWithoutSenderInput, TaskMessageUncheckedCreateWithoutSenderInput> | TaskMessageCreateWithoutSenderInput[] | TaskMessageUncheckedCreateWithoutSenderInput[]
     connectOrCreate?: TaskMessageCreateOrConnectWithoutSenderInput | TaskMessageCreateOrConnectWithoutSenderInput[]
     createMany?: TaskMessageCreateManySenderInputEnvelope
     connect?: TaskMessageWhereUniqueInput | TaskMessageWhereUniqueInput[]
+  }
+
+  export type DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<DepartmentMonthlyReportCreateWithoutUserInput, DepartmentMonthlyReportUncheckedCreateWithoutUserInput> | DepartmentMonthlyReportCreateWithoutUserInput[] | DepartmentMonthlyReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DepartmentMonthlyReportCreateOrConnectWithoutUserInput | DepartmentMonthlyReportCreateOrConnectWithoutUserInput[]
+    createMany?: DepartmentMonthlyReportCreateManyUserInputEnvelope
+    connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
   }
 
   export type PushSubscriptionUncheckedCreateNestedManyWithoutUserInput = {
@@ -42913,6 +47248,20 @@ export namespace Prisma {
     deleteMany?: CommentScalarWhereInput | CommentScalarWhereInput[]
   }
 
+  export type PostReadUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PostReadCreateWithoutUserInput, PostReadUncheckedCreateWithoutUserInput> | PostReadCreateWithoutUserInput[] | PostReadUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PostReadCreateOrConnectWithoutUserInput | PostReadCreateOrConnectWithoutUserInput[]
+    upsert?: PostReadUpsertWithWhereUniqueWithoutUserInput | PostReadUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PostReadCreateManyUserInputEnvelope
+    set?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    disconnect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    delete?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    connect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    update?: PostReadUpdateWithWhereUniqueWithoutUserInput | PostReadUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PostReadUpdateManyWithWhereWithoutUserInput | PostReadUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PostReadScalarWhereInput | PostReadScalarWhereInput[]
+  }
+
   export type TaskUpdateManyWithoutAssigneeNestedInput = {
     create?: XOR<TaskCreateWithoutAssigneeInput, TaskUncheckedCreateWithoutAssigneeInput> | TaskCreateWithoutAssigneeInput[] | TaskUncheckedCreateWithoutAssigneeInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutAssigneeInput | TaskCreateOrConnectWithoutAssigneeInput[]
@@ -42941,6 +47290,20 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
+  export type DepartmentUpdateManyWithoutHeadNestedInput = {
+    create?: XOR<DepartmentCreateWithoutHeadInput, DepartmentUncheckedCreateWithoutHeadInput> | DepartmentCreateWithoutHeadInput[] | DepartmentUncheckedCreateWithoutHeadInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutHeadInput | DepartmentCreateOrConnectWithoutHeadInput[]
+    upsert?: DepartmentUpsertWithWhereUniqueWithoutHeadInput | DepartmentUpsertWithWhereUniqueWithoutHeadInput[]
+    createMany?: DepartmentCreateManyHeadInputEnvelope
+    set?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    disconnect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    delete?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    update?: DepartmentUpdateWithWhereUniqueWithoutHeadInput | DepartmentUpdateWithWhereUniqueWithoutHeadInput[]
+    updateMany?: DepartmentUpdateManyWithWhereWithoutHeadInput | DepartmentUpdateManyWithWhereWithoutHeadInput[]
+    deleteMany?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+  }
+
   export type TaskMessageUpdateManyWithoutSenderNestedInput = {
     create?: XOR<TaskMessageCreateWithoutSenderInput, TaskMessageUncheckedCreateWithoutSenderInput> | TaskMessageCreateWithoutSenderInput[] | TaskMessageUncheckedCreateWithoutSenderInput[]
     connectOrCreate?: TaskMessageCreateOrConnectWithoutSenderInput | TaskMessageCreateOrConnectWithoutSenderInput[]
@@ -42953,6 +47316,20 @@ export namespace Prisma {
     update?: TaskMessageUpdateWithWhereUniqueWithoutSenderInput | TaskMessageUpdateWithWhereUniqueWithoutSenderInput[]
     updateMany?: TaskMessageUpdateManyWithWhereWithoutSenderInput | TaskMessageUpdateManyWithWhereWithoutSenderInput[]
     deleteMany?: TaskMessageScalarWhereInput | TaskMessageScalarWhereInput[]
+  }
+
+  export type DepartmentMonthlyReportUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DepartmentMonthlyReportCreateWithoutUserInput, DepartmentMonthlyReportUncheckedCreateWithoutUserInput> | DepartmentMonthlyReportCreateWithoutUserInput[] | DepartmentMonthlyReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DepartmentMonthlyReportCreateOrConnectWithoutUserInput | DepartmentMonthlyReportCreateOrConnectWithoutUserInput[]
+    upsert?: DepartmentMonthlyReportUpsertWithWhereUniqueWithoutUserInput | DepartmentMonthlyReportUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DepartmentMonthlyReportCreateManyUserInputEnvelope
+    set?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    disconnect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    delete?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    update?: DepartmentMonthlyReportUpdateWithWhereUniqueWithoutUserInput | DepartmentMonthlyReportUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DepartmentMonthlyReportUpdateManyWithWhereWithoutUserInput | DepartmentMonthlyReportUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DepartmentMonthlyReportScalarWhereInput | DepartmentMonthlyReportScalarWhereInput[]
   }
 
   export type PushSubscriptionUpdateManyWithoutUserNestedInput = {
@@ -43133,6 +47510,20 @@ export namespace Prisma {
     deleteMany?: CommentScalarWhereInput | CommentScalarWhereInput[]
   }
 
+  export type PostReadUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PostReadCreateWithoutUserInput, PostReadUncheckedCreateWithoutUserInput> | PostReadCreateWithoutUserInput[] | PostReadUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PostReadCreateOrConnectWithoutUserInput | PostReadCreateOrConnectWithoutUserInput[]
+    upsert?: PostReadUpsertWithWhereUniqueWithoutUserInput | PostReadUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PostReadCreateManyUserInputEnvelope
+    set?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    disconnect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    delete?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    connect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    update?: PostReadUpdateWithWhereUniqueWithoutUserInput | PostReadUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PostReadUpdateManyWithWhereWithoutUserInput | PostReadUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PostReadScalarWhereInput | PostReadScalarWhereInput[]
+  }
+
   export type TaskUncheckedUpdateManyWithoutAssigneeNestedInput = {
     create?: XOR<TaskCreateWithoutAssigneeInput, TaskUncheckedCreateWithoutAssigneeInput> | TaskCreateWithoutAssigneeInput[] | TaskUncheckedCreateWithoutAssigneeInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutAssigneeInput | TaskCreateOrConnectWithoutAssigneeInput[]
@@ -43161,6 +47552,20 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
+  export type DepartmentUncheckedUpdateManyWithoutHeadNestedInput = {
+    create?: XOR<DepartmentCreateWithoutHeadInput, DepartmentUncheckedCreateWithoutHeadInput> | DepartmentCreateWithoutHeadInput[] | DepartmentUncheckedCreateWithoutHeadInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutHeadInput | DepartmentCreateOrConnectWithoutHeadInput[]
+    upsert?: DepartmentUpsertWithWhereUniqueWithoutHeadInput | DepartmentUpsertWithWhereUniqueWithoutHeadInput[]
+    createMany?: DepartmentCreateManyHeadInputEnvelope
+    set?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    disconnect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    delete?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    update?: DepartmentUpdateWithWhereUniqueWithoutHeadInput | DepartmentUpdateWithWhereUniqueWithoutHeadInput[]
+    updateMany?: DepartmentUpdateManyWithWhereWithoutHeadInput | DepartmentUpdateManyWithWhereWithoutHeadInput[]
+    deleteMany?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+  }
+
   export type TaskMessageUncheckedUpdateManyWithoutSenderNestedInput = {
     create?: XOR<TaskMessageCreateWithoutSenderInput, TaskMessageUncheckedCreateWithoutSenderInput> | TaskMessageCreateWithoutSenderInput[] | TaskMessageUncheckedCreateWithoutSenderInput[]
     connectOrCreate?: TaskMessageCreateOrConnectWithoutSenderInput | TaskMessageCreateOrConnectWithoutSenderInput[]
@@ -43173,6 +47578,20 @@ export namespace Prisma {
     update?: TaskMessageUpdateWithWhereUniqueWithoutSenderInput | TaskMessageUpdateWithWhereUniqueWithoutSenderInput[]
     updateMany?: TaskMessageUpdateManyWithWhereWithoutSenderInput | TaskMessageUpdateManyWithWhereWithoutSenderInput[]
     deleteMany?: TaskMessageScalarWhereInput | TaskMessageScalarWhereInput[]
+  }
+
+  export type DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DepartmentMonthlyReportCreateWithoutUserInput, DepartmentMonthlyReportUncheckedCreateWithoutUserInput> | DepartmentMonthlyReportCreateWithoutUserInput[] | DepartmentMonthlyReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DepartmentMonthlyReportCreateOrConnectWithoutUserInput | DepartmentMonthlyReportCreateOrConnectWithoutUserInput[]
+    upsert?: DepartmentMonthlyReportUpsertWithWhereUniqueWithoutUserInput | DepartmentMonthlyReportUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DepartmentMonthlyReportCreateManyUserInputEnvelope
+    set?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    disconnect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    delete?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    update?: DepartmentMonthlyReportUpdateWithWhereUniqueWithoutUserInput | DepartmentMonthlyReportUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DepartmentMonthlyReportUpdateManyWithWhereWithoutUserInput | DepartmentMonthlyReportUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DepartmentMonthlyReportScalarWhereInput | DepartmentMonthlyReportScalarWhereInput[]
   }
 
   export type PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput = {
@@ -43541,6 +47960,12 @@ export namespace Prisma {
     connect?: OrganizationWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutHeadedDepartmentsInput = {
+    create?: XOR<UserCreateWithoutHeadedDepartmentsInput, UserUncheckedCreateWithoutHeadedDepartmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutHeadedDepartmentsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type DepartmentMemberCreateNestedManyWithoutDepartmentInput = {
     create?: XOR<DepartmentMemberCreateWithoutDepartmentInput, DepartmentMemberUncheckedCreateWithoutDepartmentInput> | DepartmentMemberCreateWithoutDepartmentInput[] | DepartmentMemberUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: DepartmentMemberCreateOrConnectWithoutDepartmentInput | DepartmentMemberCreateOrConnectWithoutDepartmentInput[]
@@ -43567,6 +47992,13 @@ export namespace Prisma {
     connectOrCreate?: EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput | EventDepartmentBroadcastCreateOrConnectWithoutDepartmentInput[]
     createMany?: EventDepartmentBroadcastCreateManyDepartmentInputEnvelope
     connect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
+  }
+
+  export type DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentMonthlyReportCreateWithoutDepartmentInput, DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput> | DepartmentMonthlyReportCreateWithoutDepartmentInput[] | DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput | DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentMonthlyReportCreateManyDepartmentInputEnvelope
+    connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
   }
 
   export type DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput = {
@@ -43597,12 +48029,29 @@ export namespace Prisma {
     connect?: EventDepartmentBroadcastWhereUniqueInput | EventDepartmentBroadcastWhereUniqueInput[]
   }
 
+  export type DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentMonthlyReportCreateWithoutDepartmentInput, DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput> | DepartmentMonthlyReportCreateWithoutDepartmentInput[] | DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput | DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentMonthlyReportCreateManyDepartmentInputEnvelope
+    connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+  }
+
   export type OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput = {
     create?: XOR<OrganizationCreateWithoutDepartmentsInput, OrganizationUncheckedCreateWithoutDepartmentsInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutDepartmentsInput
     upsert?: OrganizationUpsertWithoutDepartmentsInput
     connect?: OrganizationWhereUniqueInput
     update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutDepartmentsInput, OrganizationUpdateWithoutDepartmentsInput>, OrganizationUncheckedUpdateWithoutDepartmentsInput>
+  }
+
+  export type UserUpdateOneWithoutHeadedDepartmentsNestedInput = {
+    create?: XOR<UserCreateWithoutHeadedDepartmentsInput, UserUncheckedCreateWithoutHeadedDepartmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutHeadedDepartmentsInput
+    upsert?: UserUpsertWithoutHeadedDepartmentsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutHeadedDepartmentsInput, UserUpdateWithoutHeadedDepartmentsInput>, UserUncheckedUpdateWithoutHeadedDepartmentsInput>
   }
 
   export type DepartmentMemberUpdateManyWithoutDepartmentNestedInput = {
@@ -43661,6 +48110,20 @@ export namespace Prisma {
     deleteMany?: EventDepartmentBroadcastScalarWhereInput | EventDepartmentBroadcastScalarWhereInput[]
   }
 
+  export type DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentMonthlyReportCreateWithoutDepartmentInput, DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput> | DepartmentMonthlyReportCreateWithoutDepartmentInput[] | DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput | DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentMonthlyReportUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentMonthlyReportUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentMonthlyReportCreateManyDepartmentInputEnvelope
+    set?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    disconnect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    delete?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    update?: DepartmentMonthlyReportUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentMonthlyReportUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentMonthlyReportUpdateManyWithWhereWithoutDepartmentInput | DepartmentMonthlyReportUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentMonthlyReportScalarWhereInput | DepartmentMonthlyReportScalarWhereInput[]
+  }
+
   export type DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput = {
     create?: XOR<DepartmentMemberCreateWithoutDepartmentInput, DepartmentMemberUncheckedCreateWithoutDepartmentInput> | DepartmentMemberCreateWithoutDepartmentInput[] | DepartmentMemberUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: DepartmentMemberCreateOrConnectWithoutDepartmentInput | DepartmentMemberCreateOrConnectWithoutDepartmentInput[]
@@ -43715,6 +48178,20 @@ export namespace Prisma {
     update?: EventDepartmentBroadcastUpdateWithWhereUniqueWithoutDepartmentInput | EventDepartmentBroadcastUpdateWithWhereUniqueWithoutDepartmentInput[]
     updateMany?: EventDepartmentBroadcastUpdateManyWithWhereWithoutDepartmentInput | EventDepartmentBroadcastUpdateManyWithWhereWithoutDepartmentInput[]
     deleteMany?: EventDepartmentBroadcastScalarWhereInput | EventDepartmentBroadcastScalarWhereInput[]
+  }
+
+  export type DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentMonthlyReportCreateWithoutDepartmentInput, DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput> | DepartmentMonthlyReportCreateWithoutDepartmentInput[] | DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput | DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentMonthlyReportUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentMonthlyReportUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentMonthlyReportCreateManyDepartmentInputEnvelope
+    set?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    disconnect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    delete?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+    update?: DepartmentMonthlyReportUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentMonthlyReportUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentMonthlyReportUpdateManyWithWhereWithoutDepartmentInput | DepartmentMonthlyReportUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentMonthlyReportScalarWhereInput | DepartmentMonthlyReportScalarWhereInput[]
   }
 
   export type DepartmentCreateNestedOneWithoutMembersInput = {
@@ -44297,6 +48774,13 @@ export namespace Prisma {
     connect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
   }
 
+  export type PostReadCreateNestedManyWithoutPostInput = {
+    create?: XOR<PostReadCreateWithoutPostInput, PostReadUncheckedCreateWithoutPostInput> | PostReadCreateWithoutPostInput[] | PostReadUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: PostReadCreateOrConnectWithoutPostInput | PostReadCreateOrConnectWithoutPostInput[]
+    createMany?: PostReadCreateManyPostInputEnvelope
+    connect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+  }
+
   export type LikeUncheckedCreateNestedManyWithoutPostInput = {
     create?: XOR<LikeCreateWithoutPostInput, LikeUncheckedCreateWithoutPostInput> | LikeCreateWithoutPostInput[] | LikeUncheckedCreateWithoutPostInput[]
     connectOrCreate?: LikeCreateOrConnectWithoutPostInput | LikeCreateOrConnectWithoutPostInput[]
@@ -44309,6 +48793,13 @@ export namespace Prisma {
     connectOrCreate?: CommentCreateOrConnectWithoutPostInput | CommentCreateOrConnectWithoutPostInput[]
     createMany?: CommentCreateManyPostInputEnvelope
     connect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
+  }
+
+  export type PostReadUncheckedCreateNestedManyWithoutPostInput = {
+    create?: XOR<PostReadCreateWithoutPostInput, PostReadUncheckedCreateWithoutPostInput> | PostReadCreateWithoutPostInput[] | PostReadUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: PostReadCreateOrConnectWithoutPostInput | PostReadCreateOrConnectWithoutPostInput[]
+    createMany?: PostReadCreateManyPostInputEnvelope
+    connect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
   }
 
   export type EnumPostTypeFieldUpdateOperationsInput = {
@@ -44351,6 +48842,20 @@ export namespace Prisma {
     deleteMany?: CommentScalarWhereInput | CommentScalarWhereInput[]
   }
 
+  export type PostReadUpdateManyWithoutPostNestedInput = {
+    create?: XOR<PostReadCreateWithoutPostInput, PostReadUncheckedCreateWithoutPostInput> | PostReadCreateWithoutPostInput[] | PostReadUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: PostReadCreateOrConnectWithoutPostInput | PostReadCreateOrConnectWithoutPostInput[]
+    upsert?: PostReadUpsertWithWhereUniqueWithoutPostInput | PostReadUpsertWithWhereUniqueWithoutPostInput[]
+    createMany?: PostReadCreateManyPostInputEnvelope
+    set?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    disconnect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    delete?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    connect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    update?: PostReadUpdateWithWhereUniqueWithoutPostInput | PostReadUpdateWithWhereUniqueWithoutPostInput[]
+    updateMany?: PostReadUpdateManyWithWhereWithoutPostInput | PostReadUpdateManyWithWhereWithoutPostInput[]
+    deleteMany?: PostReadScalarWhereInput | PostReadScalarWhereInput[]
+  }
+
   export type LikeUncheckedUpdateManyWithoutPostNestedInput = {
     create?: XOR<LikeCreateWithoutPostInput, LikeUncheckedCreateWithoutPostInput> | LikeCreateWithoutPostInput[] | LikeUncheckedCreateWithoutPostInput[]
     connectOrCreate?: LikeCreateOrConnectWithoutPostInput | LikeCreateOrConnectWithoutPostInput[]
@@ -44377,6 +48882,20 @@ export namespace Prisma {
     update?: CommentUpdateWithWhereUniqueWithoutPostInput | CommentUpdateWithWhereUniqueWithoutPostInput[]
     updateMany?: CommentUpdateManyWithWhereWithoutPostInput | CommentUpdateManyWithWhereWithoutPostInput[]
     deleteMany?: CommentScalarWhereInput | CommentScalarWhereInput[]
+  }
+
+  export type PostReadUncheckedUpdateManyWithoutPostNestedInput = {
+    create?: XOR<PostReadCreateWithoutPostInput, PostReadUncheckedCreateWithoutPostInput> | PostReadCreateWithoutPostInput[] | PostReadUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: PostReadCreateOrConnectWithoutPostInput | PostReadCreateOrConnectWithoutPostInput[]
+    upsert?: PostReadUpsertWithWhereUniqueWithoutPostInput | PostReadUpsertWithWhereUniqueWithoutPostInput[]
+    createMany?: PostReadCreateManyPostInputEnvelope
+    set?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    disconnect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    delete?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    connect?: PostReadWhereUniqueInput | PostReadWhereUniqueInput[]
+    update?: PostReadUpdateWithWhereUniqueWithoutPostInput | PostReadUpdateWithWhereUniqueWithoutPostInput[]
+    updateMany?: PostReadUpdateManyWithWhereWithoutPostInput | PostReadUpdateManyWithWhereWithoutPostInput[]
+    deleteMany?: PostReadScalarWhereInput | PostReadScalarWhereInput[]
   }
 
   export type PostCreateNestedOneWithoutLikesInput = {
@@ -44491,6 +49010,34 @@ export namespace Prisma {
     update?: CommentUpdateWithWhereUniqueWithoutParentInput | CommentUpdateWithWhereUniqueWithoutParentInput[]
     updateMany?: CommentUpdateManyWithWhereWithoutParentInput | CommentUpdateManyWithWhereWithoutParentInput[]
     deleteMany?: CommentScalarWhereInput | CommentScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutPostReadsInput = {
+    create?: XOR<UserCreateWithoutPostReadsInput, UserUncheckedCreateWithoutPostReadsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPostReadsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type PostCreateNestedOneWithoutPostReadsInput = {
+    create?: XOR<PostCreateWithoutPostReadsInput, PostUncheckedCreateWithoutPostReadsInput>
+    connectOrCreate?: PostCreateOrConnectWithoutPostReadsInput
+    connect?: PostWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutPostReadsNestedInput = {
+    create?: XOR<UserCreateWithoutPostReadsInput, UserUncheckedCreateWithoutPostReadsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPostReadsInput
+    upsert?: UserUpsertWithoutPostReadsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPostReadsInput, UserUpdateWithoutPostReadsInput>, UserUncheckedUpdateWithoutPostReadsInput>
+  }
+
+  export type PostUpdateOneRequiredWithoutPostReadsNestedInput = {
+    create?: XOR<PostCreateWithoutPostReadsInput, PostUncheckedCreateWithoutPostReadsInput>
+    connectOrCreate?: PostCreateOrConnectWithoutPostReadsInput
+    upsert?: PostUpsertWithoutPostReadsInput
+    connect?: PostWhereUniqueInput
+    update?: XOR<XOR<PostUpdateToOneWithWhereWithoutPostReadsInput, PostUpdateWithoutPostReadsInput>, PostUncheckedUpdateWithoutPostReadsInput>
   }
 
   export type DepartmentCreateNestedOneWithoutTasksInput = {
@@ -44725,6 +49272,34 @@ export namespace Prisma {
     delete?: TaskMessageWhereInput | boolean
     connect?: TaskMessageWhereUniqueInput
     update?: XOR<XOR<TaskMessageUpdateToOneWithWhereWithoutAttachmentsInput, TaskMessageUpdateWithoutAttachmentsInput>, TaskMessageUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type DepartmentCreateNestedOneWithoutMonthlyReportsInput = {
+    create?: XOR<DepartmentCreateWithoutMonthlyReportsInput, DepartmentUncheckedCreateWithoutMonthlyReportsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutMonthlyReportsInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutDepartmentMonthlyReportsInput = {
+    create?: XOR<UserCreateWithoutDepartmentMonthlyReportsInput, UserUncheckedCreateWithoutDepartmentMonthlyReportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDepartmentMonthlyReportsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type DepartmentUpdateOneRequiredWithoutMonthlyReportsNestedInput = {
+    create?: XOR<DepartmentCreateWithoutMonthlyReportsInput, DepartmentUncheckedCreateWithoutMonthlyReportsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutMonthlyReportsInput
+    upsert?: DepartmentUpsertWithoutMonthlyReportsInput
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutMonthlyReportsInput, DepartmentUpdateWithoutMonthlyReportsInput>, DepartmentUncheckedUpdateWithoutMonthlyReportsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutDepartmentMonthlyReportsNestedInput = {
+    create?: XOR<UserCreateWithoutDepartmentMonthlyReportsInput, UserUncheckedCreateWithoutDepartmentMonthlyReportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDepartmentMonthlyReportsInput
+    upsert?: UserUpsertWithoutDepartmentMonthlyReportsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDepartmentMonthlyReportsInput, UserUpdateWithoutDepartmentMonthlyReportsInput>, UserUncheckedUpdateWithoutDepartmentMonthlyReportsInput>
   }
 
   export type UserCreateNestedOneWithoutPushSubscriptionsInput = {
@@ -45383,6 +49958,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PostReadCreateWithoutUserInput = {
+    id?: string
+    readAt?: Date | string
+    post: PostCreateNestedOneWithoutPostReadsInput
+  }
+
+  export type PostReadUncheckedCreateWithoutUserInput = {
+    id?: string
+    postId: string
+    readAt?: Date | string
+  }
+
+  export type PostReadCreateOrConnectWithoutUserInput = {
+    where: PostReadWhereUniqueInput
+    create: XOR<PostReadCreateWithoutUserInput, PostReadUncheckedCreateWithoutUserInput>
+  }
+
+  export type PostReadCreateManyUserInputEnvelope = {
+    data: PostReadCreateManyUserInput | PostReadCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TaskCreateWithoutAssigneeInput = {
     id?: string
     title: string
@@ -45471,6 +50068,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DepartmentCreateWithoutHeadInput = {
+    id?: string
+    name: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutHeadInput = {
+    id?: string
+    name: string
+    orgId: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutHeadInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutHeadInput, DepartmentUncheckedCreateWithoutHeadInput>
+  }
+
+  export type DepartmentCreateManyHeadInputEnvelope = {
+    data: DepartmentCreateManyHeadInput | DepartmentCreateManyHeadInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TaskMessageCreateWithoutSenderInput = {
     id?: string
     content: string
@@ -45496,6 +50131,34 @@ export namespace Prisma {
 
   export type TaskMessageCreateManySenderInputEnvelope = {
     data: TaskMessageCreateManySenderInput | TaskMessageCreateManySenderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentMonthlyReportCreateWithoutUserInput = {
+    id?: string
+    month: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutMonthlyReportsInput
+  }
+
+  export type DepartmentMonthlyReportUncheckedCreateWithoutUserInput = {
+    id?: string
+    deptId: string
+    month: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentMonthlyReportCreateOrConnectWithoutUserInput = {
+    where: DepartmentMonthlyReportWhereUniqueInput
+    create: XOR<DepartmentMonthlyReportCreateWithoutUserInput, DepartmentMonthlyReportUncheckedCreateWithoutUserInput>
+  }
+
+  export type DepartmentMonthlyReportCreateManyUserInputEnvelope = {
+    data: DepartmentMonthlyReportCreateManyUserInput | DepartmentMonthlyReportCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -45863,6 +50526,32 @@ export namespace Prisma {
     parentId?: StringNullableFilter<"Comment"> | string | null
   }
 
+  export type PostReadUpsertWithWhereUniqueWithoutUserInput = {
+    where: PostReadWhereUniqueInput
+    update: XOR<PostReadUpdateWithoutUserInput, PostReadUncheckedUpdateWithoutUserInput>
+    create: XOR<PostReadCreateWithoutUserInput, PostReadUncheckedCreateWithoutUserInput>
+  }
+
+  export type PostReadUpdateWithWhereUniqueWithoutUserInput = {
+    where: PostReadWhereUniqueInput
+    data: XOR<PostReadUpdateWithoutUserInput, PostReadUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PostReadUpdateManyWithWhereWithoutUserInput = {
+    where: PostReadScalarWhereInput
+    data: XOR<PostReadUpdateManyMutationInput, PostReadUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PostReadScalarWhereInput = {
+    AND?: PostReadScalarWhereInput | PostReadScalarWhereInput[]
+    OR?: PostReadScalarWhereInput[]
+    NOT?: PostReadScalarWhereInput | PostReadScalarWhereInput[]
+    id?: StringFilter<"PostRead"> | string
+    userId?: StringFilter<"PostRead"> | string
+    postId?: StringFilter<"PostRead"> | string
+    readAt?: DateTimeFilter<"PostRead"> | Date | string
+  }
+
   export type TaskUpsertWithWhereUniqueWithoutAssigneeInput = {
     where: TaskWhereUniqueInput
     update: XOR<TaskUpdateWithoutAssigneeInput, TaskUncheckedUpdateWithoutAssigneeInput>
@@ -45914,6 +50603,35 @@ export namespace Prisma {
     data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutCreatorInput>
   }
 
+  export type DepartmentUpsertWithWhereUniqueWithoutHeadInput = {
+    where: DepartmentWhereUniqueInput
+    update: XOR<DepartmentUpdateWithoutHeadInput, DepartmentUncheckedUpdateWithoutHeadInput>
+    create: XOR<DepartmentCreateWithoutHeadInput, DepartmentUncheckedCreateWithoutHeadInput>
+  }
+
+  export type DepartmentUpdateWithWhereUniqueWithoutHeadInput = {
+    where: DepartmentWhereUniqueInput
+    data: XOR<DepartmentUpdateWithoutHeadInput, DepartmentUncheckedUpdateWithoutHeadInput>
+  }
+
+  export type DepartmentUpdateManyWithWhereWithoutHeadInput = {
+    where: DepartmentScalarWhereInput
+    data: XOR<DepartmentUpdateManyMutationInput, DepartmentUncheckedUpdateManyWithoutHeadInput>
+  }
+
+  export type DepartmentScalarWhereInput = {
+    AND?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+    OR?: DepartmentScalarWhereInput[]
+    NOT?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+    id?: StringFilter<"Department"> | string
+    name?: StringFilter<"Department"> | string
+    orgId?: StringFilter<"Department"> | string
+    publicKey?: StringFilter<"Department"> | string
+    headId?: StringNullableFilter<"Department"> | string | null
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
+  }
+
   export type TaskMessageUpsertWithWhereUniqueWithoutSenderInput = {
     where: TaskMessageWhereUniqueInput
     update: XOR<TaskMessageUpdateWithoutSenderInput, TaskMessageUncheckedUpdateWithoutSenderInput>
@@ -45940,6 +50658,35 @@ export namespace Prisma {
     content?: StringFilter<"TaskMessage"> | string
     createdAt?: DateTimeFilter<"TaskMessage"> | Date | string
     updatedAt?: DateTimeFilter<"TaskMessage"> | Date | string
+  }
+
+  export type DepartmentMonthlyReportUpsertWithWhereUniqueWithoutUserInput = {
+    where: DepartmentMonthlyReportWhereUniqueInput
+    update: XOR<DepartmentMonthlyReportUpdateWithoutUserInput, DepartmentMonthlyReportUncheckedUpdateWithoutUserInput>
+    create: XOR<DepartmentMonthlyReportCreateWithoutUserInput, DepartmentMonthlyReportUncheckedCreateWithoutUserInput>
+  }
+
+  export type DepartmentMonthlyReportUpdateWithWhereUniqueWithoutUserInput = {
+    where: DepartmentMonthlyReportWhereUniqueInput
+    data: XOR<DepartmentMonthlyReportUpdateWithoutUserInput, DepartmentMonthlyReportUncheckedUpdateWithoutUserInput>
+  }
+
+  export type DepartmentMonthlyReportUpdateManyWithWhereWithoutUserInput = {
+    where: DepartmentMonthlyReportScalarWhereInput
+    data: XOR<DepartmentMonthlyReportUpdateManyMutationInput, DepartmentMonthlyReportUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type DepartmentMonthlyReportScalarWhereInput = {
+    AND?: DepartmentMonthlyReportScalarWhereInput | DepartmentMonthlyReportScalarWhereInput[]
+    OR?: DepartmentMonthlyReportScalarWhereInput[]
+    NOT?: DepartmentMonthlyReportScalarWhereInput | DepartmentMonthlyReportScalarWhereInput[]
+    id?: StringFilter<"DepartmentMonthlyReport"> | string
+    deptId?: StringFilter<"DepartmentMonthlyReport"> | string
+    userId?: StringFilter<"DepartmentMonthlyReport"> | string
+    month?: StringFilter<"DepartmentMonthlyReport"> | string
+    content?: StringFilter<"DepartmentMonthlyReport"> | string
+    createdAt?: DateTimeFilter<"DepartmentMonthlyReport"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentMonthlyReport"> | Date | string
   }
 
   export type PushSubscriptionUpsertWithWhereUniqueWithoutUserInput = {
@@ -46082,9 +50829,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
@@ -46124,9 +50874,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
@@ -46206,9 +50959,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
@@ -46248,9 +51004,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
@@ -46397,9 +51156,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -46439,9 +51201,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -46486,9 +51251,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     following?: FollowCreateNestedManyWithoutFollowerInput
@@ -46528,9 +51296,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
@@ -46586,9 +51357,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -46628,9 +51402,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -46681,9 +51458,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
@@ -46723,9 +51503,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
@@ -46737,22 +51520,26 @@ export namespace Prisma {
     publicKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
     members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutOrganizationInput = {
     id?: string
     name: string
     publicKey: string
+    headId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutOrganizationInput = {
@@ -46874,18 +51661,6 @@ export namespace Prisma {
   export type DepartmentUpdateManyWithWhereWithoutOrganizationInput = {
     where: DepartmentScalarWhereInput
     data: XOR<DepartmentUpdateManyMutationInput, DepartmentUncheckedUpdateManyWithoutOrganizationInput>
-  }
-
-  export type DepartmentScalarWhereInput = {
-    AND?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
-    OR?: DepartmentScalarWhereInput[]
-    NOT?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
-    id?: StringFilter<"Department"> | string
-    name?: StringFilter<"Department"> | string
-    orgId?: StringFilter<"Department"> | string
-    publicKey?: StringFilter<"Department"> | string
-    createdAt?: DateTimeFilter<"Department"> | Date | string
-    updatedAt?: DateTimeFilter<"Department"> | Date | string
   }
 
   export type OrganizationMemberUpsertWithWhereUniqueWithoutOrganizationInput = {
@@ -47041,9 +51816,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -47083,9 +51861,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -47182,9 +51963,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -47224,9 +52008,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -47266,6 +52053,101 @@ export namespace Prisma {
   export type OrganizationCreateOrConnectWithoutDepartmentsInput = {
     where: OrganizationWhereUniqueInput
     create: XOR<OrganizationCreateWithoutDepartmentsInput, OrganizationUncheckedCreateWithoutDepartmentsInput>
+  }
+
+  export type UserCreateWithoutHeadedDepartmentsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutHeadedDepartmentsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutHeadedDepartmentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutHeadedDepartmentsInput, UserUncheckedCreateWithoutHeadedDepartmentsInput>
   }
 
   export type DepartmentMemberCreateWithoutDepartmentInput = {
@@ -47386,6 +52268,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DepartmentMonthlyReportCreateWithoutDepartmentInput = {
+    id?: string
+    month: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutDepartmentMonthlyReportsInput
+  }
+
+  export type DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput = {
+    id?: string
+    userId: string
+    month: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput = {
+    where: DepartmentMonthlyReportWhereUniqueInput
+    create: XOR<DepartmentMonthlyReportCreateWithoutDepartmentInput, DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentMonthlyReportCreateManyDepartmentInputEnvelope = {
+    data: DepartmentMonthlyReportCreateManyDepartmentInput | DepartmentMonthlyReportCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutDepartmentsInput = {
     update: XOR<OrganizationUpdateWithoutDepartmentsInput, OrganizationUncheckedUpdateWithoutDepartmentsInput>
     create: XOR<OrganizationCreateWithoutDepartmentsInput, OrganizationUncheckedCreateWithoutDepartmentsInput>
@@ -47425,6 +52335,107 @@ export namespace Prisma {
     members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
     events?: EventInvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type UserUpsertWithoutHeadedDepartmentsInput = {
+    update: XOR<UserUpdateWithoutHeadedDepartmentsInput, UserUncheckedUpdateWithoutHeadedDepartmentsInput>
+    create: XOR<UserCreateWithoutHeadedDepartmentsInput, UserUncheckedCreateWithoutHeadedDepartmentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutHeadedDepartmentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutHeadedDepartmentsInput, UserUncheckedUpdateWithoutHeadedDepartmentsInput>
+  }
+
+  export type UserUpdateWithoutHeadedDepartmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutHeadedDepartmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
 
   export type DepartmentMemberUpsertWithWhereUniqueWithoutDepartmentInput = {
@@ -47513,6 +52524,22 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"EventDepartmentBroadcast"> | Date | string
   }
 
+  export type DepartmentMonthlyReportUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentMonthlyReportWhereUniqueInput
+    update: XOR<DepartmentMonthlyReportUpdateWithoutDepartmentInput, DepartmentMonthlyReportUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<DepartmentMonthlyReportCreateWithoutDepartmentInput, DepartmentMonthlyReportUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentMonthlyReportUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentMonthlyReportWhereUniqueInput
+    data: XOR<DepartmentMonthlyReportUpdateWithoutDepartmentInput, DepartmentMonthlyReportUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type DepartmentMonthlyReportUpdateManyWithWhereWithoutDepartmentInput = {
+    where: DepartmentMonthlyReportScalarWhereInput
+    data: XOR<DepartmentMonthlyReportUpdateManyMutationInput, DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
   export type DepartmentCreateWithoutMembersInput = {
     id?: string
     name: string
@@ -47520,9 +52547,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutMembersInput = {
@@ -47530,11 +52559,13 @@ export namespace Prisma {
     name: string
     orgId: string
     publicKey: string
+    headId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutMembersInput = {
@@ -47575,9 +52606,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -47617,9 +52651,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -47649,9 +52686,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutMembersInput = {
@@ -47659,11 +52698,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     orgId?: StringFieldUpdateOperationsInput | string
     publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutDeptMembershipsInput = {
@@ -47710,9 +52751,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -47752,9 +52796,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -47768,9 +52815,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
     members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutConversationsInput = {
@@ -47778,11 +52827,13 @@ export namespace Prisma {
     name: string
     orgId: string
     publicKey: string
+    headId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutConversationsInput = {
@@ -47862,9 +52913,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
     members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutConversationsInput = {
@@ -47872,11 +52925,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     orgId?: StringFieldUpdateOperationsInput | string
     publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type GroupMemberUpsertWithWhereUniqueWithoutGroupInput = {
@@ -47969,9 +53024,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -48011,9 +53069,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -48100,9 +53161,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -48142,9 +53206,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -48235,9 +53302,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -48277,9 +53347,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -48394,9 +53467,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -48436,9 +53512,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -48534,9 +53613,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -48576,9 +53658,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -48634,9 +53719,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -48676,9 +53764,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -48718,9 +53809,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -48760,9 +53854,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -48840,9 +53937,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -48882,9 +53982,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -49258,9 +54361,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
     members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutEventBroadcastsInput = {
@@ -49268,11 +54373,13 @@ export namespace Prisma {
     name: string
     orgId: string
     publicKey: string
+    headId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutEventBroadcastsInput = {
@@ -49341,9 +54448,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
     members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutEventBroadcastsInput = {
@@ -49351,11 +54460,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     orgId?: StringFieldUpdateOperationsInput | string
     publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type EventInvitationCreateWithoutRsvpsInput = {
@@ -49471,9 +54582,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -49513,9 +54627,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -49538,6 +54655,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     likes?: LikeCreateNestedManyWithoutPostInput
     comments?: CommentCreateNestedManyWithoutPostInput
+    postReads?: PostReadCreateNestedManyWithoutPostInput
   }
 
   export type PostUncheckedCreateWithoutPageInput = {
@@ -49551,6 +54669,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     likes?: LikeUncheckedCreateNestedManyWithoutPostInput
     comments?: CommentUncheckedCreateNestedManyWithoutPostInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutPostInput
   }
 
   export type PostCreateOrConnectWithoutPageInput = {
@@ -49607,9 +54726,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -49649,9 +54771,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -49764,6 +54889,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PostReadCreateWithoutPostInput = {
+    id?: string
+    readAt?: Date | string
+    user: UserCreateNestedOneWithoutPostReadsInput
+  }
+
+  export type PostReadUncheckedCreateWithoutPostInput = {
+    id?: string
+    userId: string
+    readAt?: Date | string
+  }
+
+  export type PostReadCreateOrConnectWithoutPostInput = {
+    where: PostReadWhereUniqueInput
+    create: XOR<PostReadCreateWithoutPostInput, PostReadUncheckedCreateWithoutPostInput>
+  }
+
+  export type PostReadCreateManyPostInputEnvelope = {
+    data: PostReadCreateManyPostInput | PostReadCreateManyPostInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserPageUpsertWithoutPostsInput = {
     update: XOR<UserPageUpdateWithoutPostsInput, UserPageUncheckedUpdateWithoutPostsInput>
     create: XOR<UserPageCreateWithoutPostsInput, UserPageUncheckedCreateWithoutPostsInput>
@@ -49825,6 +54972,22 @@ export namespace Prisma {
     data: XOR<CommentUpdateManyMutationInput, CommentUncheckedUpdateManyWithoutPostInput>
   }
 
+  export type PostReadUpsertWithWhereUniqueWithoutPostInput = {
+    where: PostReadWhereUniqueInput
+    update: XOR<PostReadUpdateWithoutPostInput, PostReadUncheckedUpdateWithoutPostInput>
+    create: XOR<PostReadCreateWithoutPostInput, PostReadUncheckedCreateWithoutPostInput>
+  }
+
+  export type PostReadUpdateWithWhereUniqueWithoutPostInput = {
+    where: PostReadWhereUniqueInput
+    data: XOR<PostReadUpdateWithoutPostInput, PostReadUncheckedUpdateWithoutPostInput>
+  }
+
+  export type PostReadUpdateManyWithWhereWithoutPostInput = {
+    where: PostReadScalarWhereInput
+    data: XOR<PostReadUpdateManyMutationInput, PostReadUncheckedUpdateManyWithoutPostInput>
+  }
+
   export type PostCreateWithoutLikesInput = {
     id?: string
     type: $Enums.PostType
@@ -49836,6 +54999,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     page: UserPageCreateNestedOneWithoutPostsInput
     comments?: CommentCreateNestedManyWithoutPostInput
+    postReads?: PostReadCreateNestedManyWithoutPostInput
   }
 
   export type PostUncheckedCreateWithoutLikesInput = {
@@ -49849,6 +55013,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     comments?: CommentUncheckedCreateNestedManyWithoutPostInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutPostInput
   }
 
   export type PostCreateOrConnectWithoutLikesInput = {
@@ -49889,9 +55054,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
     userPage?: UserPageCreateNestedOneWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -49931,9 +55099,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -49967,6 +55138,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     page?: UserPageUpdateOneRequiredWithoutPostsNestedInput
     comments?: CommentUpdateManyWithoutPostNestedInput
+    postReads?: PostReadUpdateManyWithoutPostNestedInput
   }
 
   export type PostUncheckedUpdateWithoutLikesInput = {
@@ -49980,6 +55152,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUncheckedUpdateManyWithoutPostNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type UserUpsertWithoutLikesInput = {
@@ -50026,9 +55199,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -50068,9 +55244,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -50088,6 +55267,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     page: UserPageCreateNestedOneWithoutPostsInput
     likes?: LikeCreateNestedManyWithoutPostInput
+    postReads?: PostReadCreateNestedManyWithoutPostInput
   }
 
   export type PostUncheckedCreateWithoutCommentsInput = {
@@ -50101,6 +55281,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     likes?: LikeUncheckedCreateNestedManyWithoutPostInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutPostInput
   }
 
   export type PostCreateOrConnectWithoutCommentsInput = {
@@ -50141,9 +55322,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -50183,9 +55367,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -50274,6 +55461,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     page?: UserPageUpdateOneRequiredWithoutPostsNestedInput
     likes?: LikeUpdateManyWithoutPostNestedInput
+    postReads?: PostReadUpdateManyWithoutPostNestedInput
   }
 
   export type PostUncheckedUpdateWithoutCommentsInput = {
@@ -50287,6 +55475,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     likes?: LikeUncheckedUpdateManyWithoutPostNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type UserUpsertWithoutCommentsInput = {
@@ -50333,9 +55522,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -50375,9 +55567,12 @@ export namespace Prisma {
     orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -50431,6 +55626,274 @@ export namespace Prisma {
     data: XOR<CommentUpdateManyMutationInput, CommentUncheckedUpdateManyWithoutParentInput>
   }
 
+  export type UserCreateWithoutPostReadsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutPostReadsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutPostReadsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPostReadsInput, UserUncheckedCreateWithoutPostReadsInput>
+  }
+
+  export type PostCreateWithoutPostReadsInput = {
+    id?: string
+    type: $Enums.PostType
+    content: string
+    imageUrl?: string | null
+    caption?: string | null
+    reference?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    page: UserPageCreateNestedOneWithoutPostsInput
+    likes?: LikeCreateNestedManyWithoutPostInput
+    comments?: CommentCreateNestedManyWithoutPostInput
+  }
+
+  export type PostUncheckedCreateWithoutPostReadsInput = {
+    id?: string
+    pageId: string
+    type: $Enums.PostType
+    content: string
+    imageUrl?: string | null
+    caption?: string | null
+    reference?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    likes?: LikeUncheckedCreateNestedManyWithoutPostInput
+    comments?: CommentUncheckedCreateNestedManyWithoutPostInput
+  }
+
+  export type PostCreateOrConnectWithoutPostReadsInput = {
+    where: PostWhereUniqueInput
+    create: XOR<PostCreateWithoutPostReadsInput, PostUncheckedCreateWithoutPostReadsInput>
+  }
+
+  export type UserUpsertWithoutPostReadsInput = {
+    update: XOR<UserUpdateWithoutPostReadsInput, UserUncheckedUpdateWithoutPostReadsInput>
+    create: XOR<UserCreateWithoutPostReadsInput, UserUncheckedCreateWithoutPostReadsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPostReadsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPostReadsInput, UserUncheckedUpdateWithoutPostReadsInput>
+  }
+
+  export type UserUpdateWithoutPostReadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPostReadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type PostUpsertWithoutPostReadsInput = {
+    update: XOR<PostUpdateWithoutPostReadsInput, PostUncheckedUpdateWithoutPostReadsInput>
+    create: XOR<PostCreateWithoutPostReadsInput, PostUncheckedCreateWithoutPostReadsInput>
+    where?: PostWhereInput
+  }
+
+  export type PostUpdateToOneWithWhereWithoutPostReadsInput = {
+    where?: PostWhereInput
+    data: XOR<PostUpdateWithoutPostReadsInput, PostUncheckedUpdateWithoutPostReadsInput>
+  }
+
+  export type PostUpdateWithoutPostReadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumPostTypeFieldUpdateOperationsInput | $Enums.PostType
+    content?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    page?: UserPageUpdateOneRequiredWithoutPostsNestedInput
+    likes?: LikeUpdateManyWithoutPostNestedInput
+    comments?: CommentUpdateManyWithoutPostNestedInput
+  }
+
+  export type PostUncheckedUpdateWithoutPostReadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pageId?: StringFieldUpdateOperationsInput | string
+    type?: EnumPostTypeFieldUpdateOperationsInput | $Enums.PostType
+    content?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: LikeUncheckedUpdateManyWithoutPostNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutPostNestedInput
+  }
+
   export type DepartmentCreateWithoutTasksInput = {
     id?: string
     name: string
@@ -50438,9 +55901,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
     members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutTasksInput = {
@@ -50448,11 +55913,13 @@ export namespace Prisma {
     name: string
     orgId: string
     publicKey: string
+    headId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutTasksInput = {
@@ -50494,8 +55961,11 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -50536,8 +56006,11 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -50583,8 +56056,11 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -50625,8 +56101,11 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -50716,9 +56195,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
     members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutTasksInput = {
@@ -50726,11 +56207,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     orgId?: StringFieldUpdateOperationsInput | string
     publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedTasksInput = {
@@ -50778,8 +56261,11 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -50820,8 +56306,11 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -50873,8 +56362,11 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -50915,8 +56407,11 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -51043,8 +56538,11 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -51085,8 +56583,11 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -51220,8 +56721,11 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -51262,8 +56766,11 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -51422,6 +56929,274 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DepartmentCreateWithoutMonthlyReportsInput = {
+    id?: string
+    name: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
+    members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutMonthlyReportsInput = {
+    id?: string
+    name: string
+    orgId: string
+    publicKey: string
+    headId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutMonthlyReportsInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutMonthlyReportsInput, DepartmentUncheckedCreateWithoutMonthlyReportsInput>
+  }
+
+  export type UserCreateWithoutDepartmentMonthlyReportsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutDepartmentMonthlyReportsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutDepartmentMonthlyReportsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDepartmentMonthlyReportsInput, UserUncheckedCreateWithoutDepartmentMonthlyReportsInput>
+  }
+
+  export type DepartmentUpsertWithoutMonthlyReportsInput = {
+    update: XOR<DepartmentUpdateWithoutMonthlyReportsInput, DepartmentUncheckedUpdateWithoutMonthlyReportsInput>
+    create: XOR<DepartmentCreateWithoutMonthlyReportsInput, DepartmentUncheckedCreateWithoutMonthlyReportsInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutMonthlyReportsInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutMonthlyReportsInput, DepartmentUncheckedUpdateWithoutMonthlyReportsInput>
+  }
+
+  export type DepartmentUpdateWithoutMonthlyReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
+    members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutMonthlyReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type UserUpsertWithoutDepartmentMonthlyReportsInput = {
+    update: XOR<UserUpdateWithoutDepartmentMonthlyReportsInput, UserUncheckedUpdateWithoutDepartmentMonthlyReportsInput>
+    create: XOR<UserCreateWithoutDepartmentMonthlyReportsInput, UserUncheckedCreateWithoutDepartmentMonthlyReportsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDepartmentMonthlyReportsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDepartmentMonthlyReportsInput, UserUncheckedUpdateWithoutDepartmentMonthlyReportsInput>
+  }
+
+  export type UserUpdateWithoutDepartmentMonthlyReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDepartmentMonthlyReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
   export type UserCreateWithoutPushSubscriptionsInput = {
     id?: string
     email: string
@@ -51456,9 +57231,12 @@ export namespace Prisma {
     userPage?: UserPageCreateNestedOneWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
@@ -51498,9 +57276,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
@@ -51556,9 +57337,12 @@ export namespace Prisma {
     userPage?: UserPageUpdateOneWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
@@ -51598,9 +57382,12 @@ export namespace Prisma {
     userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
@@ -51667,6 +57454,12 @@ export namespace Prisma {
     parentId?: string | null
   }
 
+  export type PostReadCreateManyUserInput = {
+    id?: string
+    postId: string
+    readAt?: Date | string
+  }
+
   export type TaskCreateManyAssigneeInput = {
     id?: string
     title: string
@@ -51697,9 +57490,27 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type DepartmentCreateManyHeadInput = {
+    id?: string
+    name: string
+    orgId: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type TaskMessageCreateManySenderInput = {
     id?: string
     taskId: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentMonthlyReportCreateManyUserInput = {
+    id?: string
+    deptId: string
+    month: string
     content: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51930,6 +57741,24 @@ export namespace Prisma {
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type PostReadUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    readAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    post?: PostUpdateOneRequiredWithoutPostReadsNestedInput
+  }
+
+  export type PostReadUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    postId?: StringFieldUpdateOperationsInput | string
+    readAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PostReadUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    postId?: StringFieldUpdateOperationsInput | string
+    readAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TaskUpdateWithoutAssigneeInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -52028,6 +57857,43 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DepartmentUpdateWithoutHeadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutHeadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateManyWithoutHeadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TaskMessageUpdateWithoutSenderInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
@@ -52049,6 +57915,33 @@ export namespace Prisma {
   export type TaskMessageUncheckedUpdateManyWithoutSenderInput = {
     id?: StringFieldUpdateOperationsInput | string
     taskId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMonthlyReportUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    month?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutMonthlyReportsNestedInput
+  }
+
+  export type DepartmentMonthlyReportUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    month?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMonthlyReportUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    month?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52196,6 +58089,7 @@ export namespace Prisma {
     id?: string
     name: string
     publicKey: string
+    headId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -52227,28 +58121,33 @@ export namespace Prisma {
     publicKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
     members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -52353,6 +58252,15 @@ export namespace Prisma {
     id?: string
     eventId: string
     createdAt?: Date | string
+  }
+
+  export type DepartmentMonthlyReportCreateManyDepartmentInput = {
+    id?: string
+    userId: string
+    month: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DepartmentMemberUpdateWithoutDepartmentInput = {
@@ -52466,6 +58374,33 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMonthlyReportUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    month?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutDepartmentMonthlyReportsNestedInput
+  }
+
+  export type DepartmentMonthlyReportUncheckedUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    month?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    month?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GroupMemberCreateManyGroupInput = {
@@ -52664,6 +58599,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     likes?: LikeUpdateManyWithoutPostNestedInput
     comments?: CommentUpdateManyWithoutPostNestedInput
+    postReads?: PostReadUpdateManyWithoutPostNestedInput
   }
 
   export type PostUncheckedUpdateWithoutPageInput = {
@@ -52677,6 +58613,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     likes?: LikeUncheckedUpdateManyWithoutPostNestedInput
     comments?: CommentUncheckedUpdateManyWithoutPostNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type PostUncheckedUpdateManyWithoutPageInput = {
@@ -52703,6 +58640,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     parentId?: string | null
+  }
+
+  export type PostReadCreateManyPostInput = {
+    id?: string
+    userId: string
+    readAt?: Date | string
   }
 
   export type LikeUpdateWithoutPostInput = {
@@ -52750,6 +58693,24 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type PostReadUpdateWithoutPostInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    readAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPostReadsNestedInput
+  }
+
+  export type PostReadUncheckedUpdateWithoutPostInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    readAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PostReadUncheckedUpdateManyWithoutPostInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    readAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CommentCreateManyParentInput = {

@@ -28,6 +28,31 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const validatedData = completeOrgSchema.parse(body);
 
+        // Empêcher l'utilisation du plan gratuit plusieurs fois pour le même propriétaire
+        if (validatedData.plan === 'FREE') {
+            const existingFreeOrg = await prisma.organization.findFirst({
+                where: {
+                    ownerId: user.userId,
+                    subscription: {
+                        is: {
+                            plan: 'FREE',
+                        },
+                    },
+                },
+            });
+
+            if (existingFreeOrg) {
+                return NextResponse.json(
+                    {
+                        error:
+                            'Vous avez déjà utilisé le plan gratuit pour une organisation. ' +
+                            'Veuillez choisir un plan payant pour cette demande.',
+                    },
+                    { status: 400 },
+                );
+            }
+        }
+
         // Check if request exists and is approved
         const orgRequest = await prisma.organizationRequest.findUnique({
             where: { id: validatedData.requestId },

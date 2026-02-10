@@ -26,16 +26,24 @@ export async function GET(
                 userId,
                 orgId,
             },
+            select: { role: true },
         });
 
         if (!orgMember) {
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
-        // Get department with members (sans exposer encryptedDeptKey dans la liste)
+        // Get department with members and head (sans exposer encryptedDeptKey dans la liste)
         const department = await prisma.department.findUnique({
             where: { id: deptId },
             include: {
+                head: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    },
+                },
                 members: {
                     include: {
                         user: {
@@ -61,18 +69,36 @@ export async function GET(
             return NextResponse.json({ error: 'Département non trouvé' }, { status: 404 });
         }
 
-        // Clé chiffrée du département pour l'utilisateur courant (pour le chat E2E)
+        const org = await prisma.organization.findUnique({
+            where: { id: orgId },
+            select: { ownerId: true },
+        });
+
+        const dept = await prisma.department.findUnique({
+            where: { id: deptId },
+            select: { headId: true },
+        });
+        const isOwnerOrAdmin = orgMember?.role === 'OWNER' || orgMember?.role === 'ADMIN';
+        const isDeptHead = dept?.headId === userId;
+        const canSeeMembers = isOwnerOrAdmin || isDeptHead;
+
+        const departmentResponse = {
+            ...department,
+            publicKey: department.publicKey,
+            members: canSeeMembers ? department.members : [],
+            head: canSeeMembers ? department.head : null,
+        };
+
         const currentMember = await prisma.departmentMember.findFirst({
             where: { deptId, userId },
             select: { encryptedDeptKey: true },
         });
 
         return NextResponse.json({
-            department: {
-                ...department,
-                publicKey: department.publicKey,
-            },
+            department: departmentResponse,
             currentMemberEncryptedDeptKey: currentMember?.encryptedDeptKey ?? null,
+            userOrgRole: orgMember?.role ?? null,
+            orgOwnerId: org?.ownerId ?? null,
         });
     } catch (error) {
         console.error('Get department error:', error);
@@ -161,9 +187,7 @@ export async function PATCH(
         const { id: orgId, deptId } = await params;
 
         const body = await request.json();
-        const { name } = body;
-
-        if (!name) return NextResponse.json({ error: 'Nom requis' }, { status: 400 });
+        const { name, headId } = body;
 
         // Verify user is ADMIN or OWNER
         const orgMember = await prisma.organizationMember.findFirst({
@@ -175,10 +199,45 @@ export async function PATCH(
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
-        // Update department
+        const updateData: { name?: string; headId?: string | null } = {};
+        if (name !== undefined) {
+            if (!String(name).trim()) return NextResponse.json({ error: 'Nom requis' }, { status: 400 });
+            updateData.name = String(name).trim();
+        }
+        // Seul le propriétaire (user principal) peut nommer ou révoquer le chef du département
+        if (headId !== undefined) {
+            if (orgMember.role !== 'OWNER') {
+                return NextResponse.json(
+                    { error: 'Seul le propriétaire de l\'organisation peut nommer ou révoquer le chef du département' },
+                    { status: 403 }
+                );
+            }
+            if (headId === null || headId === '') {
+                updateData.headId = null;
+            } else {
+                const headMember = await prisma.departmentMember.findFirst({
+                    where: { deptId, userId: headId },
+                });
+                if (!headMember) {
+                    return NextResponse.json(
+                        { error: 'Le chef doit être membre du département' },
+                        { status: 400 }
+                    );
+                }
+                updateData.headId = headId;
+            }
+        }
+
+        if (Object.keys(updateData).length === 0) {
+            return NextResponse.json({ error: 'Aucune modification' }, { status: 400 });
+        }
+
         const department = await prisma.department.update({
             where: { id: deptId },
-            data: { name }
+            data: updateData,
+            include: {
+                head: { select: { id: true, name: true, email: true } },
+            },
         });
 
         return NextResponse.json({ department });

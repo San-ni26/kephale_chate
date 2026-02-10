@@ -23,17 +23,20 @@ export async function POST(
             return NextResponse.json({ error: 'Titre et assigné requis' }, { status: 400 });
         }
 
-        // Verify user is ADMIN or OWNER locally
-        // Or check if user is a member of the department?
-        // User said: "le createur de l'organisations puise donne atribue des tache a un membre du departement"
-        // So Creator (Owner) or Admin can assign tasks.
+        // Vérifier: org OWNER/ADMIN OU chef du département peut créer/assigner des tâches
         const orgMember = await prisma.organizationMember.findFirst({
             where: { userId, orgId },
             select: { role: true }
         });
+        const department = await prisma.department.findUnique({
+            where: { id: deptId },
+            select: { headId: true }
+        });
+        const isOrgAdmin = orgMember && (orgMember.role === 'OWNER' || orgMember.role === 'ADMIN');
+        const isDeptHead = department?.headId === userId;
 
-        if (!orgMember || (orgMember.role !== 'OWNER' && orgMember.role !== 'ADMIN')) {
-            return NextResponse.json({ error: 'Seul les admins/propriétaires peuvent créer des tâches' }, { status: 403 });
+        if (!isOrgAdmin && !isDeptHead) {
+            return NextResponse.json({ error: 'Seuls le propriétaire, un admin de l\'organisation ou le chef du département peuvent créer des tâches' }, { status: 403 });
         }
 
         // Verify assignee is in the department
@@ -126,8 +129,16 @@ export async function GET(
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
+        const department = await prisma.department.findUnique({
+            where: { id: deptId },
+            select: { headId: true }
+        });
+        const isOrgAdmin = orgMember && (orgMember.role === 'OWNER' || orgMember.role === 'ADMIN');
+        const isDeptHead = department?.headId === userId;
+        const canSeeAllTasks = isOrgAdmin || isDeptHead;
+
         const tasks = await prisma.task.findMany({
-            where: { deptId },
+            where: canSeeAllTasks ? { deptId } : { deptId, assigneeId: userId },
             include: {
                 assignee: {
                     select: {

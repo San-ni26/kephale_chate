@@ -7,7 +7,8 @@ import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { Textarea } from "@/src/components/ui/textarea";
 import { toast } from "sonner";
-import { Loader2, Check, Upload, Building2, MapPin, CreditCard } from "lucide-react";
+import { fetchWithAuth } from "@/src/lib/auth-client";
+import { Loader2, Check, Upload, Building2, MapPin, CreditCard, Smartphone, FlaskConical } from "lucide-react";
 
 interface OrganizationCompletionWizardProps {
     open: boolean;
@@ -21,8 +22,8 @@ const SUBSCRIPTION_PLANS = [
     {
         id: 'FREE',
         name: 'Gratuit',
-        price: '0€',
-        duration: '1 mois',
+        price: '0 FCFA',
+        duration: '1 mois (essai unique)',
         features: [
             '2 départements maximum',
             '5 membres par département',
@@ -34,8 +35,8 @@ const SUBSCRIPTION_PLANS = [
     {
         id: 'BASIC',
         name: 'Basique',
-        price: '29€',
-        duration: '/mois',
+        price: '5 000 FCFA',
+        duration: '/ mois',
         features: [
             '5 départements maximum',
             '20 membres par département',
@@ -47,8 +48,8 @@ const SUBSCRIPTION_PLANS = [
     {
         id: 'PROFESSIONAL',
         name: 'Professionnel',
-        price: '79€',
-        duration: '/mois',
+        price: '15 000 FCFA',
+        duration: '/ mois',
         features: [
             '15 départements maximum',
             '50 membres par département',
@@ -61,8 +62,8 @@ const SUBSCRIPTION_PLANS = [
     {
         id: 'ENTERPRISE',
         name: 'Entreprise',
-        price: '199€',
-        duration: '/mois',
+        price: '50 000 FCFA',
+        duration: '/ mois',
         features: [
             'Départements illimités',
             'Membres illimités',
@@ -74,6 +75,13 @@ const SUBSCRIPTION_PLANS = [
         recommended: false,
     },
 ];
+
+const PLAN_PRICES_FCFA: Record<string, number> = {
+    FREE: 0,
+    BASIC: 5000,
+    PROFESSIONAL: 15000,
+    ENTERPRISE: 50000,
+};
 
 export default function OrganizationCompletionWizard({
     open,
@@ -89,6 +97,8 @@ export default function OrganizationCompletionWizard({
     const [logo, setLogo] = useState("");
     const [address, setAddress] = useState("");
     const [selectedPlan, setSelectedPlan] = useState<string>("FREE");
+    const [paymentProvider, setPaymentProvider] = useState<'ORANGE_MONEY' | 'MOOV' | ''>('');
+    const [phone, setPhone] = useState('');
 
     const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -104,20 +114,55 @@ export default function OrganizationCompletionWizard({
     const isDirectCreate = !requestId;
 
     const handleSubmit = async () => {
-        if (!name) {
-            toast.error("Le nom de l'organisation est requis");
+        const trimmedName = name?.trim() ?? '';
+        if (!trimmedName || trimmedName.length < 2) {
+            toast.error("Le nom de l'organisation est requis (au moins 2 caractères)");
             return;
         }
 
         setLoading(true);
 
         try {
+            // 1) Si plan payant : enregistrement en attente + CinetPay, puis redirection
+            if (selectedPlan !== 'FREE') {
+                const payRes = await fetchWithAuth('/api/payments/paytech/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        plan: selectedPlan,
+                        name: trimmedName,
+                        logo: logo || undefined,
+                        address: address?.trim() || undefined,
+                        requestId: requestId || undefined,
+                        customer_name: trimmedName,
+                        customer_phone_number: phone.trim() || undefined,
+                    }),
+                });
+
+                const payData = await payRes.json();
+
+                if (!payRes.ok || payData.status !== 'success') {
+                    toast.error(
+                        payData.error ||
+                        'Le paiement de l’abonnement a échoué. Veuillez réessayer.',
+                    );
+                    setLoading(false);
+                    return;
+                }
+                if (payData.paymentUrl) {
+                    toast.success('Redirection vers la page de paiement CinetPay...');
+                    window.location.href = payData.paymentUrl;
+                    return;
+                }
+            }
+
+            // 2) Création / complétion de l'organisation avec le plan choisi
             const url = isDirectCreate ? '/api/organizations/create' : '/api/organizations/complete';
             const body = isDirectCreate
-                ? { name, logo, address, plan: selectedPlan }
-                : { requestId, name, logo, address, plan: selectedPlan };
+                ? { name: trimmedName, logo, address, plan: selectedPlan }
+                : { requestId, name: trimmedName, logo, address, plan: selectedPlan };
 
-            const res = await fetch(url, {
+            const res = await fetchWithAuth(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
@@ -140,6 +185,8 @@ export default function OrganizationCompletionWizard({
             setLogo("");
             setAddress("");
             setSelectedPlan("FREE");
+            setPaymentProvider('');
+            setPhone('');
 
             onSuccess();
 
@@ -207,11 +254,11 @@ export default function OrganizationCompletionWizard({
 
             case 2:
                 return (
-                    <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground">
-                            Choisissez le plan d'abonnement qui correspond le mieux à vos besoins
+                    <div className="flex flex-col min-h-[420px]">
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Choisissez le plan d&apos;abonnement qui correspond le mieux à vos besoins
                         </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[320px] overflow-y-auto pr-2">
                             {SUBSCRIPTION_PLANS.map((plan) => (
                                 <div
                                     key={plan.id}
@@ -250,6 +297,68 @@ export default function OrganizationCompletionWizard({
                                 </div>
                             ))}
                         </div>
+
+                        {/* Section paiement : centrée au milieu, opérateur uniquement, mode dev */}
+                        {selectedPlan !== 'FREE' && (
+                            <div className="flex-1 flex items-center justify-center py-6">
+                                <div className="space-y-3 border border-border rounded-lg p-4 bg-muted/30 max-w-md w-full mx-auto relative">
+                                    <div className="absolute -top-2 right-3 flex items-center gap-1.5 bg-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-medium px-2 py-1 rounded-full border border-amber-500/30">
+                                        <FlaskConical className="w-3.5 h-3.5" />
+                                        Mode développement
+                                    </div>
+                                    {(() => {
+                                        const base = PLAN_PRICES_FCFA[selectedPlan] ?? 0;
+                                        const feeRate = 0.02;
+                                        const total = Math.round(base * (1 + feeRate));
+
+                                        return (
+                                            <>
+                                                <div className="text-center space-y-1">
+                                                    <p className="text-sm font-medium text-foreground">
+                                                        Détails du paiement
+                                                    </p>
+                                                    <p className="text-xs text-muted-foreground">
+                                                        Montant :{' '}
+                                                        <span className="font-semibold text-foreground">
+                                                            {base.toLocaleString('fr-FR')} FCFA
+                                                        </span>
+                                                        {' '}(total avec frais :{' '}
+                                                        <span className="font-semibold text-foreground">
+                                                            {total.toLocaleString('fr-FR')} FCFA
+                                                        </span>
+                                                        )
+                                                    </p>
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <Label className="text-center block">Choisir l&apos;opérateur Mobile Money</Label>
+                                                    <div className="flex flex-wrap gap-3 justify-center">
+                                                        <Button
+                                                            type="button"
+                                                            variant={paymentProvider === 'ORANGE_MONEY' ? 'default' : 'outline'}
+                                                            className={`flex-1 min-w-[140px] gap-2 ${paymentProvider === 'ORANGE_MONEY' ? 'bg-orange-600 hover:bg-orange-700 text-white border-orange-600' : ''}`}
+                                                            onClick={() => setPaymentProvider('ORANGE_MONEY')}
+                                                        >
+                                                            <Smartphone className="w-4 h-4" />
+                                                            Orange Money
+                                                        </Button>
+                                                        <Button
+                                                            type="button"
+                                                            variant={paymentProvider === 'MOOV' ? 'default' : 'outline'}
+                                                            className={`flex-1 min-w-[140px] gap-2 ${paymentProvider === 'MOOV' ? 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600' : ''}`}
+                                                            onClick={() => setPaymentProvider('MOOV')}
+                                                        >
+                                                            <Smartphone className="w-4 h-4" />
+                                                            Moov
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        );
+                                    })()}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 );
 

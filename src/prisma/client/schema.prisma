@@ -8,44 +8,47 @@ datasource db {
 }
 
 model User {
-  id                      String               @id @default(cuid())
-  email                   String               @unique
-  name                    String?
-  avatarUrl               String?              @db.Text
-  password                String
-  phone                   String?
-  publicKey               String               @db.Text
-  encryptedPrivateKey     String               @db.Text
-  otpCode                 String?
-  otpExpiry               DateTime?
-  isVerified              Boolean              @default(false)
-  deviceId                String?
-  deviceInfo              Json?
-  location                Json?
-  allowedCountry          String?
-  isBanned                Boolean              @default(false)
-  isFirstLogin            Boolean              @default(true)
-  currentLocation         Json?
-  lastSeen                DateTime?
-  isOnline                Boolean              @default(false)
-  role                    UserRole             @default(USER)
-  canPublishNotifications Boolean              @default(false)
-  createdAt               DateTime             @default(now())
-  updatedAt               DateTime             @updatedAt
-  publishedAnnouncements  Announcement[]
-  deptMemberships         DepartmentMember[]
-  groupMemberships        GroupMember[]
-  sentMessages            Message[]
-  notifications           Notification[]
-  orgMemberships          OrganizationMember[]
-  userPage                UserPage?
-  likes                   Like[]
-  comments                Comment[]
-  assignedTasks           Task[]               @relation("TaskAssignee")
-  createdTasks            Task[]               @relation("TaskCreator")
-  taskMessages            TaskMessage[]
-  pushSubscriptions       PushSubscription[]
-  invitations             UserInvitation[]
+  id                       String                    @id @default(cuid())
+  email                    String                    @unique
+  name                     String?
+  avatarUrl                String?                   @db.Text
+  password                 String
+  phone                    String?
+  publicKey                String                    @db.Text
+  encryptedPrivateKey      String                    @db.Text
+  otpCode                  String?
+  otpExpiry                DateTime?
+  isVerified               Boolean                   @default(false)
+  deviceId                 String?
+  deviceInfo               Json?
+  location                 Json?
+  allowedCountry           String?
+  isBanned                 Boolean                   @default(false)
+  isFirstLogin             Boolean                   @default(true)
+  currentLocation          Json?
+  lastSeen                 DateTime?
+  isOnline                 Boolean                   @default(false)
+  role                     UserRole                  @default(USER)
+  canPublishNotifications  Boolean                   @default(false)
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  publishedAnnouncements   Announcement[]
+  deptMemberships          DepartmentMember[]
+  groupMemberships         GroupMember[]
+  sentMessages             Message[]
+  notifications            Notification[]
+  orgMemberships           OrganizationMember[]
+  userPage                 UserPage?
+  likes                    Like[]
+  comments                 Comment[]
+  postReads                PostRead[]
+  assignedTasks            Task[]                    @relation("TaskAssignee")
+  createdTasks             Task[]                    @relation("TaskCreator")
+  headedDepartments        Department[]              @relation("DepartmentHead")
+  taskMessages             TaskMessage[]
+  departmentMonthlyReports DepartmentMonthlyReport[]
+  pushSubscriptions        PushSubscription[]
+  invitations              UserInvitation[]
 
   followers Follow[] @relation("UserFollowers")
   following Follow[] @relation("UserFollowing")
@@ -154,15 +157,19 @@ model Department {
   name            String
   orgId           String
   publicKey       String                     @db.Text
+  headId          String? // Chef du département (peut attribuer des tâches)
   createdAt       DateTime                   @default(now())
   updatedAt       DateTime                   @updatedAt
   organization    Organization               @relation(fields: [orgId], references: [id], onDelete: Cascade, map: "Department_orgId_fk")
+  head            User?                      @relation("DepartmentHead", fields: [headId], references: [id], onDelete: SetNull)
   members         DepartmentMember[]
   conversations   Group[]
   tasks           Task[]
   eventBroadcasts EventDepartmentBroadcast[]
+  monthlyReports  DepartmentMonthlyReport[]
 
   @@index([orgId], map: "Department_orgId_idx")
+  @@index([headId])
 }
 
 model DepartmentMember {
@@ -331,6 +338,21 @@ model OrganizationRequest {
   @@index([status])
 }
 
+model PendingSubscriptionPayment {
+  id            String   @id @default(cuid())
+  transactionId String   @unique
+  userId        String
+  plan          String
+  name          String
+  logo          String?  @db.Text
+  address       String?  @db.Text
+  requestId     String?
+  createdAt     DateTime @default(now())
+
+  @@index([transactionId])
+  @@index([userId])
+}
+
 model Subscription {
   id                String           @id @default(cuid())
   orgId             String           @unique
@@ -413,18 +435,19 @@ enum PostType {
 }
 
 model Post {
-  id        String    @id @default(cuid())
+  id        String     @id @default(cuid())
   pageId    String
   type      PostType
-  content   String    @db.Text
-  imageUrl  String?   @db.Text
-  caption   String?   @db.Text
+  content   String     @db.Text
+  imageUrl  String?    @db.Text
+  caption   String?    @db.Text
   reference String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  page      UserPage  @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  page      UserPage   @relation(fields: [pageId], references: [id], onDelete: Cascade)
   likes     Like[]
   comments  Comment[]
+  postReads PostRead[]
 
   @@index([pageId])
   @@index([createdAt])
@@ -457,6 +480,19 @@ model Comment {
 
   @@index([postId])
   @@index([parentId])
+}
+
+model PostRead {
+  id     String   @id @default(cuid())
+  userId String
+  postId String
+  readAt DateTime @default(now())
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
 }
 
 enum TaskStatus {
@@ -539,6 +575,25 @@ model TaskAttachment {
 
   @@index([taskId])
   @@index([messageId])
+}
+
+// Rapport mensuel d'un membre du département (un par user/département/mois)
+model DepartmentMonthlyReport {
+  id        String   @id @default(cuid())
+  deptId    String
+  userId    String
+  month     String // "yyyy-MM" (ex: "2025-02")
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  department Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([deptId, userId, month])
+  @@index([deptId])
+  @@index([userId])
+  @@index([month])
 }
 
 model PushSubscription {

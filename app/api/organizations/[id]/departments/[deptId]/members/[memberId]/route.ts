@@ -20,19 +20,32 @@ export async function DELETE(
         const userId = payload.userId;
         const { id: orgId, deptId, memberId } = await params;
 
-        // Verify user is admin or owner of the organization
-        const orgMember = await prisma.organizationMember.findFirst({
-            where: {
-                userId,
-                orgId,
-            },
+        const org = await prisma.organization.findUnique({
+            where: { id: orgId },
+            select: { ownerId: true },
         });
-
-        if (!orgMember || (orgMember.role !== 'ADMIN' && orgMember.role !== 'OWNER')) {
-            return NextResponse.json({ error: 'Accès refusé - Droits administrateur requis' }, { status: 403 });
+        if (!org) {
+            return NextResponse.json({ error: 'Organisation non trouvée' }, { status: 404 });
         }
 
-        // Get the department member to remove
+        // Le propriétaire (user principal) ne peut jamais être retiré du département par personne
+        // Seuls le propriétaire, un admin ou le chef du département peuvent retirer un membre (sauf le propriétaire)
+        const orgMember = await prisma.organizationMember.findFirst({
+            where: { userId, orgId },
+            select: { role: true },
+        });
+        const department = await prisma.department.findUnique({
+            where: { id: deptId },
+            select: { headId: true },
+        });
+        const isOrgOwner = orgMember?.role === 'OWNER';
+        const isOrgAdmin = orgMember?.role === 'ADMIN';
+        const isDeptHead = department?.headId === userId;
+
+        if (!isOrgOwner && !isOrgAdmin && !isDeptHead) {
+            return NextResponse.json({ error: 'Accès refusé - Droits requis' }, { status: 403 });
+        }
+
         const deptMember = await prisma.departmentMember.findUnique({
             where: { id: memberId },
             include: {
@@ -50,9 +63,15 @@ export async function DELETE(
             return NextResponse.json({ error: 'Membre non trouvé' }, { status: 404 });
         }
 
-        // Don't allow removing yourself
+        if (deptMember.userId === org.ownerId) {
+            return NextResponse.json(
+                { error: 'Impossible de retirer le propriétaire de l\'organisation du département' },
+                { status: 403 }
+            );
+        }
+
         if (deptMember.userId === userId) {
-            return NextResponse.json({ error: 'Vous ne pouvez pas vous retirer vous-même' }, { status: 400 });
+            return NextResponse.json({ error: 'Utilisez "Quitter le département" pour vous retirer' }, { status: 400 });
         }
 
         // Remove from department conversation if exists

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2, ClipboardList, CheckCircle2, AlertCircle, Clock, MoreVertical, Loader2, ImagePlus } from "lucide-react";
+import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2, ClipboardList, CheckCircle2, AlertCircle, Clock, MoreVertical, Loader2, ImagePlus, FileText } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
@@ -20,6 +20,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/src/components/ui/select";
+import { Textarea } from "@/src/components/ui/textarea";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -81,6 +82,13 @@ interface Task {
         id: string;
         name: string;
     };
+}
+
+interface OrgMember {
+    id: string;
+    name: string | null;
+    email: string;
+    role: 'OWNER' | 'ADMIN' | 'MEMBER';
 }
 
 export default function OrganizationDashboard() {
@@ -147,6 +155,31 @@ export default function OrganizationDashboard() {
 
     const { data: tasksData, mutate: mutateTasks } = useSWR(getTasksUrl(), fetcher);
     const myTasks: Task[] = tasksData?.tasks || [];
+
+    const { data: membersData, mutate: mutateMembers } = useSWR<{ members: OrgMember[] }>(
+        orgId && isOwner && showSettingsDialog ? `/api/organizations/${orgId}/members` : null,
+        fetcher
+    );
+    const orgMembers: OrgMember[] = membersData?.members || [];
+    const [updatingRoleUserId, setUpdatingRoleUserId] = useState<string | null>(null);
+
+    const currentMonth = format(new Date(), 'yyyy-MM');
+    const { data: myReportsData, mutate: mutateMyReports } = useSWR<{ month: string; reports: { deptId: string; departmentName: string; content: string; canEdit: boolean; updatedAt: string | null }[] }>(
+        orgId && !isAdmin ? `/api/organizations/${orgId}/my-monthly-reports?month=${currentMonth}` : null,
+        fetcher
+    );
+    const myMonthlyReports = myReportsData?.reports ?? [];
+    const [reportContentByDept, setReportContentByDept] = useState<Record<string, string>>({});
+    const [savingReportDeptId, setSavingReportDeptId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!myReportsData?.reports) return;
+        const next: Record<string, string> = {};
+        myReportsData.reports.forEach((r) => {
+            next[r.deptId] = r.content;
+        });
+        setReportContentByDept((prev) => ({ ...next, ...prev }));
+    }, [myReportsData]);
 
     const loading = !orgData && !orgError;
 
@@ -373,6 +406,84 @@ export default function OrganizationDashboard() {
         }
     };
 
+    const handleSaveMonthlyReport = async (deptId: string) => {
+        if (!orgId) return;
+        const content = reportContentByDept[deptId] ?? '';
+        setSavingReportDeptId(deptId);
+        try {
+            const res = await fetchWithAuth(
+                `/api/organizations/${orgId}/departments/${deptId}/reports?month=${currentMonth}`,
+                {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content }),
+                }
+            );
+            if (res.ok) {
+                toast.success('Rapport enregistré');
+                mutateMyReports();
+            } else {
+                const err = await res.json();
+                toast.error(err.error || 'Erreur');
+            }
+        } catch (e) {
+            console.error('Save report error:', e);
+            toast.error('Erreur serveur');
+        } finally {
+            setSavingReportDeptId(null);
+        }
+    };
+
+    const [removingMemberUserId, setRemovingMemberUserId] = useState<string | null>(null);
+
+    const handleRemoveMemberFromOrg = async (userId: string, memberName: string) => {
+        if (!orgId || !confirm(`Supprimer ${memberName || 'ce membre'} de l'organisation ? Il sera retiré de tous les départements.`)) return;
+        setRemovingMemberUserId(userId);
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/members`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId }),
+            });
+            if (res.ok) {
+                toast.success('Membre supprimé de l\'organisation');
+                mutateMembers();
+            } else {
+                const err = await res.json();
+                toast.error(err.error || 'Erreur');
+            }
+        } catch (e) {
+            console.error('Remove member error:', e);
+            toast.error('Erreur serveur');
+        } finally {
+            setRemovingMemberUserId(null);
+        }
+    };
+
+    const handleUpdateMemberRole = async (userId: string, role: 'ADMIN' | 'MEMBER') => {
+        if (!orgId) return;
+        setUpdatingRoleUserId(userId);
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/members`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, role }),
+            });
+            if (res.ok) {
+                toast.success(role === 'ADMIN' ? 'Droits admin attribués' : 'Rôle membre');
+                mutateMembers();
+            } else {
+                const err = await res.json();
+                toast.error(err.error || 'Erreur');
+            }
+        } catch (e) {
+            console.error('Update role error:', e);
+            toast.error('Erreur serveur');
+        } finally {
+            setUpdatingRoleUserId(null);
+        }
+    };
+
     const handleDeleteOrg = async () => {
         if (!orgId || deleteConfirmText !== org?.name) {
             toast.error('Saisissez exactement le nom de l\'organisation pour confirmer');
@@ -583,27 +694,102 @@ export default function OrganizationDashboard() {
                                                 </span>
                                             </div>
 
-                                            <div className="flex gap-2">
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                                                        onClick={() => router.push(`/chat/organizations/${orgId}/departments/${userDept.department.id}/chat`)}
+                                                    >
+                                                        <MessageSquare className="w-4 h-4 mr-2" />
+                                                        Ouvrir le chat
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                        onClick={() => handleLeaveDepartment(userDept.id, userDept.department.name)}
+                                                    >
+                                                        <LogOut className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
                                                 <Button
                                                     size="sm"
-                                                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
-                                                    onClick={() => router.push(`/chat/organizations/${orgId}/departments/${userDept.department.id}/chat`)}
+                                                    variant="secondary"
+                                                    className="w-full"
+                                                    onClick={() => router.push(`/chat/organizations/${orgId}/departments/${userDept.department.id}?tab=reports`)}
                                                 >
-                                                    <MessageSquare className="w-4 h-4 mr-2" />
-                                                    Ouvrir le chat
-                                                </Button>
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                                    onClick={() => handleLeaveDepartment(userDept.id, userDept.department.name)}
-                                                >
-                                                    <LogOut className="w-4 h-4" />
+                                                    <FileText className="w-4 h-4 mr-2" />
+                                                    Rapport du mois
                                                 </Button>
                                             </div>
                                         </CardContent>
                                     </Card>
                                 ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Mes rapports du mois */}
+                    <div className="space-y-4 pt-4 border-t border-border">
+                        <h2 className="text-lg md:text-xl font-semibold text-foreground flex items-center gap-2">
+                            <FileText className="w-5 h-5" />
+                            Mes rapports du mois ({format(new Date(currentMonth + '-01'), 'MMMM yyyy', { locale: fr })})
+                        </h2>
+                        {userDepartments.length === 0 ? (
+                            <p className="text-sm text-muted-foreground">Vous n&apos;êtes dans aucun département. Les rapports sont à renseigner par département.</p>
+                        ) : (
+                            <div className="space-y-4">
+                                {myMonthlyReports.length === 0 ? (
+                                    <div className="text-center py-6 border border-dashed border-border rounded-xl bg-muted/20">
+                                        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mx-auto mb-2" />
+                                        <p className="text-muted-foreground">Chargement des rapports...</p>
+                                    </div>
+                                ) : (
+                                    myMonthlyReports.map((r) => (
+                                        <Card key={r.deptId} className="bg-card border-border">
+                                            <CardHeader className="pb-2">
+                                                <CardTitle className="text-base flex items-center justify-between">
+                                                    <span>{r.departmentName}</span>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onClick={() => router.push(`/chat/organizations/${orgId}/departments/${r.deptId}?tab=reports`)}
+                                                    >
+                                                        Voir le département
+                                                    </Button>
+                                                </CardTitle>
+                                            </CardHeader>
+                                            <CardContent className="space-y-2">
+                                                {!r.canEdit && (
+                                                    <p className="text-sm text-amber-600 dark:text-amber-500">Le mois est terminé. Ce rapport n&apos;est plus modifiable.</p>
+                                                )}
+                                                <Textarea
+                                                    placeholder="Renseignez votre rapport d'activité du mois..."
+                                                    value={reportContentByDept[r.deptId] ?? r.content}
+                                                    onChange={(e) => setReportContentByDept((prev) => ({ ...prev, [r.deptId]: e.target.value }))}
+                                                    className="min-h-[120px]"
+                                                    disabled={!r.canEdit}
+                                                />
+                                                {r.canEdit && (
+                                                    <Button
+                                                        size="sm"
+                                                        onClick={() => handleSaveMonthlyReport(r.deptId)}
+                                                        disabled={savingReportDeptId === r.deptId}
+                                                    >
+                                                        {savingReportDeptId === r.deptId ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                                                        Enregistrer le rapport
+                                                    </Button>
+                                                )}
+                                                {r.updatedAt && (
+                                                    <p className="text-xs text-muted-foreground">
+                                                        Dernière mise à jour : {format(new Date(r.updatedAt), 'd MMM yyyy à HH:mm', { locale: fr })}
+                                                    </p>
+                                                )}
+                                            </CardContent>
+                                        </Card>
+                                    ))
+                                )}
                             </div>
                         )}
                     </div>
@@ -617,8 +803,8 @@ export default function OrganizationDashboard() {
 
     // Vue pour les administrateurs (code existant)
     return (
-        <div className="min-h-screen bg-background mt-14 md:mt-16 pb-20 md:pb-6">
-            <div className="mx-auto w-full max-w-6xl px-4 md:px-6 lg:px-8 py-6 space-y-8">
+        <div className="min-h-screen bg-background mt-14 md:mt-16 pb-20 md:pb-6 ">
+            <div className="mx-auto w-full max-w-6xl px-4 md:px-6 lg:px-8 py-6 space-y-8 pb-25">
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card className="bg-card border-border">
@@ -715,17 +901,31 @@ export default function OrganizationDashboard() {
                                         <span className="text-muted-foreground">Conversations</span>
                                         <span className="text-foreground">{dept._count.conversations}</span>
                                     </div>
-                                    <Button
-                                        className="w-full mt-2"
-                                        variant="secondary"
-                                        size="sm"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            router.push(`/chat/organizations/${orgId}/departments/${dept.id}`);
-                                        }}
-                                    >
-                                        Gérer les membres
-                                    </Button>
+                                    <div className="flex gap-2 mt-2">
+                                        <Button
+                                            className="flex-1"
+                                            variant="secondary"
+                                            size="sm"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                router.push(`/chat/organizations/${orgId}/departments/${dept.id}`);
+                                            }}
+                                        >
+                                            Gérer les membres
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                router.push(`/chat/organizations/${orgId}/departments/${dept.id}/reports`);
+                                            }}
+                                            className="shrink-0"
+                                            title="Rapports du département par mois"
+                                        >
+                                            <FileText className="w-4 h-4" />
+                                        </Button>
+                                    </div>
                                 </CardContent>
                             </Card>
                         ))}
@@ -773,7 +973,7 @@ export default function OrganizationDashboard() {
 
                     <Card
                         className={`bg-card border-border transition cursor-pointer ${isOwner ? 'hover:border-primary/50' : 'opacity-50 cursor-not-allowed'}`}
-                        onClick={() => isOwner && openSettingsDialog()}
+                        onClick={() => isOwner && router.push(`/chat/organizations/${orgId}/settings`)}
                     >
                         <CardContent className="pt-6">
                             <div className="flex items-center gap-4">
@@ -921,6 +1121,63 @@ export default function OrganizationDashboard() {
                                     Enregistrer les infos
                                 </Button>
                             </div>
+
+                            {/* Rôles des membres (owner only) */}
+                            {isOwner && (
+                                <div className="space-y-3 border-t border-border pt-4">
+                                    <h4 className="font-medium text-foreground">Rôles des membres</h4>
+                                    <p className="text-sm text-muted-foreground">
+                                        Attribuez le rôle <strong>Admin</strong> à un membre pour qu&apos;il puisse tout gérer dans l&apos;organisation (départements, tâches, événements).
+                                    </p>
+                                    {orgMembers.length === 0 ? (
+                                        <p className="text-sm text-muted-foreground">Chargement des membres...</p>
+                                    ) : (
+                                        <div className="space-y-2 max-h-48 overflow-y-auto">
+                                            {orgMembers.map((m) => (
+                                                <div key={m.id} className="flex items-center justify-between gap-2 py-2 border-b border-border last:border-0">
+                                                    <div className="min-w-0 flex-1">
+                                                        <p className="text-sm font-medium truncate">{m.name || m.email}</p>
+                                                        <p className="text-xs text-muted-foreground truncate">{m.email}</p>
+                                                    </div>
+                                                    {m.role === 'OWNER' ? (
+                                                        <span className="text-xs text-muted-foreground shrink-0">Propriétaire</span>
+                                                    ) : (
+                                                        <div className="flex items-center gap-2 shrink-0">
+                                                            <Select
+                                                                value={m.role}
+                                                                onValueChange={(val) => handleUpdateMemberRole(m.id, val as 'ADMIN' | 'MEMBER')}
+                                                                disabled={updatingRoleUserId === m.id || removingMemberUserId === m.id}
+                                                            >
+                                                                <SelectTrigger className="w-[120px]">
+                                                                    <SelectValue />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    <SelectItem value="MEMBER">Membre</SelectItem>
+                                                                    <SelectItem value="ADMIN">Admin</SelectItem>
+                                                                </SelectContent>
+                                                            </Select>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                                onClick={() => handleRemoveMemberFromOrg(m.id, m.name || m.email)}
+                                                                disabled={removingMemberUserId === m.id}
+                                                                title="Supprimer de l'organisation"
+                                                            >
+                                                                {removingMemberUserId === m.id ? (
+                                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                                ) : (
+                                                                    <Trash2 className="w-4 h-4" />
+                                                                )}
+                                                            </Button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             {/* Supprimer l'organisation */}
                             <div className="space-y-3 border-t border-border pt-4">

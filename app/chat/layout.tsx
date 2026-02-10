@@ -3,6 +3,7 @@ import { TopNav } from "@/src/components/chat/TopNav";
 import { PWAInstaller } from "@/src/components/PWAInstaller";
 import { NotificationListener } from "@/src/components/chat/NotificationListener";
 import { ConversationSidebar } from "@/src/components/chat/ConversationSidebar";
+import { FeedSearchProvider } from "@/src/contexts/FeedSearchContext";
 
 export default function ChatLayout({
     children,
@@ -10,6 +11,7 @@ export default function ChatLayout({
     children: React.ReactNode;
 }) {
     return (
+        <FeedSearchProvider>
         <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
             {/* Top Bar : visible sur mobile et desktop */}
             <TopNav />
@@ -34,5 +36,6 @@ export default function ChatLayout({
             <PWAInstaller />
             <NotificationListener />
         </div>
+        </FeedSearchProvider>
     );
 }

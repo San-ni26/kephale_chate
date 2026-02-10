@@ -3,6 +3,7 @@ import { SubscriptionPlan } from '@/src/prisma/client';
 export interface SubscriptionLimits {
     maxDepartments: number;
     maxMembersPerDept: number;
+    /** Prix de l'abonnement en FCFA */
     price: number;
     duration: number; // in months
 }
@@ -11,25 +12,29 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlan, SubscriptionLimits> = 
     FREE: {
         maxDepartments: 2,
         maxMembersPerDept: 5,
+        // Essai gratuit, une seule fois
         price: 0,
         duration: 1, // 1 month trial
     },
     BASIC: {
         maxDepartments: 5,
         maxMembersPerDept: 20,
-        price: 29,
+        // 5 000 FCFA / mois
+        price: 5000,
         duration: 1,
     },
     PROFESSIONAL: {
         maxDepartments: 15,
         maxMembersPerDept: 50,
-        price: 79,
+        // 15 000 FCFA / mois
+        price: 15000,
         duration: 1,
     },
     ENTERPRISE: {
         maxDepartments: 999999, // Unlimited
         maxMembersPerDept: 999999, // Unlimited
-        price: 199,
+        // 50 000 FCFA / mois
+        price: 50000,
         duration: 1,
     },
 };

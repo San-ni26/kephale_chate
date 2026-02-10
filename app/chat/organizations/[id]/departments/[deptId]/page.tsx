@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
@@ -38,7 +38,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
-import { CheckCircle2, Clock, AlertCircle, Calendar as CalendarIcon, ClipboardList } from "lucide-react";
+import { CheckCircle2, Clock, AlertCircle, Calendar as CalendarIcon, ClipboardList, Crown } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -46,6 +46,12 @@ interface Department {
     id: string;
     name: string;
     publicKey: string;
+    headId?: string | null;
+    head?: {
+        id: string;
+        name: string | null;
+        email: string;
+    } | null;
     members: {
         id: string;
         user: {
@@ -87,7 +93,117 @@ interface Task {
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
 
-// ... (interfaces stay same)
+function DepartmentReportsTab({
+    orgId,
+    deptId,
+    isOrgAdmin,
+}: {
+    orgId: string;
+    deptId: string;
+    isOrgAdmin: boolean;
+}) {
+    const currentMonth = format(new Date(), 'yyyy-MM');
+    const { data: reportData, mutate } = useSWR<{ report: { content: string; createdAt?: string; updatedAt?: string } | null; canEdit: boolean }>(
+        orgId && deptId && !isOrgAdmin ? `/api/organizations/${orgId}/departments/${deptId}/reports?month=${currentMonth}` : null,
+        fetcher
+    );
+    const [content, setContent] = useState('');
+    const [saving, setSaving] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (reportData?.report?.content !== undefined) {
+            setContent(reportData.report?.content ?? '');
+        }
+    }, [reportData?.report?.content]);
+
+    const handleSaveReport = async () => {
+        if (!orgId || !deptId || !reportData?.canEdit) return;
+        setSaving(true);
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/reports?month=${currentMonth}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content }),
+            });
+            if (res.ok) {
+                toast.success('Rapport enregistré');
+                mutate();
+            } else {
+                const err = await res.json();
+                toast.error(err.error || 'Erreur');
+            }
+        } catch (e) {
+            console.error('Save report error:', e);
+            toast.error('Erreur serveur');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (isOrgAdmin) {
+        return (
+            <Card className="bg-card border-border">
+                <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                        <FileText className="w-5 h-5" />
+                        Rapports mensuels du département
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                        Consultez les rapports déposés par les membres, par mois, et les membres qui n&apos;ont pas rendu de rapport.
+                    </p>
+                    <Button
+                        onClick={() => router.push(`/chat/organizations/${orgId}/departments/${deptId}/reports`)}
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                    >
+                        <FileText className="w-4 h-4 mr-2" />
+                        Voir la liste des rapports par mois
+                    </Button>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    const canEdit = reportData?.canEdit ?? false;
+
+    return (
+        <Card className="bg-card border-border">
+            <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                    <FileText className="w-5 h-5" />
+                    Mon rapport du mois ({format(new Date(currentMonth + '-01'), 'MMMM yyyy', { locale: fr })})
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                {!canEdit && (
+                    <p className="text-sm text-amber-600 dark:text-amber-500">
+                        Le mois est terminé. Vous ne pouvez plus modifier ce rapport.
+                    </p>
+                )}
+                <Textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Renseignez votre rapport d'activité du mois..."
+                    className="min-h-[180px]"
+                    disabled={!canEdit}
+                />
+                {canEdit && (
+                    <Button onClick={handleSaveReport} disabled={saving}>
+                        {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                        Enregistrer le rapport
+                    </Button>
+                )}
+                {reportData?.report?.updatedAt && (
+                    <p className="text-xs text-muted-foreground">
+                        Dernière mise à jour : {format(new Date(reportData.report.updatedAt), 'd MMM yyyy à HH:mm', { locale: fr })}
+                    </p>
+                )}
+            </CardContent>
+        </Card>
+    );
+}
 
 export default function DepartmentDetailPage() {
     const params = useParams();
@@ -114,7 +230,36 @@ export default function DepartmentDetailPage() {
     const [taskAttachments, setTaskAttachments] = useState<{ url: string; filename: string; fileType?: string; size?: number }[]>([]);
     const [uploadingTaskFile, setUploadingTaskFile] = useState(false);
     const taskFileInputRef = useRef<HTMLInputElement>(null);
+    const searchParams = useSearchParams();
+    const tabParam = searchParams?.get('tab');
     const [activeTab, setActiveTab] = useState('members');
+    useEffect(() => {
+        if (tabParam === 'reports' || tabParam === 'tasks') setActiveTab(tabParam);
+    }, [tabParam]);
+
+    const handleSetDepartmentHead = async (userId: string | null) => {
+        if (!orgId || !deptId || !canManageHead) return;
+        setUpdatingHead(true);
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ headId: userId || null }),
+            });
+            if (res.ok) {
+                toast.success(userId ? 'Chef du département mis à jour' : 'Chef du département retiré');
+                refreshDepartment();
+            } else {
+                const err = await res.json();
+                toast.error(err.error || 'Erreur');
+            }
+        } catch (e) {
+            console.error('Set head error:', e);
+            toast.error('Erreur serveur');
+        } finally {
+            setUpdatingHead(false);
+        }
+    };
 
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [editTaskForm, setEditTaskForm] = useState({
@@ -136,7 +281,21 @@ export default function DepartmentDetailPage() {
         fetcher
     );
     const department: Department | null = deptData?.department ?? null;
+    const userOrgRole = (deptData as { userOrgRole?: 'OWNER' | 'ADMIN' | 'MEMBER' } | null)?.userOrgRole ?? null;
+    const orgOwnerId = (deptData as { orgOwnerId?: string | null } | null)?.orgOwnerId ?? null;
+    const isOwner = userOrgRole === 'OWNER';
+    const isOrgAdmin = userOrgRole === 'OWNER' || userOrgRole === 'ADMIN';
+    const isDeptHead = Boolean(department?.headId && currentUser && department.headId === currentUser.id);
+    const canManageHead = isOwner;
+    const canAddOrRemoveMember = isOwner || isOrgAdmin || isDeptHead;
+    const canCreateTask = isOrgAdmin || isDeptHead;
     const loading = !deptData && !deptError;
+
+    const [updatingHead, setUpdatingHead] = useState(false);
+
+    useEffect(() => {
+        if (!canAddOrRemoveMember && activeTab === 'members') setActiveTab('tasks');
+    }, [canAddOrRemoveMember, activeTab]);
 
     // 2. Fetch Tasks (conditionally)
     const { data: tasksData, error: tasksError, mutate: mutateTasks } = useSWR(
@@ -449,6 +608,23 @@ export default function DepartmentDetailPage() {
                         <h1 className="text-lg md:text-xl font-bold text-foreground truncate">{department.name}</h1>
                         <p className="text-sm text-muted-foreground">
                             {department._count.members} membre{department._count.members > 1 ? 's' : ''}
+                            {department.head && (
+                                <span className="ml-2 inline-flex items-center gap-2 text-primary">
+                                    <Crown className="w-3.5 h-3.5" />
+                                    Chef : {department.head.name || department.head.email}
+                                    {canManageHead && (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-6 text-xs text-muted-foreground hover:text-destructive"
+                                            onClick={() => handleSetDepartmentHead(null)}
+                                            disabled={updatingHead}
+                                        >
+                                            Retirer
+                                        </Button>
+                                    )}
+                                </span>
+                            )}
                         </p>
                     </div>
                 </div>
@@ -463,18 +639,24 @@ export default function DepartmentDetailPage() {
             </div>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
                 <TabsList>
-                    <TabsTrigger value="members" className="flex items-center gap-2">
-                        <UsersIcon className="w-4 h-4" />
-                        Membres
-                    </TabsTrigger>
+                    {canAddOrRemoveMember && (
+                        <TabsTrigger value="members" className="flex items-center gap-2">
+                            <UsersIcon className="w-4 h-4" />
+                            Membres
+                        </TabsTrigger>
+                    )}
                     <TabsTrigger value="tasks" className="flex items-center gap-2">
                         <ClipboardList className="w-4 h-4" />
                         Tâches
                     </TabsTrigger>
+                    <TabsTrigger value="reports" className="flex items-center gap-2">
+                        <FileText className="w-4 h-4" />
+                        Rapports
+                    </TabsTrigger>
                 </TabsList>
 
+                {canAddOrRemoveMember && (
                 <TabsContent value="members">
-                    {/* Members Section Original */}
                     <Card className="bg-card border-border">
                         <CardHeader>
                             <div className="flex items-center justify-between">
@@ -482,25 +664,7 @@ export default function DepartmentDetailPage() {
                                     <UsersIcon className="w-5 h-5 " />
                                     Membres du département
                                 </CardTitle>
-
-                            </div>
-                            <div>
-                                <Button
-                                    size="sm"
-                                    onClick={() => setShowAddMemberDialog(true)}
-                                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                                >
-                                    <UserPlus className="w-4 h-4 mr-2" />
-                                    Ajouter un membre
-                                </Button>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            {department.members.length === 0 ? (
-                                <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
-                                    <UsersIcon className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                                    <p className="text-muted-foreground">Aucun membre dans ce département</p>
-                                    <p className="text-sm text-muted-foreground mb-4">Ajoutez des membres pour commencer</p>
+                                {canAddOrRemoveMember && (
                                     <Button
                                         size="sm"
                                         onClick={() => setShowAddMemberDialog(true)}
@@ -509,6 +673,27 @@ export default function DepartmentDetailPage() {
                                         <UserPlus className="w-4 h-4 mr-2" />
                                         Ajouter un membre
                                     </Button>
+                                )}
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            {department.members.length === 0 ? (
+                                <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+                                    <UsersIcon className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                                    <p className="text-muted-foreground">Aucun membre dans ce département</p>
+                                    {canAddOrRemoveMember && (
+                                        <>
+                                            <p className="text-sm text-muted-foreground mb-4">Ajoutez des membres pour commencer</p>
+                                            <Button
+                                                size="sm"
+                                                onClick={() => setShowAddMemberDialog(true)}
+                                                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                                            >
+                                                <UserPlus className="w-4 h-4 mr-2" />
+                                                Ajouter un membre
+                                            </Button>
+                                        </>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -527,9 +712,16 @@ export default function DepartmentDetailPage() {
                                                             </AvatarFallback>
                                                         </Avatar>
                                                         <div className="flex-1 min-w-0">
-                                                            <p className="text-sm font-semibold text-foreground truncate">
-                                                                {member.user.name || 'Sans nom'}
-                                                            </p>
+                                                            <div className="flex items-center gap-2">
+                                                                <p className="text-sm font-semibold text-foreground truncate">
+                                                                    {member.user.name || 'Sans nom'}
+                                                                </p>
+                                                                {department.headId === member.user.id && (
+                                                                    <span className="shrink-0 text-primary" title="Chef du département">
+                                                                        <Crown className="w-4 h-4" />
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                             <p className="text-xs text-muted-foreground truncate">
                                                                 {member.user.email}
                                                             </p>
@@ -540,9 +732,23 @@ export default function DepartmentDetailPage() {
                                                                     {member.user.isOnline ? 'En ligne' : 'Hors ligne'}
                                                                 </span>
                                                             </div>
+                                                            {canManageHead && (
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    className="mt-2"
+                                                                    disabled={updatingHead || department.headId === member.user.id}
+                                                                    onClick={() => handleSetDepartmentHead(member.user.id)}
+                                                                >
+                                                                    {department.headId === member.user.id ? (
+                                                                        <Crown className="w-3 h-3 mr-1 text-primary" />
+                                                                    ) : null}
+                                                                    {department.headId === member.user.id ? 'Chef' : 'Nommer chef'}
+                                                                </Button>
+                                                            )}
                                                         </div>
                                                     </div>
-                                                    {member.user.id !== currentUser?.id && (
+                                                    {canAddOrRemoveMember && member.user.id !== orgOwnerId && member.user.id !== currentUser?.id && (
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
@@ -566,6 +772,7 @@ export default function DepartmentDetailPage() {
                         </CardContent>
                     </Card>
                 </TabsContent>
+                )}
 
                 <TabsContent value="tasks">
                     <Card className="bg-card border-border">
@@ -578,17 +785,22 @@ export default function DepartmentDetailPage() {
 
                             </div>
                             <div>
-                                <Button
-                                    size="sm"
-                                    onClick={() => setShowCreateTaskDialog(true)}
-                                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                                >
-                                    <ClipboardList className="w-4 h-4 mr-2" />
-                                    Nouvelle tâche
-                                </Button>
+                                {canCreateTask && (
+                                    <Button
+                                        size="sm"
+                                        onClick={() => setShowCreateTaskDialog(true)}
+                                        className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                                    >
+                                        <ClipboardList className="w-4 h-4 mr-2" />
+                                        Nouvelle tâche
+                                    </Button>
+                                )}
                             </div>
                         </CardHeader>
                         <CardContent>
+                            {!canCreateTask && (
+                                <p className="text-sm text-muted-foreground mb-4">Seul le propriétaire, un admin de l&apos;organisation ou le chef du département peut créer des tâches.</p>
+                            )}
                             {loadingTasks ? (
                                 <div className="flex justify-center py-12">
                                     <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
@@ -597,13 +809,15 @@ export default function DepartmentDetailPage() {
                                 <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
                                     <ClipboardList className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
                                     <p className="text-muted-foreground">Aucune tâche assignée</p>
-                                    <Button
-                                        size="sm"
-                                        onClick={() => setShowCreateTaskDialog(true)}
-                                        className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground"
-                                    >
-                                        Créer une tâche
-                                    </Button>
+                                    {canCreateTask && (
+                                        <Button
+                                            size="sm"
+                                            onClick={() => setShowCreateTaskDialog(true)}
+                                            className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground"
+                                        >
+                                            Créer une tâche
+                                        </Button>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="grid gap-4">
@@ -686,6 +900,14 @@ export default function DepartmentDetailPage() {
                             )}
                         </CardContent>
                     </Card>
+                </TabsContent>
+
+                <TabsContent value="reports">
+                    <DepartmentReportsTab
+                        orgId={orgId}
+                        deptId={deptId}
+                        isOrgAdmin={isOrgAdmin}
+                    />
                 </TabsContent>
             </Tabs>
 

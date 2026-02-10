@@ -203,6 +203,7 @@ exports.Prisma.DepartmentScalarFieldEnum = {
   name: 'name',
   orgId: 'orgId',
   publicKey: 'publicKey',
+  headId: 'headId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -288,6 +289,18 @@ exports.Prisma.OrganizationRequestScalarFieldEnum = {
   orgId: 'orgId'
 };
 
+exports.Prisma.PendingSubscriptionPaymentScalarFieldEnum = {
+  id: 'id',
+  transactionId: 'transactionId',
+  userId: 'userId',
+  plan: 'plan',
+  name: 'name',
+  logo: 'logo',
+  address: 'address',
+  requestId: 'requestId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SubscriptionScalarFieldEnum = {
   id: 'id',
   orgId: 'orgId',
@@ -369,6 +382,13 @@ exports.Prisma.CommentScalarFieldEnum = {
   parentId: 'parentId'
 };
 
+exports.Prisma.PostReadScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  postId: 'postId',
+  readAt: 'readAt'
+};
+
 exports.Prisma.TaskScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -404,6 +424,16 @@ exports.Prisma.TaskAttachmentScalarFieldEnum = {
   fileType: 'fileType',
   size: 'size',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.DepartmentMonthlyReportScalarFieldEnum = {
+  id: 'id',
+  deptId: 'deptId',
+  userId: 'userId',
+  month: 'month',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.PushSubscriptionScalarFieldEnum = {
@@ -535,6 +565,7 @@ exports.Prisma.ModelName = {
   Announcement: 'Announcement',
   AnnouncementRead: 'AnnouncementRead',
   OrganizationRequest: 'OrganizationRequest',
+  PendingSubscriptionPayment: 'PendingSubscriptionPayment',
   Subscription: 'Subscription',
   EventInvitation: 'EventInvitation',
   EventDepartmentBroadcast: 'EventDepartmentBroadcast',
@@ -543,9 +574,11 @@ exports.Prisma.ModelName = {
   Post: 'Post',
   Like: 'Like',
   Comment: 'Comment',
+  PostRead: 'PostRead',
   Task: 'Task',
   TaskMessage: 'TaskMessage',
   TaskAttachment: 'TaskAttachment',
+  DepartmentMonthlyReport: 'DepartmentMonthlyReport',
   PushSubscription: 'PushSubscription'
 };
 

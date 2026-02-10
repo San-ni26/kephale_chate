@@ -151,9 +151,14 @@ export async function PATCH(
             where: { userId, orgId },
             select: { role: true },
         });
+        const dept = await prisma.department.findUnique({
+            where: { id: deptId },
+            select: { headId: true },
+        });
         const isAdmin = orgMember && (orgMember.role === 'ADMIN' || orgMember.role === 'OWNER');
+        const isDeptHead = dept?.headId === userId;
         const isCreator = task.creatorId === userId;
-        if (!isCreator && !isAdmin) {
+        if (!isCreator && !isAdmin && !isDeptHead) {
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
@@ -205,9 +210,14 @@ export async function DELETE(
             where: { userId, orgId },
             select: { role: true },
         });
+        const dept = await prisma.department.findUnique({
+            where: { id: deptId },
+            select: { headId: true },
+        });
         const isAdmin = orgMember && (orgMember.role === 'ADMIN' || orgMember.role === 'OWNER');
+        const isDeptHead = dept?.headId === userId;
         const isCreator = task.creatorId === userId;
-        if (!isCreator && !isAdmin) {
+        if (!isCreator && !isAdmin && !isDeptHead) {
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 

@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2 } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Search } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { UserSearch } from '@/src/components/chat/UserSearch';
+import { useFeedSearch } from '@/src/contexts/FeedSearchContext';
 import { toast } from 'sonner';
 import { useRouter, usePathname } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/auth-client';
@@ -18,6 +19,8 @@ const fetcher = (url: string) => fetchWithAuth(url).then((r) => (r.ok ? r.json()
 export function TopNav() {
     const router = useRouter();
     const pathname = usePathname();
+    const feedSearch = useFeedSearch();
+    const isNotificationsPage = pathname?.startsWith('/chat/notifications');
     const [user, setUser] = useState<any>(null);
     const [searchEmail, setSearchEmail] = useState('');
     const [loading, setLoading] = useState(false);
@@ -39,10 +42,23 @@ export function TopNav() {
     const orgDetail = orgDetailData?.organization ?? null;
     const isOrgDetailPage = Boolean(orgDetailId && orgDetail);
 
-    // Page département ou chat département : même top bar avec retour, avatar, nom, membres
-    const deptMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)(?:\/chat\/?)?$/);
+    // Page paramètres organisation : /chat/organizations/[id]/settings
+    const orgSettingsMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/settings\/?$/);
+    const orgSettingsOrgId = orgSettingsMatch?.[1];
+    const { data: orgSettingsData } = useSWR(
+        orgSettingsOrgId ? `/api/organizations/${orgSettingsOrgId}` : null,
+        fetcher
+    );
+    const orgSettings = orgSettingsData?.organization ?? null;
+    const isOrgSettingsPage = Boolean(orgSettingsOrgId && orgSettings);
+
+    // Page département (détail / chat / rapports) : même top bar avec retour, avatar, nom, membres
+    const deptMatch = pathname?.match(
+        /^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)(?:\/(chat|reports)\/?)?$/
+    );
     const orgId = deptMatch?.[1];
     const deptId = deptMatch?.[2];
+    const deptSubPage = deptMatch?.[3]; // 'chat' | 'reports' | undefined
     const { data: deptData } = useSWR(
         orgId && deptId ? `/api/organizations/${orgId}/departments/${deptId}` : null,
         fetcher
@@ -50,8 +66,9 @@ export function TopNav() {
     const department = deptData?.department;
     const departmentName = department?.name ?? null;
     const memberCount = department?._count?.members ?? 0;
-    const isDeptChatPage = pathname?.endsWith('/chat') || pathname?.endsWith('/chat/');
-    const isDeptDetailPage = Boolean(orgId && deptId && !isDeptChatPage);
+    const isDeptChatPage = deptSubPage === 'chat';
+    const isDeptReportsPage = deptSubPage === 'reports';
+    const isDeptDetailPage = Boolean(orgId && deptId && !isDeptChatPage && !isDeptReportsPage);
     const deptUrl = orgId && deptId ? `/chat/organizations/${orgId}/departments/${deptId}` : '';
     const deptChatUrl = orgId && deptId ? `${deptUrl}/chat` : '';
 
@@ -144,7 +161,31 @@ export function TopNav() {
 
     return (
         <header className="fixed top-0 w-full left-0 bg-background border-b border-border z-50 h-16 flex items-center justify-between px-3 md:px-4">
-            {isEventsPage && eventsBackUrl ? (
+            {isNotificationsPage ? (
+                /* Page Actualités : barre de recherche dans le top bar */
+                <div className="flex items-center gap-2 w-full min-w-0 flex-1">
+                    <div className="relative flex-1 min-w-0 max-w-xl">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground shrink-0 pointer-events-none" />
+                        <Input
+                            placeholder="Rechercher des pages ou des publications..."
+                            value={feedSearch.searchQ}
+                            onChange={(e) => feedSearch.setSearchQ(e.target.value)}
+                            onFocus={() => feedSearch.setSearchOpen(true)}
+                            className="pl-9 h-9 rounded-full bg-muted/50 border-border w-full"
+                        />
+                    </div>
+                    {feedSearch.searchOpen && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={feedSearch.closeSearch}
+                            className="shrink-0"
+                        >
+                            Annuler
+                        </Button>
+                    )}
+                </div>
+            ) : isEventsPage && eventsBackUrl ? (
                 /* Top bar page Événements : retour, titre, Nouvel Événement */
                 <>
                     <Button variant="ghost" size="icon" onClick={() => router.push(eventsBackUrl)} className="mr-2 shrink-0">
@@ -189,13 +230,19 @@ export function TopNav() {
                         </div>
                     )}
                 </>
-            ) : (isDeptChatPage || isDeptDetailPage) && departmentName && deptUrl ? (
-                /* Même top bar que la vue web : retour, avatar, nom + membres ; chat → paramètres, détail → chat */
+            ) : (isDeptChatPage || isDeptDetailPage || isDeptReportsPage) && departmentName && deptUrl ? (
+                /* Même top bar que la vue web : retour, avatar, nom + membres ; chat → paramètres, détail/rapports → chat */
                 <>
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => router.push(isDeptChatPage ? deptUrl : `/chat/organizations/${orgId}`)}
+                        onClick={() =>
+                            router.push(
+                                isDeptChatPage || isDeptReportsPage
+                                    ? deptUrl
+                                    : `/chat/organizations/${orgId}`
+                            )
+                        }
                         className="mr-2 shrink-0"
                     >
                         <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
@@ -205,7 +252,9 @@ export function TopNav() {
                         <AvatarFallback>{departmentName[0]}</AvatarFallback>
                     </Avatar>
                     <div className="ml-3 flex-1 min-w-0">
-                        <h2 className="font-semibold text-foreground truncate">{departmentName}</h2>
+                        <h2 className="font-semibold text-foreground truncate">
+                            {departmentName}
+                        </h2>
                         <p className="text-xs text-muted-foreground">
                             {memberCount} membre{memberCount > 1 ? 's' : ''}
                         </p>
@@ -213,13 +262,50 @@ export function TopNav() {
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => router.push(isDeptChatPage ? deptUrl : deptChatUrl)}
+                        onClick={() =>
+                            router.push(isDeptChatPage ? deptUrl : deptChatUrl)
+                        }
                         className="text-muted-foreground hover:text-foreground shrink-0"
-                        title={isDeptChatPage ? 'Gérer les membres' : 'Ouvrir le chat'}
+                        title={
+                            isDeptChatPage
+                                ? 'Gérer les membres'
+                                : 'Ouvrir le chat'
+                        }
                     >
                         {isDeptChatPage ? <Settings className="w-5 h-5" /> : <MessageSquare className="w-5 h-5" />}
                     </Button>
                 </>
+            ) : isOrgSettingsPage && orgSettings ? (
+                /* Top bar page paramètres organisation */
+                <div className="flex items-center justify-between w-full gap-3">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push(`/chat/organizations/${orgSettingsOrgId}`)}
+                        className="hover:bg-muted shrink-0"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <Avatar className="h-9 w-9 border border-border shrink-0">
+                            {orgSettings.logo ? (
+                                <AvatarImage src={orgSettings.logo} />
+                            ) : (
+                                <AvatarFallback>
+                                    <Building2 className="w-5 h-5" />
+                                </AvatarFallback>
+                            )}
+                        </Avatar>
+                        <div className="min-w-0">
+                            <h2 className="font-semibold text-foreground truncate">
+                                {orgSettings.name}
+                            </h2>
+                            <p className="text-xs text-muted-foreground truncate">
+                                Paramètres de l&apos;organisation
+                            </p>
+                        </div>
+                    </div>
+                </div>
             ) : isOrgDetailPage && orgDetail ? (
                 /* Top bar page organisation : retour, logo/icône, nom, code */
                 <div className="flex items-center justify-between gap-3 flex-wrap flex-1 min-w-0">
@@ -272,59 +358,59 @@ export function TopNav() {
                 </div>
             )}
 
-            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && (
-            <div className="flex items-center gap-2">
-                {!isOrganizationsPage && <UserSearch />}
+            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && (
+                <div className="flex items-center gap-2">
+                    {!isOrganizationsPage && <UserSearch />}
 
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-muted">
-                            <Plus className="w-5 h-5" />
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="bg-background border-border text-foreground">
-                        <DialogHeader>
-                            <DialogTitle>{isOrganizationsPage ? 'Nouvelle Organisation' : 'Nouvelle discussion'}</DialogTitle>
-                        </DialogHeader>
-                        {isOrganizationsPage ? (
-                            <div className="py-4">
-                                <p className="mb-4 text-sm text-muted-foreground">Voulez-vous créer une nouvelle organisation ?</p>
-                                <Button onClick={() => setShowOrgRequestDialog(true)} className="w-full">
-                                    Créer une organisation
-                                </Button>
-                            </div>
-                        ) : (
-                            <div className="space-y-4 pt-4">
-                                <div className="space-y-2">
-                                    <Input
-                                        placeholder="Email de l'utilisateur"
-                                        value={searchEmail}
-                                        onChange={(e) => setSearchEmail(e.target.value)}
-                                        className="bg-muted border-border"
-                                    />
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-muted">
+                                <Plus className="w-5 h-5" />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="bg-background border-border text-foreground">
+                            <DialogHeader>
+                                <DialogTitle>{isOrganizationsPage ? 'Nouvelle Organisation' : 'Nouvelle discussion'}</DialogTitle>
+                            </DialogHeader>
+                            {isOrganizationsPage ? (
+                                <div className="py-4">
+                                    <p className="mb-4 text-sm text-muted-foreground">Voulez-vous créer une nouvelle organisation ?</p>
+                                    <Button onClick={() => setShowOrgRequestDialog(true)} className="w-full">
+                                        Créer une organisation
+                                    </Button>
                                 </div>
-                                <Button
-                                    onClick={handleStartChat}
-                                    className="w-full"
-                                    disabled={loading || !searchEmail}
-                                >
-                                    {loading ? 'Recherche...' : 'Démarrer la discussion'}
-                                </Button>
-                            </div>
-                        )}
-                    </DialogContent>
-                </Dialog>
+                            ) : (
+                                <div className="space-y-4 pt-4">
+                                    <div className="space-y-2">
+                                        <Input
+                                            placeholder="Email de l'utilisateur"
+                                            value={searchEmail}
+                                            onChange={(e) => setSearchEmail(e.target.value)}
+                                            className="bg-muted border-border"
+                                        />
+                                    </div>
+                                    <Button
+                                        onClick={handleStartChat}
+                                        className="w-full"
+                                        disabled={loading || !searchEmail}
+                                    >
+                                        {loading ? 'Recherche...' : 'Démarrer la discussion'}
+                                    </Button>
+                                </div>
+                            )}
+                        </DialogContent>
+                    </Dialog>
 
-                {/* Independent Dialog for Org Request to avoid nesting issues if needed, but for now trigger from above */}
-                <OrganizationRequestDialog
-                    open={showOrgRequestDialog}
-                    onOpenChange={setShowOrgRequestDialog}
-                    onSuccess={() => {
-                        setShowOrgRequestDialog(false);
-                        window.location.reload(); // Simple reload to refresh data
-                    }}
-                />
-            </div>
+                    {/* Independent Dialog for Org Request to avoid nesting issues if needed, but for now trigger from above */}
+                    <OrganizationRequestDialog
+                        open={showOrgRequestDialog}
+                        onOpenChange={setShowOrgRequestDialog}
+                        onSuccess={() => {
+                            setShowOrgRequestDialog(false);
+                            window.location.reload(); // Simple reload to refresh data
+                        }}
+                    />
+                </div>
             )}
         </header>
     );

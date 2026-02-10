@@ -27,16 +27,22 @@ export async function POST(
             return NextResponse.json({ error: 'Email requis' }, { status: 400 });
         }
 
-        // Verify user is admin or owner of the organization
         const orgMember = await prisma.organizationMember.findFirst({
-            where: {
-                userId,
-                orgId,
-            },
+            where: { userId, orgId },
+            select: { role: true },
         });
+        const deptAuth = await prisma.department.findUnique({
+            where: { id: deptId },
+            select: { headId: true, orgId: true },
+        });
+        const isOrgOwnerOrAdmin = orgMember && (orgMember.role === 'OWNER' || orgMember.role === 'ADMIN');
+        const isDeptHead = deptAuth?.headId === userId;
 
-        if (!orgMember || (orgMember.role !== 'ADMIN' && orgMember.role !== 'OWNER')) {
-            return NextResponse.json({ error: 'Accès refusé - Droits administrateur requis' }, { status: 403 });
+        if (!isOrgOwnerOrAdmin && !isDeptHead) {
+            return NextResponse.json({ error: 'Accès refusé - Droits requis' }, { status: 403 });
+        }
+        if (!deptAuth || deptAuth.orgId !== orgId) {
+            return NextResponse.json({ error: 'Département non trouvé' }, { status: 404 });
         }
 
         // Find user by email
@@ -73,8 +79,7 @@ export async function POST(
             });
         }
 
-        // Get department
-        const department = await prisma.department.findUnique({
+        const departmentWithSub = await prisma.department.findUnique({
             where: { id: deptId },
             include: {
                 organization: {
@@ -89,14 +94,13 @@ export async function POST(
                 },
             },
         });
-
-        if (!department || department.orgId !== orgId) {
+        if (!departmentWithSub || departmentWithSub.orgId !== orgId) {
             return NextResponse.json({ error: 'Département non trouvé' }, { status: 404 });
         }
 
         // Check subscription limits
-        if (department.organization.subscription) {
-            const sub = department.organization.subscription;
+        if (departmentWithSub.organization.subscription) {
+            const sub = departmentWithSub.organization.subscription;
             if (sub.endDate && new Date() > new Date(sub.endDate)) {
                 return NextResponse.json(
                     { error: 'Abonnement expiré. Mettez à jour votre abonnement dans Paramètres pour ajouter des membres.' },
@@ -104,7 +108,7 @@ export async function POST(
                 );
             }
             const maxMembers = sub.maxMembersPerDept;
-            if (department._count.members >= maxMembers) {
+            if (departmentWithSub._count.members >= maxMembers) {
                 return NextResponse.json(
                     { error: `Limite de membres atteinte (${maxMembers})` },
                     { status: 400 }
@@ -124,9 +128,12 @@ export async function POST(
             return NextResponse.json({ error: 'L\'utilisateur est déjà membre du département' }, { status: 400 });
         }
 
-        // For simplicity, we'll use a placeholder encrypted department key
-        // In a real implementation, you would encrypt the department's private key with the user's public key
-        const encryptedDeptKey = department.publicKey; // Simplified - should be properly encrypted
+        // Récupérer la clé privée du département depuis un membre existant (nécessaire pour déchiffrer les messages)
+        const existingMemberWithKey = await prisma.departmentMember.findFirst({
+            where: { deptId },
+            select: { encryptedDeptKey: true },
+        });
+        const encryptedDeptKey = existingMemberWithKey?.encryptedDeptKey ?? departmentWithSub.publicKey;
 
         // Add user to department
         await prisma.departmentMember.create({
