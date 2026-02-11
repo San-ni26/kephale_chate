@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { getOnlineUserIds } from '@/src/lib/presence';
 
 export async function GET(
     request: NextRequest,
@@ -82,10 +83,24 @@ export async function GET(
         const isDeptHead = dept?.headId === userId;
         const canSeeMembers = isOwnerOrAdmin || isDeptHead;
 
+        // Merge Redis presence for members
+        let membersWithPresence = department.members;
+        if (canSeeMembers && department.members.length > 0) {
+            const memberIds = department.members.map(m => m.user.id);
+            const presenceMap = await getOnlineUserIds(memberIds);
+            membersWithPresence = department.members.map(m => ({
+                ...m,
+                user: {
+                    ...m.user,
+                    isOnline: presenceMap[m.user.id] ?? m.user.isOnline,
+                },
+            }));
+        }
+
         const departmentResponse = {
             ...department,
             publicKey: department.publicKey,
-            members: canSeeMembers ? department.members : [],
+            members: canSeeMembers ? membersWithPresence : [],
             head: canSeeMembers ? department.head : null,
         };
 

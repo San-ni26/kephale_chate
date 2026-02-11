@@ -41,7 +41,7 @@ export function ConversationSidebar() {
     const pathname = usePathname();
     const { data: profileData } = useSWR('/api/users/profile', fetcher);
     const { data: conversationsData, mutate: mutateConversations } = useSWR('/api/conversations', fetcher, {
-        refreshInterval: 30000, // Refresh every 30s as fallback
+        refreshInterval: 15000, // Refresh every 15s pour mise à jour présence (Redis)
     });
     const [searchQuery, setSearchQuery] = useState('');
     const [isCollapsed, setIsCollapsed] = useState(false);

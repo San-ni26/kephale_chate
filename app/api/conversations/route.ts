@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { getOnlineUserIds } from '@/src/lib/presence';
 
 // GET: Get all conversations for the authenticated user
 export async function GET(request: NextRequest) {
@@ -64,7 +65,10 @@ export async function GET(request: NextRequest) {
             },
         });
 
-        // Calculate unread counts for each conversation
+        // Calculate unread counts and merge Redis presence
+        const allMemberIds = [...new Set(conversations.flatMap(c => c.members.map(m => m.userId)))];
+        const presenceMap = await getOnlineUserIds(allMemberIds);
+
         const conversationsWithUnread = await Promise.all(
             conversations.map(async (conv) => {
                 const membership = conv.members.find(m => m.userId === user.userId);
@@ -78,8 +82,18 @@ export async function GET(request: NextRequest) {
                     },
                 });
 
+                // Merge Redis presence (priorité sur isOnline DB)
+                const membersWithPresence = conv.members.map(m => ({
+                    ...m,
+                    user: {
+                        ...m.user,
+                        isOnline: presenceMap[m.userId] ?? m.user.isOnline,
+                    },
+                }));
+
                 return {
                     ...conv,
+                    members: membersWithPresence,
                     unreadCount,
                 };
             })

@@ -208,6 +208,73 @@ exports.Prisma.DepartmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DepartmentGoalScalarFieldEnum = {
+  id: 'id',
+  deptId: 'deptId',
+  title: 'title',
+  description: 'description',
+  targetValue: 'targetValue',
+  currentValue: 'currentValue',
+  period: 'period',
+  periodKey: 'periodKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DepartmentMeetingScalarFieldEnum = {
+  id: 'id',
+  deptId: 'deptId',
+  title: 'title',
+  description: 'description',
+  agenda: 'agenda',
+  meetingDate: 'meetingDate',
+  location: 'location',
+  createdBy: 'createdBy',
+  minutes: 'minutes',
+  minutesAt: 'minutesAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DepartmentPollScalarFieldEnum = {
+  id: 'id',
+  deptId: 'deptId',
+  question: 'question',
+  options: 'options',
+  endDate: 'endDate',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PollVoteScalarFieldEnum = {
+  id: 'id',
+  pollId: 'pollId',
+  userId: 'userId',
+  optionIndex: 'optionIndex',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TeamDecisionScalarFieldEnum = {
+  id: 'id',
+  deptId: 'deptId',
+  title: 'title',
+  description: 'description',
+  voteDeadline: 'voteDeadline',
+  status: 'status',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DecisionVoteScalarFieldEnum = {
+  id: 'id',
+  decisionId: 'decisionId',
+  userId: 'userId',
+  vote: 'vote',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.DepartmentMemberScalarFieldEnum = {
   id: 'id',
   deptId: 'deptId',
@@ -530,6 +597,10 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -569,6 +640,12 @@ exports.OrgRole = exports.$Enums.OrgRole = {
   OWNER: 'OWNER',
   ADMIN: 'ADMIN',
   MEMBER: 'MEMBER'
+};
+
+exports.DecisionVoteType = exports.$Enums.DecisionVoteType = {
+  FOR: 'FOR',
+  AGAINST: 'AGAINST',
+  ABSTAIN: 'ABSTAIN'
 };
 
 exports.FileType = exports.$Enums.FileType = {
@@ -655,6 +732,12 @@ exports.Prisma.ModelName = {
   Organization: 'Organization',
   OrganizationMember: 'OrganizationMember',
   Department: 'Department',
+  DepartmentGoal: 'DepartmentGoal',
+  DepartmentMeeting: 'DepartmentMeeting',
+  DepartmentPoll: 'DepartmentPoll',
+  PollVote: 'PollVote',
+  TeamDecision: 'TeamDecision',
+  DecisionVote: 'DecisionVote',
   DepartmentMember: 'DepartmentMember',
   Group: 'Group',
   GroupMember: 'GroupMember',

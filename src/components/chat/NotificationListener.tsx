@@ -143,8 +143,13 @@ export function NotificationListener() {
             }
 
             try {
-                // Wait for SW to be ready
-                const registration = await navigator.serviceWorker.ready;
+                // Attendre le SW (deja enregistre par ServiceWorkerRegistration au root)
+                const registration = await Promise.race([
+                    navigator.serviceWorker.ready,
+                    new Promise<never>((_, reject) =>
+                        setTimeout(() => reject(new Error('SW timeout')), 15000)
+                    ),
+                ]);
                 console.log('[Push] SW ready:', registration.active?.scriptURL);
 
                 // Get or create subscription
@@ -190,8 +195,8 @@ export function NotificationListener() {
             }
         };
 
-        // Delay to ensure everything is loaded
-        const timeout = setTimeout(registerPush, 2000);
+        // Court delai pour laisser le SW s'enregistrer (depuis root layout)
+        const timeout = setTimeout(registerPush, 1000);
         return () => clearTimeout(timeout);
     }, []);
 

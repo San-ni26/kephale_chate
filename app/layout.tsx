@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 // import { Geist, Geist_Mono } from "next/font/google"; // Google Fonts temporarily disabled due to fetch error
 import "./globals.css";
+import { ServiceWorkerRegistration } from "@/src/components/ServiceWorkerRegistration";
 
 /*
 const geistSans = Geist({
@@ -63,6 +64,7 @@ export default function RootLayout({
       <body
         className={`antialiased`}
       >
+        <ServiceWorkerRegistration />
         {children}
       </body>
     </html>

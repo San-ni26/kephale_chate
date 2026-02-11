@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { clearAuth } from '@/src/lib/auth-client';
+import { verifyToken } from '@/src/lib/jwt';
+import { setUserOffline } from '@/src/lib/presence';
 
 export async function POST(request: NextRequest) {
     try {
+        // Marquer offline dans Redis avant de clear le token
+        const token = request.cookies.get('auth-token')?.value;
+        if (token) {
+            const payload = verifyToken(token);
+            if (payload?.userId) {
+                await setUserOffline(payload.userId);
+            }
+        }
+
         // Create response
         const response = NextResponse.json(
             { message: 'Déconnexion réussie' },

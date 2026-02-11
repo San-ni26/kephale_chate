@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { getOnlineUserIds } from '@/src/lib/presence';
 
 export async function GET(
     request: NextRequest,
@@ -60,6 +61,22 @@ export async function GET(
                 { error: 'Accès refusé' },
                 { status: 403 }
             );
+        }
+
+        // Merger la presence Redis (en ligne/hors ligne)
+        if (conversation.members.length > 0) {
+            const memberIds = conversation.members.map(m => m.user.id);
+            const presenceMap = await getOnlineUserIds(memberIds);
+            const membersWithPresence = conversation.members.map(m => ({
+                ...m,
+                user: {
+                    ...m.user,
+                    isOnline: presenceMap[m.user.id] ?? m.user.isOnline,
+                },
+            }));
+            return NextResponse.json({
+                conversation: { ...conversation, members: membersWithPresence },
+            }, { status: 200 });
         }
 
         return NextResponse.json({ conversation }, { status: 200 });

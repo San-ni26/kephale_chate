@@ -107,6 +107,9 @@ self.addEventListener('notificationclick', function (event) {
         return;
     }
 
+    // URL absolue requise pour openWindow quand le navigateur est ferme
+    var fullUrl = url.startsWith('/') ? self.location.origin + url : url;
+
     // Navigate to the conversation
     event.waitUntil(
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
@@ -118,7 +121,7 @@ self.addEventListener('notificationclick', function (event) {
                     });
                 }
             }
-            return self.clients.openWindow(url);
+            return self.clients.openWindow(fullUrl);
         })
     );
 });

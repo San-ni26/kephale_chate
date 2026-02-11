@@ -38,7 +38,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
-import { CheckCircle2, Clock, AlertCircle, Calendar as CalendarIcon, ClipboardList, Crown } from "lucide-react";
+import { CheckCircle2, Clock, AlertCircle, Calendar as CalendarIcon, ClipboardList, Crown, Target, Calendar, BarChart3, Vote } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -92,6 +92,10 @@ interface Task {
 
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
+import DepartmentGoalsTab from '@/src/components/organizations/DepartmentGoalsTab';
+import DepartmentMeetingsTab from '@/src/components/organizations/DepartmentMeetingsTab';
+import DepartmentPollsTab from '@/src/components/organizations/DepartmentPollsTab';
+import DepartmentDecisionsTab from '@/src/components/organizations/DepartmentDecisionsTab';
 
 function DepartmentReportsTab({
     orgId,
@@ -234,7 +238,7 @@ export default function DepartmentDetailPage() {
     const tabParam = searchParams?.get('tab');
     const [activeTab, setActiveTab] = useState('members');
     useEffect(() => {
-        if (tabParam === 'reports' || tabParam === 'tasks') setActiveTab(tabParam);
+        if (tabParam === 'reports' || tabParam === 'tasks' || tabParam === 'goals' || tabParam === 'meetings' || tabParam === 'polls' || tabParam === 'decisions') setActiveTab(tabParam);
     }, [tabParam]);
 
     const handleSetDepartmentHead = async (userId: string | null) => {
@@ -653,6 +657,22 @@ export default function DepartmentDetailPage() {
                         <FileText className="w-4 h-4" />
                         Rapports
                     </TabsTrigger>
+                    <TabsTrigger value="goals" className="flex items-center gap-2">
+                        <Target className="w-4 h-4" />
+                        Objectifs
+                    </TabsTrigger>
+                    <TabsTrigger value="meetings" className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        Réunions
+                    </TabsTrigger>
+                    <TabsTrigger value="polls" className="flex items-center gap-2">
+                        <BarChart3 className="w-4 h-4" />
+                        Sondages
+                    </TabsTrigger>
+                    <TabsTrigger value="decisions" className="flex items-center gap-2">
+                        <Vote className="w-4 h-4" />
+                        Décisions
+                    </TabsTrigger>
                 </TabsList>
 
                 {canAddOrRemoveMember && (
@@ -907,6 +927,38 @@ export default function DepartmentDetailPage() {
                         orgId={orgId}
                         deptId={deptId}
                         isOrgAdmin={isOrgAdmin}
+                    />
+                </TabsContent>
+
+                <TabsContent value="goals">
+                    <DepartmentGoalsTab
+                        orgId={orgId}
+                        deptId={deptId}
+                        canManage={canCreateTask}
+                    />
+                </TabsContent>
+
+                <TabsContent value="meetings">
+                    <DepartmentMeetingsTab
+                        orgId={orgId}
+                        deptId={deptId}
+                        canManage={canCreateTask}
+                    />
+                </TabsContent>
+
+                <TabsContent value="polls">
+                    <DepartmentPollsTab
+                        orgId={orgId}
+                        deptId={deptId}
+                        canManage={canCreateTask}
+                    />
+                </TabsContent>
+
+                <TabsContent value="decisions">
+                    <DepartmentDecisionsTab
+                        orgId={orgId}
+                        deptId={deptId}
+                        canManage={canCreateTask}
                     />
                 </TabsContent>
             </Tabs>

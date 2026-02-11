@@ -24,6 +24,8 @@ Ce guide vous explique comment déployer votre application **Kephale Chat** sur 
 | `JWT_SECRET` | Une chaîne secrète longue et aléatoire pour signer les tokens (si utilisé). |
 | `NEXTAUTH_SECRET` | Si vous utilisez NextAuth, idem. |
 | `NEXTAUTH_URL` | L'URL canonique de votre site. |
+| `UPSTASH_REDIS_REST_URL` | URL de votre base Redis Upstash (pour présence en ligne). |
+| `UPSTASH_REDIS_REST_TOKEN` | Token Redis Upstash. Créer une base gratuite sur [upstash.com](https://upstash.com). |
 
 ## 3. Limitations WebSockets & Solutions
 
@@ -34,7 +36,14 @@ Vercel est une plateforme **Serverless**. Cela signifie que vos fonctions (API) 
 ### L'Impact sur l'Application
 - **Notifications Push** : ✅ **Fonctionnent**. Nous avons modifié le code pour que les notifications Push soient envoyées via les routes API standards (`POST /api/...`). Vercel gère cela parfaitement.
 - **Messages en direct** : ⚠️ **Mode Dégradé**. Le chat fonctionnera grâce au système de **Polling** (vérification automatique toutes les 3 secondes) que nous avons, mais l'affichage ne sera pas instantané comme avec les WebSockets.
-- **Indicateurs de frappe / Statut En ligne** : ❌ **Ne fonctionneront pas** sur Vercel seul.
+- **Indicateurs de frappe / Statut En ligne** : ✅ **Fonctionnent** via Redis (Upstash) + Pusher. La présence en ligne est stockée dans Redis avec heartbeat.
+
+### Notifications Desktop (Chrome/Edge) quand l'onglet ou le navigateur est fermé
+Pour recevoir les notifications quand Chrome/Edge est "fermé" :
+- **Onglet fermé** : Fonctionne par défaut (le Service Worker reste actif).
+- **Fenêtre fermée** : Chrome doit continuer en arrière-plan :
+  - **Windows** : Paramètres Chrome → Système → activer « Continuer à exécuter les applications en arrière-plan lorsque Google Chrome est fermé ».
+  - **Mac** : Ne pas quitter Chrome (Cmd+Q). Fermer la fenêtre suffit – Chrome reste en arrière-plan.
 
 ### La Solution Recommandée
 Si vous avez besoin du temps réel parfait (WebSockets) :

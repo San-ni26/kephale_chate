@@ -110,7 +110,8 @@ export default function DiscussionPage() {
 
     const { data: conversationData } = useSWR(
         conversationId ? `/api/conversations/${conversationId}` : null,
-        fetcher
+        fetcher,
+        { refreshInterval: 15000 } // Rafraichir la presence (en ligne) toutes les 15s
     );
     const conversation: Conversation | null = conversationData?.conversation || null;
 

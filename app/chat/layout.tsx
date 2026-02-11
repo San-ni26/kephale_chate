@@ -2,6 +2,7 @@ import { BottomNav } from "@/src/components/chat/BottomNav";
 import { TopNav } from "@/src/components/chat/TopNav";
 import { PWAInstaller } from "@/src/components/PWAInstaller";
 import { NotificationListener } from "@/src/components/chat/NotificationListener";
+import { PresenceHeartbeat } from "@/src/components/chat/PresenceHeartbeat";
 import { ConversationSidebar } from "@/src/components/chat/ConversationSidebar";
 import { FeedSearchProvider } from "@/src/contexts/FeedSearchContext";
 import { FinancesProvider } from "@/src/contexts/FinancesContext";
@@ -37,6 +38,7 @@ export default function ChatLayout({
 
                     <PWAInstaller />
                     <NotificationListener />
+                    <PresenceHeartbeat />
                 </div>
             </FeedSearchProvider>
         </FinancesProvider>

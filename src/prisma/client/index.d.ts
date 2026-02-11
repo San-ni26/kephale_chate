@@ -49,6 +49,36 @@ export type OrganizationMember = $Result.DefaultSelection<Prisma.$OrganizationMe
  */
 export type Department = $Result.DefaultSelection<Prisma.$DepartmentPayload>
 /**
+ * Model DepartmentGoal
+ * 
+ */
+export type DepartmentGoal = $Result.DefaultSelection<Prisma.$DepartmentGoalPayload>
+/**
+ * Model DepartmentMeeting
+ * 
+ */
+export type DepartmentMeeting = $Result.DefaultSelection<Prisma.$DepartmentMeetingPayload>
+/**
+ * Model DepartmentPoll
+ * 
+ */
+export type DepartmentPoll = $Result.DefaultSelection<Prisma.$DepartmentPollPayload>
+/**
+ * Model PollVote
+ * 
+ */
+export type PollVote = $Result.DefaultSelection<Prisma.$PollVotePayload>
+/**
+ * Model TeamDecision
+ * 
+ */
+export type TeamDecision = $Result.DefaultSelection<Prisma.$TeamDecisionPayload>
+/**
+ * Model DecisionVote
+ * 
+ */
+export type DecisionVote = $Result.DefaultSelection<Prisma.$DecisionVotePayload>
+/**
  * Model DepartmentMember
  * 
  */
@@ -223,6 +253,15 @@ export const InvitationType: {
 export type InvitationType = (typeof InvitationType)[keyof typeof InvitationType]
 
 
+export const DecisionVoteType: {
+  FOR: 'FOR',
+  AGAINST: 'AGAINST',
+  ABSTAIN: 'ABSTAIN'
+};
+
+export type DecisionVoteType = (typeof DecisionVoteType)[keyof typeof DecisionVoteType]
+
+
 export const UserRole: {
   USER: 'USER',
   ADMIN: 'ADMIN',
@@ -358,6 +397,10 @@ export const InvitationStatus: typeof $Enums.InvitationStatus
 export type InvitationType = $Enums.InvitationType
 
 export const InvitationType: typeof $Enums.InvitationType
+
+export type DecisionVoteType = $Enums.DecisionVoteType
+
+export const DecisionVoteType: typeof $Enums.DecisionVoteType
 
 export type UserRole = $Enums.UserRole
 
@@ -597,6 +640,66 @@ export class PrismaClient<
     * ```
     */
   get department(): Prisma.DepartmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.departmentGoal`: Exposes CRUD operations for the **DepartmentGoal** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DepartmentGoals
+    * const departmentGoals = await prisma.departmentGoal.findMany()
+    * ```
+    */
+  get departmentGoal(): Prisma.DepartmentGoalDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.departmentMeeting`: Exposes CRUD operations for the **DepartmentMeeting** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DepartmentMeetings
+    * const departmentMeetings = await prisma.departmentMeeting.findMany()
+    * ```
+    */
+  get departmentMeeting(): Prisma.DepartmentMeetingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.departmentPoll`: Exposes CRUD operations for the **DepartmentPoll** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DepartmentPolls
+    * const departmentPolls = await prisma.departmentPoll.findMany()
+    * ```
+    */
+  get departmentPoll(): Prisma.DepartmentPollDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pollVote`: Exposes CRUD operations for the **PollVote** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PollVotes
+    * const pollVotes = await prisma.pollVote.findMany()
+    * ```
+    */
+  get pollVote(): Prisma.PollVoteDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.teamDecision`: Exposes CRUD operations for the **TeamDecision** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TeamDecisions
+    * const teamDecisions = await prisma.teamDecision.findMany()
+    * ```
+    */
+  get teamDecision(): Prisma.TeamDecisionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.decisionVote`: Exposes CRUD operations for the **DecisionVote** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DecisionVotes
+    * const decisionVotes = await prisma.decisionVote.findMany()
+    * ```
+    */
+  get decisionVote(): Prisma.DecisionVoteDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.departmentMember`: Exposes CRUD operations for the **DepartmentMember** model.
@@ -1338,6 +1441,12 @@ export namespace Prisma {
     Organization: 'Organization',
     OrganizationMember: 'OrganizationMember',
     Department: 'Department',
+    DepartmentGoal: 'DepartmentGoal',
+    DepartmentMeeting: 'DepartmentMeeting',
+    DepartmentPoll: 'DepartmentPoll',
+    PollVote: 'PollVote',
+    TeamDecision: 'TeamDecision',
+    DecisionVote: 'DecisionVote',
     DepartmentMember: 'DepartmentMember',
     Group: 'Group',
     GroupMember: 'GroupMember',
@@ -1383,7 +1492,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
+      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1902,6 +2011,450 @@ export namespace Prisma {
           count: {
             args: Prisma.DepartmentCountArgs<ExtArgs>
             result: $Utils.Optional<DepartmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      DepartmentGoal: {
+        payload: Prisma.$DepartmentGoalPayload<ExtArgs>
+        fields: Prisma.DepartmentGoalFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepartmentGoalFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepartmentGoalFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload>
+          }
+          findFirst: {
+            args: Prisma.DepartmentGoalFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepartmentGoalFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload>
+          }
+          findMany: {
+            args: Prisma.DepartmentGoalFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload>[]
+          }
+          create: {
+            args: Prisma.DepartmentGoalCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload>
+          }
+          createMany: {
+            args: Prisma.DepartmentGoalCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DepartmentGoalCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload>[]
+          }
+          delete: {
+            args: Prisma.DepartmentGoalDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload>
+          }
+          update: {
+            args: Prisma.DepartmentGoalUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload>
+          }
+          deleteMany: {
+            args: Prisma.DepartmentGoalDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepartmentGoalUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DepartmentGoalUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload>[]
+          }
+          upsert: {
+            args: Prisma.DepartmentGoalUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentGoalPayload>
+          }
+          aggregate: {
+            args: Prisma.DepartmentGoalAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepartmentGoal>
+          }
+          groupBy: {
+            args: Prisma.DepartmentGoalGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentGoalGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepartmentGoalCountArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentGoalCountAggregateOutputType> | number
+          }
+        }
+      }
+      DepartmentMeeting: {
+        payload: Prisma.$DepartmentMeetingPayload<ExtArgs>
+        fields: Prisma.DepartmentMeetingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepartmentMeetingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepartmentMeetingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload>
+          }
+          findFirst: {
+            args: Prisma.DepartmentMeetingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepartmentMeetingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload>
+          }
+          findMany: {
+            args: Prisma.DepartmentMeetingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload>[]
+          }
+          create: {
+            args: Prisma.DepartmentMeetingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload>
+          }
+          createMany: {
+            args: Prisma.DepartmentMeetingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DepartmentMeetingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload>[]
+          }
+          delete: {
+            args: Prisma.DepartmentMeetingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload>
+          }
+          update: {
+            args: Prisma.DepartmentMeetingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload>
+          }
+          deleteMany: {
+            args: Prisma.DepartmentMeetingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepartmentMeetingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DepartmentMeetingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload>[]
+          }
+          upsert: {
+            args: Prisma.DepartmentMeetingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentMeetingPayload>
+          }
+          aggregate: {
+            args: Prisma.DepartmentMeetingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepartmentMeeting>
+          }
+          groupBy: {
+            args: Prisma.DepartmentMeetingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentMeetingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepartmentMeetingCountArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentMeetingCountAggregateOutputType> | number
+          }
+        }
+      }
+      DepartmentPoll: {
+        payload: Prisma.$DepartmentPollPayload<ExtArgs>
+        fields: Prisma.DepartmentPollFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepartmentPollFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepartmentPollFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload>
+          }
+          findFirst: {
+            args: Prisma.DepartmentPollFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepartmentPollFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload>
+          }
+          findMany: {
+            args: Prisma.DepartmentPollFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload>[]
+          }
+          create: {
+            args: Prisma.DepartmentPollCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload>
+          }
+          createMany: {
+            args: Prisma.DepartmentPollCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DepartmentPollCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload>[]
+          }
+          delete: {
+            args: Prisma.DepartmentPollDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload>
+          }
+          update: {
+            args: Prisma.DepartmentPollUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload>
+          }
+          deleteMany: {
+            args: Prisma.DepartmentPollDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepartmentPollUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DepartmentPollUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload>[]
+          }
+          upsert: {
+            args: Prisma.DepartmentPollUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPollPayload>
+          }
+          aggregate: {
+            args: Prisma.DepartmentPollAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepartmentPoll>
+          }
+          groupBy: {
+            args: Prisma.DepartmentPollGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentPollGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepartmentPollCountArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentPollCountAggregateOutputType> | number
+          }
+        }
+      }
+      PollVote: {
+        payload: Prisma.$PollVotePayload<ExtArgs>
+        fields: Prisma.PollVoteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PollVoteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PollVoteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload>
+          }
+          findFirst: {
+            args: Prisma.PollVoteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PollVoteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload>
+          }
+          findMany: {
+            args: Prisma.PollVoteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload>[]
+          }
+          create: {
+            args: Prisma.PollVoteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload>
+          }
+          createMany: {
+            args: Prisma.PollVoteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PollVoteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload>[]
+          }
+          delete: {
+            args: Prisma.PollVoteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload>
+          }
+          update: {
+            args: Prisma.PollVoteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload>
+          }
+          deleteMany: {
+            args: Prisma.PollVoteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PollVoteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PollVoteUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload>[]
+          }
+          upsert: {
+            args: Prisma.PollVoteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PollVotePayload>
+          }
+          aggregate: {
+            args: Prisma.PollVoteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePollVote>
+          }
+          groupBy: {
+            args: Prisma.PollVoteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PollVoteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PollVoteCountArgs<ExtArgs>
+            result: $Utils.Optional<PollVoteCountAggregateOutputType> | number
+          }
+        }
+      }
+      TeamDecision: {
+        payload: Prisma.$TeamDecisionPayload<ExtArgs>
+        fields: Prisma.TeamDecisionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TeamDecisionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TeamDecisionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload>
+          }
+          findFirst: {
+            args: Prisma.TeamDecisionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TeamDecisionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload>
+          }
+          findMany: {
+            args: Prisma.TeamDecisionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload>[]
+          }
+          create: {
+            args: Prisma.TeamDecisionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload>
+          }
+          createMany: {
+            args: Prisma.TeamDecisionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TeamDecisionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload>[]
+          }
+          delete: {
+            args: Prisma.TeamDecisionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload>
+          }
+          update: {
+            args: Prisma.TeamDecisionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload>
+          }
+          deleteMany: {
+            args: Prisma.TeamDecisionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TeamDecisionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TeamDecisionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload>[]
+          }
+          upsert: {
+            args: Prisma.TeamDecisionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeamDecisionPayload>
+          }
+          aggregate: {
+            args: Prisma.TeamDecisionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTeamDecision>
+          }
+          groupBy: {
+            args: Prisma.TeamDecisionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TeamDecisionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TeamDecisionCountArgs<ExtArgs>
+            result: $Utils.Optional<TeamDecisionCountAggregateOutputType> | number
+          }
+        }
+      }
+      DecisionVote: {
+        payload: Prisma.$DecisionVotePayload<ExtArgs>
+        fields: Prisma.DecisionVoteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DecisionVoteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DecisionVoteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload>
+          }
+          findFirst: {
+            args: Prisma.DecisionVoteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DecisionVoteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload>
+          }
+          findMany: {
+            args: Prisma.DecisionVoteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload>[]
+          }
+          create: {
+            args: Prisma.DecisionVoteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload>
+          }
+          createMany: {
+            args: Prisma.DecisionVoteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DecisionVoteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload>[]
+          }
+          delete: {
+            args: Prisma.DecisionVoteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload>
+          }
+          update: {
+            args: Prisma.DecisionVoteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload>
+          }
+          deleteMany: {
+            args: Prisma.DecisionVoteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DecisionVoteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DecisionVoteUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload>[]
+          }
+          upsert: {
+            args: Prisma.DecisionVoteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DecisionVotePayload>
+          }
+          aggregate: {
+            args: Prisma.DecisionVoteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDecisionVote>
+          }
+          groupBy: {
+            args: Prisma.DecisionVoteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DecisionVoteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DecisionVoteCountArgs<ExtArgs>
+            result: $Utils.Optional<DecisionVoteCountAggregateOutputType> | number
           }
         }
       }
@@ -4240,6 +4793,12 @@ export namespace Prisma {
     organization?: OrganizationOmit
     organizationMember?: OrganizationMemberOmit
     department?: DepartmentOmit
+    departmentGoal?: DepartmentGoalOmit
+    departmentMeeting?: DepartmentMeetingOmit
+    departmentPoll?: DepartmentPollOmit
+    pollVote?: PollVoteOmit
+    teamDecision?: TeamDecisionOmit
+    decisionVote?: DecisionVoteOmit
     departmentMember?: DepartmentMemberOmit
     group?: GroupOmit
     groupMember?: GroupMemberOmit
@@ -4364,6 +4923,11 @@ export namespace Prisma {
     headedDepartments: number
     taskMessages: number
     departmentMonthlyReports: number
+    createdMeetings: number
+    createdPolls: number
+    createdDecisions: number
+    pollVotes: number
+    decisionVotes: number
     pushSubscriptions: number
     invitations: number
     personalTasks: number
@@ -4389,6 +4953,11 @@ export namespace Prisma {
     headedDepartments?: boolean | UserCountOutputTypeCountHeadedDepartmentsArgs
     taskMessages?: boolean | UserCountOutputTypeCountTaskMessagesArgs
     departmentMonthlyReports?: boolean | UserCountOutputTypeCountDepartmentMonthlyReportsArgs
+    createdMeetings?: boolean | UserCountOutputTypeCountCreatedMeetingsArgs
+    createdPolls?: boolean | UserCountOutputTypeCountCreatedPollsArgs
+    createdDecisions?: boolean | UserCountOutputTypeCountCreatedDecisionsArgs
+    pollVotes?: boolean | UserCountOutputTypeCountPollVotesArgs
+    decisionVotes?: boolean | UserCountOutputTypeCountDecisionVotesArgs
     pushSubscriptions?: boolean | UserCountOutputTypeCountPushSubscriptionsArgs
     invitations?: boolean | UserCountOutputTypeCountInvitationsArgs
     personalTasks?: boolean | UserCountOutputTypeCountPersonalTasksArgs
@@ -4506,6 +5075,41 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountDepartmentMonthlyReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DepartmentMonthlyReportWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCreatedMeetingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentMeetingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCreatedPollsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentPollWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCreatedDecisionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeamDecisionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPollVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PollVoteWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDecisionVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DecisionVoteWhereInput
   }
 
   /**
@@ -4655,6 +5259,10 @@ export namespace Prisma {
     tasks: number
     eventBroadcasts: number
     monthlyReports: number
+    goals: number
+    meetings: number
+    polls: number
+    teamDecisions: number
   }
 
   export type DepartmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4663,6 +5271,10 @@ export namespace Prisma {
     tasks?: boolean | DepartmentCountOutputTypeCountTasksArgs
     eventBroadcasts?: boolean | DepartmentCountOutputTypeCountEventBroadcastsArgs
     monthlyReports?: boolean | DepartmentCountOutputTypeCountMonthlyReportsArgs
+    goals?: boolean | DepartmentCountOutputTypeCountGoalsArgs
+    meetings?: boolean | DepartmentCountOutputTypeCountMeetingsArgs
+    polls?: boolean | DepartmentCountOutputTypeCountPollsArgs
+    teamDecisions?: boolean | DepartmentCountOutputTypeCountTeamDecisionsArgs
   }
 
   // Custom InputTypes
@@ -4709,6 +5321,96 @@ export namespace Prisma {
    */
   export type DepartmentCountOutputTypeCountMonthlyReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DepartmentMonthlyReportWhereInput
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountGoalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentGoalWhereInput
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountMeetingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentMeetingWhereInput
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountPollsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentPollWhereInput
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountTeamDecisionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeamDecisionWhereInput
+  }
+
+
+  /**
+   * Count Type DepartmentPollCountOutputType
+   */
+
+  export type DepartmentPollCountOutputType = {
+    votes: number
+  }
+
+  export type DepartmentPollCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    votes?: boolean | DepartmentPollCountOutputTypeCountVotesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DepartmentPollCountOutputType without action
+   */
+  export type DepartmentPollCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPollCountOutputType
+     */
+    select?: DepartmentPollCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentPollCountOutputType without action
+   */
+  export type DepartmentPollCountOutputTypeCountVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PollVoteWhereInput
+  }
+
+
+  /**
+   * Count Type TeamDecisionCountOutputType
+   */
+
+  export type TeamDecisionCountOutputType = {
+    votes: number
+  }
+
+  export type TeamDecisionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    votes?: boolean | TeamDecisionCountOutputTypeCountVotesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TeamDecisionCountOutputType without action
+   */
+  export type TeamDecisionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecisionCountOutputType
+     */
+    select?: TeamDecisionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TeamDecisionCountOutputType without action
+   */
+  export type TeamDecisionCountOutputTypeCountVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DecisionVoteWhereInput
   }
 
 
@@ -5390,6 +6092,11 @@ export namespace Prisma {
     headedDepartments?: boolean | User$headedDepartmentsArgs<ExtArgs>
     taskMessages?: boolean | User$taskMessagesArgs<ExtArgs>
     departmentMonthlyReports?: boolean | User$departmentMonthlyReportsArgs<ExtArgs>
+    createdMeetings?: boolean | User$createdMeetingsArgs<ExtArgs>
+    createdPolls?: boolean | User$createdPollsArgs<ExtArgs>
+    createdDecisions?: boolean | User$createdDecisionsArgs<ExtArgs>
+    pollVotes?: boolean | User$pollVotesArgs<ExtArgs>
+    decisionVotes?: boolean | User$decisionVotesArgs<ExtArgs>
     pushSubscriptions?: boolean | User$pushSubscriptionsArgs<ExtArgs>
     invitations?: boolean | User$invitationsArgs<ExtArgs>
     personalTasks?: boolean | User$personalTasksArgs<ExtArgs>
@@ -5500,6 +6207,11 @@ export namespace Prisma {
     headedDepartments?: boolean | User$headedDepartmentsArgs<ExtArgs>
     taskMessages?: boolean | User$taskMessagesArgs<ExtArgs>
     departmentMonthlyReports?: boolean | User$departmentMonthlyReportsArgs<ExtArgs>
+    createdMeetings?: boolean | User$createdMeetingsArgs<ExtArgs>
+    createdPolls?: boolean | User$createdPollsArgs<ExtArgs>
+    createdDecisions?: boolean | User$createdDecisionsArgs<ExtArgs>
+    pollVotes?: boolean | User$pollVotesArgs<ExtArgs>
+    decisionVotes?: boolean | User$decisionVotesArgs<ExtArgs>
     pushSubscriptions?: boolean | User$pushSubscriptionsArgs<ExtArgs>
     invitations?: boolean | User$invitationsArgs<ExtArgs>
     personalTasks?: boolean | User$personalTasksArgs<ExtArgs>
@@ -5532,6 +6244,11 @@ export namespace Prisma {
       headedDepartments: Prisma.$DepartmentPayload<ExtArgs>[]
       taskMessages: Prisma.$TaskMessagePayload<ExtArgs>[]
       departmentMonthlyReports: Prisma.$DepartmentMonthlyReportPayload<ExtArgs>[]
+      createdMeetings: Prisma.$DepartmentMeetingPayload<ExtArgs>[]
+      createdPolls: Prisma.$DepartmentPollPayload<ExtArgs>[]
+      createdDecisions: Prisma.$TeamDecisionPayload<ExtArgs>[]
+      pollVotes: Prisma.$PollVotePayload<ExtArgs>[]
+      decisionVotes: Prisma.$DecisionVotePayload<ExtArgs>[]
       pushSubscriptions: Prisma.$PushSubscriptionPayload<ExtArgs>[]
       invitations: Prisma.$UserInvitationPayload<ExtArgs>[]
       personalTasks: Prisma.$UserPersonalTaskPayload<ExtArgs>[]
@@ -5976,6 +6693,11 @@ export namespace Prisma {
     headedDepartments<T extends User$headedDepartmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$headedDepartmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     taskMessages<T extends User$taskMessagesArgs<ExtArgs> = {}>(args?: Subset<T, User$taskMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     departmentMonthlyReports<T extends User$departmentMonthlyReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$departmentMonthlyReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdMeetings<T extends User$createdMeetingsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdMeetingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdPolls<T extends User$createdPollsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdPollsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdDecisions<T extends User$createdDecisionsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pollVotes<T extends User$pollVotesArgs<ExtArgs> = {}>(args?: Subset<T, User$pollVotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    decisionVotes<T extends User$decisionVotesArgs<ExtArgs> = {}>(args?: Subset<T, User$decisionVotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pushSubscriptions<T extends User$pushSubscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, User$pushSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PushSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invitations<T extends User$invitationsArgs<ExtArgs> = {}>(args?: Subset<T, User$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserInvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     personalTasks<T extends User$personalTasksArgs<ExtArgs> = {}>(args?: Subset<T, User$personalTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6778,6 +7500,126 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DepartmentMonthlyReportScalarFieldEnum | DepartmentMonthlyReportScalarFieldEnum[]
+  }
+
+  /**
+   * User.createdMeetings
+   */
+  export type User$createdMeetingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    where?: DepartmentMeetingWhereInput
+    orderBy?: DepartmentMeetingOrderByWithRelationInput | DepartmentMeetingOrderByWithRelationInput[]
+    cursor?: DepartmentMeetingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentMeetingScalarFieldEnum | DepartmentMeetingScalarFieldEnum[]
+  }
+
+  /**
+   * User.createdPolls
+   */
+  export type User$createdPollsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    where?: DepartmentPollWhereInput
+    orderBy?: DepartmentPollOrderByWithRelationInput | DepartmentPollOrderByWithRelationInput[]
+    cursor?: DepartmentPollWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentPollScalarFieldEnum | DepartmentPollScalarFieldEnum[]
+  }
+
+  /**
+   * User.createdDecisions
+   */
+  export type User$createdDecisionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    where?: TeamDecisionWhereInput
+    orderBy?: TeamDecisionOrderByWithRelationInput | TeamDecisionOrderByWithRelationInput[]
+    cursor?: TeamDecisionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TeamDecisionScalarFieldEnum | TeamDecisionScalarFieldEnum[]
+  }
+
+  /**
+   * User.pollVotes
+   */
+  export type User$pollVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    where?: PollVoteWhereInput
+    orderBy?: PollVoteOrderByWithRelationInput | PollVoteOrderByWithRelationInput[]
+    cursor?: PollVoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PollVoteScalarFieldEnum | PollVoteScalarFieldEnum[]
+  }
+
+  /**
+   * User.decisionVotes
+   */
+  export type User$decisionVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    where?: DecisionVoteWhereInput
+    orderBy?: DecisionVoteOrderByWithRelationInput | DecisionVoteOrderByWithRelationInput[]
+    cursor?: DecisionVoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DecisionVoteScalarFieldEnum | DecisionVoteScalarFieldEnum[]
   }
 
   /**
@@ -12801,6 +13643,10 @@ export namespace Prisma {
     tasks?: boolean | Department$tasksArgs<ExtArgs>
     eventBroadcasts?: boolean | Department$eventBroadcastsArgs<ExtArgs>
     monthlyReports?: boolean | Department$monthlyReportsArgs<ExtArgs>
+    goals?: boolean | Department$goalsArgs<ExtArgs>
+    meetings?: boolean | Department$meetingsArgs<ExtArgs>
+    polls?: boolean | Department$pollsArgs<ExtArgs>
+    teamDecisions?: boolean | Department$teamDecisionsArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["department"]>
 
@@ -12847,6 +13693,10 @@ export namespace Prisma {
     tasks?: boolean | Department$tasksArgs<ExtArgs>
     eventBroadcasts?: boolean | Department$eventBroadcastsArgs<ExtArgs>
     monthlyReports?: boolean | Department$monthlyReportsArgs<ExtArgs>
+    goals?: boolean | Department$goalsArgs<ExtArgs>
+    meetings?: boolean | Department$meetingsArgs<ExtArgs>
+    polls?: boolean | Department$pollsArgs<ExtArgs>
+    teamDecisions?: boolean | Department$teamDecisionsArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12868,6 +13718,10 @@ export namespace Prisma {
       tasks: Prisma.$TaskPayload<ExtArgs>[]
       eventBroadcasts: Prisma.$EventDepartmentBroadcastPayload<ExtArgs>[]
       monthlyReports: Prisma.$DepartmentMonthlyReportPayload<ExtArgs>[]
+      goals: Prisma.$DepartmentGoalPayload<ExtArgs>[]
+      meetings: Prisma.$DepartmentMeetingPayload<ExtArgs>[]
+      polls: Prisma.$DepartmentPollPayload<ExtArgs>[]
+      teamDecisions: Prisma.$TeamDecisionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13278,6 +14132,10 @@ export namespace Prisma {
     tasks<T extends Department$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Department$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     eventBroadcasts<T extends Department$eventBroadcastsArgs<ExtArgs> = {}>(args?: Subset<T, Department$eventBroadcastsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventDepartmentBroadcastPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     monthlyReports<T extends Department$monthlyReportsArgs<ExtArgs> = {}>(args?: Subset<T, Department$monthlyReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    goals<T extends Department$goalsArgs<ExtArgs> = {}>(args?: Subset<T, Department$goalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    meetings<T extends Department$meetingsArgs<ExtArgs> = {}>(args?: Subset<T, Department$meetingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    polls<T extends Department$pollsArgs<ExtArgs> = {}>(args?: Subset<T, Department$pollsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    teamDecisions<T extends Department$teamDecisionsArgs<ExtArgs> = {}>(args?: Subset<T, Department$teamDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13849,6 +14707,102 @@ export namespace Prisma {
   }
 
   /**
+   * Department.goals
+   */
+  export type Department$goalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+    where?: DepartmentGoalWhereInput
+    orderBy?: DepartmentGoalOrderByWithRelationInput | DepartmentGoalOrderByWithRelationInput[]
+    cursor?: DepartmentGoalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentGoalScalarFieldEnum | DepartmentGoalScalarFieldEnum[]
+  }
+
+  /**
+   * Department.meetings
+   */
+  export type Department$meetingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    where?: DepartmentMeetingWhereInput
+    orderBy?: DepartmentMeetingOrderByWithRelationInput | DepartmentMeetingOrderByWithRelationInput[]
+    cursor?: DepartmentMeetingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentMeetingScalarFieldEnum | DepartmentMeetingScalarFieldEnum[]
+  }
+
+  /**
+   * Department.polls
+   */
+  export type Department$pollsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    where?: DepartmentPollWhereInput
+    orderBy?: DepartmentPollOrderByWithRelationInput | DepartmentPollOrderByWithRelationInput[]
+    cursor?: DepartmentPollWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentPollScalarFieldEnum | DepartmentPollScalarFieldEnum[]
+  }
+
+  /**
+   * Department.teamDecisions
+   */
+  export type Department$teamDecisionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    where?: TeamDecisionWhereInput
+    orderBy?: TeamDecisionOrderByWithRelationInput | TeamDecisionOrderByWithRelationInput[]
+    cursor?: TeamDecisionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TeamDecisionScalarFieldEnum | TeamDecisionScalarFieldEnum[]
+  }
+
+  /**
    * Department without action
    */
   export type DepartmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13864,6 +14818,6769 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: DepartmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DepartmentGoal
+   */
+
+  export type AggregateDepartmentGoal = {
+    _count: DepartmentGoalCountAggregateOutputType | null
+    _avg: DepartmentGoalAvgAggregateOutputType | null
+    _sum: DepartmentGoalSumAggregateOutputType | null
+    _min: DepartmentGoalMinAggregateOutputType | null
+    _max: DepartmentGoalMaxAggregateOutputType | null
+  }
+
+  export type DepartmentGoalAvgAggregateOutputType = {
+    targetValue: number | null
+    currentValue: number | null
+  }
+
+  export type DepartmentGoalSumAggregateOutputType = {
+    targetValue: number | null
+    currentValue: number | null
+  }
+
+  export type DepartmentGoalMinAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    title: string | null
+    description: string | null
+    targetValue: number | null
+    currentValue: number | null
+    period: string | null
+    periodKey: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentGoalMaxAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    title: string | null
+    description: string | null
+    targetValue: number | null
+    currentValue: number | null
+    period: string | null
+    periodKey: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentGoalCountAggregateOutputType = {
+    id: number
+    deptId: number
+    title: number
+    description: number
+    targetValue: number
+    currentValue: number
+    period: number
+    periodKey: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DepartmentGoalAvgAggregateInputType = {
+    targetValue?: true
+    currentValue?: true
+  }
+
+  export type DepartmentGoalSumAggregateInputType = {
+    targetValue?: true
+    currentValue?: true
+  }
+
+  export type DepartmentGoalMinAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    description?: true
+    targetValue?: true
+    currentValue?: true
+    period?: true
+    periodKey?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentGoalMaxAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    description?: true
+    targetValue?: true
+    currentValue?: true
+    period?: true
+    periodKey?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentGoalCountAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    description?: true
+    targetValue?: true
+    currentValue?: true
+    period?: true
+    periodKey?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DepartmentGoalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentGoal to aggregate.
+     */
+    where?: DepartmentGoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentGoals to fetch.
+     */
+    orderBy?: DepartmentGoalOrderByWithRelationInput | DepartmentGoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepartmentGoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentGoals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentGoals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DepartmentGoals
+    **/
+    _count?: true | DepartmentGoalCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DepartmentGoalAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DepartmentGoalSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepartmentGoalMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepartmentGoalMaxAggregateInputType
+  }
+
+  export type GetDepartmentGoalAggregateType<T extends DepartmentGoalAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepartmentGoal]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepartmentGoal[P]>
+      : GetScalarType<T[P], AggregateDepartmentGoal[P]>
+  }
+
+
+
+
+  export type DepartmentGoalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentGoalWhereInput
+    orderBy?: DepartmentGoalOrderByWithAggregationInput | DepartmentGoalOrderByWithAggregationInput[]
+    by: DepartmentGoalScalarFieldEnum[] | DepartmentGoalScalarFieldEnum
+    having?: DepartmentGoalScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepartmentGoalCountAggregateInputType | true
+    _avg?: DepartmentGoalAvgAggregateInputType
+    _sum?: DepartmentGoalSumAggregateInputType
+    _min?: DepartmentGoalMinAggregateInputType
+    _max?: DepartmentGoalMaxAggregateInputType
+  }
+
+  export type DepartmentGoalGroupByOutputType = {
+    id: string
+    deptId: string
+    title: string
+    description: string | null
+    targetValue: number | null
+    currentValue: number
+    period: string
+    periodKey: string
+    createdAt: Date
+    updatedAt: Date
+    _count: DepartmentGoalCountAggregateOutputType | null
+    _avg: DepartmentGoalAvgAggregateOutputType | null
+    _sum: DepartmentGoalSumAggregateOutputType | null
+    _min: DepartmentGoalMinAggregateOutputType | null
+    _max: DepartmentGoalMaxAggregateOutputType | null
+  }
+
+  type GetDepartmentGoalGroupByPayload<T extends DepartmentGoalGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepartmentGoalGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepartmentGoalGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepartmentGoalGroupByOutputType[P]>
+            : GetScalarType<T[P], DepartmentGoalGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepartmentGoalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    targetValue?: boolean
+    currentValue?: boolean
+    period?: boolean
+    periodKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentGoal"]>
+
+  export type DepartmentGoalSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    targetValue?: boolean
+    currentValue?: boolean
+    period?: boolean
+    periodKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentGoal"]>
+
+  export type DepartmentGoalSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    targetValue?: boolean
+    currentValue?: boolean
+    period?: boolean
+    periodKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentGoal"]>
+
+  export type DepartmentGoalSelectScalar = {
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    targetValue?: boolean
+    currentValue?: boolean
+    period?: boolean
+    periodKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DepartmentGoalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deptId" | "title" | "description" | "targetValue" | "currentValue" | "period" | "periodKey" | "createdAt" | "updatedAt", ExtArgs["result"]["departmentGoal"]>
+  export type DepartmentGoalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }
+  export type DepartmentGoalIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }
+  export type DepartmentGoalIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+  }
+
+  export type $DepartmentGoalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DepartmentGoal"
+    objects: {
+      department: Prisma.$DepartmentPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      deptId: string
+      title: string
+      description: string | null
+      targetValue: number | null
+      currentValue: number
+      period: string
+      periodKey: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["departmentGoal"]>
+    composites: {}
+  }
+
+  type DepartmentGoalGetPayload<S extends boolean | null | undefined | DepartmentGoalDefaultArgs> = $Result.GetResult<Prisma.$DepartmentGoalPayload, S>
+
+  type DepartmentGoalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepartmentGoalFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepartmentGoalCountAggregateInputType | true
+    }
+
+  export interface DepartmentGoalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepartmentGoal'], meta: { name: 'DepartmentGoal' } }
+    /**
+     * Find zero or one DepartmentGoal that matches the filter.
+     * @param {DepartmentGoalFindUniqueArgs} args - Arguments to find a DepartmentGoal
+     * @example
+     * // Get one DepartmentGoal
+     * const departmentGoal = await prisma.departmentGoal.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepartmentGoalFindUniqueArgs>(args: SelectSubset<T, DepartmentGoalFindUniqueArgs<ExtArgs>>): Prisma__DepartmentGoalClient<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DepartmentGoal that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepartmentGoalFindUniqueOrThrowArgs} args - Arguments to find a DepartmentGoal
+     * @example
+     * // Get one DepartmentGoal
+     * const departmentGoal = await prisma.departmentGoal.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepartmentGoalFindUniqueOrThrowArgs>(args: SelectSubset<T, DepartmentGoalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepartmentGoalClient<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentGoal that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentGoalFindFirstArgs} args - Arguments to find a DepartmentGoal
+     * @example
+     * // Get one DepartmentGoal
+     * const departmentGoal = await prisma.departmentGoal.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepartmentGoalFindFirstArgs>(args?: SelectSubset<T, DepartmentGoalFindFirstArgs<ExtArgs>>): Prisma__DepartmentGoalClient<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentGoal that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentGoalFindFirstOrThrowArgs} args - Arguments to find a DepartmentGoal
+     * @example
+     * // Get one DepartmentGoal
+     * const departmentGoal = await prisma.departmentGoal.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepartmentGoalFindFirstOrThrowArgs>(args?: SelectSubset<T, DepartmentGoalFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepartmentGoalClient<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DepartmentGoals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentGoalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DepartmentGoals
+     * const departmentGoals = await prisma.departmentGoal.findMany()
+     * 
+     * // Get first 10 DepartmentGoals
+     * const departmentGoals = await prisma.departmentGoal.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const departmentGoalWithIdOnly = await prisma.departmentGoal.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepartmentGoalFindManyArgs>(args?: SelectSubset<T, DepartmentGoalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DepartmentGoal.
+     * @param {DepartmentGoalCreateArgs} args - Arguments to create a DepartmentGoal.
+     * @example
+     * // Create one DepartmentGoal
+     * const DepartmentGoal = await prisma.departmentGoal.create({
+     *   data: {
+     *     // ... data to create a DepartmentGoal
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepartmentGoalCreateArgs>(args: SelectSubset<T, DepartmentGoalCreateArgs<ExtArgs>>): Prisma__DepartmentGoalClient<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DepartmentGoals.
+     * @param {DepartmentGoalCreateManyArgs} args - Arguments to create many DepartmentGoals.
+     * @example
+     * // Create many DepartmentGoals
+     * const departmentGoal = await prisma.departmentGoal.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepartmentGoalCreateManyArgs>(args?: SelectSubset<T, DepartmentGoalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DepartmentGoals and returns the data saved in the database.
+     * @param {DepartmentGoalCreateManyAndReturnArgs} args - Arguments to create many DepartmentGoals.
+     * @example
+     * // Create many DepartmentGoals
+     * const departmentGoal = await prisma.departmentGoal.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DepartmentGoals and only return the `id`
+     * const departmentGoalWithIdOnly = await prisma.departmentGoal.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DepartmentGoalCreateManyAndReturnArgs>(args?: SelectSubset<T, DepartmentGoalCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DepartmentGoal.
+     * @param {DepartmentGoalDeleteArgs} args - Arguments to delete one DepartmentGoal.
+     * @example
+     * // Delete one DepartmentGoal
+     * const DepartmentGoal = await prisma.departmentGoal.delete({
+     *   where: {
+     *     // ... filter to delete one DepartmentGoal
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepartmentGoalDeleteArgs>(args: SelectSubset<T, DepartmentGoalDeleteArgs<ExtArgs>>): Prisma__DepartmentGoalClient<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DepartmentGoal.
+     * @param {DepartmentGoalUpdateArgs} args - Arguments to update one DepartmentGoal.
+     * @example
+     * // Update one DepartmentGoal
+     * const departmentGoal = await prisma.departmentGoal.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepartmentGoalUpdateArgs>(args: SelectSubset<T, DepartmentGoalUpdateArgs<ExtArgs>>): Prisma__DepartmentGoalClient<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DepartmentGoals.
+     * @param {DepartmentGoalDeleteManyArgs} args - Arguments to filter DepartmentGoals to delete.
+     * @example
+     * // Delete a few DepartmentGoals
+     * const { count } = await prisma.departmentGoal.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepartmentGoalDeleteManyArgs>(args?: SelectSubset<T, DepartmentGoalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentGoals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentGoalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DepartmentGoals
+     * const departmentGoal = await prisma.departmentGoal.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepartmentGoalUpdateManyArgs>(args: SelectSubset<T, DepartmentGoalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentGoals and returns the data updated in the database.
+     * @param {DepartmentGoalUpdateManyAndReturnArgs} args - Arguments to update many DepartmentGoals.
+     * @example
+     * // Update many DepartmentGoals
+     * const departmentGoal = await prisma.departmentGoal.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DepartmentGoals and only return the `id`
+     * const departmentGoalWithIdOnly = await prisma.departmentGoal.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DepartmentGoalUpdateManyAndReturnArgs>(args: SelectSubset<T, DepartmentGoalUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DepartmentGoal.
+     * @param {DepartmentGoalUpsertArgs} args - Arguments to update or create a DepartmentGoal.
+     * @example
+     * // Update or create a DepartmentGoal
+     * const departmentGoal = await prisma.departmentGoal.upsert({
+     *   create: {
+     *     // ... data to create a DepartmentGoal
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DepartmentGoal we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepartmentGoalUpsertArgs>(args: SelectSubset<T, DepartmentGoalUpsertArgs<ExtArgs>>): Prisma__DepartmentGoalClient<$Result.GetResult<Prisma.$DepartmentGoalPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DepartmentGoals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentGoalCountArgs} args - Arguments to filter DepartmentGoals to count.
+     * @example
+     * // Count the number of DepartmentGoals
+     * const count = await prisma.departmentGoal.count({
+     *   where: {
+     *     // ... the filter for the DepartmentGoals we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepartmentGoalCountArgs>(
+      args?: Subset<T, DepartmentGoalCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepartmentGoalCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DepartmentGoal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentGoalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepartmentGoalAggregateArgs>(args: Subset<T, DepartmentGoalAggregateArgs>): Prisma.PrismaPromise<GetDepartmentGoalAggregateType<T>>
+
+    /**
+     * Group by DepartmentGoal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentGoalGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepartmentGoalGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepartmentGoalGroupByArgs['orderBy'] }
+        : { orderBy?: DepartmentGoalGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepartmentGoalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepartmentGoalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DepartmentGoal model
+   */
+  readonly fields: DepartmentGoalFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DepartmentGoal.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepartmentGoalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DepartmentGoal model
+   */
+  interface DepartmentGoalFieldRefs {
+    readonly id: FieldRef<"DepartmentGoal", 'String'>
+    readonly deptId: FieldRef<"DepartmentGoal", 'String'>
+    readonly title: FieldRef<"DepartmentGoal", 'String'>
+    readonly description: FieldRef<"DepartmentGoal", 'String'>
+    readonly targetValue: FieldRef<"DepartmentGoal", 'Float'>
+    readonly currentValue: FieldRef<"DepartmentGoal", 'Float'>
+    readonly period: FieldRef<"DepartmentGoal", 'String'>
+    readonly periodKey: FieldRef<"DepartmentGoal", 'String'>
+    readonly createdAt: FieldRef<"DepartmentGoal", 'DateTime'>
+    readonly updatedAt: FieldRef<"DepartmentGoal", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DepartmentGoal findUnique
+   */
+  export type DepartmentGoalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentGoal to fetch.
+     */
+    where: DepartmentGoalWhereUniqueInput
+  }
+
+  /**
+   * DepartmentGoal findUniqueOrThrow
+   */
+  export type DepartmentGoalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentGoal to fetch.
+     */
+    where: DepartmentGoalWhereUniqueInput
+  }
+
+  /**
+   * DepartmentGoal findFirst
+   */
+  export type DepartmentGoalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentGoal to fetch.
+     */
+    where?: DepartmentGoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentGoals to fetch.
+     */
+    orderBy?: DepartmentGoalOrderByWithRelationInput | DepartmentGoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentGoals.
+     */
+    cursor?: DepartmentGoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentGoals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentGoals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentGoals.
+     */
+    distinct?: DepartmentGoalScalarFieldEnum | DepartmentGoalScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentGoal findFirstOrThrow
+   */
+  export type DepartmentGoalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentGoal to fetch.
+     */
+    where?: DepartmentGoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentGoals to fetch.
+     */
+    orderBy?: DepartmentGoalOrderByWithRelationInput | DepartmentGoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentGoals.
+     */
+    cursor?: DepartmentGoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentGoals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentGoals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentGoals.
+     */
+    distinct?: DepartmentGoalScalarFieldEnum | DepartmentGoalScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentGoal findMany
+   */
+  export type DepartmentGoalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentGoals to fetch.
+     */
+    where?: DepartmentGoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentGoals to fetch.
+     */
+    orderBy?: DepartmentGoalOrderByWithRelationInput | DepartmentGoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DepartmentGoals.
+     */
+    cursor?: DepartmentGoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentGoals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentGoals.
+     */
+    skip?: number
+    distinct?: DepartmentGoalScalarFieldEnum | DepartmentGoalScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentGoal create
+   */
+  export type DepartmentGoalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DepartmentGoal.
+     */
+    data: XOR<DepartmentGoalCreateInput, DepartmentGoalUncheckedCreateInput>
+  }
+
+  /**
+   * DepartmentGoal createMany
+   */
+  export type DepartmentGoalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DepartmentGoals.
+     */
+    data: DepartmentGoalCreateManyInput | DepartmentGoalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DepartmentGoal createManyAndReturn
+   */
+  export type DepartmentGoalCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * The data used to create many DepartmentGoals.
+     */
+    data: DepartmentGoalCreateManyInput | DepartmentGoalCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentGoal update
+   */
+  export type DepartmentGoalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DepartmentGoal.
+     */
+    data: XOR<DepartmentGoalUpdateInput, DepartmentGoalUncheckedUpdateInput>
+    /**
+     * Choose, which DepartmentGoal to update.
+     */
+    where: DepartmentGoalWhereUniqueInput
+  }
+
+  /**
+   * DepartmentGoal updateMany
+   */
+  export type DepartmentGoalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DepartmentGoals.
+     */
+    data: XOR<DepartmentGoalUpdateManyMutationInput, DepartmentGoalUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentGoals to update
+     */
+    where?: DepartmentGoalWhereInput
+    /**
+     * Limit how many DepartmentGoals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentGoal updateManyAndReturn
+   */
+  export type DepartmentGoalUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * The data used to update DepartmentGoals.
+     */
+    data: XOR<DepartmentGoalUpdateManyMutationInput, DepartmentGoalUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentGoals to update
+     */
+    where?: DepartmentGoalWhereInput
+    /**
+     * Limit how many DepartmentGoals to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentGoal upsert
+   */
+  export type DepartmentGoalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DepartmentGoal to update in case it exists.
+     */
+    where: DepartmentGoalWhereUniqueInput
+    /**
+     * In case the DepartmentGoal found by the `where` argument doesn't exist, create a new DepartmentGoal with this data.
+     */
+    create: XOR<DepartmentGoalCreateInput, DepartmentGoalUncheckedCreateInput>
+    /**
+     * In case the DepartmentGoal was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepartmentGoalUpdateInput, DepartmentGoalUncheckedUpdateInput>
+  }
+
+  /**
+   * DepartmentGoal delete
+   */
+  export type DepartmentGoalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+    /**
+     * Filter which DepartmentGoal to delete.
+     */
+    where: DepartmentGoalWhereUniqueInput
+  }
+
+  /**
+   * DepartmentGoal deleteMany
+   */
+  export type DepartmentGoalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentGoals to delete
+     */
+    where?: DepartmentGoalWhereInput
+    /**
+     * Limit how many DepartmentGoals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentGoal without action
+   */
+  export type DepartmentGoalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentGoal
+     */
+    select?: DepartmentGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentGoal
+     */
+    omit?: DepartmentGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentGoalInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DepartmentMeeting
+   */
+
+  export type AggregateDepartmentMeeting = {
+    _count: DepartmentMeetingCountAggregateOutputType | null
+    _min: DepartmentMeetingMinAggregateOutputType | null
+    _max: DepartmentMeetingMaxAggregateOutputType | null
+  }
+
+  export type DepartmentMeetingMinAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    title: string | null
+    description: string | null
+    agenda: string | null
+    meetingDate: Date | null
+    location: string | null
+    createdBy: string | null
+    minutes: string | null
+    minutesAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentMeetingMaxAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    title: string | null
+    description: string | null
+    agenda: string | null
+    meetingDate: Date | null
+    location: string | null
+    createdBy: string | null
+    minutes: string | null
+    minutesAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentMeetingCountAggregateOutputType = {
+    id: number
+    deptId: number
+    title: number
+    description: number
+    agenda: number
+    meetingDate: number
+    location: number
+    createdBy: number
+    minutes: number
+    minutesAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DepartmentMeetingMinAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    description?: true
+    agenda?: true
+    meetingDate?: true
+    location?: true
+    createdBy?: true
+    minutes?: true
+    minutesAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentMeetingMaxAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    description?: true
+    agenda?: true
+    meetingDate?: true
+    location?: true
+    createdBy?: true
+    minutes?: true
+    minutesAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentMeetingCountAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    description?: true
+    agenda?: true
+    meetingDate?: true
+    location?: true
+    createdBy?: true
+    minutes?: true
+    minutesAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DepartmentMeetingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentMeeting to aggregate.
+     */
+    where?: DepartmentMeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentMeetings to fetch.
+     */
+    orderBy?: DepartmentMeetingOrderByWithRelationInput | DepartmentMeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepartmentMeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentMeetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentMeetings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DepartmentMeetings
+    **/
+    _count?: true | DepartmentMeetingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepartmentMeetingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepartmentMeetingMaxAggregateInputType
+  }
+
+  export type GetDepartmentMeetingAggregateType<T extends DepartmentMeetingAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepartmentMeeting]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepartmentMeeting[P]>
+      : GetScalarType<T[P], AggregateDepartmentMeeting[P]>
+  }
+
+
+
+
+  export type DepartmentMeetingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentMeetingWhereInput
+    orderBy?: DepartmentMeetingOrderByWithAggregationInput | DepartmentMeetingOrderByWithAggregationInput[]
+    by: DepartmentMeetingScalarFieldEnum[] | DepartmentMeetingScalarFieldEnum
+    having?: DepartmentMeetingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepartmentMeetingCountAggregateInputType | true
+    _min?: DepartmentMeetingMinAggregateInputType
+    _max?: DepartmentMeetingMaxAggregateInputType
+  }
+
+  export type DepartmentMeetingGroupByOutputType = {
+    id: string
+    deptId: string
+    title: string
+    description: string | null
+    agenda: string | null
+    meetingDate: Date
+    location: string | null
+    createdBy: string
+    minutes: string | null
+    minutesAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DepartmentMeetingCountAggregateOutputType | null
+    _min: DepartmentMeetingMinAggregateOutputType | null
+    _max: DepartmentMeetingMaxAggregateOutputType | null
+  }
+
+  type GetDepartmentMeetingGroupByPayload<T extends DepartmentMeetingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepartmentMeetingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepartmentMeetingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepartmentMeetingGroupByOutputType[P]>
+            : GetScalarType<T[P], DepartmentMeetingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepartmentMeetingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    agenda?: boolean
+    meetingDate?: boolean
+    location?: boolean
+    createdBy?: boolean
+    minutes?: boolean
+    minutesAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentMeeting"]>
+
+  export type DepartmentMeetingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    agenda?: boolean
+    meetingDate?: boolean
+    location?: boolean
+    createdBy?: boolean
+    minutes?: boolean
+    minutesAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentMeeting"]>
+
+  export type DepartmentMeetingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    agenda?: boolean
+    meetingDate?: boolean
+    location?: boolean
+    createdBy?: boolean
+    minutes?: boolean
+    minutesAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentMeeting"]>
+
+  export type DepartmentMeetingSelectScalar = {
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    agenda?: boolean
+    meetingDate?: boolean
+    location?: boolean
+    createdBy?: boolean
+    minutes?: boolean
+    minutesAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DepartmentMeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deptId" | "title" | "description" | "agenda" | "meetingDate" | "location" | "createdBy" | "minutes" | "minutesAt" | "createdAt" | "updatedAt", ExtArgs["result"]["departmentMeeting"]>
+  export type DepartmentMeetingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DepartmentMeetingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DepartmentMeetingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $DepartmentMeetingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DepartmentMeeting"
+    objects: {
+      department: Prisma.$DepartmentPayload<ExtArgs>
+      creator: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      deptId: string
+      title: string
+      description: string | null
+      agenda: string | null
+      meetingDate: Date
+      location: string | null
+      createdBy: string
+      minutes: string | null
+      minutesAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["departmentMeeting"]>
+    composites: {}
+  }
+
+  type DepartmentMeetingGetPayload<S extends boolean | null | undefined | DepartmentMeetingDefaultArgs> = $Result.GetResult<Prisma.$DepartmentMeetingPayload, S>
+
+  type DepartmentMeetingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepartmentMeetingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepartmentMeetingCountAggregateInputType | true
+    }
+
+  export interface DepartmentMeetingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepartmentMeeting'], meta: { name: 'DepartmentMeeting' } }
+    /**
+     * Find zero or one DepartmentMeeting that matches the filter.
+     * @param {DepartmentMeetingFindUniqueArgs} args - Arguments to find a DepartmentMeeting
+     * @example
+     * // Get one DepartmentMeeting
+     * const departmentMeeting = await prisma.departmentMeeting.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepartmentMeetingFindUniqueArgs>(args: SelectSubset<T, DepartmentMeetingFindUniqueArgs<ExtArgs>>): Prisma__DepartmentMeetingClient<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DepartmentMeeting that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepartmentMeetingFindUniqueOrThrowArgs} args - Arguments to find a DepartmentMeeting
+     * @example
+     * // Get one DepartmentMeeting
+     * const departmentMeeting = await prisma.departmentMeeting.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepartmentMeetingFindUniqueOrThrowArgs>(args: SelectSubset<T, DepartmentMeetingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepartmentMeetingClient<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentMeeting that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMeetingFindFirstArgs} args - Arguments to find a DepartmentMeeting
+     * @example
+     * // Get one DepartmentMeeting
+     * const departmentMeeting = await prisma.departmentMeeting.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepartmentMeetingFindFirstArgs>(args?: SelectSubset<T, DepartmentMeetingFindFirstArgs<ExtArgs>>): Prisma__DepartmentMeetingClient<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentMeeting that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMeetingFindFirstOrThrowArgs} args - Arguments to find a DepartmentMeeting
+     * @example
+     * // Get one DepartmentMeeting
+     * const departmentMeeting = await prisma.departmentMeeting.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepartmentMeetingFindFirstOrThrowArgs>(args?: SelectSubset<T, DepartmentMeetingFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepartmentMeetingClient<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DepartmentMeetings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMeetingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DepartmentMeetings
+     * const departmentMeetings = await prisma.departmentMeeting.findMany()
+     * 
+     * // Get first 10 DepartmentMeetings
+     * const departmentMeetings = await prisma.departmentMeeting.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const departmentMeetingWithIdOnly = await prisma.departmentMeeting.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepartmentMeetingFindManyArgs>(args?: SelectSubset<T, DepartmentMeetingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DepartmentMeeting.
+     * @param {DepartmentMeetingCreateArgs} args - Arguments to create a DepartmentMeeting.
+     * @example
+     * // Create one DepartmentMeeting
+     * const DepartmentMeeting = await prisma.departmentMeeting.create({
+     *   data: {
+     *     // ... data to create a DepartmentMeeting
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepartmentMeetingCreateArgs>(args: SelectSubset<T, DepartmentMeetingCreateArgs<ExtArgs>>): Prisma__DepartmentMeetingClient<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DepartmentMeetings.
+     * @param {DepartmentMeetingCreateManyArgs} args - Arguments to create many DepartmentMeetings.
+     * @example
+     * // Create many DepartmentMeetings
+     * const departmentMeeting = await prisma.departmentMeeting.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepartmentMeetingCreateManyArgs>(args?: SelectSubset<T, DepartmentMeetingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DepartmentMeetings and returns the data saved in the database.
+     * @param {DepartmentMeetingCreateManyAndReturnArgs} args - Arguments to create many DepartmentMeetings.
+     * @example
+     * // Create many DepartmentMeetings
+     * const departmentMeeting = await prisma.departmentMeeting.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DepartmentMeetings and only return the `id`
+     * const departmentMeetingWithIdOnly = await prisma.departmentMeeting.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DepartmentMeetingCreateManyAndReturnArgs>(args?: SelectSubset<T, DepartmentMeetingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DepartmentMeeting.
+     * @param {DepartmentMeetingDeleteArgs} args - Arguments to delete one DepartmentMeeting.
+     * @example
+     * // Delete one DepartmentMeeting
+     * const DepartmentMeeting = await prisma.departmentMeeting.delete({
+     *   where: {
+     *     // ... filter to delete one DepartmentMeeting
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepartmentMeetingDeleteArgs>(args: SelectSubset<T, DepartmentMeetingDeleteArgs<ExtArgs>>): Prisma__DepartmentMeetingClient<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DepartmentMeeting.
+     * @param {DepartmentMeetingUpdateArgs} args - Arguments to update one DepartmentMeeting.
+     * @example
+     * // Update one DepartmentMeeting
+     * const departmentMeeting = await prisma.departmentMeeting.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepartmentMeetingUpdateArgs>(args: SelectSubset<T, DepartmentMeetingUpdateArgs<ExtArgs>>): Prisma__DepartmentMeetingClient<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DepartmentMeetings.
+     * @param {DepartmentMeetingDeleteManyArgs} args - Arguments to filter DepartmentMeetings to delete.
+     * @example
+     * // Delete a few DepartmentMeetings
+     * const { count } = await prisma.departmentMeeting.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepartmentMeetingDeleteManyArgs>(args?: SelectSubset<T, DepartmentMeetingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentMeetings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMeetingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DepartmentMeetings
+     * const departmentMeeting = await prisma.departmentMeeting.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepartmentMeetingUpdateManyArgs>(args: SelectSubset<T, DepartmentMeetingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentMeetings and returns the data updated in the database.
+     * @param {DepartmentMeetingUpdateManyAndReturnArgs} args - Arguments to update many DepartmentMeetings.
+     * @example
+     * // Update many DepartmentMeetings
+     * const departmentMeeting = await prisma.departmentMeeting.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DepartmentMeetings and only return the `id`
+     * const departmentMeetingWithIdOnly = await prisma.departmentMeeting.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DepartmentMeetingUpdateManyAndReturnArgs>(args: SelectSubset<T, DepartmentMeetingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DepartmentMeeting.
+     * @param {DepartmentMeetingUpsertArgs} args - Arguments to update or create a DepartmentMeeting.
+     * @example
+     * // Update or create a DepartmentMeeting
+     * const departmentMeeting = await prisma.departmentMeeting.upsert({
+     *   create: {
+     *     // ... data to create a DepartmentMeeting
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DepartmentMeeting we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepartmentMeetingUpsertArgs>(args: SelectSubset<T, DepartmentMeetingUpsertArgs<ExtArgs>>): Prisma__DepartmentMeetingClient<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DepartmentMeetings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMeetingCountArgs} args - Arguments to filter DepartmentMeetings to count.
+     * @example
+     * // Count the number of DepartmentMeetings
+     * const count = await prisma.departmentMeeting.count({
+     *   where: {
+     *     // ... the filter for the DepartmentMeetings we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepartmentMeetingCountArgs>(
+      args?: Subset<T, DepartmentMeetingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepartmentMeetingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DepartmentMeeting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMeetingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepartmentMeetingAggregateArgs>(args: Subset<T, DepartmentMeetingAggregateArgs>): Prisma.PrismaPromise<GetDepartmentMeetingAggregateType<T>>
+
+    /**
+     * Group by DepartmentMeeting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentMeetingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepartmentMeetingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepartmentMeetingGroupByArgs['orderBy'] }
+        : { orderBy?: DepartmentMeetingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepartmentMeetingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepartmentMeetingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DepartmentMeeting model
+   */
+  readonly fields: DepartmentMeetingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DepartmentMeeting.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepartmentMeetingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DepartmentMeeting model
+   */
+  interface DepartmentMeetingFieldRefs {
+    readonly id: FieldRef<"DepartmentMeeting", 'String'>
+    readonly deptId: FieldRef<"DepartmentMeeting", 'String'>
+    readonly title: FieldRef<"DepartmentMeeting", 'String'>
+    readonly description: FieldRef<"DepartmentMeeting", 'String'>
+    readonly agenda: FieldRef<"DepartmentMeeting", 'String'>
+    readonly meetingDate: FieldRef<"DepartmentMeeting", 'DateTime'>
+    readonly location: FieldRef<"DepartmentMeeting", 'String'>
+    readonly createdBy: FieldRef<"DepartmentMeeting", 'String'>
+    readonly minutes: FieldRef<"DepartmentMeeting", 'String'>
+    readonly minutesAt: FieldRef<"DepartmentMeeting", 'DateTime'>
+    readonly createdAt: FieldRef<"DepartmentMeeting", 'DateTime'>
+    readonly updatedAt: FieldRef<"DepartmentMeeting", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DepartmentMeeting findUnique
+   */
+  export type DepartmentMeetingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentMeeting to fetch.
+     */
+    where: DepartmentMeetingWhereUniqueInput
+  }
+
+  /**
+   * DepartmentMeeting findUniqueOrThrow
+   */
+  export type DepartmentMeetingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentMeeting to fetch.
+     */
+    where: DepartmentMeetingWhereUniqueInput
+  }
+
+  /**
+   * DepartmentMeeting findFirst
+   */
+  export type DepartmentMeetingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentMeeting to fetch.
+     */
+    where?: DepartmentMeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentMeetings to fetch.
+     */
+    orderBy?: DepartmentMeetingOrderByWithRelationInput | DepartmentMeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentMeetings.
+     */
+    cursor?: DepartmentMeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentMeetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentMeetings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentMeetings.
+     */
+    distinct?: DepartmentMeetingScalarFieldEnum | DepartmentMeetingScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentMeeting findFirstOrThrow
+   */
+  export type DepartmentMeetingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentMeeting to fetch.
+     */
+    where?: DepartmentMeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentMeetings to fetch.
+     */
+    orderBy?: DepartmentMeetingOrderByWithRelationInput | DepartmentMeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentMeetings.
+     */
+    cursor?: DepartmentMeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentMeetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentMeetings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentMeetings.
+     */
+    distinct?: DepartmentMeetingScalarFieldEnum | DepartmentMeetingScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentMeeting findMany
+   */
+  export type DepartmentMeetingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentMeetings to fetch.
+     */
+    where?: DepartmentMeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentMeetings to fetch.
+     */
+    orderBy?: DepartmentMeetingOrderByWithRelationInput | DepartmentMeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DepartmentMeetings.
+     */
+    cursor?: DepartmentMeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentMeetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentMeetings.
+     */
+    skip?: number
+    distinct?: DepartmentMeetingScalarFieldEnum | DepartmentMeetingScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentMeeting create
+   */
+  export type DepartmentMeetingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DepartmentMeeting.
+     */
+    data: XOR<DepartmentMeetingCreateInput, DepartmentMeetingUncheckedCreateInput>
+  }
+
+  /**
+   * DepartmentMeeting createMany
+   */
+  export type DepartmentMeetingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DepartmentMeetings.
+     */
+    data: DepartmentMeetingCreateManyInput | DepartmentMeetingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DepartmentMeeting createManyAndReturn
+   */
+  export type DepartmentMeetingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * The data used to create many DepartmentMeetings.
+     */
+    data: DepartmentMeetingCreateManyInput | DepartmentMeetingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentMeeting update
+   */
+  export type DepartmentMeetingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DepartmentMeeting.
+     */
+    data: XOR<DepartmentMeetingUpdateInput, DepartmentMeetingUncheckedUpdateInput>
+    /**
+     * Choose, which DepartmentMeeting to update.
+     */
+    where: DepartmentMeetingWhereUniqueInput
+  }
+
+  /**
+   * DepartmentMeeting updateMany
+   */
+  export type DepartmentMeetingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DepartmentMeetings.
+     */
+    data: XOR<DepartmentMeetingUpdateManyMutationInput, DepartmentMeetingUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentMeetings to update
+     */
+    where?: DepartmentMeetingWhereInput
+    /**
+     * Limit how many DepartmentMeetings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentMeeting updateManyAndReturn
+   */
+  export type DepartmentMeetingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * The data used to update DepartmentMeetings.
+     */
+    data: XOR<DepartmentMeetingUpdateManyMutationInput, DepartmentMeetingUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentMeetings to update
+     */
+    where?: DepartmentMeetingWhereInput
+    /**
+     * Limit how many DepartmentMeetings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentMeeting upsert
+   */
+  export type DepartmentMeetingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DepartmentMeeting to update in case it exists.
+     */
+    where: DepartmentMeetingWhereUniqueInput
+    /**
+     * In case the DepartmentMeeting found by the `where` argument doesn't exist, create a new DepartmentMeeting with this data.
+     */
+    create: XOR<DepartmentMeetingCreateInput, DepartmentMeetingUncheckedCreateInput>
+    /**
+     * In case the DepartmentMeeting was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepartmentMeetingUpdateInput, DepartmentMeetingUncheckedUpdateInput>
+  }
+
+  /**
+   * DepartmentMeeting delete
+   */
+  export type DepartmentMeetingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+    /**
+     * Filter which DepartmentMeeting to delete.
+     */
+    where: DepartmentMeetingWhereUniqueInput
+  }
+
+  /**
+   * DepartmentMeeting deleteMany
+   */
+  export type DepartmentMeetingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentMeetings to delete
+     */
+    where?: DepartmentMeetingWhereInput
+    /**
+     * Limit how many DepartmentMeetings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentMeeting without action
+   */
+  export type DepartmentMeetingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentMeeting
+     */
+    select?: DepartmentMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentMeeting
+     */
+    omit?: DepartmentMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentMeetingInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DepartmentPoll
+   */
+
+  export type AggregateDepartmentPoll = {
+    _count: DepartmentPollCountAggregateOutputType | null
+    _min: DepartmentPollMinAggregateOutputType | null
+    _max: DepartmentPollMaxAggregateOutputType | null
+  }
+
+  export type DepartmentPollMinAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    question: string | null
+    endDate: Date | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentPollMaxAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    question: string | null
+    endDate: Date | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentPollCountAggregateOutputType = {
+    id: number
+    deptId: number
+    question: number
+    options: number
+    endDate: number
+    createdBy: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DepartmentPollMinAggregateInputType = {
+    id?: true
+    deptId?: true
+    question?: true
+    endDate?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentPollMaxAggregateInputType = {
+    id?: true
+    deptId?: true
+    question?: true
+    endDate?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentPollCountAggregateInputType = {
+    id?: true
+    deptId?: true
+    question?: true
+    options?: true
+    endDate?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DepartmentPollAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentPoll to aggregate.
+     */
+    where?: DepartmentPollWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentPolls to fetch.
+     */
+    orderBy?: DepartmentPollOrderByWithRelationInput | DepartmentPollOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepartmentPollWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentPolls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentPolls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DepartmentPolls
+    **/
+    _count?: true | DepartmentPollCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepartmentPollMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepartmentPollMaxAggregateInputType
+  }
+
+  export type GetDepartmentPollAggregateType<T extends DepartmentPollAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepartmentPoll]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepartmentPoll[P]>
+      : GetScalarType<T[P], AggregateDepartmentPoll[P]>
+  }
+
+
+
+
+  export type DepartmentPollGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentPollWhereInput
+    orderBy?: DepartmentPollOrderByWithAggregationInput | DepartmentPollOrderByWithAggregationInput[]
+    by: DepartmentPollScalarFieldEnum[] | DepartmentPollScalarFieldEnum
+    having?: DepartmentPollScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepartmentPollCountAggregateInputType | true
+    _min?: DepartmentPollMinAggregateInputType
+    _max?: DepartmentPollMaxAggregateInputType
+  }
+
+  export type DepartmentPollGroupByOutputType = {
+    id: string
+    deptId: string
+    question: string
+    options: JsonValue
+    endDate: Date | null
+    createdBy: string
+    createdAt: Date
+    updatedAt: Date
+    _count: DepartmentPollCountAggregateOutputType | null
+    _min: DepartmentPollMinAggregateOutputType | null
+    _max: DepartmentPollMaxAggregateOutputType | null
+  }
+
+  type GetDepartmentPollGroupByPayload<T extends DepartmentPollGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepartmentPollGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepartmentPollGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepartmentPollGroupByOutputType[P]>
+            : GetScalarType<T[P], DepartmentPollGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepartmentPollSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    question?: boolean
+    options?: boolean
+    endDate?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+    votes?: boolean | DepartmentPoll$votesArgs<ExtArgs>
+    _count?: boolean | DepartmentPollCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentPoll"]>
+
+  export type DepartmentPollSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    question?: boolean
+    options?: boolean
+    endDate?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentPoll"]>
+
+  export type DepartmentPollSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    question?: boolean
+    options?: boolean
+    endDate?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentPoll"]>
+
+  export type DepartmentPollSelectScalar = {
+    id?: boolean
+    deptId?: boolean
+    question?: boolean
+    options?: boolean
+    endDate?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DepartmentPollOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deptId" | "question" | "options" | "endDate" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["departmentPoll"]>
+  export type DepartmentPollInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+    votes?: boolean | DepartmentPoll$votesArgs<ExtArgs>
+    _count?: boolean | DepartmentPollCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DepartmentPollIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DepartmentPollIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $DepartmentPollPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DepartmentPoll"
+    objects: {
+      department: Prisma.$DepartmentPayload<ExtArgs>
+      creator: Prisma.$UserPayload<ExtArgs>
+      votes: Prisma.$PollVotePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      deptId: string
+      question: string
+      options: Prisma.JsonValue
+      endDate: Date | null
+      createdBy: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["departmentPoll"]>
+    composites: {}
+  }
+
+  type DepartmentPollGetPayload<S extends boolean | null | undefined | DepartmentPollDefaultArgs> = $Result.GetResult<Prisma.$DepartmentPollPayload, S>
+
+  type DepartmentPollCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepartmentPollFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepartmentPollCountAggregateInputType | true
+    }
+
+  export interface DepartmentPollDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepartmentPoll'], meta: { name: 'DepartmentPoll' } }
+    /**
+     * Find zero or one DepartmentPoll that matches the filter.
+     * @param {DepartmentPollFindUniqueArgs} args - Arguments to find a DepartmentPoll
+     * @example
+     * // Get one DepartmentPoll
+     * const departmentPoll = await prisma.departmentPoll.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepartmentPollFindUniqueArgs>(args: SelectSubset<T, DepartmentPollFindUniqueArgs<ExtArgs>>): Prisma__DepartmentPollClient<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DepartmentPoll that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepartmentPollFindUniqueOrThrowArgs} args - Arguments to find a DepartmentPoll
+     * @example
+     * // Get one DepartmentPoll
+     * const departmentPoll = await prisma.departmentPoll.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepartmentPollFindUniqueOrThrowArgs>(args: SelectSubset<T, DepartmentPollFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepartmentPollClient<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentPoll that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentPollFindFirstArgs} args - Arguments to find a DepartmentPoll
+     * @example
+     * // Get one DepartmentPoll
+     * const departmentPoll = await prisma.departmentPoll.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepartmentPollFindFirstArgs>(args?: SelectSubset<T, DepartmentPollFindFirstArgs<ExtArgs>>): Prisma__DepartmentPollClient<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentPoll that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentPollFindFirstOrThrowArgs} args - Arguments to find a DepartmentPoll
+     * @example
+     * // Get one DepartmentPoll
+     * const departmentPoll = await prisma.departmentPoll.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepartmentPollFindFirstOrThrowArgs>(args?: SelectSubset<T, DepartmentPollFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepartmentPollClient<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DepartmentPolls that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentPollFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DepartmentPolls
+     * const departmentPolls = await prisma.departmentPoll.findMany()
+     * 
+     * // Get first 10 DepartmentPolls
+     * const departmentPolls = await prisma.departmentPoll.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const departmentPollWithIdOnly = await prisma.departmentPoll.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepartmentPollFindManyArgs>(args?: SelectSubset<T, DepartmentPollFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DepartmentPoll.
+     * @param {DepartmentPollCreateArgs} args - Arguments to create a DepartmentPoll.
+     * @example
+     * // Create one DepartmentPoll
+     * const DepartmentPoll = await prisma.departmentPoll.create({
+     *   data: {
+     *     // ... data to create a DepartmentPoll
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepartmentPollCreateArgs>(args: SelectSubset<T, DepartmentPollCreateArgs<ExtArgs>>): Prisma__DepartmentPollClient<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DepartmentPolls.
+     * @param {DepartmentPollCreateManyArgs} args - Arguments to create many DepartmentPolls.
+     * @example
+     * // Create many DepartmentPolls
+     * const departmentPoll = await prisma.departmentPoll.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepartmentPollCreateManyArgs>(args?: SelectSubset<T, DepartmentPollCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DepartmentPolls and returns the data saved in the database.
+     * @param {DepartmentPollCreateManyAndReturnArgs} args - Arguments to create many DepartmentPolls.
+     * @example
+     * // Create many DepartmentPolls
+     * const departmentPoll = await prisma.departmentPoll.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DepartmentPolls and only return the `id`
+     * const departmentPollWithIdOnly = await prisma.departmentPoll.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DepartmentPollCreateManyAndReturnArgs>(args?: SelectSubset<T, DepartmentPollCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DepartmentPoll.
+     * @param {DepartmentPollDeleteArgs} args - Arguments to delete one DepartmentPoll.
+     * @example
+     * // Delete one DepartmentPoll
+     * const DepartmentPoll = await prisma.departmentPoll.delete({
+     *   where: {
+     *     // ... filter to delete one DepartmentPoll
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepartmentPollDeleteArgs>(args: SelectSubset<T, DepartmentPollDeleteArgs<ExtArgs>>): Prisma__DepartmentPollClient<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DepartmentPoll.
+     * @param {DepartmentPollUpdateArgs} args - Arguments to update one DepartmentPoll.
+     * @example
+     * // Update one DepartmentPoll
+     * const departmentPoll = await prisma.departmentPoll.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepartmentPollUpdateArgs>(args: SelectSubset<T, DepartmentPollUpdateArgs<ExtArgs>>): Prisma__DepartmentPollClient<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DepartmentPolls.
+     * @param {DepartmentPollDeleteManyArgs} args - Arguments to filter DepartmentPolls to delete.
+     * @example
+     * // Delete a few DepartmentPolls
+     * const { count } = await prisma.departmentPoll.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepartmentPollDeleteManyArgs>(args?: SelectSubset<T, DepartmentPollDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentPolls.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentPollUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DepartmentPolls
+     * const departmentPoll = await prisma.departmentPoll.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepartmentPollUpdateManyArgs>(args: SelectSubset<T, DepartmentPollUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentPolls and returns the data updated in the database.
+     * @param {DepartmentPollUpdateManyAndReturnArgs} args - Arguments to update many DepartmentPolls.
+     * @example
+     * // Update many DepartmentPolls
+     * const departmentPoll = await prisma.departmentPoll.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DepartmentPolls and only return the `id`
+     * const departmentPollWithIdOnly = await prisma.departmentPoll.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DepartmentPollUpdateManyAndReturnArgs>(args: SelectSubset<T, DepartmentPollUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DepartmentPoll.
+     * @param {DepartmentPollUpsertArgs} args - Arguments to update or create a DepartmentPoll.
+     * @example
+     * // Update or create a DepartmentPoll
+     * const departmentPoll = await prisma.departmentPoll.upsert({
+     *   create: {
+     *     // ... data to create a DepartmentPoll
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DepartmentPoll we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepartmentPollUpsertArgs>(args: SelectSubset<T, DepartmentPollUpsertArgs<ExtArgs>>): Prisma__DepartmentPollClient<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DepartmentPolls.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentPollCountArgs} args - Arguments to filter DepartmentPolls to count.
+     * @example
+     * // Count the number of DepartmentPolls
+     * const count = await prisma.departmentPoll.count({
+     *   where: {
+     *     // ... the filter for the DepartmentPolls we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepartmentPollCountArgs>(
+      args?: Subset<T, DepartmentPollCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepartmentPollCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DepartmentPoll.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentPollAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepartmentPollAggregateArgs>(args: Subset<T, DepartmentPollAggregateArgs>): Prisma.PrismaPromise<GetDepartmentPollAggregateType<T>>
+
+    /**
+     * Group by DepartmentPoll.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentPollGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepartmentPollGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepartmentPollGroupByArgs['orderBy'] }
+        : { orderBy?: DepartmentPollGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepartmentPollGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepartmentPollGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DepartmentPoll model
+   */
+  readonly fields: DepartmentPollFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DepartmentPoll.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepartmentPollClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    votes<T extends DepartmentPoll$votesArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentPoll$votesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DepartmentPoll model
+   */
+  interface DepartmentPollFieldRefs {
+    readonly id: FieldRef<"DepartmentPoll", 'String'>
+    readonly deptId: FieldRef<"DepartmentPoll", 'String'>
+    readonly question: FieldRef<"DepartmentPoll", 'String'>
+    readonly options: FieldRef<"DepartmentPoll", 'Json'>
+    readonly endDate: FieldRef<"DepartmentPoll", 'DateTime'>
+    readonly createdBy: FieldRef<"DepartmentPoll", 'String'>
+    readonly createdAt: FieldRef<"DepartmentPoll", 'DateTime'>
+    readonly updatedAt: FieldRef<"DepartmentPoll", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DepartmentPoll findUnique
+   */
+  export type DepartmentPollFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentPoll to fetch.
+     */
+    where: DepartmentPollWhereUniqueInput
+  }
+
+  /**
+   * DepartmentPoll findUniqueOrThrow
+   */
+  export type DepartmentPollFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentPoll to fetch.
+     */
+    where: DepartmentPollWhereUniqueInput
+  }
+
+  /**
+   * DepartmentPoll findFirst
+   */
+  export type DepartmentPollFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentPoll to fetch.
+     */
+    where?: DepartmentPollWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentPolls to fetch.
+     */
+    orderBy?: DepartmentPollOrderByWithRelationInput | DepartmentPollOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentPolls.
+     */
+    cursor?: DepartmentPollWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentPolls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentPolls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentPolls.
+     */
+    distinct?: DepartmentPollScalarFieldEnum | DepartmentPollScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentPoll findFirstOrThrow
+   */
+  export type DepartmentPollFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentPoll to fetch.
+     */
+    where?: DepartmentPollWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentPolls to fetch.
+     */
+    orderBy?: DepartmentPollOrderByWithRelationInput | DepartmentPollOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentPolls.
+     */
+    cursor?: DepartmentPollWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentPolls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentPolls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentPolls.
+     */
+    distinct?: DepartmentPollScalarFieldEnum | DepartmentPollScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentPoll findMany
+   */
+  export type DepartmentPollFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentPolls to fetch.
+     */
+    where?: DepartmentPollWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentPolls to fetch.
+     */
+    orderBy?: DepartmentPollOrderByWithRelationInput | DepartmentPollOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DepartmentPolls.
+     */
+    cursor?: DepartmentPollWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentPolls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentPolls.
+     */
+    skip?: number
+    distinct?: DepartmentPollScalarFieldEnum | DepartmentPollScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentPoll create
+   */
+  export type DepartmentPollCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DepartmentPoll.
+     */
+    data: XOR<DepartmentPollCreateInput, DepartmentPollUncheckedCreateInput>
+  }
+
+  /**
+   * DepartmentPoll createMany
+   */
+  export type DepartmentPollCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DepartmentPolls.
+     */
+    data: DepartmentPollCreateManyInput | DepartmentPollCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DepartmentPoll createManyAndReturn
+   */
+  export type DepartmentPollCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * The data used to create many DepartmentPolls.
+     */
+    data: DepartmentPollCreateManyInput | DepartmentPollCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentPoll update
+   */
+  export type DepartmentPollUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DepartmentPoll.
+     */
+    data: XOR<DepartmentPollUpdateInput, DepartmentPollUncheckedUpdateInput>
+    /**
+     * Choose, which DepartmentPoll to update.
+     */
+    where: DepartmentPollWhereUniqueInput
+  }
+
+  /**
+   * DepartmentPoll updateMany
+   */
+  export type DepartmentPollUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DepartmentPolls.
+     */
+    data: XOR<DepartmentPollUpdateManyMutationInput, DepartmentPollUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentPolls to update
+     */
+    where?: DepartmentPollWhereInput
+    /**
+     * Limit how many DepartmentPolls to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentPoll updateManyAndReturn
+   */
+  export type DepartmentPollUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * The data used to update DepartmentPolls.
+     */
+    data: XOR<DepartmentPollUpdateManyMutationInput, DepartmentPollUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentPolls to update
+     */
+    where?: DepartmentPollWhereInput
+    /**
+     * Limit how many DepartmentPolls to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentPoll upsert
+   */
+  export type DepartmentPollUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DepartmentPoll to update in case it exists.
+     */
+    where: DepartmentPollWhereUniqueInput
+    /**
+     * In case the DepartmentPoll found by the `where` argument doesn't exist, create a new DepartmentPoll with this data.
+     */
+    create: XOR<DepartmentPollCreateInput, DepartmentPollUncheckedCreateInput>
+    /**
+     * In case the DepartmentPoll was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepartmentPollUpdateInput, DepartmentPollUncheckedUpdateInput>
+  }
+
+  /**
+   * DepartmentPoll delete
+   */
+  export type DepartmentPollDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+    /**
+     * Filter which DepartmentPoll to delete.
+     */
+    where: DepartmentPollWhereUniqueInput
+  }
+
+  /**
+   * DepartmentPoll deleteMany
+   */
+  export type DepartmentPollDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentPolls to delete
+     */
+    where?: DepartmentPollWhereInput
+    /**
+     * Limit how many DepartmentPolls to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentPoll.votes
+   */
+  export type DepartmentPoll$votesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    where?: PollVoteWhereInput
+    orderBy?: PollVoteOrderByWithRelationInput | PollVoteOrderByWithRelationInput[]
+    cursor?: PollVoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PollVoteScalarFieldEnum | PollVoteScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentPoll without action
+   */
+  export type DepartmentPollDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentPoll
+     */
+    select?: DepartmentPollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentPoll
+     */
+    omit?: DepartmentPollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentPollInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PollVote
+   */
+
+  export type AggregatePollVote = {
+    _count: PollVoteCountAggregateOutputType | null
+    _avg: PollVoteAvgAggregateOutputType | null
+    _sum: PollVoteSumAggregateOutputType | null
+    _min: PollVoteMinAggregateOutputType | null
+    _max: PollVoteMaxAggregateOutputType | null
+  }
+
+  export type PollVoteAvgAggregateOutputType = {
+    optionIndex: number | null
+  }
+
+  export type PollVoteSumAggregateOutputType = {
+    optionIndex: number | null
+  }
+
+  export type PollVoteMinAggregateOutputType = {
+    id: string | null
+    pollId: string | null
+    userId: string | null
+    optionIndex: number | null
+    createdAt: Date | null
+  }
+
+  export type PollVoteMaxAggregateOutputType = {
+    id: string | null
+    pollId: string | null
+    userId: string | null
+    optionIndex: number | null
+    createdAt: Date | null
+  }
+
+  export type PollVoteCountAggregateOutputType = {
+    id: number
+    pollId: number
+    userId: number
+    optionIndex: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PollVoteAvgAggregateInputType = {
+    optionIndex?: true
+  }
+
+  export type PollVoteSumAggregateInputType = {
+    optionIndex?: true
+  }
+
+  export type PollVoteMinAggregateInputType = {
+    id?: true
+    pollId?: true
+    userId?: true
+    optionIndex?: true
+    createdAt?: true
+  }
+
+  export type PollVoteMaxAggregateInputType = {
+    id?: true
+    pollId?: true
+    userId?: true
+    optionIndex?: true
+    createdAt?: true
+  }
+
+  export type PollVoteCountAggregateInputType = {
+    id?: true
+    pollId?: true
+    userId?: true
+    optionIndex?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PollVoteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PollVote to aggregate.
+     */
+    where?: PollVoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PollVotes to fetch.
+     */
+    orderBy?: PollVoteOrderByWithRelationInput | PollVoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PollVoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PollVotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PollVotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PollVotes
+    **/
+    _count?: true | PollVoteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PollVoteAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PollVoteSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PollVoteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PollVoteMaxAggregateInputType
+  }
+
+  export type GetPollVoteAggregateType<T extends PollVoteAggregateArgs> = {
+        [P in keyof T & keyof AggregatePollVote]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePollVote[P]>
+      : GetScalarType<T[P], AggregatePollVote[P]>
+  }
+
+
+
+
+  export type PollVoteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PollVoteWhereInput
+    orderBy?: PollVoteOrderByWithAggregationInput | PollVoteOrderByWithAggregationInput[]
+    by: PollVoteScalarFieldEnum[] | PollVoteScalarFieldEnum
+    having?: PollVoteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PollVoteCountAggregateInputType | true
+    _avg?: PollVoteAvgAggregateInputType
+    _sum?: PollVoteSumAggregateInputType
+    _min?: PollVoteMinAggregateInputType
+    _max?: PollVoteMaxAggregateInputType
+  }
+
+  export type PollVoteGroupByOutputType = {
+    id: string
+    pollId: string
+    userId: string
+    optionIndex: number
+    createdAt: Date
+    _count: PollVoteCountAggregateOutputType | null
+    _avg: PollVoteAvgAggregateOutputType | null
+    _sum: PollVoteSumAggregateOutputType | null
+    _min: PollVoteMinAggregateOutputType | null
+    _max: PollVoteMaxAggregateOutputType | null
+  }
+
+  type GetPollVoteGroupByPayload<T extends PollVoteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PollVoteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PollVoteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PollVoteGroupByOutputType[P]>
+            : GetScalarType<T[P], PollVoteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PollVoteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pollId?: boolean
+    userId?: boolean
+    optionIndex?: boolean
+    createdAt?: boolean
+    poll?: boolean | DepartmentPollDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pollVote"]>
+
+  export type PollVoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pollId?: boolean
+    userId?: boolean
+    optionIndex?: boolean
+    createdAt?: boolean
+    poll?: boolean | DepartmentPollDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pollVote"]>
+
+  export type PollVoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pollId?: boolean
+    userId?: boolean
+    optionIndex?: boolean
+    createdAt?: boolean
+    poll?: boolean | DepartmentPollDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pollVote"]>
+
+  export type PollVoteSelectScalar = {
+    id?: boolean
+    pollId?: boolean
+    userId?: boolean
+    optionIndex?: boolean
+    createdAt?: boolean
+  }
+
+  export type PollVoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "pollId" | "userId" | "optionIndex" | "createdAt", ExtArgs["result"]["pollVote"]>
+  export type PollVoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    poll?: boolean | DepartmentPollDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PollVoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    poll?: boolean | DepartmentPollDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PollVoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    poll?: boolean | DepartmentPollDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PollVotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PollVote"
+    objects: {
+      poll: Prisma.$DepartmentPollPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      pollId: string
+      userId: string
+      optionIndex: number
+      createdAt: Date
+    }, ExtArgs["result"]["pollVote"]>
+    composites: {}
+  }
+
+  type PollVoteGetPayload<S extends boolean | null | undefined | PollVoteDefaultArgs> = $Result.GetResult<Prisma.$PollVotePayload, S>
+
+  type PollVoteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PollVoteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PollVoteCountAggregateInputType | true
+    }
+
+  export interface PollVoteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PollVote'], meta: { name: 'PollVote' } }
+    /**
+     * Find zero or one PollVote that matches the filter.
+     * @param {PollVoteFindUniqueArgs} args - Arguments to find a PollVote
+     * @example
+     * // Get one PollVote
+     * const pollVote = await prisma.pollVote.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PollVoteFindUniqueArgs>(args: SelectSubset<T, PollVoteFindUniqueArgs<ExtArgs>>): Prisma__PollVoteClient<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PollVote that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PollVoteFindUniqueOrThrowArgs} args - Arguments to find a PollVote
+     * @example
+     * // Get one PollVote
+     * const pollVote = await prisma.pollVote.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PollVoteFindUniqueOrThrowArgs>(args: SelectSubset<T, PollVoteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PollVoteClient<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PollVote that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PollVoteFindFirstArgs} args - Arguments to find a PollVote
+     * @example
+     * // Get one PollVote
+     * const pollVote = await prisma.pollVote.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PollVoteFindFirstArgs>(args?: SelectSubset<T, PollVoteFindFirstArgs<ExtArgs>>): Prisma__PollVoteClient<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PollVote that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PollVoteFindFirstOrThrowArgs} args - Arguments to find a PollVote
+     * @example
+     * // Get one PollVote
+     * const pollVote = await prisma.pollVote.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PollVoteFindFirstOrThrowArgs>(args?: SelectSubset<T, PollVoteFindFirstOrThrowArgs<ExtArgs>>): Prisma__PollVoteClient<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PollVotes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PollVoteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PollVotes
+     * const pollVotes = await prisma.pollVote.findMany()
+     * 
+     * // Get first 10 PollVotes
+     * const pollVotes = await prisma.pollVote.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pollVoteWithIdOnly = await prisma.pollVote.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PollVoteFindManyArgs>(args?: SelectSubset<T, PollVoteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PollVote.
+     * @param {PollVoteCreateArgs} args - Arguments to create a PollVote.
+     * @example
+     * // Create one PollVote
+     * const PollVote = await prisma.pollVote.create({
+     *   data: {
+     *     // ... data to create a PollVote
+     *   }
+     * })
+     * 
+     */
+    create<T extends PollVoteCreateArgs>(args: SelectSubset<T, PollVoteCreateArgs<ExtArgs>>): Prisma__PollVoteClient<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PollVotes.
+     * @param {PollVoteCreateManyArgs} args - Arguments to create many PollVotes.
+     * @example
+     * // Create many PollVotes
+     * const pollVote = await prisma.pollVote.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PollVoteCreateManyArgs>(args?: SelectSubset<T, PollVoteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PollVotes and returns the data saved in the database.
+     * @param {PollVoteCreateManyAndReturnArgs} args - Arguments to create many PollVotes.
+     * @example
+     * // Create many PollVotes
+     * const pollVote = await prisma.pollVote.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PollVotes and only return the `id`
+     * const pollVoteWithIdOnly = await prisma.pollVote.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PollVoteCreateManyAndReturnArgs>(args?: SelectSubset<T, PollVoteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PollVote.
+     * @param {PollVoteDeleteArgs} args - Arguments to delete one PollVote.
+     * @example
+     * // Delete one PollVote
+     * const PollVote = await prisma.pollVote.delete({
+     *   where: {
+     *     // ... filter to delete one PollVote
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PollVoteDeleteArgs>(args: SelectSubset<T, PollVoteDeleteArgs<ExtArgs>>): Prisma__PollVoteClient<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PollVote.
+     * @param {PollVoteUpdateArgs} args - Arguments to update one PollVote.
+     * @example
+     * // Update one PollVote
+     * const pollVote = await prisma.pollVote.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PollVoteUpdateArgs>(args: SelectSubset<T, PollVoteUpdateArgs<ExtArgs>>): Prisma__PollVoteClient<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PollVotes.
+     * @param {PollVoteDeleteManyArgs} args - Arguments to filter PollVotes to delete.
+     * @example
+     * // Delete a few PollVotes
+     * const { count } = await prisma.pollVote.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PollVoteDeleteManyArgs>(args?: SelectSubset<T, PollVoteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PollVotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PollVoteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PollVotes
+     * const pollVote = await prisma.pollVote.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PollVoteUpdateManyArgs>(args: SelectSubset<T, PollVoteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PollVotes and returns the data updated in the database.
+     * @param {PollVoteUpdateManyAndReturnArgs} args - Arguments to update many PollVotes.
+     * @example
+     * // Update many PollVotes
+     * const pollVote = await prisma.pollVote.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PollVotes and only return the `id`
+     * const pollVoteWithIdOnly = await prisma.pollVote.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PollVoteUpdateManyAndReturnArgs>(args: SelectSubset<T, PollVoteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PollVote.
+     * @param {PollVoteUpsertArgs} args - Arguments to update or create a PollVote.
+     * @example
+     * // Update or create a PollVote
+     * const pollVote = await prisma.pollVote.upsert({
+     *   create: {
+     *     // ... data to create a PollVote
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PollVote we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PollVoteUpsertArgs>(args: SelectSubset<T, PollVoteUpsertArgs<ExtArgs>>): Prisma__PollVoteClient<$Result.GetResult<Prisma.$PollVotePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PollVotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PollVoteCountArgs} args - Arguments to filter PollVotes to count.
+     * @example
+     * // Count the number of PollVotes
+     * const count = await prisma.pollVote.count({
+     *   where: {
+     *     // ... the filter for the PollVotes we want to count
+     *   }
+     * })
+    **/
+    count<T extends PollVoteCountArgs>(
+      args?: Subset<T, PollVoteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PollVoteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PollVote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PollVoteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PollVoteAggregateArgs>(args: Subset<T, PollVoteAggregateArgs>): Prisma.PrismaPromise<GetPollVoteAggregateType<T>>
+
+    /**
+     * Group by PollVote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PollVoteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PollVoteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PollVoteGroupByArgs['orderBy'] }
+        : { orderBy?: PollVoteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PollVoteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPollVoteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PollVote model
+   */
+  readonly fields: PollVoteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PollVote.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PollVoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    poll<T extends DepartmentPollDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentPollDefaultArgs<ExtArgs>>): Prisma__DepartmentPollClient<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PollVote model
+   */
+  interface PollVoteFieldRefs {
+    readonly id: FieldRef<"PollVote", 'String'>
+    readonly pollId: FieldRef<"PollVote", 'String'>
+    readonly userId: FieldRef<"PollVote", 'String'>
+    readonly optionIndex: FieldRef<"PollVote", 'Int'>
+    readonly createdAt: FieldRef<"PollVote", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PollVote findUnique
+   */
+  export type PollVoteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    /**
+     * Filter, which PollVote to fetch.
+     */
+    where: PollVoteWhereUniqueInput
+  }
+
+  /**
+   * PollVote findUniqueOrThrow
+   */
+  export type PollVoteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    /**
+     * Filter, which PollVote to fetch.
+     */
+    where: PollVoteWhereUniqueInput
+  }
+
+  /**
+   * PollVote findFirst
+   */
+  export type PollVoteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    /**
+     * Filter, which PollVote to fetch.
+     */
+    where?: PollVoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PollVotes to fetch.
+     */
+    orderBy?: PollVoteOrderByWithRelationInput | PollVoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PollVotes.
+     */
+    cursor?: PollVoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PollVotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PollVotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PollVotes.
+     */
+    distinct?: PollVoteScalarFieldEnum | PollVoteScalarFieldEnum[]
+  }
+
+  /**
+   * PollVote findFirstOrThrow
+   */
+  export type PollVoteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    /**
+     * Filter, which PollVote to fetch.
+     */
+    where?: PollVoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PollVotes to fetch.
+     */
+    orderBy?: PollVoteOrderByWithRelationInput | PollVoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PollVotes.
+     */
+    cursor?: PollVoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PollVotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PollVotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PollVotes.
+     */
+    distinct?: PollVoteScalarFieldEnum | PollVoteScalarFieldEnum[]
+  }
+
+  /**
+   * PollVote findMany
+   */
+  export type PollVoteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    /**
+     * Filter, which PollVotes to fetch.
+     */
+    where?: PollVoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PollVotes to fetch.
+     */
+    orderBy?: PollVoteOrderByWithRelationInput | PollVoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PollVotes.
+     */
+    cursor?: PollVoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PollVotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PollVotes.
+     */
+    skip?: number
+    distinct?: PollVoteScalarFieldEnum | PollVoteScalarFieldEnum[]
+  }
+
+  /**
+   * PollVote create
+   */
+  export type PollVoteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PollVote.
+     */
+    data: XOR<PollVoteCreateInput, PollVoteUncheckedCreateInput>
+  }
+
+  /**
+   * PollVote createMany
+   */
+  export type PollVoteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PollVotes.
+     */
+    data: PollVoteCreateManyInput | PollVoteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PollVote createManyAndReturn
+   */
+  export type PollVoteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * The data used to create many PollVotes.
+     */
+    data: PollVoteCreateManyInput | PollVoteCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PollVote update
+   */
+  export type PollVoteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PollVote.
+     */
+    data: XOR<PollVoteUpdateInput, PollVoteUncheckedUpdateInput>
+    /**
+     * Choose, which PollVote to update.
+     */
+    where: PollVoteWhereUniqueInput
+  }
+
+  /**
+   * PollVote updateMany
+   */
+  export type PollVoteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PollVotes.
+     */
+    data: XOR<PollVoteUpdateManyMutationInput, PollVoteUncheckedUpdateManyInput>
+    /**
+     * Filter which PollVotes to update
+     */
+    where?: PollVoteWhereInput
+    /**
+     * Limit how many PollVotes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PollVote updateManyAndReturn
+   */
+  export type PollVoteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * The data used to update PollVotes.
+     */
+    data: XOR<PollVoteUpdateManyMutationInput, PollVoteUncheckedUpdateManyInput>
+    /**
+     * Filter which PollVotes to update
+     */
+    where?: PollVoteWhereInput
+    /**
+     * Limit how many PollVotes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PollVote upsert
+   */
+  export type PollVoteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PollVote to update in case it exists.
+     */
+    where: PollVoteWhereUniqueInput
+    /**
+     * In case the PollVote found by the `where` argument doesn't exist, create a new PollVote with this data.
+     */
+    create: XOR<PollVoteCreateInput, PollVoteUncheckedCreateInput>
+    /**
+     * In case the PollVote was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PollVoteUpdateInput, PollVoteUncheckedUpdateInput>
+  }
+
+  /**
+   * PollVote delete
+   */
+  export type PollVoteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+    /**
+     * Filter which PollVote to delete.
+     */
+    where: PollVoteWhereUniqueInput
+  }
+
+  /**
+   * PollVote deleteMany
+   */
+  export type PollVoteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PollVotes to delete
+     */
+    where?: PollVoteWhereInput
+    /**
+     * Limit how many PollVotes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PollVote without action
+   */
+  export type PollVoteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PollVote
+     */
+    select?: PollVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PollVote
+     */
+    omit?: PollVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PollVoteInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TeamDecision
+   */
+
+  export type AggregateTeamDecision = {
+    _count: TeamDecisionCountAggregateOutputType | null
+    _min: TeamDecisionMinAggregateOutputType | null
+    _max: TeamDecisionMaxAggregateOutputType | null
+  }
+
+  export type TeamDecisionMinAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    title: string | null
+    description: string | null
+    voteDeadline: Date | null
+    status: string | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TeamDecisionMaxAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    title: string | null
+    description: string | null
+    voteDeadline: Date | null
+    status: string | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TeamDecisionCountAggregateOutputType = {
+    id: number
+    deptId: number
+    title: number
+    description: number
+    voteDeadline: number
+    status: number
+    createdBy: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TeamDecisionMinAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    description?: true
+    voteDeadline?: true
+    status?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TeamDecisionMaxAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    description?: true
+    voteDeadline?: true
+    status?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TeamDecisionCountAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    description?: true
+    voteDeadline?: true
+    status?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TeamDecisionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TeamDecision to aggregate.
+     */
+    where?: TeamDecisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamDecisions to fetch.
+     */
+    orderBy?: TeamDecisionOrderByWithRelationInput | TeamDecisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TeamDecisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamDecisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamDecisions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TeamDecisions
+    **/
+    _count?: true | TeamDecisionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TeamDecisionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TeamDecisionMaxAggregateInputType
+  }
+
+  export type GetTeamDecisionAggregateType<T extends TeamDecisionAggregateArgs> = {
+        [P in keyof T & keyof AggregateTeamDecision]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTeamDecision[P]>
+      : GetScalarType<T[P], AggregateTeamDecision[P]>
+  }
+
+
+
+
+  export type TeamDecisionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeamDecisionWhereInput
+    orderBy?: TeamDecisionOrderByWithAggregationInput | TeamDecisionOrderByWithAggregationInput[]
+    by: TeamDecisionScalarFieldEnum[] | TeamDecisionScalarFieldEnum
+    having?: TeamDecisionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TeamDecisionCountAggregateInputType | true
+    _min?: TeamDecisionMinAggregateInputType
+    _max?: TeamDecisionMaxAggregateInputType
+  }
+
+  export type TeamDecisionGroupByOutputType = {
+    id: string
+    deptId: string
+    title: string
+    description: string | null
+    voteDeadline: Date | null
+    status: string
+    createdBy: string
+    createdAt: Date
+    updatedAt: Date
+    _count: TeamDecisionCountAggregateOutputType | null
+    _min: TeamDecisionMinAggregateOutputType | null
+    _max: TeamDecisionMaxAggregateOutputType | null
+  }
+
+  type GetTeamDecisionGroupByPayload<T extends TeamDecisionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TeamDecisionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TeamDecisionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TeamDecisionGroupByOutputType[P]>
+            : GetScalarType<T[P], TeamDecisionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TeamDecisionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    voteDeadline?: boolean
+    status?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+    votes?: boolean | TeamDecision$votesArgs<ExtArgs>
+    _count?: boolean | TeamDecisionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["teamDecision"]>
+
+  export type TeamDecisionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    voteDeadline?: boolean
+    status?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["teamDecision"]>
+
+  export type TeamDecisionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    voteDeadline?: boolean
+    status?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["teamDecision"]>
+
+  export type TeamDecisionSelectScalar = {
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    description?: boolean
+    voteDeadline?: boolean
+    status?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TeamDecisionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deptId" | "title" | "description" | "voteDeadline" | "status" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["teamDecision"]>
+  export type TeamDecisionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+    votes?: boolean | TeamDecision$votesArgs<ExtArgs>
+    _count?: boolean | TeamDecisionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TeamDecisionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TeamDecisionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TeamDecisionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TeamDecision"
+    objects: {
+      department: Prisma.$DepartmentPayload<ExtArgs>
+      creator: Prisma.$UserPayload<ExtArgs>
+      votes: Prisma.$DecisionVotePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      deptId: string
+      title: string
+      description: string | null
+      voteDeadline: Date | null
+      status: string
+      createdBy: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["teamDecision"]>
+    composites: {}
+  }
+
+  type TeamDecisionGetPayload<S extends boolean | null | undefined | TeamDecisionDefaultArgs> = $Result.GetResult<Prisma.$TeamDecisionPayload, S>
+
+  type TeamDecisionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TeamDecisionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TeamDecisionCountAggregateInputType | true
+    }
+
+  export interface TeamDecisionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TeamDecision'], meta: { name: 'TeamDecision' } }
+    /**
+     * Find zero or one TeamDecision that matches the filter.
+     * @param {TeamDecisionFindUniqueArgs} args - Arguments to find a TeamDecision
+     * @example
+     * // Get one TeamDecision
+     * const teamDecision = await prisma.teamDecision.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TeamDecisionFindUniqueArgs>(args: SelectSubset<T, TeamDecisionFindUniqueArgs<ExtArgs>>): Prisma__TeamDecisionClient<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TeamDecision that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TeamDecisionFindUniqueOrThrowArgs} args - Arguments to find a TeamDecision
+     * @example
+     * // Get one TeamDecision
+     * const teamDecision = await prisma.teamDecision.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TeamDecisionFindUniqueOrThrowArgs>(args: SelectSubset<T, TeamDecisionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TeamDecisionClient<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TeamDecision that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamDecisionFindFirstArgs} args - Arguments to find a TeamDecision
+     * @example
+     * // Get one TeamDecision
+     * const teamDecision = await prisma.teamDecision.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TeamDecisionFindFirstArgs>(args?: SelectSubset<T, TeamDecisionFindFirstArgs<ExtArgs>>): Prisma__TeamDecisionClient<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TeamDecision that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamDecisionFindFirstOrThrowArgs} args - Arguments to find a TeamDecision
+     * @example
+     * // Get one TeamDecision
+     * const teamDecision = await prisma.teamDecision.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TeamDecisionFindFirstOrThrowArgs>(args?: SelectSubset<T, TeamDecisionFindFirstOrThrowArgs<ExtArgs>>): Prisma__TeamDecisionClient<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TeamDecisions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamDecisionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TeamDecisions
+     * const teamDecisions = await prisma.teamDecision.findMany()
+     * 
+     * // Get first 10 TeamDecisions
+     * const teamDecisions = await prisma.teamDecision.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const teamDecisionWithIdOnly = await prisma.teamDecision.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TeamDecisionFindManyArgs>(args?: SelectSubset<T, TeamDecisionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TeamDecision.
+     * @param {TeamDecisionCreateArgs} args - Arguments to create a TeamDecision.
+     * @example
+     * // Create one TeamDecision
+     * const TeamDecision = await prisma.teamDecision.create({
+     *   data: {
+     *     // ... data to create a TeamDecision
+     *   }
+     * })
+     * 
+     */
+    create<T extends TeamDecisionCreateArgs>(args: SelectSubset<T, TeamDecisionCreateArgs<ExtArgs>>): Prisma__TeamDecisionClient<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TeamDecisions.
+     * @param {TeamDecisionCreateManyArgs} args - Arguments to create many TeamDecisions.
+     * @example
+     * // Create many TeamDecisions
+     * const teamDecision = await prisma.teamDecision.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TeamDecisionCreateManyArgs>(args?: SelectSubset<T, TeamDecisionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TeamDecisions and returns the data saved in the database.
+     * @param {TeamDecisionCreateManyAndReturnArgs} args - Arguments to create many TeamDecisions.
+     * @example
+     * // Create many TeamDecisions
+     * const teamDecision = await prisma.teamDecision.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TeamDecisions and only return the `id`
+     * const teamDecisionWithIdOnly = await prisma.teamDecision.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TeamDecisionCreateManyAndReturnArgs>(args?: SelectSubset<T, TeamDecisionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TeamDecision.
+     * @param {TeamDecisionDeleteArgs} args - Arguments to delete one TeamDecision.
+     * @example
+     * // Delete one TeamDecision
+     * const TeamDecision = await prisma.teamDecision.delete({
+     *   where: {
+     *     // ... filter to delete one TeamDecision
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TeamDecisionDeleteArgs>(args: SelectSubset<T, TeamDecisionDeleteArgs<ExtArgs>>): Prisma__TeamDecisionClient<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TeamDecision.
+     * @param {TeamDecisionUpdateArgs} args - Arguments to update one TeamDecision.
+     * @example
+     * // Update one TeamDecision
+     * const teamDecision = await prisma.teamDecision.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TeamDecisionUpdateArgs>(args: SelectSubset<T, TeamDecisionUpdateArgs<ExtArgs>>): Prisma__TeamDecisionClient<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TeamDecisions.
+     * @param {TeamDecisionDeleteManyArgs} args - Arguments to filter TeamDecisions to delete.
+     * @example
+     * // Delete a few TeamDecisions
+     * const { count } = await prisma.teamDecision.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TeamDecisionDeleteManyArgs>(args?: SelectSubset<T, TeamDecisionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TeamDecisions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamDecisionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TeamDecisions
+     * const teamDecision = await prisma.teamDecision.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TeamDecisionUpdateManyArgs>(args: SelectSubset<T, TeamDecisionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TeamDecisions and returns the data updated in the database.
+     * @param {TeamDecisionUpdateManyAndReturnArgs} args - Arguments to update many TeamDecisions.
+     * @example
+     * // Update many TeamDecisions
+     * const teamDecision = await prisma.teamDecision.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TeamDecisions and only return the `id`
+     * const teamDecisionWithIdOnly = await prisma.teamDecision.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TeamDecisionUpdateManyAndReturnArgs>(args: SelectSubset<T, TeamDecisionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TeamDecision.
+     * @param {TeamDecisionUpsertArgs} args - Arguments to update or create a TeamDecision.
+     * @example
+     * // Update or create a TeamDecision
+     * const teamDecision = await prisma.teamDecision.upsert({
+     *   create: {
+     *     // ... data to create a TeamDecision
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TeamDecision we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TeamDecisionUpsertArgs>(args: SelectSubset<T, TeamDecisionUpsertArgs<ExtArgs>>): Prisma__TeamDecisionClient<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TeamDecisions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamDecisionCountArgs} args - Arguments to filter TeamDecisions to count.
+     * @example
+     * // Count the number of TeamDecisions
+     * const count = await prisma.teamDecision.count({
+     *   where: {
+     *     // ... the filter for the TeamDecisions we want to count
+     *   }
+     * })
+    **/
+    count<T extends TeamDecisionCountArgs>(
+      args?: Subset<T, TeamDecisionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TeamDecisionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TeamDecision.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamDecisionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TeamDecisionAggregateArgs>(args: Subset<T, TeamDecisionAggregateArgs>): Prisma.PrismaPromise<GetTeamDecisionAggregateType<T>>
+
+    /**
+     * Group by TeamDecision.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamDecisionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TeamDecisionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TeamDecisionGroupByArgs['orderBy'] }
+        : { orderBy?: TeamDecisionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TeamDecisionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTeamDecisionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TeamDecision model
+   */
+  readonly fields: TeamDecisionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TeamDecision.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TeamDecisionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    votes<T extends TeamDecision$votesArgs<ExtArgs> = {}>(args?: Subset<T, TeamDecision$votesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TeamDecision model
+   */
+  interface TeamDecisionFieldRefs {
+    readonly id: FieldRef<"TeamDecision", 'String'>
+    readonly deptId: FieldRef<"TeamDecision", 'String'>
+    readonly title: FieldRef<"TeamDecision", 'String'>
+    readonly description: FieldRef<"TeamDecision", 'String'>
+    readonly voteDeadline: FieldRef<"TeamDecision", 'DateTime'>
+    readonly status: FieldRef<"TeamDecision", 'String'>
+    readonly createdBy: FieldRef<"TeamDecision", 'String'>
+    readonly createdAt: FieldRef<"TeamDecision", 'DateTime'>
+    readonly updatedAt: FieldRef<"TeamDecision", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TeamDecision findUnique
+   */
+  export type TeamDecisionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamDecision to fetch.
+     */
+    where: TeamDecisionWhereUniqueInput
+  }
+
+  /**
+   * TeamDecision findUniqueOrThrow
+   */
+  export type TeamDecisionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamDecision to fetch.
+     */
+    where: TeamDecisionWhereUniqueInput
+  }
+
+  /**
+   * TeamDecision findFirst
+   */
+  export type TeamDecisionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamDecision to fetch.
+     */
+    where?: TeamDecisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamDecisions to fetch.
+     */
+    orderBy?: TeamDecisionOrderByWithRelationInput | TeamDecisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TeamDecisions.
+     */
+    cursor?: TeamDecisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamDecisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamDecisions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeamDecisions.
+     */
+    distinct?: TeamDecisionScalarFieldEnum | TeamDecisionScalarFieldEnum[]
+  }
+
+  /**
+   * TeamDecision findFirstOrThrow
+   */
+  export type TeamDecisionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamDecision to fetch.
+     */
+    where?: TeamDecisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamDecisions to fetch.
+     */
+    orderBy?: TeamDecisionOrderByWithRelationInput | TeamDecisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TeamDecisions.
+     */
+    cursor?: TeamDecisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamDecisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamDecisions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeamDecisions.
+     */
+    distinct?: TeamDecisionScalarFieldEnum | TeamDecisionScalarFieldEnum[]
+  }
+
+  /**
+   * TeamDecision findMany
+   */
+  export type TeamDecisionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamDecisions to fetch.
+     */
+    where?: TeamDecisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamDecisions to fetch.
+     */
+    orderBy?: TeamDecisionOrderByWithRelationInput | TeamDecisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TeamDecisions.
+     */
+    cursor?: TeamDecisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamDecisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamDecisions.
+     */
+    skip?: number
+    distinct?: TeamDecisionScalarFieldEnum | TeamDecisionScalarFieldEnum[]
+  }
+
+  /**
+   * TeamDecision create
+   */
+  export type TeamDecisionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TeamDecision.
+     */
+    data: XOR<TeamDecisionCreateInput, TeamDecisionUncheckedCreateInput>
+  }
+
+  /**
+   * TeamDecision createMany
+   */
+  export type TeamDecisionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TeamDecisions.
+     */
+    data: TeamDecisionCreateManyInput | TeamDecisionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TeamDecision createManyAndReturn
+   */
+  export type TeamDecisionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * The data used to create many TeamDecisions.
+     */
+    data: TeamDecisionCreateManyInput | TeamDecisionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TeamDecision update
+   */
+  export type TeamDecisionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TeamDecision.
+     */
+    data: XOR<TeamDecisionUpdateInput, TeamDecisionUncheckedUpdateInput>
+    /**
+     * Choose, which TeamDecision to update.
+     */
+    where: TeamDecisionWhereUniqueInput
+  }
+
+  /**
+   * TeamDecision updateMany
+   */
+  export type TeamDecisionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TeamDecisions.
+     */
+    data: XOR<TeamDecisionUpdateManyMutationInput, TeamDecisionUncheckedUpdateManyInput>
+    /**
+     * Filter which TeamDecisions to update
+     */
+    where?: TeamDecisionWhereInput
+    /**
+     * Limit how many TeamDecisions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TeamDecision updateManyAndReturn
+   */
+  export type TeamDecisionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * The data used to update TeamDecisions.
+     */
+    data: XOR<TeamDecisionUpdateManyMutationInput, TeamDecisionUncheckedUpdateManyInput>
+    /**
+     * Filter which TeamDecisions to update
+     */
+    where?: TeamDecisionWhereInput
+    /**
+     * Limit how many TeamDecisions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TeamDecision upsert
+   */
+  export type TeamDecisionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TeamDecision to update in case it exists.
+     */
+    where: TeamDecisionWhereUniqueInput
+    /**
+     * In case the TeamDecision found by the `where` argument doesn't exist, create a new TeamDecision with this data.
+     */
+    create: XOR<TeamDecisionCreateInput, TeamDecisionUncheckedCreateInput>
+    /**
+     * In case the TeamDecision was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TeamDecisionUpdateInput, TeamDecisionUncheckedUpdateInput>
+  }
+
+  /**
+   * TeamDecision delete
+   */
+  export type TeamDecisionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+    /**
+     * Filter which TeamDecision to delete.
+     */
+    where: TeamDecisionWhereUniqueInput
+  }
+
+  /**
+   * TeamDecision deleteMany
+   */
+  export type TeamDecisionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TeamDecisions to delete
+     */
+    where?: TeamDecisionWhereInput
+    /**
+     * Limit how many TeamDecisions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TeamDecision.votes
+   */
+  export type TeamDecision$votesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    where?: DecisionVoteWhereInput
+    orderBy?: DecisionVoteOrderByWithRelationInput | DecisionVoteOrderByWithRelationInput[]
+    cursor?: DecisionVoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DecisionVoteScalarFieldEnum | DecisionVoteScalarFieldEnum[]
+  }
+
+  /**
+   * TeamDecision without action
+   */
+  export type TeamDecisionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamDecision
+     */
+    select?: TeamDecisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamDecision
+     */
+    omit?: TeamDecisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamDecisionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DecisionVote
+   */
+
+  export type AggregateDecisionVote = {
+    _count: DecisionVoteCountAggregateOutputType | null
+    _min: DecisionVoteMinAggregateOutputType | null
+    _max: DecisionVoteMaxAggregateOutputType | null
+  }
+
+  export type DecisionVoteMinAggregateOutputType = {
+    id: string | null
+    decisionId: string | null
+    userId: string | null
+    vote: $Enums.DecisionVoteType | null
+    createdAt: Date | null
+  }
+
+  export type DecisionVoteMaxAggregateOutputType = {
+    id: string | null
+    decisionId: string | null
+    userId: string | null
+    vote: $Enums.DecisionVoteType | null
+    createdAt: Date | null
+  }
+
+  export type DecisionVoteCountAggregateOutputType = {
+    id: number
+    decisionId: number
+    userId: number
+    vote: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type DecisionVoteMinAggregateInputType = {
+    id?: true
+    decisionId?: true
+    userId?: true
+    vote?: true
+    createdAt?: true
+  }
+
+  export type DecisionVoteMaxAggregateInputType = {
+    id?: true
+    decisionId?: true
+    userId?: true
+    vote?: true
+    createdAt?: true
+  }
+
+  export type DecisionVoteCountAggregateInputType = {
+    id?: true
+    decisionId?: true
+    userId?: true
+    vote?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type DecisionVoteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DecisionVote to aggregate.
+     */
+    where?: DecisionVoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DecisionVotes to fetch.
+     */
+    orderBy?: DecisionVoteOrderByWithRelationInput | DecisionVoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DecisionVoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DecisionVotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DecisionVotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DecisionVotes
+    **/
+    _count?: true | DecisionVoteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DecisionVoteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DecisionVoteMaxAggregateInputType
+  }
+
+  export type GetDecisionVoteAggregateType<T extends DecisionVoteAggregateArgs> = {
+        [P in keyof T & keyof AggregateDecisionVote]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDecisionVote[P]>
+      : GetScalarType<T[P], AggregateDecisionVote[P]>
+  }
+
+
+
+
+  export type DecisionVoteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DecisionVoteWhereInput
+    orderBy?: DecisionVoteOrderByWithAggregationInput | DecisionVoteOrderByWithAggregationInput[]
+    by: DecisionVoteScalarFieldEnum[] | DecisionVoteScalarFieldEnum
+    having?: DecisionVoteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DecisionVoteCountAggregateInputType | true
+    _min?: DecisionVoteMinAggregateInputType
+    _max?: DecisionVoteMaxAggregateInputType
+  }
+
+  export type DecisionVoteGroupByOutputType = {
+    id: string
+    decisionId: string
+    userId: string
+    vote: $Enums.DecisionVoteType
+    createdAt: Date
+    _count: DecisionVoteCountAggregateOutputType | null
+    _min: DecisionVoteMinAggregateOutputType | null
+    _max: DecisionVoteMaxAggregateOutputType | null
+  }
+
+  type GetDecisionVoteGroupByPayload<T extends DecisionVoteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DecisionVoteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DecisionVoteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DecisionVoteGroupByOutputType[P]>
+            : GetScalarType<T[P], DecisionVoteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DecisionVoteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    decisionId?: boolean
+    userId?: boolean
+    vote?: boolean
+    createdAt?: boolean
+    decision?: boolean | TeamDecisionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["decisionVote"]>
+
+  export type DecisionVoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    decisionId?: boolean
+    userId?: boolean
+    vote?: boolean
+    createdAt?: boolean
+    decision?: boolean | TeamDecisionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["decisionVote"]>
+
+  export type DecisionVoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    decisionId?: boolean
+    userId?: boolean
+    vote?: boolean
+    createdAt?: boolean
+    decision?: boolean | TeamDecisionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["decisionVote"]>
+
+  export type DecisionVoteSelectScalar = {
+    id?: boolean
+    decisionId?: boolean
+    userId?: boolean
+    vote?: boolean
+    createdAt?: boolean
+  }
+
+  export type DecisionVoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "decisionId" | "userId" | "vote" | "createdAt", ExtArgs["result"]["decisionVote"]>
+  export type DecisionVoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    decision?: boolean | TeamDecisionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DecisionVoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    decision?: boolean | TeamDecisionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DecisionVoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    decision?: boolean | TeamDecisionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $DecisionVotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DecisionVote"
+    objects: {
+      decision: Prisma.$TeamDecisionPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      decisionId: string
+      userId: string
+      vote: $Enums.DecisionVoteType
+      createdAt: Date
+    }, ExtArgs["result"]["decisionVote"]>
+    composites: {}
+  }
+
+  type DecisionVoteGetPayload<S extends boolean | null | undefined | DecisionVoteDefaultArgs> = $Result.GetResult<Prisma.$DecisionVotePayload, S>
+
+  type DecisionVoteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DecisionVoteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DecisionVoteCountAggregateInputType | true
+    }
+
+  export interface DecisionVoteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DecisionVote'], meta: { name: 'DecisionVote' } }
+    /**
+     * Find zero or one DecisionVote that matches the filter.
+     * @param {DecisionVoteFindUniqueArgs} args - Arguments to find a DecisionVote
+     * @example
+     * // Get one DecisionVote
+     * const decisionVote = await prisma.decisionVote.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DecisionVoteFindUniqueArgs>(args: SelectSubset<T, DecisionVoteFindUniqueArgs<ExtArgs>>): Prisma__DecisionVoteClient<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DecisionVote that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DecisionVoteFindUniqueOrThrowArgs} args - Arguments to find a DecisionVote
+     * @example
+     * // Get one DecisionVote
+     * const decisionVote = await prisma.decisionVote.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DecisionVoteFindUniqueOrThrowArgs>(args: SelectSubset<T, DecisionVoteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DecisionVoteClient<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DecisionVote that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DecisionVoteFindFirstArgs} args - Arguments to find a DecisionVote
+     * @example
+     * // Get one DecisionVote
+     * const decisionVote = await prisma.decisionVote.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DecisionVoteFindFirstArgs>(args?: SelectSubset<T, DecisionVoteFindFirstArgs<ExtArgs>>): Prisma__DecisionVoteClient<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DecisionVote that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DecisionVoteFindFirstOrThrowArgs} args - Arguments to find a DecisionVote
+     * @example
+     * // Get one DecisionVote
+     * const decisionVote = await prisma.decisionVote.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DecisionVoteFindFirstOrThrowArgs>(args?: SelectSubset<T, DecisionVoteFindFirstOrThrowArgs<ExtArgs>>): Prisma__DecisionVoteClient<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DecisionVotes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DecisionVoteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DecisionVotes
+     * const decisionVotes = await prisma.decisionVote.findMany()
+     * 
+     * // Get first 10 DecisionVotes
+     * const decisionVotes = await prisma.decisionVote.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const decisionVoteWithIdOnly = await prisma.decisionVote.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DecisionVoteFindManyArgs>(args?: SelectSubset<T, DecisionVoteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DecisionVote.
+     * @param {DecisionVoteCreateArgs} args - Arguments to create a DecisionVote.
+     * @example
+     * // Create one DecisionVote
+     * const DecisionVote = await prisma.decisionVote.create({
+     *   data: {
+     *     // ... data to create a DecisionVote
+     *   }
+     * })
+     * 
+     */
+    create<T extends DecisionVoteCreateArgs>(args: SelectSubset<T, DecisionVoteCreateArgs<ExtArgs>>): Prisma__DecisionVoteClient<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DecisionVotes.
+     * @param {DecisionVoteCreateManyArgs} args - Arguments to create many DecisionVotes.
+     * @example
+     * // Create many DecisionVotes
+     * const decisionVote = await prisma.decisionVote.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DecisionVoteCreateManyArgs>(args?: SelectSubset<T, DecisionVoteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DecisionVotes and returns the data saved in the database.
+     * @param {DecisionVoteCreateManyAndReturnArgs} args - Arguments to create many DecisionVotes.
+     * @example
+     * // Create many DecisionVotes
+     * const decisionVote = await prisma.decisionVote.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DecisionVotes and only return the `id`
+     * const decisionVoteWithIdOnly = await prisma.decisionVote.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DecisionVoteCreateManyAndReturnArgs>(args?: SelectSubset<T, DecisionVoteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DecisionVote.
+     * @param {DecisionVoteDeleteArgs} args - Arguments to delete one DecisionVote.
+     * @example
+     * // Delete one DecisionVote
+     * const DecisionVote = await prisma.decisionVote.delete({
+     *   where: {
+     *     // ... filter to delete one DecisionVote
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DecisionVoteDeleteArgs>(args: SelectSubset<T, DecisionVoteDeleteArgs<ExtArgs>>): Prisma__DecisionVoteClient<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DecisionVote.
+     * @param {DecisionVoteUpdateArgs} args - Arguments to update one DecisionVote.
+     * @example
+     * // Update one DecisionVote
+     * const decisionVote = await prisma.decisionVote.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DecisionVoteUpdateArgs>(args: SelectSubset<T, DecisionVoteUpdateArgs<ExtArgs>>): Prisma__DecisionVoteClient<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DecisionVotes.
+     * @param {DecisionVoteDeleteManyArgs} args - Arguments to filter DecisionVotes to delete.
+     * @example
+     * // Delete a few DecisionVotes
+     * const { count } = await prisma.decisionVote.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DecisionVoteDeleteManyArgs>(args?: SelectSubset<T, DecisionVoteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DecisionVotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DecisionVoteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DecisionVotes
+     * const decisionVote = await prisma.decisionVote.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DecisionVoteUpdateManyArgs>(args: SelectSubset<T, DecisionVoteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DecisionVotes and returns the data updated in the database.
+     * @param {DecisionVoteUpdateManyAndReturnArgs} args - Arguments to update many DecisionVotes.
+     * @example
+     * // Update many DecisionVotes
+     * const decisionVote = await prisma.decisionVote.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DecisionVotes and only return the `id`
+     * const decisionVoteWithIdOnly = await prisma.decisionVote.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DecisionVoteUpdateManyAndReturnArgs>(args: SelectSubset<T, DecisionVoteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DecisionVote.
+     * @param {DecisionVoteUpsertArgs} args - Arguments to update or create a DecisionVote.
+     * @example
+     * // Update or create a DecisionVote
+     * const decisionVote = await prisma.decisionVote.upsert({
+     *   create: {
+     *     // ... data to create a DecisionVote
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DecisionVote we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DecisionVoteUpsertArgs>(args: SelectSubset<T, DecisionVoteUpsertArgs<ExtArgs>>): Prisma__DecisionVoteClient<$Result.GetResult<Prisma.$DecisionVotePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DecisionVotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DecisionVoteCountArgs} args - Arguments to filter DecisionVotes to count.
+     * @example
+     * // Count the number of DecisionVotes
+     * const count = await prisma.decisionVote.count({
+     *   where: {
+     *     // ... the filter for the DecisionVotes we want to count
+     *   }
+     * })
+    **/
+    count<T extends DecisionVoteCountArgs>(
+      args?: Subset<T, DecisionVoteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DecisionVoteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DecisionVote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DecisionVoteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DecisionVoteAggregateArgs>(args: Subset<T, DecisionVoteAggregateArgs>): Prisma.PrismaPromise<GetDecisionVoteAggregateType<T>>
+
+    /**
+     * Group by DecisionVote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DecisionVoteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DecisionVoteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DecisionVoteGroupByArgs['orderBy'] }
+        : { orderBy?: DecisionVoteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DecisionVoteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDecisionVoteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DecisionVote model
+   */
+  readonly fields: DecisionVoteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DecisionVote.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DecisionVoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    decision<T extends TeamDecisionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeamDecisionDefaultArgs<ExtArgs>>): Prisma__TeamDecisionClient<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DecisionVote model
+   */
+  interface DecisionVoteFieldRefs {
+    readonly id: FieldRef<"DecisionVote", 'String'>
+    readonly decisionId: FieldRef<"DecisionVote", 'String'>
+    readonly userId: FieldRef<"DecisionVote", 'String'>
+    readonly vote: FieldRef<"DecisionVote", 'DecisionVoteType'>
+    readonly createdAt: FieldRef<"DecisionVote", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DecisionVote findUnique
+   */
+  export type DecisionVoteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    /**
+     * Filter, which DecisionVote to fetch.
+     */
+    where: DecisionVoteWhereUniqueInput
+  }
+
+  /**
+   * DecisionVote findUniqueOrThrow
+   */
+  export type DecisionVoteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    /**
+     * Filter, which DecisionVote to fetch.
+     */
+    where: DecisionVoteWhereUniqueInput
+  }
+
+  /**
+   * DecisionVote findFirst
+   */
+  export type DecisionVoteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    /**
+     * Filter, which DecisionVote to fetch.
+     */
+    where?: DecisionVoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DecisionVotes to fetch.
+     */
+    orderBy?: DecisionVoteOrderByWithRelationInput | DecisionVoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DecisionVotes.
+     */
+    cursor?: DecisionVoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DecisionVotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DecisionVotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DecisionVotes.
+     */
+    distinct?: DecisionVoteScalarFieldEnum | DecisionVoteScalarFieldEnum[]
+  }
+
+  /**
+   * DecisionVote findFirstOrThrow
+   */
+  export type DecisionVoteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    /**
+     * Filter, which DecisionVote to fetch.
+     */
+    where?: DecisionVoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DecisionVotes to fetch.
+     */
+    orderBy?: DecisionVoteOrderByWithRelationInput | DecisionVoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DecisionVotes.
+     */
+    cursor?: DecisionVoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DecisionVotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DecisionVotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DecisionVotes.
+     */
+    distinct?: DecisionVoteScalarFieldEnum | DecisionVoteScalarFieldEnum[]
+  }
+
+  /**
+   * DecisionVote findMany
+   */
+  export type DecisionVoteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    /**
+     * Filter, which DecisionVotes to fetch.
+     */
+    where?: DecisionVoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DecisionVotes to fetch.
+     */
+    orderBy?: DecisionVoteOrderByWithRelationInput | DecisionVoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DecisionVotes.
+     */
+    cursor?: DecisionVoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DecisionVotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DecisionVotes.
+     */
+    skip?: number
+    distinct?: DecisionVoteScalarFieldEnum | DecisionVoteScalarFieldEnum[]
+  }
+
+  /**
+   * DecisionVote create
+   */
+  export type DecisionVoteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DecisionVote.
+     */
+    data: XOR<DecisionVoteCreateInput, DecisionVoteUncheckedCreateInput>
+  }
+
+  /**
+   * DecisionVote createMany
+   */
+  export type DecisionVoteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DecisionVotes.
+     */
+    data: DecisionVoteCreateManyInput | DecisionVoteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DecisionVote createManyAndReturn
+   */
+  export type DecisionVoteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * The data used to create many DecisionVotes.
+     */
+    data: DecisionVoteCreateManyInput | DecisionVoteCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DecisionVote update
+   */
+  export type DecisionVoteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DecisionVote.
+     */
+    data: XOR<DecisionVoteUpdateInput, DecisionVoteUncheckedUpdateInput>
+    /**
+     * Choose, which DecisionVote to update.
+     */
+    where: DecisionVoteWhereUniqueInput
+  }
+
+  /**
+   * DecisionVote updateMany
+   */
+  export type DecisionVoteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DecisionVotes.
+     */
+    data: XOR<DecisionVoteUpdateManyMutationInput, DecisionVoteUncheckedUpdateManyInput>
+    /**
+     * Filter which DecisionVotes to update
+     */
+    where?: DecisionVoteWhereInput
+    /**
+     * Limit how many DecisionVotes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DecisionVote updateManyAndReturn
+   */
+  export type DecisionVoteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * The data used to update DecisionVotes.
+     */
+    data: XOR<DecisionVoteUpdateManyMutationInput, DecisionVoteUncheckedUpdateManyInput>
+    /**
+     * Filter which DecisionVotes to update
+     */
+    where?: DecisionVoteWhereInput
+    /**
+     * Limit how many DecisionVotes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DecisionVote upsert
+   */
+  export type DecisionVoteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DecisionVote to update in case it exists.
+     */
+    where: DecisionVoteWhereUniqueInput
+    /**
+     * In case the DecisionVote found by the `where` argument doesn't exist, create a new DecisionVote with this data.
+     */
+    create: XOR<DecisionVoteCreateInput, DecisionVoteUncheckedCreateInput>
+    /**
+     * In case the DecisionVote was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DecisionVoteUpdateInput, DecisionVoteUncheckedUpdateInput>
+  }
+
+  /**
+   * DecisionVote delete
+   */
+  export type DecisionVoteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
+    /**
+     * Filter which DecisionVote to delete.
+     */
+    where: DecisionVoteWhereUniqueInput
+  }
+
+  /**
+   * DecisionVote deleteMany
+   */
+  export type DecisionVoteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DecisionVotes to delete
+     */
+    where?: DecisionVoteWhereInput
+    /**
+     * Limit how many DecisionVotes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DecisionVote without action
+   */
+  export type DecisionVoteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DecisionVote
+     */
+    select?: DecisionVoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DecisionVote
+     */
+    omit?: DecisionVoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DecisionVoteInclude<ExtArgs> | null
   }
 
 
@@ -47480,6 +55197,91 @@ export namespace Prisma {
   export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
 
 
+  export const DepartmentGoalScalarFieldEnum: {
+    id: 'id',
+    deptId: 'deptId',
+    title: 'title',
+    description: 'description',
+    targetValue: 'targetValue',
+    currentValue: 'currentValue',
+    period: 'period',
+    periodKey: 'periodKey',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DepartmentGoalScalarFieldEnum = (typeof DepartmentGoalScalarFieldEnum)[keyof typeof DepartmentGoalScalarFieldEnum]
+
+
+  export const DepartmentMeetingScalarFieldEnum: {
+    id: 'id',
+    deptId: 'deptId',
+    title: 'title',
+    description: 'description',
+    agenda: 'agenda',
+    meetingDate: 'meetingDate',
+    location: 'location',
+    createdBy: 'createdBy',
+    minutes: 'minutes',
+    minutesAt: 'minutesAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DepartmentMeetingScalarFieldEnum = (typeof DepartmentMeetingScalarFieldEnum)[keyof typeof DepartmentMeetingScalarFieldEnum]
+
+
+  export const DepartmentPollScalarFieldEnum: {
+    id: 'id',
+    deptId: 'deptId',
+    question: 'question',
+    options: 'options',
+    endDate: 'endDate',
+    createdBy: 'createdBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DepartmentPollScalarFieldEnum = (typeof DepartmentPollScalarFieldEnum)[keyof typeof DepartmentPollScalarFieldEnum]
+
+
+  export const PollVoteScalarFieldEnum: {
+    id: 'id',
+    pollId: 'pollId',
+    userId: 'userId',
+    optionIndex: 'optionIndex',
+    createdAt: 'createdAt'
+  };
+
+  export type PollVoteScalarFieldEnum = (typeof PollVoteScalarFieldEnum)[keyof typeof PollVoteScalarFieldEnum]
+
+
+  export const TeamDecisionScalarFieldEnum: {
+    id: 'id',
+    deptId: 'deptId',
+    title: 'title',
+    description: 'description',
+    voteDeadline: 'voteDeadline',
+    status: 'status',
+    createdBy: 'createdBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TeamDecisionScalarFieldEnum = (typeof TeamDecisionScalarFieldEnum)[keyof typeof TeamDecisionScalarFieldEnum]
+
+
+  export const DecisionVoteScalarFieldEnum: {
+    id: 'id',
+    decisionId: 'decisionId',
+    userId: 'userId',
+    vote: 'vote',
+    createdAt: 'createdAt'
+  };
+
+  export type DecisionVoteScalarFieldEnum = (typeof DecisionVoteScalarFieldEnum)[keyof typeof DecisionVoteScalarFieldEnum]
+
+
   export const DepartmentMemberScalarFieldEnum: {
     id: 'id',
     deptId: 'deptId',
@@ -47898,6 +55700,13 @@ export namespace Prisma {
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -48048,6 +55857,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DecisionVoteType'
+   */
+  export type EnumDecisionVoteTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DecisionVoteType'>
+    
+
+
+  /**
+   * Reference to a field of type 'DecisionVoteType[]'
+   */
+  export type ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DecisionVoteType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'FileType'
    */
   export type EnumFileTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FileType'>
@@ -48188,20 +56025,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-  /**
    * Reference to a field of type 'FinancialEntryType'
    */
   export type EnumFinancialEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialEntryType'>
@@ -48261,6 +56084,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentListRelationFilter
     taskMessages?: TaskMessageListRelationFilter
     departmentMonthlyReports?: DepartmentMonthlyReportListRelationFilter
+    createdMeetings?: DepartmentMeetingListRelationFilter
+    createdPolls?: DepartmentPollListRelationFilter
+    createdDecisions?: TeamDecisionListRelationFilter
+    pollVotes?: PollVoteListRelationFilter
+    decisionVotes?: DecisionVoteListRelationFilter
     pushSubscriptions?: PushSubscriptionListRelationFilter
     invitations?: UserInvitationListRelationFilter
     personalTasks?: UserPersonalTaskListRelationFilter
@@ -48312,6 +56140,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentOrderByRelationAggregateInput
     taskMessages?: TaskMessageOrderByRelationAggregateInput
     departmentMonthlyReports?: DepartmentMonthlyReportOrderByRelationAggregateInput
+    createdMeetings?: DepartmentMeetingOrderByRelationAggregateInput
+    createdPolls?: DepartmentPollOrderByRelationAggregateInput
+    createdDecisions?: TeamDecisionOrderByRelationAggregateInput
+    pollVotes?: PollVoteOrderByRelationAggregateInput
+    decisionVotes?: DecisionVoteOrderByRelationAggregateInput
     pushSubscriptions?: PushSubscriptionOrderByRelationAggregateInput
     invitations?: UserInvitationOrderByRelationAggregateInput
     personalTasks?: UserPersonalTaskOrderByRelationAggregateInput
@@ -48366,6 +56199,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentListRelationFilter
     taskMessages?: TaskMessageListRelationFilter
     departmentMonthlyReports?: DepartmentMonthlyReportListRelationFilter
+    createdMeetings?: DepartmentMeetingListRelationFilter
+    createdPolls?: DepartmentPollListRelationFilter
+    createdDecisions?: TeamDecisionListRelationFilter
+    pollVotes?: PollVoteListRelationFilter
+    decisionVotes?: DecisionVoteListRelationFilter
     pushSubscriptions?: PushSubscriptionListRelationFilter
     invitations?: UserInvitationListRelationFilter
     personalTasks?: UserPersonalTaskListRelationFilter
@@ -48807,6 +56645,10 @@ export namespace Prisma {
     tasks?: TaskListRelationFilter
     eventBroadcasts?: EventDepartmentBroadcastListRelationFilter
     monthlyReports?: DepartmentMonthlyReportListRelationFilter
+    goals?: DepartmentGoalListRelationFilter
+    meetings?: DepartmentMeetingListRelationFilter
+    polls?: DepartmentPollListRelationFilter
+    teamDecisions?: TeamDecisionListRelationFilter
   }
 
   export type DepartmentOrderByWithRelationInput = {
@@ -48824,6 +56666,10 @@ export namespace Prisma {
     tasks?: TaskOrderByRelationAggregateInput
     eventBroadcasts?: EventDepartmentBroadcastOrderByRelationAggregateInput
     monthlyReports?: DepartmentMonthlyReportOrderByRelationAggregateInput
+    goals?: DepartmentGoalOrderByRelationAggregateInput
+    meetings?: DepartmentMeetingOrderByRelationAggregateInput
+    polls?: DepartmentPollOrderByRelationAggregateInput
+    teamDecisions?: TeamDecisionOrderByRelationAggregateInput
   }
 
   export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
@@ -48844,6 +56690,10 @@ export namespace Prisma {
     tasks?: TaskListRelationFilter
     eventBroadcasts?: EventDepartmentBroadcastListRelationFilter
     monthlyReports?: DepartmentMonthlyReportListRelationFilter
+    goals?: DepartmentGoalListRelationFilter
+    meetings?: DepartmentMeetingListRelationFilter
+    polls?: DepartmentPollListRelationFilter
+    teamDecisions?: TeamDecisionListRelationFilter
   }, "id">
 
   export type DepartmentOrderByWithAggregationInput = {
@@ -48870,6 +56720,458 @@ export namespace Prisma {
     headId?: StringNullableWithAggregatesFilter<"Department"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+  }
+
+  export type DepartmentGoalWhereInput = {
+    AND?: DepartmentGoalWhereInput | DepartmentGoalWhereInput[]
+    OR?: DepartmentGoalWhereInput[]
+    NOT?: DepartmentGoalWhereInput | DepartmentGoalWhereInput[]
+    id?: StringFilter<"DepartmentGoal"> | string
+    deptId?: StringFilter<"DepartmentGoal"> | string
+    title?: StringFilter<"DepartmentGoal"> | string
+    description?: StringNullableFilter<"DepartmentGoal"> | string | null
+    targetValue?: FloatNullableFilter<"DepartmentGoal"> | number | null
+    currentValue?: FloatFilter<"DepartmentGoal"> | number
+    period?: StringFilter<"DepartmentGoal"> | string
+    periodKey?: StringFilter<"DepartmentGoal"> | string
+    createdAt?: DateTimeFilter<"DepartmentGoal"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentGoal"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+  }
+
+  export type DepartmentGoalOrderByWithRelationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    targetValue?: SortOrderInput | SortOrder
+    currentValue?: SortOrder
+    period?: SortOrder
+    periodKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    department?: DepartmentOrderByWithRelationInput
+  }
+
+  export type DepartmentGoalWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DepartmentGoalWhereInput | DepartmentGoalWhereInput[]
+    OR?: DepartmentGoalWhereInput[]
+    NOT?: DepartmentGoalWhereInput | DepartmentGoalWhereInput[]
+    deptId?: StringFilter<"DepartmentGoal"> | string
+    title?: StringFilter<"DepartmentGoal"> | string
+    description?: StringNullableFilter<"DepartmentGoal"> | string | null
+    targetValue?: FloatNullableFilter<"DepartmentGoal"> | number | null
+    currentValue?: FloatFilter<"DepartmentGoal"> | number
+    period?: StringFilter<"DepartmentGoal"> | string
+    periodKey?: StringFilter<"DepartmentGoal"> | string
+    createdAt?: DateTimeFilter<"DepartmentGoal"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentGoal"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+  }, "id">
+
+  export type DepartmentGoalOrderByWithAggregationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    targetValue?: SortOrderInput | SortOrder
+    currentValue?: SortOrder
+    period?: SortOrder
+    periodKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DepartmentGoalCountOrderByAggregateInput
+    _avg?: DepartmentGoalAvgOrderByAggregateInput
+    _max?: DepartmentGoalMaxOrderByAggregateInput
+    _min?: DepartmentGoalMinOrderByAggregateInput
+    _sum?: DepartmentGoalSumOrderByAggregateInput
+  }
+
+  export type DepartmentGoalScalarWhereWithAggregatesInput = {
+    AND?: DepartmentGoalScalarWhereWithAggregatesInput | DepartmentGoalScalarWhereWithAggregatesInput[]
+    OR?: DepartmentGoalScalarWhereWithAggregatesInput[]
+    NOT?: DepartmentGoalScalarWhereWithAggregatesInput | DepartmentGoalScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DepartmentGoal"> | string
+    deptId?: StringWithAggregatesFilter<"DepartmentGoal"> | string
+    title?: StringWithAggregatesFilter<"DepartmentGoal"> | string
+    description?: StringNullableWithAggregatesFilter<"DepartmentGoal"> | string | null
+    targetValue?: FloatNullableWithAggregatesFilter<"DepartmentGoal"> | number | null
+    currentValue?: FloatWithAggregatesFilter<"DepartmentGoal"> | number
+    period?: StringWithAggregatesFilter<"DepartmentGoal"> | string
+    periodKey?: StringWithAggregatesFilter<"DepartmentGoal"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"DepartmentGoal"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DepartmentGoal"> | Date | string
+  }
+
+  export type DepartmentMeetingWhereInput = {
+    AND?: DepartmentMeetingWhereInput | DepartmentMeetingWhereInput[]
+    OR?: DepartmentMeetingWhereInput[]
+    NOT?: DepartmentMeetingWhereInput | DepartmentMeetingWhereInput[]
+    id?: StringFilter<"DepartmentMeeting"> | string
+    deptId?: StringFilter<"DepartmentMeeting"> | string
+    title?: StringFilter<"DepartmentMeeting"> | string
+    description?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    agenda?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    meetingDate?: DateTimeFilter<"DepartmentMeeting"> | Date | string
+    location?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    createdBy?: StringFilter<"DepartmentMeeting"> | string
+    minutes?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    minutesAt?: DateTimeNullableFilter<"DepartmentMeeting"> | Date | string | null
+    createdAt?: DateTimeFilter<"DepartmentMeeting"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentMeeting"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type DepartmentMeetingOrderByWithRelationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    agenda?: SortOrderInput | SortOrder
+    meetingDate?: SortOrder
+    location?: SortOrderInput | SortOrder
+    createdBy?: SortOrder
+    minutes?: SortOrderInput | SortOrder
+    minutesAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    department?: DepartmentOrderByWithRelationInput
+    creator?: UserOrderByWithRelationInput
+  }
+
+  export type DepartmentMeetingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DepartmentMeetingWhereInput | DepartmentMeetingWhereInput[]
+    OR?: DepartmentMeetingWhereInput[]
+    NOT?: DepartmentMeetingWhereInput | DepartmentMeetingWhereInput[]
+    deptId?: StringFilter<"DepartmentMeeting"> | string
+    title?: StringFilter<"DepartmentMeeting"> | string
+    description?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    agenda?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    meetingDate?: DateTimeFilter<"DepartmentMeeting"> | Date | string
+    location?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    createdBy?: StringFilter<"DepartmentMeeting"> | string
+    minutes?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    minutesAt?: DateTimeNullableFilter<"DepartmentMeeting"> | Date | string | null
+    createdAt?: DateTimeFilter<"DepartmentMeeting"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentMeeting"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type DepartmentMeetingOrderByWithAggregationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    agenda?: SortOrderInput | SortOrder
+    meetingDate?: SortOrder
+    location?: SortOrderInput | SortOrder
+    createdBy?: SortOrder
+    minutes?: SortOrderInput | SortOrder
+    minutesAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DepartmentMeetingCountOrderByAggregateInput
+    _max?: DepartmentMeetingMaxOrderByAggregateInput
+    _min?: DepartmentMeetingMinOrderByAggregateInput
+  }
+
+  export type DepartmentMeetingScalarWhereWithAggregatesInput = {
+    AND?: DepartmentMeetingScalarWhereWithAggregatesInput | DepartmentMeetingScalarWhereWithAggregatesInput[]
+    OR?: DepartmentMeetingScalarWhereWithAggregatesInput[]
+    NOT?: DepartmentMeetingScalarWhereWithAggregatesInput | DepartmentMeetingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DepartmentMeeting"> | string
+    deptId?: StringWithAggregatesFilter<"DepartmentMeeting"> | string
+    title?: StringWithAggregatesFilter<"DepartmentMeeting"> | string
+    description?: StringNullableWithAggregatesFilter<"DepartmentMeeting"> | string | null
+    agenda?: StringNullableWithAggregatesFilter<"DepartmentMeeting"> | string | null
+    meetingDate?: DateTimeWithAggregatesFilter<"DepartmentMeeting"> | Date | string
+    location?: StringNullableWithAggregatesFilter<"DepartmentMeeting"> | string | null
+    createdBy?: StringWithAggregatesFilter<"DepartmentMeeting"> | string
+    minutes?: StringNullableWithAggregatesFilter<"DepartmentMeeting"> | string | null
+    minutesAt?: DateTimeNullableWithAggregatesFilter<"DepartmentMeeting"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"DepartmentMeeting"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DepartmentMeeting"> | Date | string
+  }
+
+  export type DepartmentPollWhereInput = {
+    AND?: DepartmentPollWhereInput | DepartmentPollWhereInput[]
+    OR?: DepartmentPollWhereInput[]
+    NOT?: DepartmentPollWhereInput | DepartmentPollWhereInput[]
+    id?: StringFilter<"DepartmentPoll"> | string
+    deptId?: StringFilter<"DepartmentPoll"> | string
+    question?: StringFilter<"DepartmentPoll"> | string
+    options?: JsonFilter<"DepartmentPoll">
+    endDate?: DateTimeNullableFilter<"DepartmentPoll"> | Date | string | null
+    createdBy?: StringFilter<"DepartmentPoll"> | string
+    createdAt?: DateTimeFilter<"DepartmentPoll"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentPoll"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+    votes?: PollVoteListRelationFilter
+  }
+
+  export type DepartmentPollOrderByWithRelationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    question?: SortOrder
+    options?: SortOrder
+    endDate?: SortOrderInput | SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    department?: DepartmentOrderByWithRelationInput
+    creator?: UserOrderByWithRelationInput
+    votes?: PollVoteOrderByRelationAggregateInput
+  }
+
+  export type DepartmentPollWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DepartmentPollWhereInput | DepartmentPollWhereInput[]
+    OR?: DepartmentPollWhereInput[]
+    NOT?: DepartmentPollWhereInput | DepartmentPollWhereInput[]
+    deptId?: StringFilter<"DepartmentPoll"> | string
+    question?: StringFilter<"DepartmentPoll"> | string
+    options?: JsonFilter<"DepartmentPoll">
+    endDate?: DateTimeNullableFilter<"DepartmentPoll"> | Date | string | null
+    createdBy?: StringFilter<"DepartmentPoll"> | string
+    createdAt?: DateTimeFilter<"DepartmentPoll"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentPoll"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+    votes?: PollVoteListRelationFilter
+  }, "id">
+
+  export type DepartmentPollOrderByWithAggregationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    question?: SortOrder
+    options?: SortOrder
+    endDate?: SortOrderInput | SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DepartmentPollCountOrderByAggregateInput
+    _max?: DepartmentPollMaxOrderByAggregateInput
+    _min?: DepartmentPollMinOrderByAggregateInput
+  }
+
+  export type DepartmentPollScalarWhereWithAggregatesInput = {
+    AND?: DepartmentPollScalarWhereWithAggregatesInput | DepartmentPollScalarWhereWithAggregatesInput[]
+    OR?: DepartmentPollScalarWhereWithAggregatesInput[]
+    NOT?: DepartmentPollScalarWhereWithAggregatesInput | DepartmentPollScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DepartmentPoll"> | string
+    deptId?: StringWithAggregatesFilter<"DepartmentPoll"> | string
+    question?: StringWithAggregatesFilter<"DepartmentPoll"> | string
+    options?: JsonWithAggregatesFilter<"DepartmentPoll">
+    endDate?: DateTimeNullableWithAggregatesFilter<"DepartmentPoll"> | Date | string | null
+    createdBy?: StringWithAggregatesFilter<"DepartmentPoll"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"DepartmentPoll"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DepartmentPoll"> | Date | string
+  }
+
+  export type PollVoteWhereInput = {
+    AND?: PollVoteWhereInput | PollVoteWhereInput[]
+    OR?: PollVoteWhereInput[]
+    NOT?: PollVoteWhereInput | PollVoteWhereInput[]
+    id?: StringFilter<"PollVote"> | string
+    pollId?: StringFilter<"PollVote"> | string
+    userId?: StringFilter<"PollVote"> | string
+    optionIndex?: IntFilter<"PollVote"> | number
+    createdAt?: DateTimeFilter<"PollVote"> | Date | string
+    poll?: XOR<DepartmentPollScalarRelationFilter, DepartmentPollWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type PollVoteOrderByWithRelationInput = {
+    id?: SortOrder
+    pollId?: SortOrder
+    userId?: SortOrder
+    optionIndex?: SortOrder
+    createdAt?: SortOrder
+    poll?: DepartmentPollOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type PollVoteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    pollId_userId?: PollVotePollIdUserIdCompoundUniqueInput
+    AND?: PollVoteWhereInput | PollVoteWhereInput[]
+    OR?: PollVoteWhereInput[]
+    NOT?: PollVoteWhereInput | PollVoteWhereInput[]
+    pollId?: StringFilter<"PollVote"> | string
+    userId?: StringFilter<"PollVote"> | string
+    optionIndex?: IntFilter<"PollVote"> | number
+    createdAt?: DateTimeFilter<"PollVote"> | Date | string
+    poll?: XOR<DepartmentPollScalarRelationFilter, DepartmentPollWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "pollId_userId">
+
+  export type PollVoteOrderByWithAggregationInput = {
+    id?: SortOrder
+    pollId?: SortOrder
+    userId?: SortOrder
+    optionIndex?: SortOrder
+    createdAt?: SortOrder
+    _count?: PollVoteCountOrderByAggregateInput
+    _avg?: PollVoteAvgOrderByAggregateInput
+    _max?: PollVoteMaxOrderByAggregateInput
+    _min?: PollVoteMinOrderByAggregateInput
+    _sum?: PollVoteSumOrderByAggregateInput
+  }
+
+  export type PollVoteScalarWhereWithAggregatesInput = {
+    AND?: PollVoteScalarWhereWithAggregatesInput | PollVoteScalarWhereWithAggregatesInput[]
+    OR?: PollVoteScalarWhereWithAggregatesInput[]
+    NOT?: PollVoteScalarWhereWithAggregatesInput | PollVoteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PollVote"> | string
+    pollId?: StringWithAggregatesFilter<"PollVote"> | string
+    userId?: StringWithAggregatesFilter<"PollVote"> | string
+    optionIndex?: IntWithAggregatesFilter<"PollVote"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"PollVote"> | Date | string
+  }
+
+  export type TeamDecisionWhereInput = {
+    AND?: TeamDecisionWhereInput | TeamDecisionWhereInput[]
+    OR?: TeamDecisionWhereInput[]
+    NOT?: TeamDecisionWhereInput | TeamDecisionWhereInput[]
+    id?: StringFilter<"TeamDecision"> | string
+    deptId?: StringFilter<"TeamDecision"> | string
+    title?: StringFilter<"TeamDecision"> | string
+    description?: StringNullableFilter<"TeamDecision"> | string | null
+    voteDeadline?: DateTimeNullableFilter<"TeamDecision"> | Date | string | null
+    status?: StringFilter<"TeamDecision"> | string
+    createdBy?: StringFilter<"TeamDecision"> | string
+    createdAt?: DateTimeFilter<"TeamDecision"> | Date | string
+    updatedAt?: DateTimeFilter<"TeamDecision"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+    votes?: DecisionVoteListRelationFilter
+  }
+
+  export type TeamDecisionOrderByWithRelationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    voteDeadline?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    department?: DepartmentOrderByWithRelationInput
+    creator?: UserOrderByWithRelationInput
+    votes?: DecisionVoteOrderByRelationAggregateInput
+  }
+
+  export type TeamDecisionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TeamDecisionWhereInput | TeamDecisionWhereInput[]
+    OR?: TeamDecisionWhereInput[]
+    NOT?: TeamDecisionWhereInput | TeamDecisionWhereInput[]
+    deptId?: StringFilter<"TeamDecision"> | string
+    title?: StringFilter<"TeamDecision"> | string
+    description?: StringNullableFilter<"TeamDecision"> | string | null
+    voteDeadline?: DateTimeNullableFilter<"TeamDecision"> | Date | string | null
+    status?: StringFilter<"TeamDecision"> | string
+    createdBy?: StringFilter<"TeamDecision"> | string
+    createdAt?: DateTimeFilter<"TeamDecision"> | Date | string
+    updatedAt?: DateTimeFilter<"TeamDecision"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+    votes?: DecisionVoteListRelationFilter
+  }, "id">
+
+  export type TeamDecisionOrderByWithAggregationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    voteDeadline?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TeamDecisionCountOrderByAggregateInput
+    _max?: TeamDecisionMaxOrderByAggregateInput
+    _min?: TeamDecisionMinOrderByAggregateInput
+  }
+
+  export type TeamDecisionScalarWhereWithAggregatesInput = {
+    AND?: TeamDecisionScalarWhereWithAggregatesInput | TeamDecisionScalarWhereWithAggregatesInput[]
+    OR?: TeamDecisionScalarWhereWithAggregatesInput[]
+    NOT?: TeamDecisionScalarWhereWithAggregatesInput | TeamDecisionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TeamDecision"> | string
+    deptId?: StringWithAggregatesFilter<"TeamDecision"> | string
+    title?: StringWithAggregatesFilter<"TeamDecision"> | string
+    description?: StringNullableWithAggregatesFilter<"TeamDecision"> | string | null
+    voteDeadline?: DateTimeNullableWithAggregatesFilter<"TeamDecision"> | Date | string | null
+    status?: StringWithAggregatesFilter<"TeamDecision"> | string
+    createdBy?: StringWithAggregatesFilter<"TeamDecision"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"TeamDecision"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TeamDecision"> | Date | string
+  }
+
+  export type DecisionVoteWhereInput = {
+    AND?: DecisionVoteWhereInput | DecisionVoteWhereInput[]
+    OR?: DecisionVoteWhereInput[]
+    NOT?: DecisionVoteWhereInput | DecisionVoteWhereInput[]
+    id?: StringFilter<"DecisionVote"> | string
+    decisionId?: StringFilter<"DecisionVote"> | string
+    userId?: StringFilter<"DecisionVote"> | string
+    vote?: EnumDecisionVoteTypeFilter<"DecisionVote"> | $Enums.DecisionVoteType
+    createdAt?: DateTimeFilter<"DecisionVote"> | Date | string
+    decision?: XOR<TeamDecisionScalarRelationFilter, TeamDecisionWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type DecisionVoteOrderByWithRelationInput = {
+    id?: SortOrder
+    decisionId?: SortOrder
+    userId?: SortOrder
+    vote?: SortOrder
+    createdAt?: SortOrder
+    decision?: TeamDecisionOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type DecisionVoteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    decisionId_userId?: DecisionVoteDecisionIdUserIdCompoundUniqueInput
+    AND?: DecisionVoteWhereInput | DecisionVoteWhereInput[]
+    OR?: DecisionVoteWhereInput[]
+    NOT?: DecisionVoteWhereInput | DecisionVoteWhereInput[]
+    decisionId?: StringFilter<"DecisionVote"> | string
+    userId?: StringFilter<"DecisionVote"> | string
+    vote?: EnumDecisionVoteTypeFilter<"DecisionVote"> | $Enums.DecisionVoteType
+    createdAt?: DateTimeFilter<"DecisionVote"> | Date | string
+    decision?: XOR<TeamDecisionScalarRelationFilter, TeamDecisionWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "decisionId_userId">
+
+  export type DecisionVoteOrderByWithAggregationInput = {
+    id?: SortOrder
+    decisionId?: SortOrder
+    userId?: SortOrder
+    vote?: SortOrder
+    createdAt?: SortOrder
+    _count?: DecisionVoteCountOrderByAggregateInput
+    _max?: DecisionVoteMaxOrderByAggregateInput
+    _min?: DecisionVoteMinOrderByAggregateInput
+  }
+
+  export type DecisionVoteScalarWhereWithAggregatesInput = {
+    AND?: DecisionVoteScalarWhereWithAggregatesInput | DecisionVoteScalarWhereWithAggregatesInput[]
+    OR?: DecisionVoteScalarWhereWithAggregatesInput[]
+    NOT?: DecisionVoteScalarWhereWithAggregatesInput | DecisionVoteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DecisionVote"> | string
+    decisionId?: StringWithAggregatesFilter<"DecisionVote"> | string
+    userId?: StringWithAggregatesFilter<"DecisionVote"> | string
+    vote?: EnumDecisionVoteTypeWithAggregatesFilter<"DecisionVote"> | $Enums.DecisionVoteType
+    createdAt?: DateTimeWithAggregatesFilter<"DecisionVote"> | Date | string
   }
 
   export type DepartmentMemberWhereInput = {
@@ -51025,6 +59327,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -51076,6 +59383,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -51127,6 +59439,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -51178,6 +59495,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -51654,6 +59976,10 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateInput = {
@@ -51669,6 +59995,10 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUpdateInput = {
@@ -51684,6 +60014,10 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateInput = {
@@ -51699,6 +60033,10 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentCreateManyInput = {
@@ -51727,6 +60065,472 @@ export namespace Prisma {
     headId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentGoalCreateInput = {
+    id?: string
+    title: string
+    description?: string | null
+    targetValue?: number | null
+    currentValue?: number
+    period: string
+    periodKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutGoalsInput
+  }
+
+  export type DepartmentGoalUncheckedCreateInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    targetValue?: number | null
+    currentValue?: number
+    period: string
+    periodKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentGoalUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    targetValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentValue?: FloatFieldUpdateOperationsInput | number
+    period?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutGoalsNestedInput
+  }
+
+  export type DepartmentGoalUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    targetValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentValue?: FloatFieldUpdateOperationsInput | number
+    period?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentGoalCreateManyInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    targetValue?: number | null
+    currentValue?: number
+    period: string
+    periodKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentGoalUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    targetValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentValue?: FloatFieldUpdateOperationsInput | number
+    period?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentGoalUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    targetValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentValue?: FloatFieldUpdateOperationsInput | number
+    period?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMeetingCreateInput = {
+    id?: string
+    title: string
+    description?: string | null
+    agenda?: string | null
+    meetingDate: Date | string
+    location?: string | null
+    minutes?: string | null
+    minutesAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutMeetingsInput
+    creator: UserCreateNestedOneWithoutCreatedMeetingsInput
+  }
+
+  export type DepartmentMeetingUncheckedCreateInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    agenda?: string | null
+    meetingDate: Date | string
+    location?: string | null
+    createdBy: string
+    minutes?: string | null
+    minutesAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentMeetingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    minutesAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutMeetingsNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedMeetingsNestedInput
+  }
+
+  export type DepartmentMeetingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    minutesAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMeetingCreateManyInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    agenda?: string | null
+    meetingDate: Date | string
+    location?: string | null
+    createdBy: string
+    minutes?: string | null
+    minutesAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentMeetingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    minutesAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMeetingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    minutesAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentPollCreateInput = {
+    id?: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutPollsInput
+    creator: UserCreateNestedOneWithoutCreatedPollsInput
+    votes?: PollVoteCreateNestedManyWithoutPollInput
+  }
+
+  export type DepartmentPollUncheckedCreateInput = {
+    id?: string
+    deptId: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    votes?: PollVoteUncheckedCreateNestedManyWithoutPollInput
+  }
+
+  export type DepartmentPollUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutPollsNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedPollsNestedInput
+    votes?: PollVoteUpdateManyWithoutPollNestedInput
+  }
+
+  export type DepartmentPollUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    votes?: PollVoteUncheckedUpdateManyWithoutPollNestedInput
+  }
+
+  export type DepartmentPollCreateManyInput = {
+    id?: string
+    deptId: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentPollUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentPollUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PollVoteCreateInput = {
+    id?: string
+    optionIndex: number
+    createdAt?: Date | string
+    poll: DepartmentPollCreateNestedOneWithoutVotesInput
+    user: UserCreateNestedOneWithoutPollVotesInput
+  }
+
+  export type PollVoteUncheckedCreateInput = {
+    id?: string
+    pollId: string
+    userId: string
+    optionIndex: number
+    createdAt?: Date | string
+  }
+
+  export type PollVoteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    poll?: DepartmentPollUpdateOneRequiredWithoutVotesNestedInput
+    user?: UserUpdateOneRequiredWithoutPollVotesNestedInput
+  }
+
+  export type PollVoteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pollId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PollVoteCreateManyInput = {
+    id?: string
+    pollId: string
+    userId: string
+    optionIndex: number
+    createdAt?: Date | string
+  }
+
+  export type PollVoteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PollVoteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pollId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamDecisionCreateInput = {
+    id?: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutTeamDecisionsInput
+    creator: UserCreateNestedOneWithoutCreatedDecisionsInput
+    votes?: DecisionVoteCreateNestedManyWithoutDecisionInput
+  }
+
+  export type TeamDecisionUncheckedCreateInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    votes?: DecisionVoteUncheckedCreateNestedManyWithoutDecisionInput
+  }
+
+  export type TeamDecisionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutTeamDecisionsNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedDecisionsNestedInput
+    votes?: DecisionVoteUpdateManyWithoutDecisionNestedInput
+  }
+
+  export type TeamDecisionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    votes?: DecisionVoteUncheckedUpdateManyWithoutDecisionNestedInput
+  }
+
+  export type TeamDecisionCreateManyInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeamDecisionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamDecisionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DecisionVoteCreateInput = {
+    id?: string
+    vote: $Enums.DecisionVoteType
+    createdAt?: Date | string
+    decision: TeamDecisionCreateNestedOneWithoutVotesInput
+    user: UserCreateNestedOneWithoutDecisionVotesInput
+  }
+
+  export type DecisionVoteUncheckedCreateInput = {
+    id?: string
+    decisionId: string
+    userId: string
+    vote: $Enums.DecisionVoteType
+    createdAt?: Date | string
+  }
+
+  export type DecisionVoteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vote?: EnumDecisionVoteTypeFieldUpdateOperationsInput | $Enums.DecisionVoteType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    decision?: TeamDecisionUpdateOneRequiredWithoutVotesNestedInput
+    user?: UserUpdateOneRequiredWithoutDecisionVotesNestedInput
+  }
+
+  export type DecisionVoteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    decisionId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    vote?: EnumDecisionVoteTypeFieldUpdateOperationsInput | $Enums.DecisionVoteType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DecisionVoteCreateManyInput = {
+    id?: string
+    decisionId: string
+    userId: string
+    vote: $Enums.DecisionVoteType
+    createdAt?: Date | string
+  }
+
+  export type DecisionVoteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vote?: EnumDecisionVoteTypeFieldUpdateOperationsInput | $Enums.DecisionVoteType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DecisionVoteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    decisionId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    vote?: EnumDecisionVoteTypeFieldUpdateOperationsInput | $Enums.DecisionVoteType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DepartmentMemberCreateInput = {
@@ -54102,6 +62906,36 @@ export namespace Prisma {
     none?: DepartmentMonthlyReportWhereInput
   }
 
+  export type DepartmentMeetingListRelationFilter = {
+    every?: DepartmentMeetingWhereInput
+    some?: DepartmentMeetingWhereInput
+    none?: DepartmentMeetingWhereInput
+  }
+
+  export type DepartmentPollListRelationFilter = {
+    every?: DepartmentPollWhereInput
+    some?: DepartmentPollWhereInput
+    none?: DepartmentPollWhereInput
+  }
+
+  export type TeamDecisionListRelationFilter = {
+    every?: TeamDecisionWhereInput
+    some?: TeamDecisionWhereInput
+    none?: TeamDecisionWhereInput
+  }
+
+  export type PollVoteListRelationFilter = {
+    every?: PollVoteWhereInput
+    some?: PollVoteWhereInput
+    none?: PollVoteWhereInput
+  }
+
+  export type DecisionVoteListRelationFilter = {
+    every?: DecisionVoteWhereInput
+    some?: DecisionVoteWhereInput
+    none?: DecisionVoteWhereInput
+  }
+
   export type PushSubscriptionListRelationFilter = {
     every?: PushSubscriptionWhereInput
     some?: PushSubscriptionWhereInput
@@ -54203,6 +63037,26 @@ export namespace Prisma {
   }
 
   export type DepartmentMonthlyReportOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DepartmentMeetingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DepartmentPollOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TeamDecisionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PollVoteOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DecisionVoteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -54723,11 +63577,21 @@ export namespace Prisma {
     none?: EventDepartmentBroadcastWhereInput
   }
 
+  export type DepartmentGoalListRelationFilter = {
+    every?: DepartmentGoalWhereInput
+    some?: DepartmentGoalWhereInput
+    none?: DepartmentGoalWhereInput
+  }
+
   export type GroupOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type EventDepartmentBroadcastOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DepartmentGoalOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -54761,9 +63625,393 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type DepartmentScalarRelationFilter = {
     is?: DepartmentWhereInput
     isNot?: DepartmentWhereInput
+  }
+
+  export type DepartmentGoalCountOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    targetValue?: SortOrder
+    currentValue?: SortOrder
+    period?: SortOrder
+    periodKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentGoalAvgOrderByAggregateInput = {
+    targetValue?: SortOrder
+    currentValue?: SortOrder
+  }
+
+  export type DepartmentGoalMaxOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    targetValue?: SortOrder
+    currentValue?: SortOrder
+    period?: SortOrder
+    periodKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentGoalMinOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    targetValue?: SortOrder
+    currentValue?: SortOrder
+    period?: SortOrder
+    periodKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentGoalSumOrderByAggregateInput = {
+    targetValue?: SortOrder
+    currentValue?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type DepartmentMeetingCountOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    agenda?: SortOrder
+    meetingDate?: SortOrder
+    location?: SortOrder
+    createdBy?: SortOrder
+    minutes?: SortOrder
+    minutesAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentMeetingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    agenda?: SortOrder
+    meetingDate?: SortOrder
+    location?: SortOrder
+    createdBy?: SortOrder
+    minutes?: SortOrder
+    minutesAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentMeetingMinOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    agenda?: SortOrder
+    meetingDate?: SortOrder
+    location?: SortOrder
+    createdBy?: SortOrder
+    minutes?: SortOrder
+    minutesAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type DepartmentPollCountOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    question?: SortOrder
+    options?: SortOrder
+    endDate?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentPollMaxOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    question?: SortOrder
+    endDate?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentPollMinOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    question?: SortOrder
+    endDate?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type DepartmentPollScalarRelationFilter = {
+    is?: DepartmentPollWhereInput
+    isNot?: DepartmentPollWhereInput
+  }
+
+  export type PollVotePollIdUserIdCompoundUniqueInput = {
+    pollId: string
+    userId: string
+  }
+
+  export type PollVoteCountOrderByAggregateInput = {
+    id?: SortOrder
+    pollId?: SortOrder
+    userId?: SortOrder
+    optionIndex?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PollVoteAvgOrderByAggregateInput = {
+    optionIndex?: SortOrder
+  }
+
+  export type PollVoteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    pollId?: SortOrder
+    userId?: SortOrder
+    optionIndex?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PollVoteMinOrderByAggregateInput = {
+    id?: SortOrder
+    pollId?: SortOrder
+    userId?: SortOrder
+    optionIndex?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PollVoteSumOrderByAggregateInput = {
+    optionIndex?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type TeamDecisionCountOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    voteDeadline?: SortOrder
+    status?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TeamDecisionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    voteDeadline?: SortOrder
+    status?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TeamDecisionMinOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    voteDeadline?: SortOrder
+    status?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumDecisionVoteTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DecisionVoteType | EnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DecisionVoteType[] | ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DecisionVoteType[] | ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDecisionVoteTypeFilter<$PrismaModel> | $Enums.DecisionVoteType
+  }
+
+  export type TeamDecisionScalarRelationFilter = {
+    is?: TeamDecisionWhereInput
+    isNot?: TeamDecisionWhereInput
+  }
+
+  export type DecisionVoteDecisionIdUserIdCompoundUniqueInput = {
+    decisionId: string
+    userId: string
+  }
+
+  export type DecisionVoteCountOrderByAggregateInput = {
+    id?: SortOrder
+    decisionId?: SortOrder
+    userId?: SortOrder
+    vote?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DecisionVoteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    decisionId?: SortOrder
+    userId?: SortOrder
+    vote?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DecisionVoteMinOrderByAggregateInput = {
+    id?: SortOrder
+    decisionId?: SortOrder
+    userId?: SortOrder
+    vote?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumDecisionVoteTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DecisionVoteType | EnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DecisionVoteType[] | ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DecisionVoteType[] | ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDecisionVoteTypeWithAggregatesFilter<$PrismaModel> | $Enums.DecisionVoteType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDecisionVoteTypeFilter<$PrismaModel>
+    _max?: NestedEnumDecisionVoteTypeFilter<$PrismaModel>
   }
 
   export type DepartmentMemberDeptIdUserIdCompoundUniqueInput = {
@@ -55141,17 +64389,6 @@ export namespace Prisma {
     not?: NestedEnumSubscriptionPlanFilter<$PrismaModel> | $Enums.SubscriptionPlan
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type SubscriptionCountOrderByAggregateInput = {
     id?: SortOrder
     orgId?: SortOrder
@@ -55209,22 +64446,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSubscriptionPlanFilter<$PrismaModel>
     _max?: NestedEnumSubscriptionPlanFilter<$PrismaModel>
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumEventTypeFilter<$PrismaModel = never> = {
@@ -55868,17 +65089,6 @@ export namespace Prisma {
     not?: NestedEnumFinancialGoalTypeFilter<$PrismaModel> | $Enums.FinancialGoalType
   }
 
-  export type FloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type UserMonthlyProgressListRelationFilter = {
     every?: UserMonthlyProgressWhereInput
     some?: UserMonthlyProgressWhereInput
@@ -55948,33 +65158,6 @@ export namespace Prisma {
     _max?: NestedEnumFinancialGoalTypeFilter<$PrismaModel>
   }
 
-  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
-  }
-
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type UserFinancialProfileCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -56018,22 +65201,6 @@ export namespace Prisma {
     monthlySalary?: SortOrder
     supplementaryIncome?: SortOrder
     preferredSavingsRate?: SortOrder
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type UserMonthlyStatementUserIdYearMonthCompoundUniqueInput = {
@@ -56325,6 +65492,41 @@ export namespace Prisma {
     connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
   }
 
+  export type DepartmentMeetingCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<DepartmentMeetingCreateWithoutCreatorInput, DepartmentMeetingUncheckedCreateWithoutCreatorInput> | DepartmentMeetingCreateWithoutCreatorInput[] | DepartmentMeetingUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentMeetingCreateOrConnectWithoutCreatorInput | DepartmentMeetingCreateOrConnectWithoutCreatorInput[]
+    createMany?: DepartmentMeetingCreateManyCreatorInputEnvelope
+    connect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+  }
+
+  export type DepartmentPollCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<DepartmentPollCreateWithoutCreatorInput, DepartmentPollUncheckedCreateWithoutCreatorInput> | DepartmentPollCreateWithoutCreatorInput[] | DepartmentPollUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentPollCreateOrConnectWithoutCreatorInput | DepartmentPollCreateOrConnectWithoutCreatorInput[]
+    createMany?: DepartmentPollCreateManyCreatorInputEnvelope
+    connect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+  }
+
+  export type TeamDecisionCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<TeamDecisionCreateWithoutCreatorInput, TeamDecisionUncheckedCreateWithoutCreatorInput> | TeamDecisionCreateWithoutCreatorInput[] | TeamDecisionUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: TeamDecisionCreateOrConnectWithoutCreatorInput | TeamDecisionCreateOrConnectWithoutCreatorInput[]
+    createMany?: TeamDecisionCreateManyCreatorInputEnvelope
+    connect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+  }
+
+  export type PollVoteCreateNestedManyWithoutUserInput = {
+    create?: XOR<PollVoteCreateWithoutUserInput, PollVoteUncheckedCreateWithoutUserInput> | PollVoteCreateWithoutUserInput[] | PollVoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PollVoteCreateOrConnectWithoutUserInput | PollVoteCreateOrConnectWithoutUserInput[]
+    createMany?: PollVoteCreateManyUserInputEnvelope
+    connect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+  }
+
+  export type DecisionVoteCreateNestedManyWithoutUserInput = {
+    create?: XOR<DecisionVoteCreateWithoutUserInput, DecisionVoteUncheckedCreateWithoutUserInput> | DecisionVoteCreateWithoutUserInput[] | DecisionVoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DecisionVoteCreateOrConnectWithoutUserInput | DecisionVoteCreateOrConnectWithoutUserInput[]
+    createMany?: DecisionVoteCreateManyUserInputEnvelope
+    connect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+  }
+
   export type PushSubscriptionCreateNestedManyWithoutUserInput = {
     create?: XOR<PushSubscriptionCreateWithoutUserInput, PushSubscriptionUncheckedCreateWithoutUserInput> | PushSubscriptionCreateWithoutUserInput[] | PushSubscriptionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PushSubscriptionCreateOrConnectWithoutUserInput | PushSubscriptionCreateOrConnectWithoutUserInput[]
@@ -56489,6 +65691,41 @@ export namespace Prisma {
     connectOrCreate?: DepartmentMonthlyReportCreateOrConnectWithoutUserInput | DepartmentMonthlyReportCreateOrConnectWithoutUserInput[]
     createMany?: DepartmentMonthlyReportCreateManyUserInputEnvelope
     connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+  }
+
+  export type DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<DepartmentMeetingCreateWithoutCreatorInput, DepartmentMeetingUncheckedCreateWithoutCreatorInput> | DepartmentMeetingCreateWithoutCreatorInput[] | DepartmentMeetingUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentMeetingCreateOrConnectWithoutCreatorInput | DepartmentMeetingCreateOrConnectWithoutCreatorInput[]
+    createMany?: DepartmentMeetingCreateManyCreatorInputEnvelope
+    connect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+  }
+
+  export type DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<DepartmentPollCreateWithoutCreatorInput, DepartmentPollUncheckedCreateWithoutCreatorInput> | DepartmentPollCreateWithoutCreatorInput[] | DepartmentPollUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentPollCreateOrConnectWithoutCreatorInput | DepartmentPollCreateOrConnectWithoutCreatorInput[]
+    createMany?: DepartmentPollCreateManyCreatorInputEnvelope
+    connect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+  }
+
+  export type TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<TeamDecisionCreateWithoutCreatorInput, TeamDecisionUncheckedCreateWithoutCreatorInput> | TeamDecisionCreateWithoutCreatorInput[] | TeamDecisionUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: TeamDecisionCreateOrConnectWithoutCreatorInput | TeamDecisionCreateOrConnectWithoutCreatorInput[]
+    createMany?: TeamDecisionCreateManyCreatorInputEnvelope
+    connect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+  }
+
+  export type PollVoteUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PollVoteCreateWithoutUserInput, PollVoteUncheckedCreateWithoutUserInput> | PollVoteCreateWithoutUserInput[] | PollVoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PollVoteCreateOrConnectWithoutUserInput | PollVoteCreateOrConnectWithoutUserInput[]
+    createMany?: PollVoteCreateManyUserInputEnvelope
+    connect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+  }
+
+  export type DecisionVoteUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<DecisionVoteCreateWithoutUserInput, DecisionVoteUncheckedCreateWithoutUserInput> | DecisionVoteCreateWithoutUserInput[] | DecisionVoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DecisionVoteCreateOrConnectWithoutUserInput | DecisionVoteCreateOrConnectWithoutUserInput[]
+    createMany?: DecisionVoteCreateManyUserInputEnvelope
+    connect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
   }
 
   export type PushSubscriptionUncheckedCreateNestedManyWithoutUserInput = {
@@ -56781,6 +66018,76 @@ export namespace Prisma {
     update?: DepartmentMonthlyReportUpdateWithWhereUniqueWithoutUserInput | DepartmentMonthlyReportUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: DepartmentMonthlyReportUpdateManyWithWhereWithoutUserInput | DepartmentMonthlyReportUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: DepartmentMonthlyReportScalarWhereInput | DepartmentMonthlyReportScalarWhereInput[]
+  }
+
+  export type DepartmentMeetingUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<DepartmentMeetingCreateWithoutCreatorInput, DepartmentMeetingUncheckedCreateWithoutCreatorInput> | DepartmentMeetingCreateWithoutCreatorInput[] | DepartmentMeetingUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentMeetingCreateOrConnectWithoutCreatorInput | DepartmentMeetingCreateOrConnectWithoutCreatorInput[]
+    upsert?: DepartmentMeetingUpsertWithWhereUniqueWithoutCreatorInput | DepartmentMeetingUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: DepartmentMeetingCreateManyCreatorInputEnvelope
+    set?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    disconnect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    delete?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    connect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    update?: DepartmentMeetingUpdateWithWhereUniqueWithoutCreatorInput | DepartmentMeetingUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: DepartmentMeetingUpdateManyWithWhereWithoutCreatorInput | DepartmentMeetingUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: DepartmentMeetingScalarWhereInput | DepartmentMeetingScalarWhereInput[]
+  }
+
+  export type DepartmentPollUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<DepartmentPollCreateWithoutCreatorInput, DepartmentPollUncheckedCreateWithoutCreatorInput> | DepartmentPollCreateWithoutCreatorInput[] | DepartmentPollUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentPollCreateOrConnectWithoutCreatorInput | DepartmentPollCreateOrConnectWithoutCreatorInput[]
+    upsert?: DepartmentPollUpsertWithWhereUniqueWithoutCreatorInput | DepartmentPollUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: DepartmentPollCreateManyCreatorInputEnvelope
+    set?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    disconnect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    delete?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    connect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    update?: DepartmentPollUpdateWithWhereUniqueWithoutCreatorInput | DepartmentPollUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: DepartmentPollUpdateManyWithWhereWithoutCreatorInput | DepartmentPollUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: DepartmentPollScalarWhereInput | DepartmentPollScalarWhereInput[]
+  }
+
+  export type TeamDecisionUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<TeamDecisionCreateWithoutCreatorInput, TeamDecisionUncheckedCreateWithoutCreatorInput> | TeamDecisionCreateWithoutCreatorInput[] | TeamDecisionUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: TeamDecisionCreateOrConnectWithoutCreatorInput | TeamDecisionCreateOrConnectWithoutCreatorInput[]
+    upsert?: TeamDecisionUpsertWithWhereUniqueWithoutCreatorInput | TeamDecisionUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: TeamDecisionCreateManyCreatorInputEnvelope
+    set?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    disconnect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    delete?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    connect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    update?: TeamDecisionUpdateWithWhereUniqueWithoutCreatorInput | TeamDecisionUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: TeamDecisionUpdateManyWithWhereWithoutCreatorInput | TeamDecisionUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: TeamDecisionScalarWhereInput | TeamDecisionScalarWhereInput[]
+  }
+
+  export type PollVoteUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PollVoteCreateWithoutUserInput, PollVoteUncheckedCreateWithoutUserInput> | PollVoteCreateWithoutUserInput[] | PollVoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PollVoteCreateOrConnectWithoutUserInput | PollVoteCreateOrConnectWithoutUserInput[]
+    upsert?: PollVoteUpsertWithWhereUniqueWithoutUserInput | PollVoteUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PollVoteCreateManyUserInputEnvelope
+    set?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    disconnect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    delete?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    connect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    update?: PollVoteUpdateWithWhereUniqueWithoutUserInput | PollVoteUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PollVoteUpdateManyWithWhereWithoutUserInput | PollVoteUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PollVoteScalarWhereInput | PollVoteScalarWhereInput[]
+  }
+
+  export type DecisionVoteUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DecisionVoteCreateWithoutUserInput, DecisionVoteUncheckedCreateWithoutUserInput> | DecisionVoteCreateWithoutUserInput[] | DecisionVoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DecisionVoteCreateOrConnectWithoutUserInput | DecisionVoteCreateOrConnectWithoutUserInput[]
+    upsert?: DecisionVoteUpsertWithWhereUniqueWithoutUserInput | DecisionVoteUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DecisionVoteCreateManyUserInputEnvelope
+    set?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    disconnect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    delete?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    connect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    update?: DecisionVoteUpdateWithWhereUniqueWithoutUserInput | DecisionVoteUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DecisionVoteUpdateManyWithWhereWithoutUserInput | DecisionVoteUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DecisionVoteScalarWhereInput | DecisionVoteScalarWhereInput[]
   }
 
   export type PushSubscriptionUpdateManyWithoutUserNestedInput = {
@@ -57109,6 +66416,76 @@ export namespace Prisma {
     update?: DepartmentMonthlyReportUpdateWithWhereUniqueWithoutUserInput | DepartmentMonthlyReportUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: DepartmentMonthlyReportUpdateManyWithWhereWithoutUserInput | DepartmentMonthlyReportUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: DepartmentMonthlyReportScalarWhereInput | DepartmentMonthlyReportScalarWhereInput[]
+  }
+
+  export type DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<DepartmentMeetingCreateWithoutCreatorInput, DepartmentMeetingUncheckedCreateWithoutCreatorInput> | DepartmentMeetingCreateWithoutCreatorInput[] | DepartmentMeetingUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentMeetingCreateOrConnectWithoutCreatorInput | DepartmentMeetingCreateOrConnectWithoutCreatorInput[]
+    upsert?: DepartmentMeetingUpsertWithWhereUniqueWithoutCreatorInput | DepartmentMeetingUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: DepartmentMeetingCreateManyCreatorInputEnvelope
+    set?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    disconnect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    delete?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    connect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    update?: DepartmentMeetingUpdateWithWhereUniqueWithoutCreatorInput | DepartmentMeetingUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: DepartmentMeetingUpdateManyWithWhereWithoutCreatorInput | DepartmentMeetingUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: DepartmentMeetingScalarWhereInput | DepartmentMeetingScalarWhereInput[]
+  }
+
+  export type DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<DepartmentPollCreateWithoutCreatorInput, DepartmentPollUncheckedCreateWithoutCreatorInput> | DepartmentPollCreateWithoutCreatorInput[] | DepartmentPollUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentPollCreateOrConnectWithoutCreatorInput | DepartmentPollCreateOrConnectWithoutCreatorInput[]
+    upsert?: DepartmentPollUpsertWithWhereUniqueWithoutCreatorInput | DepartmentPollUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: DepartmentPollCreateManyCreatorInputEnvelope
+    set?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    disconnect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    delete?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    connect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    update?: DepartmentPollUpdateWithWhereUniqueWithoutCreatorInput | DepartmentPollUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: DepartmentPollUpdateManyWithWhereWithoutCreatorInput | DepartmentPollUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: DepartmentPollScalarWhereInput | DepartmentPollScalarWhereInput[]
+  }
+
+  export type TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<TeamDecisionCreateWithoutCreatorInput, TeamDecisionUncheckedCreateWithoutCreatorInput> | TeamDecisionCreateWithoutCreatorInput[] | TeamDecisionUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: TeamDecisionCreateOrConnectWithoutCreatorInput | TeamDecisionCreateOrConnectWithoutCreatorInput[]
+    upsert?: TeamDecisionUpsertWithWhereUniqueWithoutCreatorInput | TeamDecisionUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: TeamDecisionCreateManyCreatorInputEnvelope
+    set?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    disconnect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    delete?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    connect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    update?: TeamDecisionUpdateWithWhereUniqueWithoutCreatorInput | TeamDecisionUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: TeamDecisionUpdateManyWithWhereWithoutCreatorInput | TeamDecisionUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: TeamDecisionScalarWhereInput | TeamDecisionScalarWhereInput[]
+  }
+
+  export type PollVoteUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PollVoteCreateWithoutUserInput, PollVoteUncheckedCreateWithoutUserInput> | PollVoteCreateWithoutUserInput[] | PollVoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PollVoteCreateOrConnectWithoutUserInput | PollVoteCreateOrConnectWithoutUserInput[]
+    upsert?: PollVoteUpsertWithWhereUniqueWithoutUserInput | PollVoteUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PollVoteCreateManyUserInputEnvelope
+    set?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    disconnect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    delete?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    connect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    update?: PollVoteUpdateWithWhereUniqueWithoutUserInput | PollVoteUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PollVoteUpdateManyWithWhereWithoutUserInput | PollVoteUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PollVoteScalarWhereInput | PollVoteScalarWhereInput[]
+  }
+
+  export type DecisionVoteUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DecisionVoteCreateWithoutUserInput, DecisionVoteUncheckedCreateWithoutUserInput> | DecisionVoteCreateWithoutUserInput[] | DecisionVoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DecisionVoteCreateOrConnectWithoutUserInput | DecisionVoteCreateOrConnectWithoutUserInput[]
+    upsert?: DecisionVoteUpsertWithWhereUniqueWithoutUserInput | DecisionVoteUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DecisionVoteCreateManyUserInputEnvelope
+    set?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    disconnect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    delete?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    connect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    update?: DecisionVoteUpdateWithWhereUniqueWithoutUserInput | DecisionVoteUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DecisionVoteUpdateManyWithWhereWithoutUserInput | DecisionVoteUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DecisionVoteScalarWhereInput | DecisionVoteScalarWhereInput[]
   }
 
   export type PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput = {
@@ -57584,6 +66961,34 @@ export namespace Prisma {
     connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
   }
 
+  export type DepartmentGoalCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentGoalCreateWithoutDepartmentInput, DepartmentGoalUncheckedCreateWithoutDepartmentInput> | DepartmentGoalCreateWithoutDepartmentInput[] | DepartmentGoalUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentGoalCreateOrConnectWithoutDepartmentInput | DepartmentGoalCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentGoalCreateManyDepartmentInputEnvelope
+    connect?: DepartmentGoalWhereUniqueInput | DepartmentGoalWhereUniqueInput[]
+  }
+
+  export type DepartmentMeetingCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentMeetingCreateWithoutDepartmentInput, DepartmentMeetingUncheckedCreateWithoutDepartmentInput> | DepartmentMeetingCreateWithoutDepartmentInput[] | DepartmentMeetingUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentMeetingCreateOrConnectWithoutDepartmentInput | DepartmentMeetingCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentMeetingCreateManyDepartmentInputEnvelope
+    connect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+  }
+
+  export type DepartmentPollCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentPollCreateWithoutDepartmentInput, DepartmentPollUncheckedCreateWithoutDepartmentInput> | DepartmentPollCreateWithoutDepartmentInput[] | DepartmentPollUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentPollCreateOrConnectWithoutDepartmentInput | DepartmentPollCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentPollCreateManyDepartmentInputEnvelope
+    connect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+  }
+
+  export type TeamDecisionCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<TeamDecisionCreateWithoutDepartmentInput, TeamDecisionUncheckedCreateWithoutDepartmentInput> | TeamDecisionCreateWithoutDepartmentInput[] | TeamDecisionUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: TeamDecisionCreateOrConnectWithoutDepartmentInput | TeamDecisionCreateOrConnectWithoutDepartmentInput[]
+    createMany?: TeamDecisionCreateManyDepartmentInputEnvelope
+    connect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+  }
+
   export type DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput = {
     create?: XOR<DepartmentMemberCreateWithoutDepartmentInput, DepartmentMemberUncheckedCreateWithoutDepartmentInput> | DepartmentMemberCreateWithoutDepartmentInput[] | DepartmentMemberUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: DepartmentMemberCreateOrConnectWithoutDepartmentInput | DepartmentMemberCreateOrConnectWithoutDepartmentInput[]
@@ -57617,6 +67022,34 @@ export namespace Prisma {
     connectOrCreate?: DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput | DepartmentMonthlyReportCreateOrConnectWithoutDepartmentInput[]
     createMany?: DepartmentMonthlyReportCreateManyDepartmentInputEnvelope
     connect?: DepartmentMonthlyReportWhereUniqueInput | DepartmentMonthlyReportWhereUniqueInput[]
+  }
+
+  export type DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentGoalCreateWithoutDepartmentInput, DepartmentGoalUncheckedCreateWithoutDepartmentInput> | DepartmentGoalCreateWithoutDepartmentInput[] | DepartmentGoalUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentGoalCreateOrConnectWithoutDepartmentInput | DepartmentGoalCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentGoalCreateManyDepartmentInputEnvelope
+    connect?: DepartmentGoalWhereUniqueInput | DepartmentGoalWhereUniqueInput[]
+  }
+
+  export type DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentMeetingCreateWithoutDepartmentInput, DepartmentMeetingUncheckedCreateWithoutDepartmentInput> | DepartmentMeetingCreateWithoutDepartmentInput[] | DepartmentMeetingUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentMeetingCreateOrConnectWithoutDepartmentInput | DepartmentMeetingCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentMeetingCreateManyDepartmentInputEnvelope
+    connect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+  }
+
+  export type DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentPollCreateWithoutDepartmentInput, DepartmentPollUncheckedCreateWithoutDepartmentInput> | DepartmentPollCreateWithoutDepartmentInput[] | DepartmentPollUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentPollCreateOrConnectWithoutDepartmentInput | DepartmentPollCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentPollCreateManyDepartmentInputEnvelope
+    connect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+  }
+
+  export type TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<TeamDecisionCreateWithoutDepartmentInput, TeamDecisionUncheckedCreateWithoutDepartmentInput> | TeamDecisionCreateWithoutDepartmentInput[] | TeamDecisionUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: TeamDecisionCreateOrConnectWithoutDepartmentInput | TeamDecisionCreateOrConnectWithoutDepartmentInput[]
+    createMany?: TeamDecisionCreateManyDepartmentInputEnvelope
+    connect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
   }
 
   export type OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput = {
@@ -57707,6 +67140,62 @@ export namespace Prisma {
     deleteMany?: DepartmentMonthlyReportScalarWhereInput | DepartmentMonthlyReportScalarWhereInput[]
   }
 
+  export type DepartmentGoalUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentGoalCreateWithoutDepartmentInput, DepartmentGoalUncheckedCreateWithoutDepartmentInput> | DepartmentGoalCreateWithoutDepartmentInput[] | DepartmentGoalUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentGoalCreateOrConnectWithoutDepartmentInput | DepartmentGoalCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentGoalUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentGoalUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentGoalCreateManyDepartmentInputEnvelope
+    set?: DepartmentGoalWhereUniqueInput | DepartmentGoalWhereUniqueInput[]
+    disconnect?: DepartmentGoalWhereUniqueInput | DepartmentGoalWhereUniqueInput[]
+    delete?: DepartmentGoalWhereUniqueInput | DepartmentGoalWhereUniqueInput[]
+    connect?: DepartmentGoalWhereUniqueInput | DepartmentGoalWhereUniqueInput[]
+    update?: DepartmentGoalUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentGoalUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentGoalUpdateManyWithWhereWithoutDepartmentInput | DepartmentGoalUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentGoalScalarWhereInput | DepartmentGoalScalarWhereInput[]
+  }
+
+  export type DepartmentMeetingUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentMeetingCreateWithoutDepartmentInput, DepartmentMeetingUncheckedCreateWithoutDepartmentInput> | DepartmentMeetingCreateWithoutDepartmentInput[] | DepartmentMeetingUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentMeetingCreateOrConnectWithoutDepartmentInput | DepartmentMeetingCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentMeetingUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentMeetingUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentMeetingCreateManyDepartmentInputEnvelope
+    set?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    disconnect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    delete?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    connect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    update?: DepartmentMeetingUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentMeetingUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentMeetingUpdateManyWithWhereWithoutDepartmentInput | DepartmentMeetingUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentMeetingScalarWhereInput | DepartmentMeetingScalarWhereInput[]
+  }
+
+  export type DepartmentPollUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentPollCreateWithoutDepartmentInput, DepartmentPollUncheckedCreateWithoutDepartmentInput> | DepartmentPollCreateWithoutDepartmentInput[] | DepartmentPollUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentPollCreateOrConnectWithoutDepartmentInput | DepartmentPollCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentPollUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentPollUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentPollCreateManyDepartmentInputEnvelope
+    set?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    disconnect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    delete?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    connect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    update?: DepartmentPollUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentPollUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentPollUpdateManyWithWhereWithoutDepartmentInput | DepartmentPollUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentPollScalarWhereInput | DepartmentPollScalarWhereInput[]
+  }
+
+  export type TeamDecisionUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<TeamDecisionCreateWithoutDepartmentInput, TeamDecisionUncheckedCreateWithoutDepartmentInput> | TeamDecisionCreateWithoutDepartmentInput[] | TeamDecisionUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: TeamDecisionCreateOrConnectWithoutDepartmentInput | TeamDecisionCreateOrConnectWithoutDepartmentInput[]
+    upsert?: TeamDecisionUpsertWithWhereUniqueWithoutDepartmentInput | TeamDecisionUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: TeamDecisionCreateManyDepartmentInputEnvelope
+    set?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    disconnect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    delete?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    connect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    update?: TeamDecisionUpdateWithWhereUniqueWithoutDepartmentInput | TeamDecisionUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: TeamDecisionUpdateManyWithWhereWithoutDepartmentInput | TeamDecisionUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: TeamDecisionScalarWhereInput | TeamDecisionScalarWhereInput[]
+  }
+
   export type DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput = {
     create?: XOR<DepartmentMemberCreateWithoutDepartmentInput, DepartmentMemberUncheckedCreateWithoutDepartmentInput> | DepartmentMemberCreateWithoutDepartmentInput[] | DepartmentMemberUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: DepartmentMemberCreateOrConnectWithoutDepartmentInput | DepartmentMemberCreateOrConnectWithoutDepartmentInput[]
@@ -57775,6 +67264,328 @@ export namespace Prisma {
     update?: DepartmentMonthlyReportUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentMonthlyReportUpdateWithWhereUniqueWithoutDepartmentInput[]
     updateMany?: DepartmentMonthlyReportUpdateManyWithWhereWithoutDepartmentInput | DepartmentMonthlyReportUpdateManyWithWhereWithoutDepartmentInput[]
     deleteMany?: DepartmentMonthlyReportScalarWhereInput | DepartmentMonthlyReportScalarWhereInput[]
+  }
+
+  export type DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentGoalCreateWithoutDepartmentInput, DepartmentGoalUncheckedCreateWithoutDepartmentInput> | DepartmentGoalCreateWithoutDepartmentInput[] | DepartmentGoalUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentGoalCreateOrConnectWithoutDepartmentInput | DepartmentGoalCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentGoalUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentGoalUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentGoalCreateManyDepartmentInputEnvelope
+    set?: DepartmentGoalWhereUniqueInput | DepartmentGoalWhereUniqueInput[]
+    disconnect?: DepartmentGoalWhereUniqueInput | DepartmentGoalWhereUniqueInput[]
+    delete?: DepartmentGoalWhereUniqueInput | DepartmentGoalWhereUniqueInput[]
+    connect?: DepartmentGoalWhereUniqueInput | DepartmentGoalWhereUniqueInput[]
+    update?: DepartmentGoalUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentGoalUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentGoalUpdateManyWithWhereWithoutDepartmentInput | DepartmentGoalUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentGoalScalarWhereInput | DepartmentGoalScalarWhereInput[]
+  }
+
+  export type DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentMeetingCreateWithoutDepartmentInput, DepartmentMeetingUncheckedCreateWithoutDepartmentInput> | DepartmentMeetingCreateWithoutDepartmentInput[] | DepartmentMeetingUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentMeetingCreateOrConnectWithoutDepartmentInput | DepartmentMeetingCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentMeetingUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentMeetingUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentMeetingCreateManyDepartmentInputEnvelope
+    set?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    disconnect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    delete?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    connect?: DepartmentMeetingWhereUniqueInput | DepartmentMeetingWhereUniqueInput[]
+    update?: DepartmentMeetingUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentMeetingUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentMeetingUpdateManyWithWhereWithoutDepartmentInput | DepartmentMeetingUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentMeetingScalarWhereInput | DepartmentMeetingScalarWhereInput[]
+  }
+
+  export type DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentPollCreateWithoutDepartmentInput, DepartmentPollUncheckedCreateWithoutDepartmentInput> | DepartmentPollCreateWithoutDepartmentInput[] | DepartmentPollUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentPollCreateOrConnectWithoutDepartmentInput | DepartmentPollCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentPollUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentPollUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentPollCreateManyDepartmentInputEnvelope
+    set?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    disconnect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    delete?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    connect?: DepartmentPollWhereUniqueInput | DepartmentPollWhereUniqueInput[]
+    update?: DepartmentPollUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentPollUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentPollUpdateManyWithWhereWithoutDepartmentInput | DepartmentPollUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentPollScalarWhereInput | DepartmentPollScalarWhereInput[]
+  }
+
+  export type TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<TeamDecisionCreateWithoutDepartmentInput, TeamDecisionUncheckedCreateWithoutDepartmentInput> | TeamDecisionCreateWithoutDepartmentInput[] | TeamDecisionUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: TeamDecisionCreateOrConnectWithoutDepartmentInput | TeamDecisionCreateOrConnectWithoutDepartmentInput[]
+    upsert?: TeamDecisionUpsertWithWhereUniqueWithoutDepartmentInput | TeamDecisionUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: TeamDecisionCreateManyDepartmentInputEnvelope
+    set?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    disconnect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    delete?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    connect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+    update?: TeamDecisionUpdateWithWhereUniqueWithoutDepartmentInput | TeamDecisionUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: TeamDecisionUpdateManyWithWhereWithoutDepartmentInput | TeamDecisionUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: TeamDecisionScalarWhereInput | TeamDecisionScalarWhereInput[]
+  }
+
+  export type DepartmentCreateNestedOneWithoutGoalsInput = {
+    create?: XOR<DepartmentCreateWithoutGoalsInput, DepartmentUncheckedCreateWithoutGoalsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutGoalsInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type DepartmentUpdateOneRequiredWithoutGoalsNestedInput = {
+    create?: XOR<DepartmentCreateWithoutGoalsInput, DepartmentUncheckedCreateWithoutGoalsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutGoalsInput
+    upsert?: DepartmentUpsertWithoutGoalsInput
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutGoalsInput, DepartmentUpdateWithoutGoalsInput>, DepartmentUncheckedUpdateWithoutGoalsInput>
+  }
+
+  export type DepartmentCreateNestedOneWithoutMeetingsInput = {
+    create?: XOR<DepartmentCreateWithoutMeetingsInput, DepartmentUncheckedCreateWithoutMeetingsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutMeetingsInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCreatedMeetingsInput = {
+    create?: XOR<UserCreateWithoutCreatedMeetingsInput, UserUncheckedCreateWithoutCreatedMeetingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedMeetingsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type DepartmentUpdateOneRequiredWithoutMeetingsNestedInput = {
+    create?: XOR<DepartmentCreateWithoutMeetingsInput, DepartmentUncheckedCreateWithoutMeetingsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutMeetingsInput
+    upsert?: DepartmentUpsertWithoutMeetingsInput
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutMeetingsInput, DepartmentUpdateWithoutMeetingsInput>, DepartmentUncheckedUpdateWithoutMeetingsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCreatedMeetingsNestedInput = {
+    create?: XOR<UserCreateWithoutCreatedMeetingsInput, UserUncheckedCreateWithoutCreatedMeetingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedMeetingsInput
+    upsert?: UserUpsertWithoutCreatedMeetingsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedMeetingsInput, UserUpdateWithoutCreatedMeetingsInput>, UserUncheckedUpdateWithoutCreatedMeetingsInput>
+  }
+
+  export type DepartmentCreateNestedOneWithoutPollsInput = {
+    create?: XOR<DepartmentCreateWithoutPollsInput, DepartmentUncheckedCreateWithoutPollsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutPollsInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCreatedPollsInput = {
+    create?: XOR<UserCreateWithoutCreatedPollsInput, UserUncheckedCreateWithoutCreatedPollsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedPollsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type PollVoteCreateNestedManyWithoutPollInput = {
+    create?: XOR<PollVoteCreateWithoutPollInput, PollVoteUncheckedCreateWithoutPollInput> | PollVoteCreateWithoutPollInput[] | PollVoteUncheckedCreateWithoutPollInput[]
+    connectOrCreate?: PollVoteCreateOrConnectWithoutPollInput | PollVoteCreateOrConnectWithoutPollInput[]
+    createMany?: PollVoteCreateManyPollInputEnvelope
+    connect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+  }
+
+  export type PollVoteUncheckedCreateNestedManyWithoutPollInput = {
+    create?: XOR<PollVoteCreateWithoutPollInput, PollVoteUncheckedCreateWithoutPollInput> | PollVoteCreateWithoutPollInput[] | PollVoteUncheckedCreateWithoutPollInput[]
+    connectOrCreate?: PollVoteCreateOrConnectWithoutPollInput | PollVoteCreateOrConnectWithoutPollInput[]
+    createMany?: PollVoteCreateManyPollInputEnvelope
+    connect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+  }
+
+  export type DepartmentUpdateOneRequiredWithoutPollsNestedInput = {
+    create?: XOR<DepartmentCreateWithoutPollsInput, DepartmentUncheckedCreateWithoutPollsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutPollsInput
+    upsert?: DepartmentUpsertWithoutPollsInput
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutPollsInput, DepartmentUpdateWithoutPollsInput>, DepartmentUncheckedUpdateWithoutPollsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCreatedPollsNestedInput = {
+    create?: XOR<UserCreateWithoutCreatedPollsInput, UserUncheckedCreateWithoutCreatedPollsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedPollsInput
+    upsert?: UserUpsertWithoutCreatedPollsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedPollsInput, UserUpdateWithoutCreatedPollsInput>, UserUncheckedUpdateWithoutCreatedPollsInput>
+  }
+
+  export type PollVoteUpdateManyWithoutPollNestedInput = {
+    create?: XOR<PollVoteCreateWithoutPollInput, PollVoteUncheckedCreateWithoutPollInput> | PollVoteCreateWithoutPollInput[] | PollVoteUncheckedCreateWithoutPollInput[]
+    connectOrCreate?: PollVoteCreateOrConnectWithoutPollInput | PollVoteCreateOrConnectWithoutPollInput[]
+    upsert?: PollVoteUpsertWithWhereUniqueWithoutPollInput | PollVoteUpsertWithWhereUniqueWithoutPollInput[]
+    createMany?: PollVoteCreateManyPollInputEnvelope
+    set?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    disconnect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    delete?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    connect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    update?: PollVoteUpdateWithWhereUniqueWithoutPollInput | PollVoteUpdateWithWhereUniqueWithoutPollInput[]
+    updateMany?: PollVoteUpdateManyWithWhereWithoutPollInput | PollVoteUpdateManyWithWhereWithoutPollInput[]
+    deleteMany?: PollVoteScalarWhereInput | PollVoteScalarWhereInput[]
+  }
+
+  export type PollVoteUncheckedUpdateManyWithoutPollNestedInput = {
+    create?: XOR<PollVoteCreateWithoutPollInput, PollVoteUncheckedCreateWithoutPollInput> | PollVoteCreateWithoutPollInput[] | PollVoteUncheckedCreateWithoutPollInput[]
+    connectOrCreate?: PollVoteCreateOrConnectWithoutPollInput | PollVoteCreateOrConnectWithoutPollInput[]
+    upsert?: PollVoteUpsertWithWhereUniqueWithoutPollInput | PollVoteUpsertWithWhereUniqueWithoutPollInput[]
+    createMany?: PollVoteCreateManyPollInputEnvelope
+    set?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    disconnect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    delete?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    connect?: PollVoteWhereUniqueInput | PollVoteWhereUniqueInput[]
+    update?: PollVoteUpdateWithWhereUniqueWithoutPollInput | PollVoteUpdateWithWhereUniqueWithoutPollInput[]
+    updateMany?: PollVoteUpdateManyWithWhereWithoutPollInput | PollVoteUpdateManyWithWhereWithoutPollInput[]
+    deleteMany?: PollVoteScalarWhereInput | PollVoteScalarWhereInput[]
+  }
+
+  export type DepartmentPollCreateNestedOneWithoutVotesInput = {
+    create?: XOR<DepartmentPollCreateWithoutVotesInput, DepartmentPollUncheckedCreateWithoutVotesInput>
+    connectOrCreate?: DepartmentPollCreateOrConnectWithoutVotesInput
+    connect?: DepartmentPollWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutPollVotesInput = {
+    create?: XOR<UserCreateWithoutPollVotesInput, UserUncheckedCreateWithoutPollVotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPollVotesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type DepartmentPollUpdateOneRequiredWithoutVotesNestedInput = {
+    create?: XOR<DepartmentPollCreateWithoutVotesInput, DepartmentPollUncheckedCreateWithoutVotesInput>
+    connectOrCreate?: DepartmentPollCreateOrConnectWithoutVotesInput
+    upsert?: DepartmentPollUpsertWithoutVotesInput
+    connect?: DepartmentPollWhereUniqueInput
+    update?: XOR<XOR<DepartmentPollUpdateToOneWithWhereWithoutVotesInput, DepartmentPollUpdateWithoutVotesInput>, DepartmentPollUncheckedUpdateWithoutVotesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutPollVotesNestedInput = {
+    create?: XOR<UserCreateWithoutPollVotesInput, UserUncheckedCreateWithoutPollVotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPollVotesInput
+    upsert?: UserUpsertWithoutPollVotesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPollVotesInput, UserUpdateWithoutPollVotesInput>, UserUncheckedUpdateWithoutPollVotesInput>
+  }
+
+  export type DepartmentCreateNestedOneWithoutTeamDecisionsInput = {
+    create?: XOR<DepartmentCreateWithoutTeamDecisionsInput, DepartmentUncheckedCreateWithoutTeamDecisionsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutTeamDecisionsInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCreatedDecisionsInput = {
+    create?: XOR<UserCreateWithoutCreatedDecisionsInput, UserUncheckedCreateWithoutCreatedDecisionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedDecisionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type DecisionVoteCreateNestedManyWithoutDecisionInput = {
+    create?: XOR<DecisionVoteCreateWithoutDecisionInput, DecisionVoteUncheckedCreateWithoutDecisionInput> | DecisionVoteCreateWithoutDecisionInput[] | DecisionVoteUncheckedCreateWithoutDecisionInput[]
+    connectOrCreate?: DecisionVoteCreateOrConnectWithoutDecisionInput | DecisionVoteCreateOrConnectWithoutDecisionInput[]
+    createMany?: DecisionVoteCreateManyDecisionInputEnvelope
+    connect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+  }
+
+  export type DecisionVoteUncheckedCreateNestedManyWithoutDecisionInput = {
+    create?: XOR<DecisionVoteCreateWithoutDecisionInput, DecisionVoteUncheckedCreateWithoutDecisionInput> | DecisionVoteCreateWithoutDecisionInput[] | DecisionVoteUncheckedCreateWithoutDecisionInput[]
+    connectOrCreate?: DecisionVoteCreateOrConnectWithoutDecisionInput | DecisionVoteCreateOrConnectWithoutDecisionInput[]
+    createMany?: DecisionVoteCreateManyDecisionInputEnvelope
+    connect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+  }
+
+  export type DepartmentUpdateOneRequiredWithoutTeamDecisionsNestedInput = {
+    create?: XOR<DepartmentCreateWithoutTeamDecisionsInput, DepartmentUncheckedCreateWithoutTeamDecisionsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutTeamDecisionsInput
+    upsert?: DepartmentUpsertWithoutTeamDecisionsInput
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutTeamDecisionsInput, DepartmentUpdateWithoutTeamDecisionsInput>, DepartmentUncheckedUpdateWithoutTeamDecisionsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCreatedDecisionsNestedInput = {
+    create?: XOR<UserCreateWithoutCreatedDecisionsInput, UserUncheckedCreateWithoutCreatedDecisionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedDecisionsInput
+    upsert?: UserUpsertWithoutCreatedDecisionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedDecisionsInput, UserUpdateWithoutCreatedDecisionsInput>, UserUncheckedUpdateWithoutCreatedDecisionsInput>
+  }
+
+  export type DecisionVoteUpdateManyWithoutDecisionNestedInput = {
+    create?: XOR<DecisionVoteCreateWithoutDecisionInput, DecisionVoteUncheckedCreateWithoutDecisionInput> | DecisionVoteCreateWithoutDecisionInput[] | DecisionVoteUncheckedCreateWithoutDecisionInput[]
+    connectOrCreate?: DecisionVoteCreateOrConnectWithoutDecisionInput | DecisionVoteCreateOrConnectWithoutDecisionInput[]
+    upsert?: DecisionVoteUpsertWithWhereUniqueWithoutDecisionInput | DecisionVoteUpsertWithWhereUniqueWithoutDecisionInput[]
+    createMany?: DecisionVoteCreateManyDecisionInputEnvelope
+    set?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    disconnect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    delete?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    connect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    update?: DecisionVoteUpdateWithWhereUniqueWithoutDecisionInput | DecisionVoteUpdateWithWhereUniqueWithoutDecisionInput[]
+    updateMany?: DecisionVoteUpdateManyWithWhereWithoutDecisionInput | DecisionVoteUpdateManyWithWhereWithoutDecisionInput[]
+    deleteMany?: DecisionVoteScalarWhereInput | DecisionVoteScalarWhereInput[]
+  }
+
+  export type DecisionVoteUncheckedUpdateManyWithoutDecisionNestedInput = {
+    create?: XOR<DecisionVoteCreateWithoutDecisionInput, DecisionVoteUncheckedCreateWithoutDecisionInput> | DecisionVoteCreateWithoutDecisionInput[] | DecisionVoteUncheckedCreateWithoutDecisionInput[]
+    connectOrCreate?: DecisionVoteCreateOrConnectWithoutDecisionInput | DecisionVoteCreateOrConnectWithoutDecisionInput[]
+    upsert?: DecisionVoteUpsertWithWhereUniqueWithoutDecisionInput | DecisionVoteUpsertWithWhereUniqueWithoutDecisionInput[]
+    createMany?: DecisionVoteCreateManyDecisionInputEnvelope
+    set?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    disconnect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    delete?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    connect?: DecisionVoteWhereUniqueInput | DecisionVoteWhereUniqueInput[]
+    update?: DecisionVoteUpdateWithWhereUniqueWithoutDecisionInput | DecisionVoteUpdateWithWhereUniqueWithoutDecisionInput[]
+    updateMany?: DecisionVoteUpdateManyWithWhereWithoutDecisionInput | DecisionVoteUpdateManyWithWhereWithoutDecisionInput[]
+    deleteMany?: DecisionVoteScalarWhereInput | DecisionVoteScalarWhereInput[]
+  }
+
+  export type TeamDecisionCreateNestedOneWithoutVotesInput = {
+    create?: XOR<TeamDecisionCreateWithoutVotesInput, TeamDecisionUncheckedCreateWithoutVotesInput>
+    connectOrCreate?: TeamDecisionCreateOrConnectWithoutVotesInput
+    connect?: TeamDecisionWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutDecisionVotesInput = {
+    create?: XOR<UserCreateWithoutDecisionVotesInput, UserUncheckedCreateWithoutDecisionVotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDecisionVotesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumDecisionVoteTypeFieldUpdateOperationsInput = {
+    set?: $Enums.DecisionVoteType
+  }
+
+  export type TeamDecisionUpdateOneRequiredWithoutVotesNestedInput = {
+    create?: XOR<TeamDecisionCreateWithoutVotesInput, TeamDecisionUncheckedCreateWithoutVotesInput>
+    connectOrCreate?: TeamDecisionCreateOrConnectWithoutVotesInput
+    upsert?: TeamDecisionUpsertWithoutVotesInput
+    connect?: TeamDecisionWhereUniqueInput
+    update?: XOR<XOR<TeamDecisionUpdateToOneWithWhereWithoutVotesInput, TeamDecisionUpdateWithoutVotesInput>, TeamDecisionUncheckedUpdateWithoutVotesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutDecisionVotesNestedInput = {
+    create?: XOR<UserCreateWithoutDecisionVotesInput, UserUncheckedCreateWithoutDecisionVotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDecisionVotesInput
+    upsert?: UserUpsertWithoutDecisionVotesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDecisionVotesInput, UserUpdateWithoutDecisionVotesInput>, UserUncheckedUpdateWithoutDecisionVotesInput>
   }
 
   export type DepartmentCreateNestedOneWithoutMembersInput = {
@@ -58119,14 +67930,6 @@ export namespace Prisma {
 
   export type EnumSubscriptionPlanFieldUpdateOperationsInput = {
     set?: $Enums.SubscriptionPlan
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type OrganizationUpdateOneRequiredWithoutSubscriptionNestedInput = {
@@ -58945,14 +68748,6 @@ export namespace Prisma {
     set?: $Enums.FinancialGoalType
   }
 
-  export type FloatFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type UserUpdateOneRequiredWithoutFinancialGoalsNestedInput = {
     create?: XOR<UserCreateWithoutFinancialGoalsInput, UserUncheckedCreateWithoutFinancialGoalsInput>
     connectOrCreate?: UserCreateOrConnectWithoutFinancialGoalsInput
@@ -58993,14 +68788,6 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutFinancialProfileInput, UserUncheckedCreateWithoutFinancialProfileInput>
     connectOrCreate?: UserCreateOrConnectWithoutFinancialProfileInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutFinancialProfileNestedInput = {
@@ -59322,6 +69109,105 @@ export namespace Prisma {
     _max?: NestedEnumOrgRoleFilter<$PrismaModel>
   }
 
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDecisionVoteTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DecisionVoteType | EnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DecisionVoteType[] | ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DecisionVoteType[] | ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDecisionVoteTypeFilter<$PrismaModel> | $Enums.DecisionVoteType
+  }
+
+  export type NestedEnumDecisionVoteTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DecisionVoteType | EnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DecisionVoteType[] | ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DecisionVoteType[] | ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDecisionVoteTypeWithAggregatesFilter<$PrismaModel> | $Enums.DecisionVoteType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDecisionVoteTypeFilter<$PrismaModel>
+    _max?: NestedEnumDecisionVoteTypeFilter<$PrismaModel>
+  }
+
   export type NestedEnumFileTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
     in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
@@ -59371,33 +69257,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSubscriptionPlanFilter<$PrismaModel>
     _max?: NestedEnumSubscriptionPlanFilter<$PrismaModel>
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type NestedEnumEventTypeFilter<$PrismaModel = never> = {
@@ -59517,38 +69376,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFinancialGoalTypeFilter<$PrismaModel>
     _max?: NestedEnumFinancialGoalTypeFilter<$PrismaModel>
-  }
-
-  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumFinancialEntryTypeFilter<$PrismaModel = never> = {
@@ -59921,6 +69748,10 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutHeadInput = {
@@ -59935,6 +69766,10 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutHeadInput = {
@@ -60000,6 +69835,158 @@ export namespace Prisma {
 
   export type DepartmentMonthlyReportCreateManyUserInputEnvelope = {
     data: DepartmentMonthlyReportCreateManyUserInput | DepartmentMonthlyReportCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentMeetingCreateWithoutCreatorInput = {
+    id?: string
+    title: string
+    description?: string | null
+    agenda?: string | null
+    meetingDate: Date | string
+    location?: string | null
+    minutes?: string | null
+    minutesAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutMeetingsInput
+  }
+
+  export type DepartmentMeetingUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    agenda?: string | null
+    meetingDate: Date | string
+    location?: string | null
+    minutes?: string | null
+    minutesAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentMeetingCreateOrConnectWithoutCreatorInput = {
+    where: DepartmentMeetingWhereUniqueInput
+    create: XOR<DepartmentMeetingCreateWithoutCreatorInput, DepartmentMeetingUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type DepartmentMeetingCreateManyCreatorInputEnvelope = {
+    data: DepartmentMeetingCreateManyCreatorInput | DepartmentMeetingCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentPollCreateWithoutCreatorInput = {
+    id?: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutPollsInput
+    votes?: PollVoteCreateNestedManyWithoutPollInput
+  }
+
+  export type DepartmentPollUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    deptId: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    votes?: PollVoteUncheckedCreateNestedManyWithoutPollInput
+  }
+
+  export type DepartmentPollCreateOrConnectWithoutCreatorInput = {
+    where: DepartmentPollWhereUniqueInput
+    create: XOR<DepartmentPollCreateWithoutCreatorInput, DepartmentPollUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type DepartmentPollCreateManyCreatorInputEnvelope = {
+    data: DepartmentPollCreateManyCreatorInput | DepartmentPollCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TeamDecisionCreateWithoutCreatorInput = {
+    id?: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutTeamDecisionsInput
+    votes?: DecisionVoteCreateNestedManyWithoutDecisionInput
+  }
+
+  export type TeamDecisionUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    votes?: DecisionVoteUncheckedCreateNestedManyWithoutDecisionInput
+  }
+
+  export type TeamDecisionCreateOrConnectWithoutCreatorInput = {
+    where: TeamDecisionWhereUniqueInput
+    create: XOR<TeamDecisionCreateWithoutCreatorInput, TeamDecisionUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type TeamDecisionCreateManyCreatorInputEnvelope = {
+    data: TeamDecisionCreateManyCreatorInput | TeamDecisionCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PollVoteCreateWithoutUserInput = {
+    id?: string
+    optionIndex: number
+    createdAt?: Date | string
+    poll: DepartmentPollCreateNestedOneWithoutVotesInput
+  }
+
+  export type PollVoteUncheckedCreateWithoutUserInput = {
+    id?: string
+    pollId: string
+    optionIndex: number
+    createdAt?: Date | string
+  }
+
+  export type PollVoteCreateOrConnectWithoutUserInput = {
+    where: PollVoteWhereUniqueInput
+    create: XOR<PollVoteCreateWithoutUserInput, PollVoteUncheckedCreateWithoutUserInput>
+  }
+
+  export type PollVoteCreateManyUserInputEnvelope = {
+    data: PollVoteCreateManyUserInput | PollVoteCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DecisionVoteCreateWithoutUserInput = {
+    id?: string
+    vote: $Enums.DecisionVoteType
+    createdAt?: Date | string
+    decision: TeamDecisionCreateNestedOneWithoutVotesInput
+  }
+
+  export type DecisionVoteUncheckedCreateWithoutUserInput = {
+    id?: string
+    decisionId: string
+    vote: $Enums.DecisionVoteType
+    createdAt?: Date | string
+  }
+
+  export type DecisionVoteCreateOrConnectWithoutUserInput = {
+    where: DecisionVoteWhereUniqueInput
+    create: XOR<DecisionVoteCreateWithoutUserInput, DecisionVoteUncheckedCreateWithoutUserInput>
+  }
+
+  export type DecisionVoteCreateManyUserInputEnvelope = {
+    data: DecisionVoteCreateManyUserInput | DecisionVoteCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -60693,6 +70680,155 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"DepartmentMonthlyReport"> | Date | string
   }
 
+  export type DepartmentMeetingUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: DepartmentMeetingWhereUniqueInput
+    update: XOR<DepartmentMeetingUpdateWithoutCreatorInput, DepartmentMeetingUncheckedUpdateWithoutCreatorInput>
+    create: XOR<DepartmentMeetingCreateWithoutCreatorInput, DepartmentMeetingUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type DepartmentMeetingUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: DepartmentMeetingWhereUniqueInput
+    data: XOR<DepartmentMeetingUpdateWithoutCreatorInput, DepartmentMeetingUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type DepartmentMeetingUpdateManyWithWhereWithoutCreatorInput = {
+    where: DepartmentMeetingScalarWhereInput
+    data: XOR<DepartmentMeetingUpdateManyMutationInput, DepartmentMeetingUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type DepartmentMeetingScalarWhereInput = {
+    AND?: DepartmentMeetingScalarWhereInput | DepartmentMeetingScalarWhereInput[]
+    OR?: DepartmentMeetingScalarWhereInput[]
+    NOT?: DepartmentMeetingScalarWhereInput | DepartmentMeetingScalarWhereInput[]
+    id?: StringFilter<"DepartmentMeeting"> | string
+    deptId?: StringFilter<"DepartmentMeeting"> | string
+    title?: StringFilter<"DepartmentMeeting"> | string
+    description?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    agenda?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    meetingDate?: DateTimeFilter<"DepartmentMeeting"> | Date | string
+    location?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    createdBy?: StringFilter<"DepartmentMeeting"> | string
+    minutes?: StringNullableFilter<"DepartmentMeeting"> | string | null
+    minutesAt?: DateTimeNullableFilter<"DepartmentMeeting"> | Date | string | null
+    createdAt?: DateTimeFilter<"DepartmentMeeting"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentMeeting"> | Date | string
+  }
+
+  export type DepartmentPollUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: DepartmentPollWhereUniqueInput
+    update: XOR<DepartmentPollUpdateWithoutCreatorInput, DepartmentPollUncheckedUpdateWithoutCreatorInput>
+    create: XOR<DepartmentPollCreateWithoutCreatorInput, DepartmentPollUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type DepartmentPollUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: DepartmentPollWhereUniqueInput
+    data: XOR<DepartmentPollUpdateWithoutCreatorInput, DepartmentPollUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type DepartmentPollUpdateManyWithWhereWithoutCreatorInput = {
+    where: DepartmentPollScalarWhereInput
+    data: XOR<DepartmentPollUpdateManyMutationInput, DepartmentPollUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type DepartmentPollScalarWhereInput = {
+    AND?: DepartmentPollScalarWhereInput | DepartmentPollScalarWhereInput[]
+    OR?: DepartmentPollScalarWhereInput[]
+    NOT?: DepartmentPollScalarWhereInput | DepartmentPollScalarWhereInput[]
+    id?: StringFilter<"DepartmentPoll"> | string
+    deptId?: StringFilter<"DepartmentPoll"> | string
+    question?: StringFilter<"DepartmentPoll"> | string
+    options?: JsonFilter<"DepartmentPoll">
+    endDate?: DateTimeNullableFilter<"DepartmentPoll"> | Date | string | null
+    createdBy?: StringFilter<"DepartmentPoll"> | string
+    createdAt?: DateTimeFilter<"DepartmentPoll"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentPoll"> | Date | string
+  }
+
+  export type TeamDecisionUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: TeamDecisionWhereUniqueInput
+    update: XOR<TeamDecisionUpdateWithoutCreatorInput, TeamDecisionUncheckedUpdateWithoutCreatorInput>
+    create: XOR<TeamDecisionCreateWithoutCreatorInput, TeamDecisionUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type TeamDecisionUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: TeamDecisionWhereUniqueInput
+    data: XOR<TeamDecisionUpdateWithoutCreatorInput, TeamDecisionUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type TeamDecisionUpdateManyWithWhereWithoutCreatorInput = {
+    where: TeamDecisionScalarWhereInput
+    data: XOR<TeamDecisionUpdateManyMutationInput, TeamDecisionUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type TeamDecisionScalarWhereInput = {
+    AND?: TeamDecisionScalarWhereInput | TeamDecisionScalarWhereInput[]
+    OR?: TeamDecisionScalarWhereInput[]
+    NOT?: TeamDecisionScalarWhereInput | TeamDecisionScalarWhereInput[]
+    id?: StringFilter<"TeamDecision"> | string
+    deptId?: StringFilter<"TeamDecision"> | string
+    title?: StringFilter<"TeamDecision"> | string
+    description?: StringNullableFilter<"TeamDecision"> | string | null
+    voteDeadline?: DateTimeNullableFilter<"TeamDecision"> | Date | string | null
+    status?: StringFilter<"TeamDecision"> | string
+    createdBy?: StringFilter<"TeamDecision"> | string
+    createdAt?: DateTimeFilter<"TeamDecision"> | Date | string
+    updatedAt?: DateTimeFilter<"TeamDecision"> | Date | string
+  }
+
+  export type PollVoteUpsertWithWhereUniqueWithoutUserInput = {
+    where: PollVoteWhereUniqueInput
+    update: XOR<PollVoteUpdateWithoutUserInput, PollVoteUncheckedUpdateWithoutUserInput>
+    create: XOR<PollVoteCreateWithoutUserInput, PollVoteUncheckedCreateWithoutUserInput>
+  }
+
+  export type PollVoteUpdateWithWhereUniqueWithoutUserInput = {
+    where: PollVoteWhereUniqueInput
+    data: XOR<PollVoteUpdateWithoutUserInput, PollVoteUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PollVoteUpdateManyWithWhereWithoutUserInput = {
+    where: PollVoteScalarWhereInput
+    data: XOR<PollVoteUpdateManyMutationInput, PollVoteUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PollVoteScalarWhereInput = {
+    AND?: PollVoteScalarWhereInput | PollVoteScalarWhereInput[]
+    OR?: PollVoteScalarWhereInput[]
+    NOT?: PollVoteScalarWhereInput | PollVoteScalarWhereInput[]
+    id?: StringFilter<"PollVote"> | string
+    pollId?: StringFilter<"PollVote"> | string
+    userId?: StringFilter<"PollVote"> | string
+    optionIndex?: IntFilter<"PollVote"> | number
+    createdAt?: DateTimeFilter<"PollVote"> | Date | string
+  }
+
+  export type DecisionVoteUpsertWithWhereUniqueWithoutUserInput = {
+    where: DecisionVoteWhereUniqueInput
+    update: XOR<DecisionVoteUpdateWithoutUserInput, DecisionVoteUncheckedUpdateWithoutUserInput>
+    create: XOR<DecisionVoteCreateWithoutUserInput, DecisionVoteUncheckedCreateWithoutUserInput>
+  }
+
+  export type DecisionVoteUpdateWithWhereUniqueWithoutUserInput = {
+    where: DecisionVoteWhereUniqueInput
+    data: XOR<DecisionVoteUpdateWithoutUserInput, DecisionVoteUncheckedUpdateWithoutUserInput>
+  }
+
+  export type DecisionVoteUpdateManyWithWhereWithoutUserInput = {
+    where: DecisionVoteScalarWhereInput
+    data: XOR<DecisionVoteUpdateManyMutationInput, DecisionVoteUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type DecisionVoteScalarWhereInput = {
+    AND?: DecisionVoteScalarWhereInput | DecisionVoteScalarWhereInput[]
+    OR?: DecisionVoteScalarWhereInput[]
+    NOT?: DecisionVoteScalarWhereInput | DecisionVoteScalarWhereInput[]
+    id?: StringFilter<"DecisionVote"> | string
+    decisionId?: StringFilter<"DecisionVote"> | string
+    userId?: StringFilter<"DecisionVote"> | string
+    vote?: EnumDecisionVoteTypeFilter<"DecisionVote"> | $Enums.DecisionVoteType
+    createdAt?: DateTimeFilter<"DecisionVote"> | Date | string
+  }
+
   export type PushSubscriptionUpsertWithWhereUniqueWithoutUserInput = {
     where: PushSubscriptionWhereUniqueInput
     update: XOR<PushSubscriptionUpdateWithoutUserInput, PushSubscriptionUncheckedUpdateWithoutUserInput>
@@ -60998,6 +71134,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
     financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
@@ -61048,6 +71189,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
     financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
@@ -61138,6 +71284,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
     financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
@@ -61188,6 +71339,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
     financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
@@ -61345,6 +71501,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -61395,6 +71556,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -61450,6 +71616,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -61500,6 +71671,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -61566,6 +71742,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -61616,6 +71797,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -61677,6 +71863,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -61727,6 +71918,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -61749,6 +71945,10 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutOrganizationInput = {
@@ -61763,6 +71963,10 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutOrganizationInput = {
@@ -62045,6 +72249,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -62095,6 +72304,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -62202,6 +72416,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -62252,6 +72471,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -62337,6 +72561,11 @@ export namespace Prisma {
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -62387,6 +72616,11 @@ export namespace Prisma {
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -62549,6 +72783,144 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DepartmentGoalCreateWithoutDepartmentInput = {
+    id?: string
+    title: string
+    description?: string | null
+    targetValue?: number | null
+    currentValue?: number
+    period: string
+    periodKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentGoalUncheckedCreateWithoutDepartmentInput = {
+    id?: string
+    title: string
+    description?: string | null
+    targetValue?: number | null
+    currentValue?: number
+    period: string
+    periodKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentGoalCreateOrConnectWithoutDepartmentInput = {
+    where: DepartmentGoalWhereUniqueInput
+    create: XOR<DepartmentGoalCreateWithoutDepartmentInput, DepartmentGoalUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentGoalCreateManyDepartmentInputEnvelope = {
+    data: DepartmentGoalCreateManyDepartmentInput | DepartmentGoalCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentMeetingCreateWithoutDepartmentInput = {
+    id?: string
+    title: string
+    description?: string | null
+    agenda?: string | null
+    meetingDate: Date | string
+    location?: string | null
+    minutes?: string | null
+    minutesAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: UserCreateNestedOneWithoutCreatedMeetingsInput
+  }
+
+  export type DepartmentMeetingUncheckedCreateWithoutDepartmentInput = {
+    id?: string
+    title: string
+    description?: string | null
+    agenda?: string | null
+    meetingDate: Date | string
+    location?: string | null
+    createdBy: string
+    minutes?: string | null
+    minutesAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentMeetingCreateOrConnectWithoutDepartmentInput = {
+    where: DepartmentMeetingWhereUniqueInput
+    create: XOR<DepartmentMeetingCreateWithoutDepartmentInput, DepartmentMeetingUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentMeetingCreateManyDepartmentInputEnvelope = {
+    data: DepartmentMeetingCreateManyDepartmentInput | DepartmentMeetingCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentPollCreateWithoutDepartmentInput = {
+    id?: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: UserCreateNestedOneWithoutCreatedPollsInput
+    votes?: PollVoteCreateNestedManyWithoutPollInput
+  }
+
+  export type DepartmentPollUncheckedCreateWithoutDepartmentInput = {
+    id?: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    votes?: PollVoteUncheckedCreateNestedManyWithoutPollInput
+  }
+
+  export type DepartmentPollCreateOrConnectWithoutDepartmentInput = {
+    where: DepartmentPollWhereUniqueInput
+    create: XOR<DepartmentPollCreateWithoutDepartmentInput, DepartmentPollUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentPollCreateManyDepartmentInputEnvelope = {
+    data: DepartmentPollCreateManyDepartmentInput | DepartmentPollCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TeamDecisionCreateWithoutDepartmentInput = {
+    id?: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: UserCreateNestedOneWithoutCreatedDecisionsInput
+    votes?: DecisionVoteCreateNestedManyWithoutDecisionInput
+  }
+
+  export type TeamDecisionUncheckedCreateWithoutDepartmentInput = {
+    id?: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    votes?: DecisionVoteUncheckedCreateNestedManyWithoutDecisionInput
+  }
+
+  export type TeamDecisionCreateOrConnectWithoutDepartmentInput = {
+    where: TeamDecisionWhereUniqueInput
+    create: XOR<TeamDecisionCreateWithoutDepartmentInput, TeamDecisionUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type TeamDecisionCreateManyDepartmentInputEnvelope = {
+    data: TeamDecisionCreateManyDepartmentInput | TeamDecisionCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutDepartmentsInput = {
     update: XOR<OrganizationUpdateWithoutDepartmentsInput, OrganizationUncheckedUpdateWithoutDepartmentsInput>
     create: XOR<OrganizationCreateWithoutDepartmentsInput, OrganizationUncheckedCreateWithoutDepartmentsInput>
@@ -62640,6 +73012,11 @@ export namespace Prisma {
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -62690,6 +73067,11 @@ export namespace Prisma {
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -62803,6 +73185,1822 @@ export namespace Prisma {
     data: XOR<DepartmentMonthlyReportUpdateManyMutationInput, DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentInput>
   }
 
+  export type DepartmentGoalUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentGoalWhereUniqueInput
+    update: XOR<DepartmentGoalUpdateWithoutDepartmentInput, DepartmentGoalUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<DepartmentGoalCreateWithoutDepartmentInput, DepartmentGoalUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentGoalUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentGoalWhereUniqueInput
+    data: XOR<DepartmentGoalUpdateWithoutDepartmentInput, DepartmentGoalUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type DepartmentGoalUpdateManyWithWhereWithoutDepartmentInput = {
+    where: DepartmentGoalScalarWhereInput
+    data: XOR<DepartmentGoalUpdateManyMutationInput, DepartmentGoalUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
+  export type DepartmentGoalScalarWhereInput = {
+    AND?: DepartmentGoalScalarWhereInput | DepartmentGoalScalarWhereInput[]
+    OR?: DepartmentGoalScalarWhereInput[]
+    NOT?: DepartmentGoalScalarWhereInput | DepartmentGoalScalarWhereInput[]
+    id?: StringFilter<"DepartmentGoal"> | string
+    deptId?: StringFilter<"DepartmentGoal"> | string
+    title?: StringFilter<"DepartmentGoal"> | string
+    description?: StringNullableFilter<"DepartmentGoal"> | string | null
+    targetValue?: FloatNullableFilter<"DepartmentGoal"> | number | null
+    currentValue?: FloatFilter<"DepartmentGoal"> | number
+    period?: StringFilter<"DepartmentGoal"> | string
+    periodKey?: StringFilter<"DepartmentGoal"> | string
+    createdAt?: DateTimeFilter<"DepartmentGoal"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentGoal"> | Date | string
+  }
+
+  export type DepartmentMeetingUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentMeetingWhereUniqueInput
+    update: XOR<DepartmentMeetingUpdateWithoutDepartmentInput, DepartmentMeetingUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<DepartmentMeetingCreateWithoutDepartmentInput, DepartmentMeetingUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentMeetingUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentMeetingWhereUniqueInput
+    data: XOR<DepartmentMeetingUpdateWithoutDepartmentInput, DepartmentMeetingUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type DepartmentMeetingUpdateManyWithWhereWithoutDepartmentInput = {
+    where: DepartmentMeetingScalarWhereInput
+    data: XOR<DepartmentMeetingUpdateManyMutationInput, DepartmentMeetingUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
+  export type DepartmentPollUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentPollWhereUniqueInput
+    update: XOR<DepartmentPollUpdateWithoutDepartmentInput, DepartmentPollUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<DepartmentPollCreateWithoutDepartmentInput, DepartmentPollUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentPollUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentPollWhereUniqueInput
+    data: XOR<DepartmentPollUpdateWithoutDepartmentInput, DepartmentPollUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type DepartmentPollUpdateManyWithWhereWithoutDepartmentInput = {
+    where: DepartmentPollScalarWhereInput
+    data: XOR<DepartmentPollUpdateManyMutationInput, DepartmentPollUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
+  export type TeamDecisionUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: TeamDecisionWhereUniqueInput
+    update: XOR<TeamDecisionUpdateWithoutDepartmentInput, TeamDecisionUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<TeamDecisionCreateWithoutDepartmentInput, TeamDecisionUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type TeamDecisionUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: TeamDecisionWhereUniqueInput
+    data: XOR<TeamDecisionUpdateWithoutDepartmentInput, TeamDecisionUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type TeamDecisionUpdateManyWithWhereWithoutDepartmentInput = {
+    where: TeamDecisionScalarWhereInput
+    data: XOR<TeamDecisionUpdateManyMutationInput, TeamDecisionUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
+  export type DepartmentCreateWithoutGoalsInput = {
+    id?: string
+    name: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
+    members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutGoalsInput = {
+    id?: string
+    name: string
+    orgId: string
+    publicKey: string
+    headId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutGoalsInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutGoalsInput, DepartmentUncheckedCreateWithoutGoalsInput>
+  }
+
+  export type DepartmentUpsertWithoutGoalsInput = {
+    update: XOR<DepartmentUpdateWithoutGoalsInput, DepartmentUncheckedUpdateWithoutGoalsInput>
+    create: XOR<DepartmentCreateWithoutGoalsInput, DepartmentUncheckedCreateWithoutGoalsInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutGoalsInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutGoalsInput, DepartmentUncheckedUpdateWithoutGoalsInput>
+  }
+
+  export type DepartmentUpdateWithoutGoalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
+    members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutGoalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentCreateWithoutMeetingsInput = {
+    id?: string
+    name: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
+    members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutMeetingsInput = {
+    id?: string
+    name: string
+    orgId: string
+    publicKey: string
+    headId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutMeetingsInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutMeetingsInput, DepartmentUncheckedCreateWithoutMeetingsInput>
+  }
+
+  export type UserCreateWithoutCreatedMeetingsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutCreatedMeetingsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutCreatedMeetingsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCreatedMeetingsInput, UserUncheckedCreateWithoutCreatedMeetingsInput>
+  }
+
+  export type DepartmentUpsertWithoutMeetingsInput = {
+    update: XOR<DepartmentUpdateWithoutMeetingsInput, DepartmentUncheckedUpdateWithoutMeetingsInput>
+    create: XOR<DepartmentCreateWithoutMeetingsInput, DepartmentUncheckedCreateWithoutMeetingsInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutMeetingsInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutMeetingsInput, DepartmentUncheckedUpdateWithoutMeetingsInput>
+  }
+
+  export type DepartmentUpdateWithoutMeetingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
+    members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutMeetingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type UserUpsertWithoutCreatedMeetingsInput = {
+    update: XOR<UserUpdateWithoutCreatedMeetingsInput, UserUncheckedUpdateWithoutCreatedMeetingsInput>
+    create: XOR<UserCreateWithoutCreatedMeetingsInput, UserUncheckedCreateWithoutCreatedMeetingsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCreatedMeetingsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCreatedMeetingsInput, UserUncheckedUpdateWithoutCreatedMeetingsInput>
+  }
+
+  export type UserUpdateWithoutCreatedMeetingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCreatedMeetingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type DepartmentCreateWithoutPollsInput = {
+    id?: string
+    name: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
+    members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutPollsInput = {
+    id?: string
+    name: string
+    orgId: string
+    publicKey: string
+    headId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutPollsInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutPollsInput, DepartmentUncheckedCreateWithoutPollsInput>
+  }
+
+  export type UserCreateWithoutCreatedPollsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutCreatedPollsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutCreatedPollsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCreatedPollsInput, UserUncheckedCreateWithoutCreatedPollsInput>
+  }
+
+  export type PollVoteCreateWithoutPollInput = {
+    id?: string
+    optionIndex: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutPollVotesInput
+  }
+
+  export type PollVoteUncheckedCreateWithoutPollInput = {
+    id?: string
+    userId: string
+    optionIndex: number
+    createdAt?: Date | string
+  }
+
+  export type PollVoteCreateOrConnectWithoutPollInput = {
+    where: PollVoteWhereUniqueInput
+    create: XOR<PollVoteCreateWithoutPollInput, PollVoteUncheckedCreateWithoutPollInput>
+  }
+
+  export type PollVoteCreateManyPollInputEnvelope = {
+    data: PollVoteCreateManyPollInput | PollVoteCreateManyPollInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentUpsertWithoutPollsInput = {
+    update: XOR<DepartmentUpdateWithoutPollsInput, DepartmentUncheckedUpdateWithoutPollsInput>
+    create: XOR<DepartmentCreateWithoutPollsInput, DepartmentUncheckedCreateWithoutPollsInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutPollsInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutPollsInput, DepartmentUncheckedUpdateWithoutPollsInput>
+  }
+
+  export type DepartmentUpdateWithoutPollsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
+    members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutPollsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type UserUpsertWithoutCreatedPollsInput = {
+    update: XOR<UserUpdateWithoutCreatedPollsInput, UserUncheckedUpdateWithoutCreatedPollsInput>
+    create: XOR<UserCreateWithoutCreatedPollsInput, UserUncheckedCreateWithoutCreatedPollsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCreatedPollsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCreatedPollsInput, UserUncheckedUpdateWithoutCreatedPollsInput>
+  }
+
+  export type UserUpdateWithoutCreatedPollsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCreatedPollsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type PollVoteUpsertWithWhereUniqueWithoutPollInput = {
+    where: PollVoteWhereUniqueInput
+    update: XOR<PollVoteUpdateWithoutPollInput, PollVoteUncheckedUpdateWithoutPollInput>
+    create: XOR<PollVoteCreateWithoutPollInput, PollVoteUncheckedCreateWithoutPollInput>
+  }
+
+  export type PollVoteUpdateWithWhereUniqueWithoutPollInput = {
+    where: PollVoteWhereUniqueInput
+    data: XOR<PollVoteUpdateWithoutPollInput, PollVoteUncheckedUpdateWithoutPollInput>
+  }
+
+  export type PollVoteUpdateManyWithWhereWithoutPollInput = {
+    where: PollVoteScalarWhereInput
+    data: XOR<PollVoteUpdateManyMutationInput, PollVoteUncheckedUpdateManyWithoutPollInput>
+  }
+
+  export type DepartmentPollCreateWithoutVotesInput = {
+    id?: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutPollsInput
+    creator: UserCreateNestedOneWithoutCreatedPollsInput
+  }
+
+  export type DepartmentPollUncheckedCreateWithoutVotesInput = {
+    id?: string
+    deptId: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentPollCreateOrConnectWithoutVotesInput = {
+    where: DepartmentPollWhereUniqueInput
+    create: XOR<DepartmentPollCreateWithoutVotesInput, DepartmentPollUncheckedCreateWithoutVotesInput>
+  }
+
+  export type UserCreateWithoutPollVotesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutPollVotesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutPollVotesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPollVotesInput, UserUncheckedCreateWithoutPollVotesInput>
+  }
+
+  export type DepartmentPollUpsertWithoutVotesInput = {
+    update: XOR<DepartmentPollUpdateWithoutVotesInput, DepartmentPollUncheckedUpdateWithoutVotesInput>
+    create: XOR<DepartmentPollCreateWithoutVotesInput, DepartmentPollUncheckedCreateWithoutVotesInput>
+    where?: DepartmentPollWhereInput
+  }
+
+  export type DepartmentPollUpdateToOneWithWhereWithoutVotesInput = {
+    where?: DepartmentPollWhereInput
+    data: XOR<DepartmentPollUpdateWithoutVotesInput, DepartmentPollUncheckedUpdateWithoutVotesInput>
+  }
+
+  export type DepartmentPollUpdateWithoutVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutPollsNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedPollsNestedInput
+  }
+
+  export type DepartmentPollUncheckedUpdateWithoutVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutPollVotesInput = {
+    update: XOR<UserUpdateWithoutPollVotesInput, UserUncheckedUpdateWithoutPollVotesInput>
+    create: XOR<UserCreateWithoutPollVotesInput, UserUncheckedCreateWithoutPollVotesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPollVotesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPollVotesInput, UserUncheckedUpdateWithoutPollVotesInput>
+  }
+
+  export type UserUpdateWithoutPollVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPollVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type DepartmentCreateWithoutTeamDecisionsInput = {
+    id?: string
+    name: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
+    members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutTeamDecisionsInput = {
+    id?: string
+    name: string
+    orgId: string
+    publicKey: string
+    headId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutTeamDecisionsInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutTeamDecisionsInput, DepartmentUncheckedCreateWithoutTeamDecisionsInput>
+  }
+
+  export type UserCreateWithoutCreatedDecisionsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutCreatedDecisionsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutCreatedDecisionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCreatedDecisionsInput, UserUncheckedCreateWithoutCreatedDecisionsInput>
+  }
+
+  export type DecisionVoteCreateWithoutDecisionInput = {
+    id?: string
+    vote: $Enums.DecisionVoteType
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutDecisionVotesInput
+  }
+
+  export type DecisionVoteUncheckedCreateWithoutDecisionInput = {
+    id?: string
+    userId: string
+    vote: $Enums.DecisionVoteType
+    createdAt?: Date | string
+  }
+
+  export type DecisionVoteCreateOrConnectWithoutDecisionInput = {
+    where: DecisionVoteWhereUniqueInput
+    create: XOR<DecisionVoteCreateWithoutDecisionInput, DecisionVoteUncheckedCreateWithoutDecisionInput>
+  }
+
+  export type DecisionVoteCreateManyDecisionInputEnvelope = {
+    data: DecisionVoteCreateManyDecisionInput | DecisionVoteCreateManyDecisionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentUpsertWithoutTeamDecisionsInput = {
+    update: XOR<DepartmentUpdateWithoutTeamDecisionsInput, DepartmentUncheckedUpdateWithoutTeamDecisionsInput>
+    create: XOR<DepartmentCreateWithoutTeamDecisionsInput, DepartmentUncheckedCreateWithoutTeamDecisionsInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutTeamDecisionsInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutTeamDecisionsInput, DepartmentUncheckedUpdateWithoutTeamDecisionsInput>
+  }
+
+  export type DepartmentUpdateWithoutTeamDecisionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
+    members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutTeamDecisionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type UserUpsertWithoutCreatedDecisionsInput = {
+    update: XOR<UserUpdateWithoutCreatedDecisionsInput, UserUncheckedUpdateWithoutCreatedDecisionsInput>
+    create: XOR<UserCreateWithoutCreatedDecisionsInput, UserUncheckedCreateWithoutCreatedDecisionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCreatedDecisionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCreatedDecisionsInput, UserUncheckedUpdateWithoutCreatedDecisionsInput>
+  }
+
+  export type UserUpdateWithoutCreatedDecisionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCreatedDecisionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type DecisionVoteUpsertWithWhereUniqueWithoutDecisionInput = {
+    where: DecisionVoteWhereUniqueInput
+    update: XOR<DecisionVoteUpdateWithoutDecisionInput, DecisionVoteUncheckedUpdateWithoutDecisionInput>
+    create: XOR<DecisionVoteCreateWithoutDecisionInput, DecisionVoteUncheckedCreateWithoutDecisionInput>
+  }
+
+  export type DecisionVoteUpdateWithWhereUniqueWithoutDecisionInput = {
+    where: DecisionVoteWhereUniqueInput
+    data: XOR<DecisionVoteUpdateWithoutDecisionInput, DecisionVoteUncheckedUpdateWithoutDecisionInput>
+  }
+
+  export type DecisionVoteUpdateManyWithWhereWithoutDecisionInput = {
+    where: DecisionVoteScalarWhereInput
+    data: XOR<DecisionVoteUpdateManyMutationInput, DecisionVoteUncheckedUpdateManyWithoutDecisionInput>
+  }
+
+  export type TeamDecisionCreateWithoutVotesInput = {
+    id?: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutTeamDecisionsInput
+    creator: UserCreateNestedOneWithoutCreatedDecisionsInput
+  }
+
+  export type TeamDecisionUncheckedCreateWithoutVotesInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeamDecisionCreateOrConnectWithoutVotesInput = {
+    where: TeamDecisionWhereUniqueInput
+    create: XOR<TeamDecisionCreateWithoutVotesInput, TeamDecisionUncheckedCreateWithoutVotesInput>
+  }
+
+  export type UserCreateWithoutDecisionVotesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutDecisionVotesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutDecisionVotesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDecisionVotesInput, UserUncheckedCreateWithoutDecisionVotesInput>
+  }
+
+  export type TeamDecisionUpsertWithoutVotesInput = {
+    update: XOR<TeamDecisionUpdateWithoutVotesInput, TeamDecisionUncheckedUpdateWithoutVotesInput>
+    create: XOR<TeamDecisionCreateWithoutVotesInput, TeamDecisionUncheckedCreateWithoutVotesInput>
+    where?: TeamDecisionWhereInput
+  }
+
+  export type TeamDecisionUpdateToOneWithWhereWithoutVotesInput = {
+    where?: TeamDecisionWhereInput
+    data: XOR<TeamDecisionUpdateWithoutVotesInput, TeamDecisionUncheckedUpdateWithoutVotesInput>
+  }
+
+  export type TeamDecisionUpdateWithoutVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutTeamDecisionsNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedDecisionsNestedInput
+  }
+
+  export type TeamDecisionUncheckedUpdateWithoutVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutDecisionVotesInput = {
+    update: XOR<UserUpdateWithoutDecisionVotesInput, UserUncheckedUpdateWithoutDecisionVotesInput>
+    create: XOR<UserCreateWithoutDecisionVotesInput, UserUncheckedCreateWithoutDecisionVotesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDecisionVotesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDecisionVotesInput, UserUncheckedUpdateWithoutDecisionVotesInput>
+  }
+
+  export type UserUpdateWithoutDecisionVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDecisionVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
   export type DepartmentCreateWithoutMembersInput = {
     id?: string
     name: string
@@ -62815,6 +75013,10 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutMembersInput = {
@@ -62829,6 +75031,10 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutMembersInput = {
@@ -62875,6 +75081,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -62925,6 +75136,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -62964,6 +75180,10 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutMembersInput = {
@@ -62978,6 +75198,10 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutDeptMembershipsInput = {
@@ -63030,6 +75254,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -63080,6 +75309,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -63103,6 +75337,10 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutConversationsInput = {
@@ -63117,6 +75355,10 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutConversationsInput = {
@@ -63201,6 +75443,10 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutConversationsInput = {
@@ -63215,6 +75461,10 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type GroupMemberUpsertWithWhereUniqueWithoutGroupInput = {
@@ -63313,6 +75563,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -63363,6 +75618,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -63460,6 +75720,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -63510,6 +75775,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -63611,6 +75881,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -63661,6 +75936,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -63786,6 +76066,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -63836,6 +76121,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -63942,6 +76232,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -63992,6 +76287,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -64058,6 +76358,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -64108,6 +76413,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -64158,6 +76468,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -64208,6 +76523,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -64296,6 +76616,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -64346,6 +76671,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -64729,6 +77059,10 @@ export namespace Prisma {
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutEventBroadcastsInput = {
@@ -64743,6 +77077,10 @@ export namespace Prisma {
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutEventBroadcastsInput = {
@@ -64816,6 +77154,10 @@ export namespace Prisma {
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutEventBroadcastsInput = {
@@ -64830,6 +77172,10 @@ export namespace Prisma {
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type EventInvitationCreateWithoutRsvpsInput = {
@@ -64951,6 +77297,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -65001,6 +77352,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -65105,6 +77461,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -65155,6 +77516,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -65443,6 +77809,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -65493,6 +77864,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -65598,6 +77974,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -65648,6 +78029,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -65731,6 +78117,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -65781,6 +78172,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -65941,6 +78337,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -65991,6 +78392,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -66088,6 +78494,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -66138,6 +78549,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -66237,6 +78653,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -66287,6 +78708,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -66349,6 +78775,10 @@ export namespace Prisma {
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutTasksInput = {
@@ -66363,6 +78793,10 @@ export namespace Prisma {
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
     monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutTasksInput = {
@@ -66409,6 +78843,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -66459,6 +78898,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -66514,6 +78958,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -66564,6 +79013,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -66663,6 +79117,10 @@ export namespace Prisma {
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutTasksInput = {
@@ -66677,6 +79135,10 @@ export namespace Prisma {
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedTasksInput = {
@@ -66729,6 +79191,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -66779,6 +79246,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -66840,6 +79312,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -66890,6 +79367,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -67026,6 +79508,11 @@ export namespace Prisma {
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -67076,6 +79563,11 @@ export namespace Prisma {
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -67219,6 +79711,11 @@ export namespace Prisma {
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -67269,6 +79766,11 @@ export namespace Prisma {
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -67444,6 +79946,10 @@ export namespace Prisma {
     conversations?: GroupCreateNestedManyWithoutDepartmentInput
     tasks?: TaskCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutMonthlyReportsInput = {
@@ -67458,6 +79964,10 @@ export namespace Prisma {
     conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutMonthlyReportsInput = {
@@ -67504,6 +80014,11 @@ export namespace Prisma {
     createdTasks?: TaskCreateNestedManyWithoutCreatorInput
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -67554,6 +80069,11 @@ export namespace Prisma {
     createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -67593,6 +80113,10 @@ export namespace Prisma {
     conversations?: GroupUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutMonthlyReportsInput = {
@@ -67607,6 +80131,10 @@ export namespace Prisma {
     conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutDepartmentMonthlyReportsInput = {
@@ -67659,6 +80187,11 @@ export namespace Prisma {
     createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -67709,6 +80242,11 @@ export namespace Prisma {
     createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -67760,6 +80298,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
     financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
@@ -67810,6 +80353,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
     financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
@@ -67876,6 +80424,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
     financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
@@ -67926,6 +80479,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
     financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
@@ -67976,6 +80534,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
@@ -68026,6 +80589,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
@@ -68092,6 +80660,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
@@ -68142,6 +80715,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
@@ -68192,6 +80770,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -68242,6 +80825,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -68338,6 +80926,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -68388,6 +80981,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -68468,6 +81066,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -68518,6 +81121,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -68584,6 +81192,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -68634,6 +81247,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -68684,6 +81302,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -68734,6 +81357,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -68800,6 +81428,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -68850,6 +81483,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -68900,6 +81538,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
@@ -68950,6 +81593,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
     personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
@@ -69016,6 +81664,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
@@ -69066,6 +81719,11 @@ export namespace Prisma {
     headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
     personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
@@ -69265,6 +81923,55 @@ export namespace Prisma {
     content: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type DepartmentMeetingCreateManyCreatorInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    agenda?: string | null
+    meetingDate: Date | string
+    location?: string | null
+    minutes?: string | null
+    minutesAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentPollCreateManyCreatorInput = {
+    id?: string
+    deptId: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeamDecisionCreateManyCreatorInput = {
+    id?: string
+    deptId: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PollVoteCreateManyUserInput = {
+    id?: string
+    pollId: string
+    optionIndex: number
+    createdAt?: Date | string
+  }
+
+  export type DecisionVoteCreateManyUserInput = {
+    id?: string
+    decisionId: string
+    vote: $Enums.DecisionVoteType
+    createdAt?: Date | string
   }
 
   export type PushSubscriptionCreateManyUserInput = {
@@ -69668,6 +82375,10 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutHeadInput = {
@@ -69682,6 +82393,10 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutHeadInput = {
@@ -69744,6 +82459,157 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMeetingUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    minutesAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutMeetingsNestedInput
+  }
+
+  export type DepartmentMeetingUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    minutesAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMeetingUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    minutesAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentPollUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutPollsNestedInput
+    votes?: PollVoteUpdateManyWithoutPollNestedInput
+  }
+
+  export type DepartmentPollUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    votes?: PollVoteUncheckedUpdateManyWithoutPollNestedInput
+  }
+
+  export type DepartmentPollUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamDecisionUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutTeamDecisionsNestedInput
+    votes?: DecisionVoteUpdateManyWithoutDecisionNestedInput
+  }
+
+  export type TeamDecisionUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    votes?: DecisionVoteUncheckedUpdateManyWithoutDecisionNestedInput
+  }
+
+  export type TeamDecisionUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PollVoteUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    poll?: DepartmentPollUpdateOneRequiredWithoutVotesNestedInput
+  }
+
+  export type PollVoteUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pollId?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PollVoteUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pollId?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DecisionVoteUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vote?: EnumDecisionVoteTypeFieldUpdateOperationsInput | $Enums.DecisionVoteType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    decision?: TeamDecisionUpdateOneRequiredWithoutVotesNestedInput
+  }
+
+  export type DecisionVoteUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    decisionId?: StringFieldUpdateOperationsInput | string
+    vote?: EnumDecisionVoteTypeFieldUpdateOperationsInput | $Enums.DecisionVoteType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DecisionVoteUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    decisionId?: StringFieldUpdateOperationsInput | string
+    vote?: EnumDecisionVoteTypeFieldUpdateOperationsInput | $Enums.DecisionVoteType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PushSubscriptionUpdateWithoutUserInput = {
@@ -70072,6 +82938,10 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutOrganizationInput = {
@@ -70086,6 +82956,10 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
     eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
     monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutOrganizationInput = {
@@ -70204,6 +83078,53 @@ export namespace Prisma {
     userId: string
     month: string
     content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentGoalCreateManyDepartmentInput = {
+    id?: string
+    title: string
+    description?: string | null
+    targetValue?: number | null
+    currentValue?: number
+    period: string
+    periodKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentMeetingCreateManyDepartmentInput = {
+    id?: string
+    title: string
+    description?: string | null
+    agenda?: string | null
+    meetingDate: Date | string
+    location?: string | null
+    createdBy: string
+    minutes?: string | null
+    minutesAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentPollCreateManyDepartmentInput = {
+    id?: string
+    question: string
+    options: JsonNullValueInput | InputJsonValue
+    endDate?: Date | string | null
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeamDecisionCreateManyDepartmentInput = {
+    id?: string
+    title: string
+    description?: string | null
+    voteDeadline?: Date | string | null
+    status?: string
+    createdBy: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -70346,6 +83267,207 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentGoalUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    targetValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentValue?: FloatFieldUpdateOperationsInput | number
+    period?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentGoalUncheckedUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    targetValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentValue?: FloatFieldUpdateOperationsInput | number
+    period?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentGoalUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    targetValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentValue?: FloatFieldUpdateOperationsInput | number
+    period?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMeetingUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    minutesAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: UserUpdateOneRequiredWithoutCreatedMeetingsNestedInput
+  }
+
+  export type DepartmentMeetingUncheckedUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    minutesAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentMeetingUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    minutesAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentPollUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: UserUpdateOneRequiredWithoutCreatedPollsNestedInput
+    votes?: PollVoteUpdateManyWithoutPollNestedInput
+  }
+
+  export type DepartmentPollUncheckedUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    votes?: PollVoteUncheckedUpdateManyWithoutPollNestedInput
+  }
+
+  export type DepartmentPollUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    options?: JsonNullValueInput | InputJsonValue
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamDecisionUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: UserUpdateOneRequiredWithoutCreatedDecisionsNestedInput
+    votes?: DecisionVoteUpdateManyWithoutDecisionNestedInput
+  }
+
+  export type TeamDecisionUncheckedUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    votes?: DecisionVoteUncheckedUpdateManyWithoutDecisionNestedInput
+  }
+
+  export type TeamDecisionUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    voteDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PollVoteCreateManyPollInput = {
+    id?: string
+    userId: string
+    optionIndex: number
+    createdAt?: Date | string
+  }
+
+  export type PollVoteUpdateWithoutPollInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPollVotesNestedInput
+  }
+
+  export type PollVoteUncheckedUpdateWithoutPollInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PollVoteUncheckedUpdateManyWithoutPollInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DecisionVoteCreateManyDecisionInput = {
+    id?: string
+    userId: string
+    vote: $Enums.DecisionVoteType
+    createdAt?: Date | string
+  }
+
+  export type DecisionVoteUpdateWithoutDecisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vote?: EnumDecisionVoteTypeFieldUpdateOperationsInput | $Enums.DecisionVoteType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutDecisionVotesNestedInput
+  }
+
+  export type DecisionVoteUncheckedUpdateWithoutDecisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    vote?: EnumDecisionVoteTypeFieldUpdateOperationsInput | $Enums.DecisionVoteType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DecisionVoteUncheckedUpdateManyWithoutDecisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    vote?: EnumDecisionVoteTypeFieldUpdateOperationsInput | $Enums.DecisionVoteType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GroupMemberCreateManyGroupInput = {

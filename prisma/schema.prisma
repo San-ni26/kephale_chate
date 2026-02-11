@@ -47,6 +47,11 @@ model User {
   headedDepartments       Department[]         @relation("DepartmentHead")
   taskMessages            TaskMessage[]
   departmentMonthlyReports DepartmentMonthlyReport[]
+  createdMeetings         DepartmentMeeting[] @relation("MeetingCreator")
+  createdPolls            DepartmentPoll[]    @relation("PollCreator")
+  createdDecisions        TeamDecision[]     @relation("DecisionCreator")
+  pollVotes               PollVote[]
+  decisionVotes           DecisionVote[]
   pushSubscriptions       PushSubscription[]
   invitations             UserInvitation[]
   personalTasks           UserPersonalTask[]
@@ -172,9 +177,127 @@ model Department {
   tasks             Task[]
   eventBroadcasts   EventDepartmentBroadcast[]
   monthlyReports    DepartmentMonthlyReport[]
+  goals             DepartmentGoal[]
+  meetings          DepartmentMeeting[]
+  polls             DepartmentPoll[]
+  teamDecisions     TeamDecision[]
 
   @@index([orgId], map: "Department_orgId_idx")
   @@index([headId])
+}
+
+// Objectifs par département
+model DepartmentGoal {
+  id           String   @id @default(cuid())
+  deptId       String
+  title        String
+  description  String?  @db.Text
+  targetValue  Float?   // Valeur cible (ex: 100 pour 100%)
+  currentValue Float    @default(0)
+  period       String   // "MONTHLY" | "QUARTERLY" | "YEARLY"
+  periodKey    String   // "2025-02" ou "2025-Q1" ou "2025"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  department Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
+
+  @@index([deptId])
+  @@index([periodKey])
+}
+
+// Réunions & comptes-rendus
+model DepartmentMeeting {
+  id          String    @id @default(cuid())
+  deptId      String
+  title       String
+  description String?  @db.Text
+  agenda      String?   @db.Text
+  meetingDate DateTime
+  location    String?
+  createdBy   String
+  minutes     String?   @db.Text // Compte-rendu
+  minutesAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  department Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  creator     User       @relation("MeetingCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([deptId])
+  @@index([meetingDate])
+}
+
+// Sondages rapides
+model DepartmentPoll {
+  id        String   @id @default(cuid())
+  deptId    String
+  question  String   @db.Text
+  options   Json     // ["Option A", "Option B", ...]
+  endDate   DateTime?
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  department Department  @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  creator    User        @relation("PollCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  votes      PollVote[]
+
+  @@index([deptId])
+  @@index([endDate])
+}
+
+model PollVote {
+  id          String   @id @default(cuid())
+  pollId      String
+  userId      String
+  optionIndex Int      // Index de l'option choisie (0-based)
+  createdAt   DateTime @default(now())
+
+  poll DepartmentPoll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([pollId, userId])
+  @@index([pollId])
+}
+
+// Décisions d'équipe (vote pour/contre/abstention)
+enum DecisionVoteType {
+  FOR
+  AGAINST
+  ABSTAIN
+}
+
+model TeamDecision {
+  id           String    @id @default(cuid())
+  deptId       String
+  title        String
+  description  String?   @db.Text
+  voteDeadline DateTime?
+  status       String    @default("PENDING") // PENDING | APPROVED | REJECTED
+  createdBy    String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  department Department  @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  creator    User         @relation("DecisionCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  votes      DecisionVote[]
+
+  @@index([deptId])
+  @@index([voteDeadline])
+}
+
+model DecisionVote {
+  id         String          @id @default(cuid())
+  decisionId String
+  userId     String
+  vote       DecisionVoteType
+  createdAt  DateTime        @default(now())
+
+  decision TeamDecision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([decisionId, userId])
+  @@index([decisionId])
 }
 
 model DepartmentMember {
