@@ -143,14 +143,49 @@ export function NotificationListener() {
             }
 
             try {
-                // Attendre le SW (deja enregistre par ServiceWorkerRegistration au root)
-                const registration = await Promise.race([
-                    navigator.serviceWorker.ready,
-                    new Promise<never>((_, reject) =>
-                        setTimeout(() => reject(new Error('SW timeout')), 15000)
-                    ),
-                ]);
-                console.log('[Push] SW ready:', registration.active?.scriptURL);
+                // Obtenir ou enregistrer le SW et attendre qu'il soit ACTIF
+                let registration = await navigator.serviceWorker.getRegistration('/');
+
+                if (!registration) {
+                    registration = await navigator.serviceWorker.register('/sw.js', {
+                        updateViaCache: 'none',
+                        scope: '/',
+                    });
+                }
+
+                // Si un worker attend, declencher l'activation
+                if (registration.waiting) {
+                    registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                }
+
+                // Attendre qu'un worker soit actif (requis pour pushManager.subscribe)
+                if (!registration.active) {
+                    const sw = registration.installing || registration.waiting;
+                    if (sw) {
+                        await new Promise<void>((resolve) => {
+                            const onStateChange = () => {
+                                if (sw.state === 'activated') {
+                                    sw.removeEventListener('statechange', onStateChange);
+                                    resolve();
+                                }
+                            };
+                            sw.addEventListener('statechange', onStateChange);
+                            if (sw.state === 'activated') {
+                                sw.removeEventListener('statechange', onStateChange);
+                                resolve();
+                            }
+                        });
+                    } else {
+                        await navigator.serviceWorker.ready;
+                    }
+                }
+
+                if (!registration.active) {
+                    console.warn('[Push] No active Service Worker - push unavailable');
+                    return;
+                }
+
+                console.log('[Push] SW active:', registration.active.scriptURL);
 
                 // Get or create subscription
                 let subscription = await registration.pushManager.getSubscription();
@@ -195,8 +230,8 @@ export function NotificationListener() {
             }
         };
 
-        // Court delai pour laisser le SW s'enregistrer (depuis root layout)
-        const timeout = setTimeout(registerPush, 1000);
+        // Delai pour laisser le SW s'enregistrer et s'activer
+        const timeout = setTimeout(registerPush, 2000);
         return () => clearTimeout(timeout);
     }, []);
 
