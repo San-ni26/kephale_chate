@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { getOnlineUserIds } from '@/src/lib/presence';
+import { getUsersInCall } from '@/src/lib/call-redis';
 
 export async function GET(
     request: NextRequest,
@@ -63,15 +64,19 @@ export async function GET(
             );
         }
 
-        // Merger la presence Redis (en ligne/hors ligne)
+        // Merger presence Redis (en ligne) + statut appel (en appel)
         if (conversation.members.length > 0) {
             const memberIds = conversation.members.map(m => m.user.id);
-            const presenceMap = await getOnlineUserIds(memberIds);
+            const [presenceMap, callMap] = await Promise.all([
+                getOnlineUserIds(memberIds),
+                getUsersInCall(memberIds),
+            ]);
             const membersWithPresence = conversation.members.map(m => ({
                 ...m,
                 user: {
                     ...m.user,
                     isOnline: presenceMap[m.user.id] ?? m.user.isOnline,
+                    inCall: !!callMap[m.user.id],
                 },
             }));
             return NextResponse.json({

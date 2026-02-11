@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { setUserOnline, setUserOffline, getOnlineUserIds } from '@/src/lib/presence';
+import { getAndClearPendingCall } from '@/src/lib/call-redis';
+import { notifyIncomingCall } from '@/src/lib/websocket';
 
 /**
  * POST - Heartbeat : marquer l'utilisateur comme en ligne ou hors ligne
@@ -34,6 +36,19 @@ export async function POST(request: NextRequest) {
     }
 
     const ok = await setUserOnline(user.userId);
+
+    // Appel en attente (destinataire etait offline) - livrer maintenant
+    const pendingCall = await getAndClearPendingCall(user.userId);
+    if (pendingCall) {
+        notifyIncomingCall(
+            user.userId,
+            pendingCall.callerId,
+            pendingCall.callerName,
+            pendingCall.offer,
+            pendingCall.conversationId
+        ).catch((err) => console.error('[Presence] Pending call delivery failed:', err));
+    }
+
     return NextResponse.json({
         success: true,
         online: ok,

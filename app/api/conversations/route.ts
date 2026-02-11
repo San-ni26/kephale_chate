@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { getOnlineUserIds } from '@/src/lib/presence';
+import { getUsersInCall } from '@/src/lib/call-redis';
 
 // GET: Get all conversations for the authenticated user
 export async function GET(request: NextRequest) {
@@ -65,9 +66,12 @@ export async function GET(request: NextRequest) {
             },
         });
 
-        // Calculate unread counts and merge Redis presence
-        const allMemberIds = [...new Set(conversations.flatMap(c => c.members.map(m => m.userId)))];
-        const presenceMap = await getOnlineUserIds(allMemberIds);
+        // Calculate unread counts and merge Redis presence + statut appel
+        const memberUserIds = [...new Set(conversations.flatMap(c => c.members.map(m => m.user.id)))];
+        const [presenceMap, callMap] = await Promise.all([
+            getOnlineUserIds(memberUserIds),
+            getUsersInCall(memberUserIds),
+        ]);
 
         const conversationsWithUnread = await Promise.all(
             conversations.map(async (conv) => {
@@ -82,12 +86,13 @@ export async function GET(request: NextRequest) {
                     },
                 });
 
-                // Merge Redis presence (priorité sur isOnline DB)
+                // Merge Redis presence + statut appel
                 const membersWithPresence = conv.members.map(m => ({
                     ...m,
                     user: {
                         ...m.user,
-                        isOnline: presenceMap[m.userId] ?? m.user.isOnline,
+                        isOnline: presenceMap[m.user.id] ?? m.user.isOnline,
+                        inCall: !!callMap[m.user.id],
                     },
                 }));
 

@@ -3,6 +3,11 @@ import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { emitToUser } from '@/src/lib/pusher-server';
 import { prisma } from '@/src/lib/prisma';
 import { notifyIncomingCall } from '@/src/lib/websocket';
+import {
+    setUserInCall,
+    setUserCallEnded,
+    setPendingCall,
+} from '@/src/lib/call-redis';
 
 /**
  * POST /api/call/signal
@@ -49,6 +54,17 @@ export async function POST(request: NextRequest) {
                     console.error('Error fetching caller name:', e);
                 }
 
+                // Stocker appel en attente (Redis) pour destinataire offline
+                await setPendingCall(recipientId, {
+                    callerId: user.userId,
+                    callerName,
+                    offer,
+                    conversationId,
+                });
+
+                // Marquer l'appelant comme en appel (Redis)
+                await setUserInCall(user.userId, conversationId, recipientId);
+
                 // Send via Pusher + Web Push
                 await notifyIncomingCall(recipientId, user.userId, callerName, offer, conversationId);
 
@@ -56,10 +72,15 @@ export async function POST(request: NextRequest) {
             }
 
             case 'call:answer': {
-                const { callerId, answer } = body;
+                const { callerId, answer, conversationId } = body;
                 if (!callerId || !answer) {
                     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
                 }
+
+                // Marquer les deux comme en appel (Redis)
+                const convId = conversationId || '';
+                await setUserInCall(user.userId, convId, callerId);
+                await setUserInCall(callerId, convId, user.userId);
 
                 await emitToUser(callerId, 'call:answered', {
                     answer,
@@ -75,6 +96,10 @@ export async function POST(request: NextRequest) {
                     return NextResponse.json({ error: 'Missing callerId' }, { status: 400 });
                 }
 
+                // Fin d'appel pour les deux (Redis)
+                await setUserCallEnded(user.userId);
+                await setUserCallEnded(callerId);
+
                 await emitToUser(callerId, 'call:rejected', {
                     responderId: user.userId,
                 });
@@ -87,6 +112,10 @@ export async function POST(request: NextRequest) {
                 if (!targetUserId) {
                     return NextResponse.json({ error: 'Missing targetUserId' }, { status: 400 });
                 }
+
+                // Fin d'appel pour les deux (Redis)
+                await setUserCallEnded(user.userId);
+                await setUserCallEnded(targetUserId);
 
                 await emitToUser(targetUserId, 'call:ended', {
                     enderId: user.userId,

@@ -69,6 +69,7 @@ interface Conversation {
             email: string;
             publicKey: string;
             isOnline: boolean;
+            inCall?: boolean;
         };
     }[];
 }
@@ -401,6 +402,7 @@ export default function DiscussionPage() {
             await emitCallSignal('call:answer', {
                 callerId: incomingCallData.callerId,
                 answer: answer,
+                conversationId: incomingCallData.conversationId,
             });
 
         } catch (err) {
@@ -1082,7 +1084,9 @@ export default function DiscussionPage() {
                     <h2 className="font-semibold text-foreground">{getConversationName()}</h2>
                     {otherUser && (
                         <p className="text-xs text-muted-foreground">
-                            {otherUser.isOnline ? (
+                            {otherUser.inCall ? (
+                                <span className="text-amber-500 font-medium">En appel</span>
+                            ) : otherUser.isOnline ? (
                                 <span className="text-green-500 font-medium">En ligne</span>
                             ) : (
                                 'Hors ligne'
