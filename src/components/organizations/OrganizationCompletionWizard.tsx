@@ -302,7 +302,7 @@ export default function OrganizationCompletionWizard({
                         {selectedPlan !== 'FREE' && (
                             <div className="flex-1 flex items-center justify-center py-6">
                                 <div className="space-y-3 border border-border rounded-lg p-4 bg-muted/30 max-w-md w-full mx-auto relative">
-                                    <div className="absolute -top-2 right-3 flex items-center gap-1.5 bg-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-medium px-2 py-1 rounded-full border border-amber-500/30">
+                                    <div className="absolute -top-2 right-3 flex items-center gap-1.5 bg-warning/20 text-warning text-xs font-medium px-2 py-1 rounded-full border border-amber-500/30">
                                         <FlaskConical className="w-3.5 h-3.5" />
                                         Mode développement
                                     </div>

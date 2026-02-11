@@ -60,9 +60,9 @@ const PRIORITY_LABELS: Record<TaskPriority, string> = {
 
 const PRIORITY_COLORS: Record<TaskPriority, string> = {
     LOW: "bg-slate-500/20 text-slate-600 dark:text-slate-400",
-    MEDIUM: "bg-blue-500/20 text-blue-600 dark:text-blue-400",
-    HIGH: "bg-amber-500/20 text-amber-600 dark:text-amber-400",
-    URGENT: "bg-red-500/20 text-red-600 dark:text-red-400",
+    MEDIUM: "bg-primary/20 text-primary",
+    HIGH: "bg-warning/20 text-warning",
+    URGENT: "bg-destructive/20 text-destructive",
 };
 
 export function TaskManagement() {
@@ -301,7 +301,7 @@ export function TaskManagement() {
                                     className="mt-0.5 shrink-0 text-muted-foreground hover:text-primary"
                                 >
                                     {task.status === "DONE" ? (
-                                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                                        <CheckCircle2 className="h-5 w-5 text-success" />
                                     ) : (
                                         <Circle className="h-5 w-5" />
                                     )}

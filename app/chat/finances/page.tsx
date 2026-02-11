@@ -555,24 +555,24 @@ export default function FinancesPage() {
     }
 
     return (
-        <div className="p-4  space-y-6 pt-20  bg-gradient-to-b from-emerald-50/30 to-transparent dark:from-emerald-950/10 dark:to-transparent">
-            {/* Gestion Financière */}
-            <Card className="bg-card border-border border-emerald-200/50 dark:border-emerald-800/30">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm uppercase text-muted-foreground font-bold flex items-center gap-2">
-                        <Wallet className="h-4 w-4" />
+        <div className="p-4 max-w-2xl mx-auto space-y-5 pt-20 min-h-screen bg-background">
+            {/* Gestion Financière - style finance minimaliste */}
+            <Card className="bg-card border-0 shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-5 px-5">
+                    <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                        <Wallet className="h-3.5 w-3.5" />
                         Gestion Financière
                     </CardTitle>
-                    <Button size="sm" variant="outline" onClick={openProfileDialog}>
-                        <Edit className="h-4 w-4 mr-1" />
+                    <Button size="sm" variant="ghost" onClick={openProfileDialog} className="text-muted-foreground hover:text-foreground h-8">
+                        <Edit className="h-3.5 w-3.5 mr-1" />
                         {profile ? "Modifier" : "Configurer"}
                     </Button>
                 </CardHeader>
-                <CardContent>
-                    <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                        <p className="text-xs text-muted-foreground mb-1">Portefeuille</p>
-                        <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-                            {finances?.totalPortfolio.toLocaleString() ?? 0} FCFA
+                <CardContent className="px-5 pb-5">
+                    <div className="py-4">
+                        <p className="text-xs text-muted-foreground mb-0.5">Portefeuille</p>
+                        <p className="text-2xl font-semibold text-primary tracking-tight">
+                            {finances?.totalPortfolio.toLocaleString() ?? 0} <span className="text-sm font-normal text-muted-foreground">FCFA</span>
                         </p>
                     </div>
                 </CardContent>
@@ -580,21 +580,19 @@ export default function FinancesPage() {
 
             {/* Recommandations - masqué par défaut, affiché via icône TopNav */}
             {finances?.showRecs && profile && totalIncome > 0 && (
-                <Card className="text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm bg-amber-50/80 dark:bg-amber-950/20 border-amber-200/50 dark:border-amber-800/30">
-                    <CardHeader>
-                        <CardTitle className="text-sm flex items-center gap-2">
-                            <Lightbulb className="h-4 w-4 text-amber-500" />
+                <Card className="bg-card border-0 shadow-sm">
+                    <CardHeader className="pb-1 pt-5 px-5">
+                        <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                            <Lightbulb className="h-3.5 w-3.5 text-warning" />
                             Recommandations
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-2">
-                        <p className="text-sm">
-                            Avec un revenu de <strong>{totalIncome.toLocaleString()} FCFA</strong>/mois, nous recommandons
-                            d&apos;épargner <strong>{Math.round(profile.preferredSavingsRate ?? 20)}%</strong>, soit environ{" "}
-                            <strong>{recommendedSavings.toLocaleString()} FCFA</strong> par mois.
+                    <CardContent className="px-5 pb-5 space-y-1">
+                        <p className="text-sm text-foreground">
+                            Avec un revenu de <strong>{totalIncome.toLocaleString()} FCFA</strong>/mois, épargnez <strong>{Math.round(profile.preferredSavingsRate ?? 20)}%</strong>, soit <strong>{recommendedSavings.toLocaleString()} FCFA</strong>/mois.
                         </p>
                         <p className="text-xs text-muted-foreground">
-                            Cette règle permet de construire une réserve et financer vos projets.
+                            Réserve et projets.
                         </p>
                     </CardContent>
                 </Card>
@@ -602,14 +600,14 @@ export default function FinancesPage() {
 
             {/* Graphique état financier - masqué par défaut */}
             {finances?.showGraph && monthSummaries.length > 0 && (
-                <Card className="text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm bg-card border-emerald-200/50 dark:border-emerald-800/30">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm uppercase text-muted-foreground font-bold flex items-center gap-2">
-                            <BarChart3 className="h-4 w-4" />
+                <Card className="bg-card border-0 shadow-sm">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-5 px-5">
+                        <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                            <BarChart3 className="h-3.5 w-3.5" />
                             État financier (confirmé)
                         </CardTitle>
                         <Select value={entriesYear.toString()} onValueChange={(v) => setEntriesYear(parseInt(v))}>
-                            <SelectTrigger className="w-24 h-8">
+                            <SelectTrigger className="w-20 h-7 text-xs border-0 bg-transparent">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -619,8 +617,8 @@ export default function FinancesPage() {
                             </SelectContent>
                         </Select>
                     </CardHeader>
-                    <CardContent>
-                        <div className="flex items-end gap-1 h-32 pt-4">
+                    <CardContent className="px-5 pb-5">
+                        <div className="flex items-end gap-0.5 h-28 pt-4">
                             {MONTHS_SHORT.map((name, i) => {
                                 const sm = getSummaryForMonth(entriesYear, i + 1);
                                 const maxVal = Math.max(...monthSummaries.map((s) => Math.abs(s.balance)), 1);
@@ -631,8 +629,8 @@ export default function FinancesPage() {
                                         <div
                                             className={`w-full rounded-t transition-all min-h-[4px] ${sm
                                                 ? isPositive
-                                                    ? "bg-green-500"
-                                                    : "bg-red-500"
+                                                    ? "bg-success"
+                                                    : "bg-destructive"
                                                 : "bg-muted"
                                                 }`}
                                             style={{ height: `${height}px` }}
@@ -649,10 +647,10 @@ export default function FinancesPage() {
 
             {/* Entrées détaillées par mois - masqué par défaut */}
             {finances?.showEntries && (
-                <Card className="text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm bg-card border-border">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm uppercase text-muted-foreground font-bold flex items-center gap-2">
-                            <TrendingUp className="h-4 w-4" />
+                <Card className="bg-card border-0 shadow-sm">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-5 px-5">
+                        <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                            <TrendingUp className="h-3.5 w-3.5" />
                             Entrées & Dépenses
                         </CardTitle>
                         <div className="flex gap-2">
@@ -671,8 +669,8 @@ export default function FinancesPage() {
                             </Button>
                         </div>
                     </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-3 gap-2 mb-4">
+                    <CardContent className="px-5 pb-5">
+                        <div className="grid grid-cols-3 gap-1.5 mb-4">
                             {MONTHS_SHORT.map((name, i) => {
                                 const sm = getSummaryForMonth(entriesYear, i + 1);
                                 const balance = sm?.balance ?? null;
@@ -681,11 +679,11 @@ export default function FinancesPage() {
                                     <button
                                         key={i}
                                         onClick={() => openMonthDetail(entriesYear, i + 1)}
-                                        className={`p-3 rounded-lg border text-left transition-colors ${balance !== null
+                                        className={`p-2.5 rounded-md border text-left transition-colors ${balance !== null
                                             ? balance >= 0
-                                                ? "bg-green-500/10 border-green-500/20 hover:bg-green-500/20"
-                                                : "bg-red-500/10 border-red-500/20 hover:bg-red-500/20"
-                                            : "bg-muted/30 border-border hover:bg-muted/50"
+                                                ? "bg-success/5 border-success/10 hover:bg-success/10"
+                                                : "bg-destructive/5 border-destructive/10 hover:bg-destructive/10"
+                                            : "bg-muted/20 border-border/50 hover:bg-muted/30"
                                             }`}
                                     >
                                         <p className="text-[10px] text-muted-foreground">{name}</p>
@@ -722,7 +720,7 @@ export default function FinancesPage() {
                                         getEntriesForMonth(selectedMonthDetail.year, selectedMonthDetail.month).map((e) => (
                                             <div
                                                 key={e.id}
-                                                className={`flex items-center justify-between p-3 rounded-lg border ${e.type === "EXPENSE" ? "bg-red-500/5 border-red-500/20" : "bg-green-500/5 border-green-500/20"
+                                                className={`flex items-center justify-between p-3 rounded-lg border ${e.type === "EXPENSE" ? "bg-destructive/5 border-destructive/20" : "bg-success/5 border-success/20"
                                                     }`}
                                             >
                                                 <div className="flex-1 min-w-0">
@@ -730,7 +728,7 @@ export default function FinancesPage() {
                                                         <span className="text-xs font-medium">
                                                             {e.type === "SALARY" ? "Salaire" : e.type === "SUPPLEMENTARY_INCOME" ? "Revenu supp." : "Dépense"}
                                                         </span>
-                                                        <span className={`font-semibold ${e.type === "EXPENSE" ? "text-red-600" : "text-green-600"}`}>
+                                                        <span className={`font-semibold ${e.type === "EXPENSE" ? "text-destructive" : "text-success"}`}>
                                                             {e.type === "EXPENSE" ? "-" : "+"}{e.amount.toLocaleString()} FCFA
                                                         </span>
                                                     </div>
@@ -747,7 +745,7 @@ export default function FinancesPage() {
                                                         title={e.isConfirmed ? "Déconfirmer" : "Confirmer"}
                                                     >
                                                         {e.isConfirmed ? (
-                                                            <CheckCircle className="h-4 w-4 text-green-500" />
+                                                            <CheckCircle className="h-4 w-4 text-success" />
                                                         ) : (
                                                             <Circle className="h-4 w-4 text-muted-foreground" />
                                                         )}
@@ -770,10 +768,10 @@ export default function FinancesPage() {
             )}
 
             {/* Objectifs */}
-            <Card className="bg-card border-border border-emerald-200/50 dark:border-emerald-800/30">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm uppercase text-muted-foreground font-bold flex items-center gap-2">
-                        <Target className="h-4 w-4" />
+            <Card className="bg-card border-0 shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-5 px-5">
+                    <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                        <Target className="h-3.5 w-3.5" />
                         Mes objectifs
                     </CardTitle>
                     <div className="flex gap-1">
@@ -785,7 +783,7 @@ export default function FinancesPage() {
                         </Button>
                     </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="px-5 pb-5 space-y-4">
                     {/* Objectifs d'achat */}
                     {purchaseGoals.length > 0 && (
                         <div>
@@ -1033,7 +1031,7 @@ export default function FinancesPage() {
                                 <SelectContent>
                                     <SelectItem value="SALARY">
                                         <span className="flex items-center gap-2">
-                                            <ArrowDownCircle className="h-4 w-4 text-green-500" /> Salaire
+                                            <ArrowDownCircle className="h-4 w-4 text-success" /> Salaire
                                         </span>
                                     </SelectItem>
                                     <SelectItem value="SUPPLEMENTARY_INCOME">
@@ -1043,7 +1041,7 @@ export default function FinancesPage() {
                                     </SelectItem>
                                     <SelectItem value="EXPENSE">
                                         <span className="flex items-center gap-2">
-                                            <ArrowUpCircle className="h-4 w-4 text-red-500" /> Dépense
+                                            <ArrowUpCircle className="h-4 w-4 text-destructive" /> Dépense
                                         </span>
                                     </SelectItem>
                                 </SelectContent>

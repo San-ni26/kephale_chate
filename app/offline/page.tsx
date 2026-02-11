@@ -70,7 +70,7 @@ export default function OfflinePage() {
 
                     <div className="mt-8 pt-6 border-t border-border/40">
                         <p className="text-xs text-muted-foreground font-medium flex items-center justify-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500/50 inline-block animate-pulse" />
+                            <span className="w-2 h-2 rounded-full bg-success/50 inline-block animate-pulse" />
                             Mode hors ligne activé
                         </p>
                     </div>

@@ -180,7 +180,7 @@ export function UserSearch() {
                                                     </p>
                                                     <Badge
                                                         variant={user.isOnline ? "default" : "secondary"}
-                                                        className={`text-[10px] px-1.5 h-5 ${user.isOnline ? "bg-green-500 hover:bg-green-600" : "bg-muted-foreground/30 text-muted-foreground hover:bg-muted-foreground/40"}`}
+                                                        className={`text-[10px] px-1.5 h-5 ${user.isOnline ? "bg-success hover:bg-success/90" : "bg-muted-foreground/30 text-muted-foreground hover:bg-muted-foreground/40"}`}
                                                     >
                                                         {user.isOnline ? "En ligne" : "Hors ligne"}
                                                     </Badge>

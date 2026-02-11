@@ -242,14 +242,14 @@ export default function RegisterPage() {
                 {/* Geolocation Notice */}
                 <div className={cn(
                     "mb-6 p-4 rounded-xl border flex items-start gap-3 transition-colors",
-                    geoStatus === 'granted' ? "bg-emerald-500/10 border-emerald-500/20" : "bg-muted/50 border-border"
+                    geoStatus === 'granted' ? "bg-success/10 border-success/20" : "bg-muted/50 border-border"
                 )}>
                     <MapPin className={cn(
                         "w-5 h-5 mt-0.5 shrink-0",
-                        geoStatus === 'granted' ? "text-emerald-500" : "text-muted-foreground"
+                        geoStatus === 'granted' ? "text-success" : "text-muted-foreground"
                     )} />
                     <div className="text-sm">
-                        <p className={cn("font-medium", geoStatus === 'granted' ? "text-emerald-600 dark:text-emerald-400" : "text-foreground")}>
+                        <p className={cn("font-medium", geoStatus === 'granted' ? "text-success" : "text-foreground")}>
                             {geoStatus === 'granted' ? 'Localisation activée' : 'Localisation désactivée'}
                         </p>
                         <p className="text-muted-foreground text-xs mt-1">

@@ -168,16 +168,16 @@ export function TopNav() {
     }
 
     return (
-        <header className={`fixed top-0 w-full left-0 z-50 h-16 flex items-center justify-between px-3 md:px-4 ${isFinancesPage ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-b border-emerald-200/50 dark:border-emerald-800/30' : 'bg-background border-b border-border'}`}>
+        <header className={`fixed top-0 w-full left-0 z-50 h-16 flex items-center justify-between px-3 md:px-4 ${isFinancesPage ? 'bg-background border-b border-border' : 'bg-background border-b border-border'}`}>
             {isFinancesPage && finances ? (
                 /* Top bar page Finances : titre, portefeuille, icônes recommandations/graphique/entrées/code */
                 <div className="flex items-center justify-between w-full gap-2 min-w-0 overflow-hidden">
                     <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
-                        <Wallet className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                        <Wallet className="w-5 h-5 text-primary shrink-0" />
                         <div className="min-w-0 flex-1">
                             <h2 className="font-semibold text-foreground truncate">Gestion Financière</h2>
                             <p className="text-xs text-muted-foreground truncate">
-                                Portefeuille: <span className="font-medium text-emerald-600 dark:text-emerald-400">{finances.totalPortfolio.toLocaleString()} FCFA</span>
+                                Portefeuille: <span className="font-medium text-primary">{finances.totalPortfolio.toLocaleString()} FCFA</span>
                             </p>
                         </div>
                     </div>
@@ -185,7 +185,7 @@ export function TopNav() {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showRecs ? 'text-amber-500 bg-amber-500/10' : 'text-muted-foreground hover:text-foreground'}`}
+                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showRecs ? 'text-warning bg-warning/10' : 'text-muted-foreground hover:text-foreground'}`}
                             onClick={() => finances.setShowRecs(!finances.showRecs)}
                             title="Recommandations"
                         >
@@ -194,7 +194,7 @@ export function TopNav() {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showGraph ? 'text-emerald-600 bg-emerald-500/10 dark:text-emerald-400' : 'text-muted-foreground hover:text-foreground'}`}
+                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showGraph ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground'}`}
                             onClick={() => finances.setShowGraph(!finances.showGraph)}
                             title="Graphique"
                         >
@@ -203,7 +203,7 @@ export function TopNav() {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showEntries ? 'text-emerald-600 bg-emerald-500/10 dark:text-emerald-400' : 'text-muted-foreground hover:text-foreground'}`}
+                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showEntries ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground'}`}
                             onClick={() => finances.setShowEntries(!finances.showEntries)}
                             title="Entrées & Dépenses"
                         >
@@ -221,7 +221,7 @@ export function TopNav() {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 sm:h-9 sm:w-9 text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400"
+                            className="h-8 w-8 sm:h-9 sm:w-9 text-muted-foreground hover:text-primary"
                             onClick={() => router.push('/chat/settings')}
                             title="Paramètres"
                         >
@@ -286,7 +286,7 @@ export function TopNav() {
                     {taskCanManage && (
                         <div className="flex gap-1 shrink-0">
                             {task.status !== 'COMPLETED' && (
-                                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white h-8" onClick={() => handleTaskStatusUpdate('COMPLETED')}>
+                                <Button size="sm" className="bg-success hover:bg-success/90 text-white h-8" onClick={() => handleTaskStatusUpdate('COMPLETED')}>
                                     <CheckCircle2 className="w-4 h-4" />
                                 </Button>
                             )}

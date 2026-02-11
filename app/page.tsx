@@ -53,7 +53,7 @@ export default function LandingPage() {
                                 desc="Créez votre structure d'entreprise, gérez vos départements et vos équipes en toute simplicité."
                             />
                             <FeatureCard
-                                icon={<ListTodo className="w-8 h-8 text-emerald-500" />}
+                                icon={<ListTodo className="w-8 h-8 text-primary" />}
                                 title="Gestion de Tâches"
                                 desc="Assignez des tâches aux membres de votre département, suivez leur progression et validez leur accomplissement."
                             />
@@ -75,7 +75,7 @@ export default function LandingPage() {
                                 desc="Créez des cartes d'invitation digitales élégantes pour vos événements (mariages, fêtes). Gérez les RSVPs en temps réel."
                             />
                             <FeatureCard
-                                icon={<Briefcase className="w-8 h-8 text-amber-500" />}
+                                icon={<Briefcase className="w-8 h-8 text-warning" />}
                                 title="Événements Professionnels"
                                 desc="Organisez des séminaires ou réunions, envoyez des pass d'accès sécurisés et gérez les listes de présence."
                             />

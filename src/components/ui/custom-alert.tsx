@@ -10,10 +10,10 @@ interface AlertProps {
 
 export function Alert({ type = "info", title, message, className }: AlertProps) {
     const styles = {
-        success: "bg-emerald-50 text-emerald-900 border-emerald-200 dark:bg-emerald-900/10 dark:text-emerald-200 dark:border-emerald-800",
-        error: "bg-red-50 text-red-900 border-red-200 dark:bg-red-900/10 dark:text-red-200 dark:border-red-800",
-        warning: "bg-yellow-50 text-yellow-900 border-yellow-200 dark:bg-yellow-900/10 dark:text-yellow-200 dark:border-yellow-800",
-        info: "bg-blue-50 text-blue-900 border-blue-200 dark:bg-blue-900/10 dark:text-blue-200 dark:border-blue-800",
+        success: "bg-success/15 text-success border-success/40 dark:bg-success/20 dark:text-success dark:border-success/50",
+        error: "bg-destructive/15 text-destructive border-destructive/40 dark:bg-destructive/20 dark:text-destructive/90 dark:border-destructive/50",
+        warning: "bg-warning/20 text-warning border-warning/40 dark:bg-warning/25 dark:text-warning dark:border-warning/50",
+        info: "bg-info/15 text-info border-info/40 dark:bg-info/20 dark:text-info dark:border-info/50",
     };
 
     const icons = {
