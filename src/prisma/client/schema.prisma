@@ -49,6 +49,11 @@ model User {
   departmentMonthlyReports DepartmentMonthlyReport[]
   pushSubscriptions        PushSubscription[]
   invitations              UserInvitation[]
+  personalTasks            UserPersonalTask[]
+  financialGoals           UserFinancialGoal[]
+  financialProfile         UserFinancialProfile?
+  monthlyStatements        UserMonthlyStatement[]
+  financialEntries         UserFinancialEntry[]
 
   followers Follow[] @relation("UserFollowers")
   following Follow[] @relation("UserFollowing")
@@ -607,4 +612,141 @@ model PushSubscription {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+// === Tâches personnelles et finances utilisateur ===
+
+enum PersonalTaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum PersonalTaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model UserPersonalTask {
+  id          String               @id @default(cuid())
+  userId      String
+  title       String
+  description String?              @db.Text
+  status      PersonalTaskStatus   @default(TODO)
+  priority    PersonalTaskPriority @default(MEDIUM)
+  dueDate     DateTime?
+  completedAt DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+enum FinancialGoalType {
+  ANNUAL_SAVINGS // Épargne annuelle
+  MATERIAL_PURCHASE // Achat d'un bien matériel (voiture, téléphone, etc.)
+}
+
+model UserFinancialGoal {
+  id           String            @id @default(cuid())
+  userId       String
+  type         FinancialGoalType @default(ANNUAL_SAVINGS)
+  year         Int? // Pour ANNUAL_SAVINGS
+  targetItem   String?           @db.Text // Pour MATERIAL_PURCHASE: "Voiture", "Téléphone"
+  targetAmount Float
+  targetDate   DateTime? // Pour MATERIAL_PURCHASE: date souhaitée d'achat
+  label        String?           @db.Text
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  user     User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  progress UserMonthlyProgress[]
+
+  @@index([userId])
+  @@index([type])
+}
+
+model UserFinancialProfile {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  monthlySalary        Float    @default(0)
+  supplementaryIncome  Float    @default(0)
+  currency             String   @default("FCFA")
+  preferredSavingsRate Float?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model UserMonthlyStatement {
+  id                  String   @id @default(cuid())
+  userId              String
+  year                Int
+  month               Int
+  salaryReceived      Float    @default(0)
+  supplementaryIncome Float    @default(0)
+  totalExpenses       Float    @default(0)
+  notes               String?  @db.Text
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, year, month])
+  @@index([userId])
+  @@index([year, month])
+}
+
+// Entrées financières détaillées : salaire, revenus supplémentaires, dépenses
+// Chaque entrée a une note et peut être confirmée pour le calcul du graphique
+enum FinancialEntryType {
+  SALARY // Salaire reçu
+  SUPPLEMENTARY_INCOME // Revenu supplémentaire (freelance, bonus...)
+  EXPENSE // Dépense
+}
+
+model UserFinancialEntry {
+  id          String             @id @default(cuid())
+  userId      String
+  year        Int
+  month       Int
+  type        FinancialEntryType
+  amount      Float
+  note        String?            @db.Text
+  isConfirmed Boolean            @default(false)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, year, month])
+  @@index([type])
+}
+
+model UserMonthlyProgress {
+  id        String   @id @default(cuid())
+  goalId    String
+  year      Int
+  month     Int // 1-12
+  amount    Float    @default(0) // Montant atteint ce mois (FCFA)
+  notes     String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  goal UserFinancialGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  @@unique([goalId, year, month])
+  @@index([goalId])
+  @@index([year, month])
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LogOut, Trash2, Smartphone, Shield, User, Upload, Plus, Copy, Users, Edit, CreditCard, CheckCircle, Mail } from "lucide-react";
+import { LogOut, Trash2, Smartphone, Shield, User, Upload, Plus, Copy, Users, Edit, CreditCard, CheckCircle, Mail, ListTodo } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
 import { Skeleton } from "@/src/components/ui/skeleton";
@@ -13,10 +13,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/src/components/ui/dialog";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { clearAuth, getUser, type AuthUser, getAuthHeader } from "@/src/lib/auth-client";
 
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
+import { TaskManagement } from "@/src/components/settings/TaskManagement";
 
 export default function SettingsPage() {
     const router = useRouter();
@@ -320,7 +322,7 @@ export default function SettingsPage() {
     };
 
     return (
-        <div className="p-4 space-y-6 pt-16">
+        <div className="p-4 space-y-6 pt-16 pb-20">
             <h2 className="text-xl font-bold px-2 text-foreground">Paramètres</h2>
 
             <div className="flex items-center p-4 bg-card rounded-xl border border-border">
@@ -471,6 +473,15 @@ export default function SettingsPage() {
                 </Card>
 
 
+
+                {/* Tâches */}
+                <div className="space-y-4">
+                    <h2 className="text-lg font-semibold px-2 flex items-center gap-2">
+                        <ListTodo className="h-4 w-4" />
+                        Tâches
+                    </h2>
+                    <TaskManagement />
+                </div>
 
                 {/* Invitations Section */}
                 <div className="space-y-4">

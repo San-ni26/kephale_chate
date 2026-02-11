@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { User, Search, MessageSquarePlus, Building2, Users, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { User, Search, MessageSquarePlus, Building2, Users, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet } from 'lucide-react';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
 import { Input } from '@/src/components/ui/input';
@@ -101,7 +101,7 @@ export function ConversationSidebar() {
             <div className={`p-4 border-b border-border bg-background/50 backdrop-blur sticky top-0 z-10 flex flex-col gap-4 ${isCollapsed ? 'items-center' : ''
                 }`}>
                 <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : 'justify-between w-full'}`}>
-                    {!isCollapsed && <h2 className="text-xl font-bold">Chats</h2>}
+                    {!isCollapsed && <h2 className="text-xl font-bold">Discussions</h2>}
 
                     <div className="flex items-center gap-1">
                         {!isCollapsed && (
@@ -239,6 +239,9 @@ export function ConversationSidebar() {
                     </Link>
                     <Link href="/chat/notifications" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/notifications') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Actualites">
                         <Bell className="w-5 h-5" />
+                    </Link>
+                    <Link href="/chat/finances" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/finances') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Finances">
+                        <Wallet className="w-5 h-5" />
                     </Link>
                     <Link href="/chat/settings" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/settings') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Reglages">
                         <Settings className="w-5 h-5" />

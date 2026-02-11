@@ -168,6 +168,36 @@ export type DepartmentMonthlyReport = $Result.DefaultSelection<Prisma.$Departmen
  * 
  */
 export type PushSubscription = $Result.DefaultSelection<Prisma.$PushSubscriptionPayload>
+/**
+ * Model UserPersonalTask
+ * 
+ */
+export type UserPersonalTask = $Result.DefaultSelection<Prisma.$UserPersonalTaskPayload>
+/**
+ * Model UserFinancialGoal
+ * 
+ */
+export type UserFinancialGoal = $Result.DefaultSelection<Prisma.$UserFinancialGoalPayload>
+/**
+ * Model UserFinancialProfile
+ * 
+ */
+export type UserFinancialProfile = $Result.DefaultSelection<Prisma.$UserFinancialProfilePayload>
+/**
+ * Model UserMonthlyStatement
+ * 
+ */
+export type UserMonthlyStatement = $Result.DefaultSelection<Prisma.$UserMonthlyStatementPayload>
+/**
+ * Model UserFinancialEntry
+ * 
+ */
+export type UserFinancialEntry = $Result.DefaultSelection<Prisma.$UserFinancialEntryPayload>
+/**
+ * Model UserMonthlyProgress
+ * 
+ */
+export type UserMonthlyProgress = $Result.DefaultSelection<Prisma.$UserMonthlyProgressPayload>
 
 /**
  * Enums
@@ -282,6 +312,43 @@ export const TaskPriority: {
 
 export type TaskPriority = (typeof TaskPriority)[keyof typeof TaskPriority]
 
+
+export const PersonalTaskStatus: {
+  TODO: 'TODO',
+  IN_PROGRESS: 'IN_PROGRESS',
+  DONE: 'DONE',
+  CANCELLED: 'CANCELLED'
+};
+
+export type PersonalTaskStatus = (typeof PersonalTaskStatus)[keyof typeof PersonalTaskStatus]
+
+
+export const PersonalTaskPriority: {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+};
+
+export type PersonalTaskPriority = (typeof PersonalTaskPriority)[keyof typeof PersonalTaskPriority]
+
+
+export const FinancialGoalType: {
+  ANNUAL_SAVINGS: 'ANNUAL_SAVINGS',
+  MATERIAL_PURCHASE: 'MATERIAL_PURCHASE'
+};
+
+export type FinancialGoalType = (typeof FinancialGoalType)[keyof typeof FinancialGoalType]
+
+
+export const FinancialEntryType: {
+  SALARY: 'SALARY',
+  SUPPLEMENTARY_INCOME: 'SUPPLEMENTARY_INCOME',
+  EXPENSE: 'EXPENSE'
+};
+
+export type FinancialEntryType = (typeof FinancialEntryType)[keyof typeof FinancialEntryType]
+
 }
 
 export type InvitationStatus = $Enums.InvitationStatus
@@ -327,6 +394,22 @@ export const TaskStatus: typeof $Enums.TaskStatus
 export type TaskPriority = $Enums.TaskPriority
 
 export const TaskPriority: typeof $Enums.TaskPriority
+
+export type PersonalTaskStatus = $Enums.PersonalTaskStatus
+
+export const PersonalTaskStatus: typeof $Enums.PersonalTaskStatus
+
+export type PersonalTaskPriority = $Enums.PersonalTaskPriority
+
+export const PersonalTaskPriority: typeof $Enums.PersonalTaskPriority
+
+export type FinancialGoalType = $Enums.FinancialGoalType
+
+export const FinancialGoalType: typeof $Enums.FinancialGoalType
+
+export type FinancialEntryType = $Enums.FinancialEntryType
+
+export const FinancialEntryType: typeof $Enums.FinancialEntryType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -754,6 +837,66 @@ export class PrismaClient<
     * ```
     */
   get pushSubscription(): Prisma.PushSubscriptionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userPersonalTask`: Exposes CRUD operations for the **UserPersonalTask** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserPersonalTasks
+    * const userPersonalTasks = await prisma.userPersonalTask.findMany()
+    * ```
+    */
+  get userPersonalTask(): Prisma.UserPersonalTaskDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userFinancialGoal`: Exposes CRUD operations for the **UserFinancialGoal** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserFinancialGoals
+    * const userFinancialGoals = await prisma.userFinancialGoal.findMany()
+    * ```
+    */
+  get userFinancialGoal(): Prisma.UserFinancialGoalDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userFinancialProfile`: Exposes CRUD operations for the **UserFinancialProfile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserFinancialProfiles
+    * const userFinancialProfiles = await prisma.userFinancialProfile.findMany()
+    * ```
+    */
+  get userFinancialProfile(): Prisma.UserFinancialProfileDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userMonthlyStatement`: Exposes CRUD operations for the **UserMonthlyStatement** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserMonthlyStatements
+    * const userMonthlyStatements = await prisma.userMonthlyStatement.findMany()
+    * ```
+    */
+  get userMonthlyStatement(): Prisma.UserMonthlyStatementDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userFinancialEntry`: Exposes CRUD operations for the **UserFinancialEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserFinancialEntries
+    * const userFinancialEntries = await prisma.userFinancialEntry.findMany()
+    * ```
+    */
+  get userFinancialEntry(): Prisma.UserFinancialEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userMonthlyProgress`: Exposes CRUD operations for the **UserMonthlyProgress** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserMonthlyProgresses
+    * const userMonthlyProgresses = await prisma.userMonthlyProgress.findMany()
+    * ```
+    */
+  get userMonthlyProgress(): Prisma.UserMonthlyProgressDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1218,7 +1361,13 @@ export namespace Prisma {
     TaskMessage: 'TaskMessage',
     TaskAttachment: 'TaskAttachment',
     DepartmentMonthlyReport: 'DepartmentMonthlyReport',
-    PushSubscription: 'PushSubscription'
+    PushSubscription: 'PushSubscription',
+    UserPersonalTask: 'UserPersonalTask',
+    UserFinancialGoal: 'UserFinancialGoal',
+    UserFinancialProfile: 'UserFinancialProfile',
+    UserMonthlyStatement: 'UserMonthlyStatement',
+    UserFinancialEntry: 'UserFinancialEntry',
+    UserMonthlyProgress: 'UserMonthlyProgress'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1234,7 +1383,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription"
+      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3532,6 +3681,450 @@ export namespace Prisma {
           }
         }
       }
+      UserPersonalTask: {
+        payload: Prisma.$UserPersonalTaskPayload<ExtArgs>
+        fields: Prisma.UserPersonalTaskFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserPersonalTaskFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserPersonalTaskFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload>
+          }
+          findFirst: {
+            args: Prisma.UserPersonalTaskFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserPersonalTaskFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload>
+          }
+          findMany: {
+            args: Prisma.UserPersonalTaskFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload>[]
+          }
+          create: {
+            args: Prisma.UserPersonalTaskCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload>
+          }
+          createMany: {
+            args: Prisma.UserPersonalTaskCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserPersonalTaskCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload>[]
+          }
+          delete: {
+            args: Prisma.UserPersonalTaskDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload>
+          }
+          update: {
+            args: Prisma.UserPersonalTaskUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserPersonalTaskDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserPersonalTaskUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserPersonalTaskUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserPersonalTaskUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPersonalTaskPayload>
+          }
+          aggregate: {
+            args: Prisma.UserPersonalTaskAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserPersonalTask>
+          }
+          groupBy: {
+            args: Prisma.UserPersonalTaskGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserPersonalTaskGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserPersonalTaskCountArgs<ExtArgs>
+            result: $Utils.Optional<UserPersonalTaskCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserFinancialGoal: {
+        payload: Prisma.$UserFinancialGoalPayload<ExtArgs>
+        fields: Prisma.UserFinancialGoalFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserFinancialGoalFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserFinancialGoalFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload>
+          }
+          findFirst: {
+            args: Prisma.UserFinancialGoalFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserFinancialGoalFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload>
+          }
+          findMany: {
+            args: Prisma.UserFinancialGoalFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload>[]
+          }
+          create: {
+            args: Prisma.UserFinancialGoalCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload>
+          }
+          createMany: {
+            args: Prisma.UserFinancialGoalCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserFinancialGoalCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload>[]
+          }
+          delete: {
+            args: Prisma.UserFinancialGoalDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload>
+          }
+          update: {
+            args: Prisma.UserFinancialGoalUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserFinancialGoalDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserFinancialGoalUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserFinancialGoalUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserFinancialGoalUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialGoalPayload>
+          }
+          aggregate: {
+            args: Prisma.UserFinancialGoalAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserFinancialGoal>
+          }
+          groupBy: {
+            args: Prisma.UserFinancialGoalGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserFinancialGoalGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserFinancialGoalCountArgs<ExtArgs>
+            result: $Utils.Optional<UserFinancialGoalCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserFinancialProfile: {
+        payload: Prisma.$UserFinancialProfilePayload<ExtArgs>
+        fields: Prisma.UserFinancialProfileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserFinancialProfileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserFinancialProfileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload>
+          }
+          findFirst: {
+            args: Prisma.UserFinancialProfileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserFinancialProfileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload>
+          }
+          findMany: {
+            args: Prisma.UserFinancialProfileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload>[]
+          }
+          create: {
+            args: Prisma.UserFinancialProfileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload>
+          }
+          createMany: {
+            args: Prisma.UserFinancialProfileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserFinancialProfileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload>[]
+          }
+          delete: {
+            args: Prisma.UserFinancialProfileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload>
+          }
+          update: {
+            args: Prisma.UserFinancialProfileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload>
+          }
+          deleteMany: {
+            args: Prisma.UserFinancialProfileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserFinancialProfileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserFinancialProfileUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload>[]
+          }
+          upsert: {
+            args: Prisma.UserFinancialProfileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialProfilePayload>
+          }
+          aggregate: {
+            args: Prisma.UserFinancialProfileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserFinancialProfile>
+          }
+          groupBy: {
+            args: Prisma.UserFinancialProfileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserFinancialProfileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserFinancialProfileCountArgs<ExtArgs>
+            result: $Utils.Optional<UserFinancialProfileCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserMonthlyStatement: {
+        payload: Prisma.$UserMonthlyStatementPayload<ExtArgs>
+        fields: Prisma.UserMonthlyStatementFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserMonthlyStatementFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserMonthlyStatementFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload>
+          }
+          findFirst: {
+            args: Prisma.UserMonthlyStatementFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserMonthlyStatementFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload>
+          }
+          findMany: {
+            args: Prisma.UserMonthlyStatementFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload>[]
+          }
+          create: {
+            args: Prisma.UserMonthlyStatementCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload>
+          }
+          createMany: {
+            args: Prisma.UserMonthlyStatementCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserMonthlyStatementCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload>[]
+          }
+          delete: {
+            args: Prisma.UserMonthlyStatementDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload>
+          }
+          update: {
+            args: Prisma.UserMonthlyStatementUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserMonthlyStatementDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserMonthlyStatementUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserMonthlyStatementUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserMonthlyStatementUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyStatementPayload>
+          }
+          aggregate: {
+            args: Prisma.UserMonthlyStatementAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserMonthlyStatement>
+          }
+          groupBy: {
+            args: Prisma.UserMonthlyStatementGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserMonthlyStatementGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserMonthlyStatementCountArgs<ExtArgs>
+            result: $Utils.Optional<UserMonthlyStatementCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserFinancialEntry: {
+        payload: Prisma.$UserFinancialEntryPayload<ExtArgs>
+        fields: Prisma.UserFinancialEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserFinancialEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserFinancialEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.UserFinancialEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserFinancialEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload>
+          }
+          findMany: {
+            args: Prisma.UserFinancialEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload>[]
+          }
+          create: {
+            args: Prisma.UserFinancialEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload>
+          }
+          createMany: {
+            args: Prisma.UserFinancialEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserFinancialEntryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload>[]
+          }
+          delete: {
+            args: Prisma.UserFinancialEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload>
+          }
+          update: {
+            args: Prisma.UserFinancialEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserFinancialEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserFinancialEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserFinancialEntryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserFinancialEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserFinancialEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.UserFinancialEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserFinancialEntry>
+          }
+          groupBy: {
+            args: Prisma.UserFinancialEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserFinancialEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserFinancialEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<UserFinancialEntryCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserMonthlyProgress: {
+        payload: Prisma.$UserMonthlyProgressPayload<ExtArgs>
+        fields: Prisma.UserMonthlyProgressFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserMonthlyProgressFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserMonthlyProgressFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload>
+          }
+          findFirst: {
+            args: Prisma.UserMonthlyProgressFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserMonthlyProgressFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload>
+          }
+          findMany: {
+            args: Prisma.UserMonthlyProgressFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload>[]
+          }
+          create: {
+            args: Prisma.UserMonthlyProgressCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload>
+          }
+          createMany: {
+            args: Prisma.UserMonthlyProgressCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserMonthlyProgressCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload>[]
+          }
+          delete: {
+            args: Prisma.UserMonthlyProgressDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload>
+          }
+          update: {
+            args: Prisma.UserMonthlyProgressUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserMonthlyProgressDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserMonthlyProgressUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserMonthlyProgressUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserMonthlyProgressUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMonthlyProgressPayload>
+          }
+          aggregate: {
+            args: Prisma.UserMonthlyProgressAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserMonthlyProgress>
+          }
+          groupBy: {
+            args: Prisma.UserMonthlyProgressGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserMonthlyProgressGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserMonthlyProgressCountArgs<ExtArgs>
+            result: $Utils.Optional<UserMonthlyProgressCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3671,6 +4264,12 @@ export namespace Prisma {
     taskAttachment?: TaskAttachmentOmit
     departmentMonthlyReport?: DepartmentMonthlyReportOmit
     pushSubscription?: PushSubscriptionOmit
+    userPersonalTask?: UserPersonalTaskOmit
+    userFinancialGoal?: UserFinancialGoalOmit
+    userFinancialProfile?: UserFinancialProfileOmit
+    userMonthlyStatement?: UserMonthlyStatementOmit
+    userFinancialEntry?: UserFinancialEntryOmit
+    userMonthlyProgress?: UserMonthlyProgressOmit
   }
 
   /* Types for Logging */
@@ -3767,6 +4366,10 @@ export namespace Prisma {
     departmentMonthlyReports: number
     pushSubscriptions: number
     invitations: number
+    personalTasks: number
+    financialGoals: number
+    monthlyStatements: number
+    financialEntries: number
     followers: number
     following: number
   }
@@ -3788,6 +4391,10 @@ export namespace Prisma {
     departmentMonthlyReports?: boolean | UserCountOutputTypeCountDepartmentMonthlyReportsArgs
     pushSubscriptions?: boolean | UserCountOutputTypeCountPushSubscriptionsArgs
     invitations?: boolean | UserCountOutputTypeCountInvitationsArgs
+    personalTasks?: boolean | UserCountOutputTypeCountPersonalTasksArgs
+    financialGoals?: boolean | UserCountOutputTypeCountFinancialGoalsArgs
+    monthlyStatements?: boolean | UserCountOutputTypeCountMonthlyStatementsArgs
+    financialEntries?: boolean | UserCountOutputTypeCountFinancialEntriesArgs
     followers?: boolean | UserCountOutputTypeCountFollowersArgs
     following?: boolean | UserCountOutputTypeCountFollowingArgs
   }
@@ -3913,6 +4520,34 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountInvitationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserInvitationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPersonalTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPersonalTaskWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFinancialGoalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserFinancialGoalWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMonthlyStatementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserMonthlyStatementWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFinancialEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserFinancialEntryWhereInput
   }
 
   /**
@@ -4402,6 +5037,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type UserFinancialGoalCountOutputType
+   */
+
+  export type UserFinancialGoalCountOutputType = {
+    progress: number
+  }
+
+  export type UserFinancialGoalCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    progress?: boolean | UserFinancialGoalCountOutputTypeCountProgressArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserFinancialGoalCountOutputType without action
+   */
+  export type UserFinancialGoalCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoalCountOutputType
+     */
+    select?: UserFinancialGoalCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserFinancialGoalCountOutputType without action
+   */
+  export type UserFinancialGoalCountOutputTypeCountProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserMonthlyProgressWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -4726,6 +5392,11 @@ export namespace Prisma {
     departmentMonthlyReports?: boolean | User$departmentMonthlyReportsArgs<ExtArgs>
     pushSubscriptions?: boolean | User$pushSubscriptionsArgs<ExtArgs>
     invitations?: boolean | User$invitationsArgs<ExtArgs>
+    personalTasks?: boolean | User$personalTasksArgs<ExtArgs>
+    financialGoals?: boolean | User$financialGoalsArgs<ExtArgs>
+    financialProfile?: boolean | User$financialProfileArgs<ExtArgs>
+    monthlyStatements?: boolean | User$monthlyStatementsArgs<ExtArgs>
+    financialEntries?: boolean | User$financialEntriesArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4831,6 +5502,11 @@ export namespace Prisma {
     departmentMonthlyReports?: boolean | User$departmentMonthlyReportsArgs<ExtArgs>
     pushSubscriptions?: boolean | User$pushSubscriptionsArgs<ExtArgs>
     invitations?: boolean | User$invitationsArgs<ExtArgs>
+    personalTasks?: boolean | User$personalTasksArgs<ExtArgs>
+    financialGoals?: boolean | User$financialGoalsArgs<ExtArgs>
+    financialProfile?: boolean | User$financialProfileArgs<ExtArgs>
+    monthlyStatements?: boolean | User$monthlyStatementsArgs<ExtArgs>
+    financialEntries?: boolean | User$financialEntriesArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4858,6 +5534,11 @@ export namespace Prisma {
       departmentMonthlyReports: Prisma.$DepartmentMonthlyReportPayload<ExtArgs>[]
       pushSubscriptions: Prisma.$PushSubscriptionPayload<ExtArgs>[]
       invitations: Prisma.$UserInvitationPayload<ExtArgs>[]
+      personalTasks: Prisma.$UserPersonalTaskPayload<ExtArgs>[]
+      financialGoals: Prisma.$UserFinancialGoalPayload<ExtArgs>[]
+      financialProfile: Prisma.$UserFinancialProfilePayload<ExtArgs> | null
+      monthlyStatements: Prisma.$UserMonthlyStatementPayload<ExtArgs>[]
+      financialEntries: Prisma.$UserFinancialEntryPayload<ExtArgs>[]
       followers: Prisma.$FollowPayload<ExtArgs>[]
       following: Prisma.$FollowPayload<ExtArgs>[]
     }
@@ -5297,6 +5978,11 @@ export namespace Prisma {
     departmentMonthlyReports<T extends User$departmentMonthlyReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$departmentMonthlyReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMonthlyReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pushSubscriptions<T extends User$pushSubscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, User$pushSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PushSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invitations<T extends User$invitationsArgs<ExtArgs> = {}>(args?: Subset<T, User$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserInvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    personalTasks<T extends User$personalTasksArgs<ExtArgs> = {}>(args?: Subset<T, User$personalTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    financialGoals<T extends User$financialGoalsArgs<ExtArgs> = {}>(args?: Subset<T, User$financialGoalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    financialProfile<T extends User$financialProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$financialProfileArgs<ExtArgs>>): Prisma__UserFinancialProfileClient<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    monthlyStatements<T extends User$monthlyStatementsArgs<ExtArgs> = {}>(args?: Subset<T, User$monthlyStatementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    financialEntries<T extends User$financialEntriesArgs<ExtArgs> = {}>(args?: Subset<T, User$financialEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     followers<T extends User$followersArgs<ExtArgs> = {}>(args?: Subset<T, User$followersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     following<T extends User$followingArgs<ExtArgs> = {}>(args?: Subset<T, User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -6140,6 +6826,121 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserInvitationScalarFieldEnum | UserInvitationScalarFieldEnum[]
+  }
+
+  /**
+   * User.personalTasks
+   */
+  export type User$personalTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+    where?: UserPersonalTaskWhereInput
+    orderBy?: UserPersonalTaskOrderByWithRelationInput | UserPersonalTaskOrderByWithRelationInput[]
+    cursor?: UserPersonalTaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserPersonalTaskScalarFieldEnum | UserPersonalTaskScalarFieldEnum[]
+  }
+
+  /**
+   * User.financialGoals
+   */
+  export type User$financialGoalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+    where?: UserFinancialGoalWhereInput
+    orderBy?: UserFinancialGoalOrderByWithRelationInput | UserFinancialGoalOrderByWithRelationInput[]
+    cursor?: UserFinancialGoalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserFinancialGoalScalarFieldEnum | UserFinancialGoalScalarFieldEnum[]
+  }
+
+  /**
+   * User.financialProfile
+   */
+  export type User$financialProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+    where?: UserFinancialProfileWhereInput
+  }
+
+  /**
+   * User.monthlyStatements
+   */
+  export type User$monthlyStatementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+    where?: UserMonthlyStatementWhereInput
+    orderBy?: UserMonthlyStatementOrderByWithRelationInput | UserMonthlyStatementOrderByWithRelationInput[]
+    cursor?: UserMonthlyStatementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserMonthlyStatementScalarFieldEnum | UserMonthlyStatementScalarFieldEnum[]
+  }
+
+  /**
+   * User.financialEntries
+   */
+  export type User$financialEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+    where?: UserFinancialEntryWhereInput
+    orderBy?: UserFinancialEntryOrderByWithRelationInput | UserFinancialEntryOrderByWithRelationInput[]
+    cursor?: UserFinancialEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserFinancialEntryScalarFieldEnum | UserFinancialEntryScalarFieldEnum[]
   }
 
   /**
@@ -39627,6 +40428,6936 @@ export namespace Prisma {
 
 
   /**
+   * Model UserPersonalTask
+   */
+
+  export type AggregateUserPersonalTask = {
+    _count: UserPersonalTaskCountAggregateOutputType | null
+    _min: UserPersonalTaskMinAggregateOutputType | null
+    _max: UserPersonalTaskMaxAggregateOutputType | null
+  }
+
+  export type UserPersonalTaskMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    title: string | null
+    description: string | null
+    status: $Enums.PersonalTaskStatus | null
+    priority: $Enums.PersonalTaskPriority | null
+    dueDate: Date | null
+    completedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserPersonalTaskMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    title: string | null
+    description: string | null
+    status: $Enums.PersonalTaskStatus | null
+    priority: $Enums.PersonalTaskPriority | null
+    dueDate: Date | null
+    completedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserPersonalTaskCountAggregateOutputType = {
+    id: number
+    userId: number
+    title: number
+    description: number
+    status: number
+    priority: number
+    dueDate: number
+    completedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserPersonalTaskMinAggregateInputType = {
+    id?: true
+    userId?: true
+    title?: true
+    description?: true
+    status?: true
+    priority?: true
+    dueDate?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserPersonalTaskMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    title?: true
+    description?: true
+    status?: true
+    priority?: true
+    dueDate?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserPersonalTaskCountAggregateInputType = {
+    id?: true
+    userId?: true
+    title?: true
+    description?: true
+    status?: true
+    priority?: true
+    dueDate?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserPersonalTaskAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPersonalTask to aggregate.
+     */
+    where?: UserPersonalTaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPersonalTasks to fetch.
+     */
+    orderBy?: UserPersonalTaskOrderByWithRelationInput | UserPersonalTaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserPersonalTaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPersonalTasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPersonalTasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserPersonalTasks
+    **/
+    _count?: true | UserPersonalTaskCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserPersonalTaskMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserPersonalTaskMaxAggregateInputType
+  }
+
+  export type GetUserPersonalTaskAggregateType<T extends UserPersonalTaskAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserPersonalTask]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserPersonalTask[P]>
+      : GetScalarType<T[P], AggregateUserPersonalTask[P]>
+  }
+
+
+
+
+  export type UserPersonalTaskGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPersonalTaskWhereInput
+    orderBy?: UserPersonalTaskOrderByWithAggregationInput | UserPersonalTaskOrderByWithAggregationInput[]
+    by: UserPersonalTaskScalarFieldEnum[] | UserPersonalTaskScalarFieldEnum
+    having?: UserPersonalTaskScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserPersonalTaskCountAggregateInputType | true
+    _min?: UserPersonalTaskMinAggregateInputType
+    _max?: UserPersonalTaskMaxAggregateInputType
+  }
+
+  export type UserPersonalTaskGroupByOutputType = {
+    id: string
+    userId: string
+    title: string
+    description: string | null
+    status: $Enums.PersonalTaskStatus
+    priority: $Enums.PersonalTaskPriority
+    dueDate: Date | null
+    completedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: UserPersonalTaskCountAggregateOutputType | null
+    _min: UserPersonalTaskMinAggregateOutputType | null
+    _max: UserPersonalTaskMaxAggregateOutputType | null
+  }
+
+  type GetUserPersonalTaskGroupByPayload<T extends UserPersonalTaskGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserPersonalTaskGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserPersonalTaskGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserPersonalTaskGroupByOutputType[P]>
+            : GetScalarType<T[P], UserPersonalTaskGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserPersonalTaskSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    title?: boolean
+    description?: boolean
+    status?: boolean
+    priority?: boolean
+    dueDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPersonalTask"]>
+
+  export type UserPersonalTaskSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    title?: boolean
+    description?: boolean
+    status?: boolean
+    priority?: boolean
+    dueDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPersonalTask"]>
+
+  export type UserPersonalTaskSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    title?: boolean
+    description?: boolean
+    status?: boolean
+    priority?: boolean
+    dueDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPersonalTask"]>
+
+  export type UserPersonalTaskSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    title?: boolean
+    description?: boolean
+    status?: boolean
+    priority?: boolean
+    dueDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserPersonalTaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "title" | "description" | "status" | "priority" | "dueDate" | "completedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["userPersonalTask"]>
+  export type UserPersonalTaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserPersonalTaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserPersonalTaskIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserPersonalTaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserPersonalTask"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      title: string
+      description: string | null
+      status: $Enums.PersonalTaskStatus
+      priority: $Enums.PersonalTaskPriority
+      dueDate: Date | null
+      completedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userPersonalTask"]>
+    composites: {}
+  }
+
+  type UserPersonalTaskGetPayload<S extends boolean | null | undefined | UserPersonalTaskDefaultArgs> = $Result.GetResult<Prisma.$UserPersonalTaskPayload, S>
+
+  type UserPersonalTaskCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserPersonalTaskFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserPersonalTaskCountAggregateInputType | true
+    }
+
+  export interface UserPersonalTaskDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserPersonalTask'], meta: { name: 'UserPersonalTask' } }
+    /**
+     * Find zero or one UserPersonalTask that matches the filter.
+     * @param {UserPersonalTaskFindUniqueArgs} args - Arguments to find a UserPersonalTask
+     * @example
+     * // Get one UserPersonalTask
+     * const userPersonalTask = await prisma.userPersonalTask.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserPersonalTaskFindUniqueArgs>(args: SelectSubset<T, UserPersonalTaskFindUniqueArgs<ExtArgs>>): Prisma__UserPersonalTaskClient<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserPersonalTask that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserPersonalTaskFindUniqueOrThrowArgs} args - Arguments to find a UserPersonalTask
+     * @example
+     * // Get one UserPersonalTask
+     * const userPersonalTask = await prisma.userPersonalTask.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserPersonalTaskFindUniqueOrThrowArgs>(args: SelectSubset<T, UserPersonalTaskFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserPersonalTaskClient<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPersonalTask that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPersonalTaskFindFirstArgs} args - Arguments to find a UserPersonalTask
+     * @example
+     * // Get one UserPersonalTask
+     * const userPersonalTask = await prisma.userPersonalTask.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserPersonalTaskFindFirstArgs>(args?: SelectSubset<T, UserPersonalTaskFindFirstArgs<ExtArgs>>): Prisma__UserPersonalTaskClient<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPersonalTask that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPersonalTaskFindFirstOrThrowArgs} args - Arguments to find a UserPersonalTask
+     * @example
+     * // Get one UserPersonalTask
+     * const userPersonalTask = await prisma.userPersonalTask.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserPersonalTaskFindFirstOrThrowArgs>(args?: SelectSubset<T, UserPersonalTaskFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserPersonalTaskClient<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserPersonalTasks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPersonalTaskFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserPersonalTasks
+     * const userPersonalTasks = await prisma.userPersonalTask.findMany()
+     * 
+     * // Get first 10 UserPersonalTasks
+     * const userPersonalTasks = await prisma.userPersonalTask.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userPersonalTaskWithIdOnly = await prisma.userPersonalTask.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserPersonalTaskFindManyArgs>(args?: SelectSubset<T, UserPersonalTaskFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserPersonalTask.
+     * @param {UserPersonalTaskCreateArgs} args - Arguments to create a UserPersonalTask.
+     * @example
+     * // Create one UserPersonalTask
+     * const UserPersonalTask = await prisma.userPersonalTask.create({
+     *   data: {
+     *     // ... data to create a UserPersonalTask
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserPersonalTaskCreateArgs>(args: SelectSubset<T, UserPersonalTaskCreateArgs<ExtArgs>>): Prisma__UserPersonalTaskClient<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserPersonalTasks.
+     * @param {UserPersonalTaskCreateManyArgs} args - Arguments to create many UserPersonalTasks.
+     * @example
+     * // Create many UserPersonalTasks
+     * const userPersonalTask = await prisma.userPersonalTask.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserPersonalTaskCreateManyArgs>(args?: SelectSubset<T, UserPersonalTaskCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserPersonalTasks and returns the data saved in the database.
+     * @param {UserPersonalTaskCreateManyAndReturnArgs} args - Arguments to create many UserPersonalTasks.
+     * @example
+     * // Create many UserPersonalTasks
+     * const userPersonalTask = await prisma.userPersonalTask.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserPersonalTasks and only return the `id`
+     * const userPersonalTaskWithIdOnly = await prisma.userPersonalTask.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserPersonalTaskCreateManyAndReturnArgs>(args?: SelectSubset<T, UserPersonalTaskCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserPersonalTask.
+     * @param {UserPersonalTaskDeleteArgs} args - Arguments to delete one UserPersonalTask.
+     * @example
+     * // Delete one UserPersonalTask
+     * const UserPersonalTask = await prisma.userPersonalTask.delete({
+     *   where: {
+     *     // ... filter to delete one UserPersonalTask
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserPersonalTaskDeleteArgs>(args: SelectSubset<T, UserPersonalTaskDeleteArgs<ExtArgs>>): Prisma__UserPersonalTaskClient<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserPersonalTask.
+     * @param {UserPersonalTaskUpdateArgs} args - Arguments to update one UserPersonalTask.
+     * @example
+     * // Update one UserPersonalTask
+     * const userPersonalTask = await prisma.userPersonalTask.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserPersonalTaskUpdateArgs>(args: SelectSubset<T, UserPersonalTaskUpdateArgs<ExtArgs>>): Prisma__UserPersonalTaskClient<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserPersonalTasks.
+     * @param {UserPersonalTaskDeleteManyArgs} args - Arguments to filter UserPersonalTasks to delete.
+     * @example
+     * // Delete a few UserPersonalTasks
+     * const { count } = await prisma.userPersonalTask.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserPersonalTaskDeleteManyArgs>(args?: SelectSubset<T, UserPersonalTaskDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPersonalTasks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPersonalTaskUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserPersonalTasks
+     * const userPersonalTask = await prisma.userPersonalTask.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserPersonalTaskUpdateManyArgs>(args: SelectSubset<T, UserPersonalTaskUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPersonalTasks and returns the data updated in the database.
+     * @param {UserPersonalTaskUpdateManyAndReturnArgs} args - Arguments to update many UserPersonalTasks.
+     * @example
+     * // Update many UserPersonalTasks
+     * const userPersonalTask = await prisma.userPersonalTask.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserPersonalTasks and only return the `id`
+     * const userPersonalTaskWithIdOnly = await prisma.userPersonalTask.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserPersonalTaskUpdateManyAndReturnArgs>(args: SelectSubset<T, UserPersonalTaskUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserPersonalTask.
+     * @param {UserPersonalTaskUpsertArgs} args - Arguments to update or create a UserPersonalTask.
+     * @example
+     * // Update or create a UserPersonalTask
+     * const userPersonalTask = await prisma.userPersonalTask.upsert({
+     *   create: {
+     *     // ... data to create a UserPersonalTask
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserPersonalTask we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserPersonalTaskUpsertArgs>(args: SelectSubset<T, UserPersonalTaskUpsertArgs<ExtArgs>>): Prisma__UserPersonalTaskClient<$Result.GetResult<Prisma.$UserPersonalTaskPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserPersonalTasks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPersonalTaskCountArgs} args - Arguments to filter UserPersonalTasks to count.
+     * @example
+     * // Count the number of UserPersonalTasks
+     * const count = await prisma.userPersonalTask.count({
+     *   where: {
+     *     // ... the filter for the UserPersonalTasks we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserPersonalTaskCountArgs>(
+      args?: Subset<T, UserPersonalTaskCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserPersonalTaskCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserPersonalTask.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPersonalTaskAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserPersonalTaskAggregateArgs>(args: Subset<T, UserPersonalTaskAggregateArgs>): Prisma.PrismaPromise<GetUserPersonalTaskAggregateType<T>>
+
+    /**
+     * Group by UserPersonalTask.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPersonalTaskGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserPersonalTaskGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserPersonalTaskGroupByArgs['orderBy'] }
+        : { orderBy?: UserPersonalTaskGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserPersonalTaskGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserPersonalTaskGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserPersonalTask model
+   */
+  readonly fields: UserPersonalTaskFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserPersonalTask.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserPersonalTaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserPersonalTask model
+   */
+  interface UserPersonalTaskFieldRefs {
+    readonly id: FieldRef<"UserPersonalTask", 'String'>
+    readonly userId: FieldRef<"UserPersonalTask", 'String'>
+    readonly title: FieldRef<"UserPersonalTask", 'String'>
+    readonly description: FieldRef<"UserPersonalTask", 'String'>
+    readonly status: FieldRef<"UserPersonalTask", 'PersonalTaskStatus'>
+    readonly priority: FieldRef<"UserPersonalTask", 'PersonalTaskPriority'>
+    readonly dueDate: FieldRef<"UserPersonalTask", 'DateTime'>
+    readonly completedAt: FieldRef<"UserPersonalTask", 'DateTime'>
+    readonly createdAt: FieldRef<"UserPersonalTask", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserPersonalTask", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserPersonalTask findUnique
+   */
+  export type UserPersonalTaskFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPersonalTask to fetch.
+     */
+    where: UserPersonalTaskWhereUniqueInput
+  }
+
+  /**
+   * UserPersonalTask findUniqueOrThrow
+   */
+  export type UserPersonalTaskFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPersonalTask to fetch.
+     */
+    where: UserPersonalTaskWhereUniqueInput
+  }
+
+  /**
+   * UserPersonalTask findFirst
+   */
+  export type UserPersonalTaskFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPersonalTask to fetch.
+     */
+    where?: UserPersonalTaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPersonalTasks to fetch.
+     */
+    orderBy?: UserPersonalTaskOrderByWithRelationInput | UserPersonalTaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPersonalTasks.
+     */
+    cursor?: UserPersonalTaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPersonalTasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPersonalTasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPersonalTasks.
+     */
+    distinct?: UserPersonalTaskScalarFieldEnum | UserPersonalTaskScalarFieldEnum[]
+  }
+
+  /**
+   * UserPersonalTask findFirstOrThrow
+   */
+  export type UserPersonalTaskFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPersonalTask to fetch.
+     */
+    where?: UserPersonalTaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPersonalTasks to fetch.
+     */
+    orderBy?: UserPersonalTaskOrderByWithRelationInput | UserPersonalTaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPersonalTasks.
+     */
+    cursor?: UserPersonalTaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPersonalTasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPersonalTasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPersonalTasks.
+     */
+    distinct?: UserPersonalTaskScalarFieldEnum | UserPersonalTaskScalarFieldEnum[]
+  }
+
+  /**
+   * UserPersonalTask findMany
+   */
+  export type UserPersonalTaskFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPersonalTasks to fetch.
+     */
+    where?: UserPersonalTaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPersonalTasks to fetch.
+     */
+    orderBy?: UserPersonalTaskOrderByWithRelationInput | UserPersonalTaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserPersonalTasks.
+     */
+    cursor?: UserPersonalTaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPersonalTasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPersonalTasks.
+     */
+    skip?: number
+    distinct?: UserPersonalTaskScalarFieldEnum | UserPersonalTaskScalarFieldEnum[]
+  }
+
+  /**
+   * UserPersonalTask create
+   */
+  export type UserPersonalTaskCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserPersonalTask.
+     */
+    data: XOR<UserPersonalTaskCreateInput, UserPersonalTaskUncheckedCreateInput>
+  }
+
+  /**
+   * UserPersonalTask createMany
+   */
+  export type UserPersonalTaskCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserPersonalTasks.
+     */
+    data: UserPersonalTaskCreateManyInput | UserPersonalTaskCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserPersonalTask createManyAndReturn
+   */
+  export type UserPersonalTaskCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserPersonalTasks.
+     */
+    data: UserPersonalTaskCreateManyInput | UserPersonalTaskCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserPersonalTask update
+   */
+  export type UserPersonalTaskUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserPersonalTask.
+     */
+    data: XOR<UserPersonalTaskUpdateInput, UserPersonalTaskUncheckedUpdateInput>
+    /**
+     * Choose, which UserPersonalTask to update.
+     */
+    where: UserPersonalTaskWhereUniqueInput
+  }
+
+  /**
+   * UserPersonalTask updateMany
+   */
+  export type UserPersonalTaskUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserPersonalTasks.
+     */
+    data: XOR<UserPersonalTaskUpdateManyMutationInput, UserPersonalTaskUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPersonalTasks to update
+     */
+    where?: UserPersonalTaskWhereInput
+    /**
+     * Limit how many UserPersonalTasks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPersonalTask updateManyAndReturn
+   */
+  export type UserPersonalTaskUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * The data used to update UserPersonalTasks.
+     */
+    data: XOR<UserPersonalTaskUpdateManyMutationInput, UserPersonalTaskUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPersonalTasks to update
+     */
+    where?: UserPersonalTaskWhereInput
+    /**
+     * Limit how many UserPersonalTasks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserPersonalTask upsert
+   */
+  export type UserPersonalTaskUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserPersonalTask to update in case it exists.
+     */
+    where: UserPersonalTaskWhereUniqueInput
+    /**
+     * In case the UserPersonalTask found by the `where` argument doesn't exist, create a new UserPersonalTask with this data.
+     */
+    create: XOR<UserPersonalTaskCreateInput, UserPersonalTaskUncheckedCreateInput>
+    /**
+     * In case the UserPersonalTask was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserPersonalTaskUpdateInput, UserPersonalTaskUncheckedUpdateInput>
+  }
+
+  /**
+   * UserPersonalTask delete
+   */
+  export type UserPersonalTaskDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+    /**
+     * Filter which UserPersonalTask to delete.
+     */
+    where: UserPersonalTaskWhereUniqueInput
+  }
+
+  /**
+   * UserPersonalTask deleteMany
+   */
+  export type UserPersonalTaskDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPersonalTasks to delete
+     */
+    where?: UserPersonalTaskWhereInput
+    /**
+     * Limit how many UserPersonalTasks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPersonalTask without action
+   */
+  export type UserPersonalTaskDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPersonalTask
+     */
+    select?: UserPersonalTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPersonalTask
+     */
+    omit?: UserPersonalTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPersonalTaskInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserFinancialGoal
+   */
+
+  export type AggregateUserFinancialGoal = {
+    _count: UserFinancialGoalCountAggregateOutputType | null
+    _avg: UserFinancialGoalAvgAggregateOutputType | null
+    _sum: UserFinancialGoalSumAggregateOutputType | null
+    _min: UserFinancialGoalMinAggregateOutputType | null
+    _max: UserFinancialGoalMaxAggregateOutputType | null
+  }
+
+  export type UserFinancialGoalAvgAggregateOutputType = {
+    year: number | null
+    targetAmount: number | null
+  }
+
+  export type UserFinancialGoalSumAggregateOutputType = {
+    year: number | null
+    targetAmount: number | null
+  }
+
+  export type UserFinancialGoalMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.FinancialGoalType | null
+    year: number | null
+    targetItem: string | null
+    targetAmount: number | null
+    targetDate: Date | null
+    label: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserFinancialGoalMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.FinancialGoalType | null
+    year: number | null
+    targetItem: string | null
+    targetAmount: number | null
+    targetDate: Date | null
+    label: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserFinancialGoalCountAggregateOutputType = {
+    id: number
+    userId: number
+    type: number
+    year: number
+    targetItem: number
+    targetAmount: number
+    targetDate: number
+    label: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserFinancialGoalAvgAggregateInputType = {
+    year?: true
+    targetAmount?: true
+  }
+
+  export type UserFinancialGoalSumAggregateInputType = {
+    year?: true
+    targetAmount?: true
+  }
+
+  export type UserFinancialGoalMinAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    year?: true
+    targetItem?: true
+    targetAmount?: true
+    targetDate?: true
+    label?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserFinancialGoalMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    year?: true
+    targetItem?: true
+    targetAmount?: true
+    targetDate?: true
+    label?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserFinancialGoalCountAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    year?: true
+    targetItem?: true
+    targetAmount?: true
+    targetDate?: true
+    label?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserFinancialGoalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserFinancialGoal to aggregate.
+     */
+    where?: UserFinancialGoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialGoals to fetch.
+     */
+    orderBy?: UserFinancialGoalOrderByWithRelationInput | UserFinancialGoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserFinancialGoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialGoals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialGoals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserFinancialGoals
+    **/
+    _count?: true | UserFinancialGoalCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserFinancialGoalAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserFinancialGoalSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserFinancialGoalMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserFinancialGoalMaxAggregateInputType
+  }
+
+  export type GetUserFinancialGoalAggregateType<T extends UserFinancialGoalAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserFinancialGoal]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserFinancialGoal[P]>
+      : GetScalarType<T[P], AggregateUserFinancialGoal[P]>
+  }
+
+
+
+
+  export type UserFinancialGoalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserFinancialGoalWhereInput
+    orderBy?: UserFinancialGoalOrderByWithAggregationInput | UserFinancialGoalOrderByWithAggregationInput[]
+    by: UserFinancialGoalScalarFieldEnum[] | UserFinancialGoalScalarFieldEnum
+    having?: UserFinancialGoalScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserFinancialGoalCountAggregateInputType | true
+    _avg?: UserFinancialGoalAvgAggregateInputType
+    _sum?: UserFinancialGoalSumAggregateInputType
+    _min?: UserFinancialGoalMinAggregateInputType
+    _max?: UserFinancialGoalMaxAggregateInputType
+  }
+
+  export type UserFinancialGoalGroupByOutputType = {
+    id: string
+    userId: string
+    type: $Enums.FinancialGoalType
+    year: number | null
+    targetItem: string | null
+    targetAmount: number
+    targetDate: Date | null
+    label: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: UserFinancialGoalCountAggregateOutputType | null
+    _avg: UserFinancialGoalAvgAggregateOutputType | null
+    _sum: UserFinancialGoalSumAggregateOutputType | null
+    _min: UserFinancialGoalMinAggregateOutputType | null
+    _max: UserFinancialGoalMaxAggregateOutputType | null
+  }
+
+  type GetUserFinancialGoalGroupByPayload<T extends UserFinancialGoalGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserFinancialGoalGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserFinancialGoalGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserFinancialGoalGroupByOutputType[P]>
+            : GetScalarType<T[P], UserFinancialGoalGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserFinancialGoalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    year?: boolean
+    targetItem?: boolean
+    targetAmount?: boolean
+    targetDate?: boolean
+    label?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    progress?: boolean | UserFinancialGoal$progressArgs<ExtArgs>
+    _count?: boolean | UserFinancialGoalCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userFinancialGoal"]>
+
+  export type UserFinancialGoalSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    year?: boolean
+    targetItem?: boolean
+    targetAmount?: boolean
+    targetDate?: boolean
+    label?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userFinancialGoal"]>
+
+  export type UserFinancialGoalSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    year?: boolean
+    targetItem?: boolean
+    targetAmount?: boolean
+    targetDate?: boolean
+    label?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userFinancialGoal"]>
+
+  export type UserFinancialGoalSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    year?: boolean
+    targetItem?: boolean
+    targetAmount?: boolean
+    targetDate?: boolean
+    label?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserFinancialGoalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "type" | "year" | "targetItem" | "targetAmount" | "targetDate" | "label" | "createdAt" | "updatedAt", ExtArgs["result"]["userFinancialGoal"]>
+  export type UserFinancialGoalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    progress?: boolean | UserFinancialGoal$progressArgs<ExtArgs>
+    _count?: boolean | UserFinancialGoalCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserFinancialGoalIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserFinancialGoalIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserFinancialGoalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserFinancialGoal"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      progress: Prisma.$UserMonthlyProgressPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      type: $Enums.FinancialGoalType
+      year: number | null
+      targetItem: string | null
+      targetAmount: number
+      targetDate: Date | null
+      label: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userFinancialGoal"]>
+    composites: {}
+  }
+
+  type UserFinancialGoalGetPayload<S extends boolean | null | undefined | UserFinancialGoalDefaultArgs> = $Result.GetResult<Prisma.$UserFinancialGoalPayload, S>
+
+  type UserFinancialGoalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserFinancialGoalFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserFinancialGoalCountAggregateInputType | true
+    }
+
+  export interface UserFinancialGoalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserFinancialGoal'], meta: { name: 'UserFinancialGoal' } }
+    /**
+     * Find zero or one UserFinancialGoal that matches the filter.
+     * @param {UserFinancialGoalFindUniqueArgs} args - Arguments to find a UserFinancialGoal
+     * @example
+     * // Get one UserFinancialGoal
+     * const userFinancialGoal = await prisma.userFinancialGoal.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserFinancialGoalFindUniqueArgs>(args: SelectSubset<T, UserFinancialGoalFindUniqueArgs<ExtArgs>>): Prisma__UserFinancialGoalClient<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserFinancialGoal that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserFinancialGoalFindUniqueOrThrowArgs} args - Arguments to find a UserFinancialGoal
+     * @example
+     * // Get one UserFinancialGoal
+     * const userFinancialGoal = await prisma.userFinancialGoal.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserFinancialGoalFindUniqueOrThrowArgs>(args: SelectSubset<T, UserFinancialGoalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserFinancialGoalClient<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserFinancialGoal that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialGoalFindFirstArgs} args - Arguments to find a UserFinancialGoal
+     * @example
+     * // Get one UserFinancialGoal
+     * const userFinancialGoal = await prisma.userFinancialGoal.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserFinancialGoalFindFirstArgs>(args?: SelectSubset<T, UserFinancialGoalFindFirstArgs<ExtArgs>>): Prisma__UserFinancialGoalClient<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserFinancialGoal that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialGoalFindFirstOrThrowArgs} args - Arguments to find a UserFinancialGoal
+     * @example
+     * // Get one UserFinancialGoal
+     * const userFinancialGoal = await prisma.userFinancialGoal.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserFinancialGoalFindFirstOrThrowArgs>(args?: SelectSubset<T, UserFinancialGoalFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserFinancialGoalClient<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserFinancialGoals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialGoalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserFinancialGoals
+     * const userFinancialGoals = await prisma.userFinancialGoal.findMany()
+     * 
+     * // Get first 10 UserFinancialGoals
+     * const userFinancialGoals = await prisma.userFinancialGoal.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userFinancialGoalWithIdOnly = await prisma.userFinancialGoal.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserFinancialGoalFindManyArgs>(args?: SelectSubset<T, UserFinancialGoalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserFinancialGoal.
+     * @param {UserFinancialGoalCreateArgs} args - Arguments to create a UserFinancialGoal.
+     * @example
+     * // Create one UserFinancialGoal
+     * const UserFinancialGoal = await prisma.userFinancialGoal.create({
+     *   data: {
+     *     // ... data to create a UserFinancialGoal
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserFinancialGoalCreateArgs>(args: SelectSubset<T, UserFinancialGoalCreateArgs<ExtArgs>>): Prisma__UserFinancialGoalClient<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserFinancialGoals.
+     * @param {UserFinancialGoalCreateManyArgs} args - Arguments to create many UserFinancialGoals.
+     * @example
+     * // Create many UserFinancialGoals
+     * const userFinancialGoal = await prisma.userFinancialGoal.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserFinancialGoalCreateManyArgs>(args?: SelectSubset<T, UserFinancialGoalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserFinancialGoals and returns the data saved in the database.
+     * @param {UserFinancialGoalCreateManyAndReturnArgs} args - Arguments to create many UserFinancialGoals.
+     * @example
+     * // Create many UserFinancialGoals
+     * const userFinancialGoal = await prisma.userFinancialGoal.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserFinancialGoals and only return the `id`
+     * const userFinancialGoalWithIdOnly = await prisma.userFinancialGoal.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserFinancialGoalCreateManyAndReturnArgs>(args?: SelectSubset<T, UserFinancialGoalCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserFinancialGoal.
+     * @param {UserFinancialGoalDeleteArgs} args - Arguments to delete one UserFinancialGoal.
+     * @example
+     * // Delete one UserFinancialGoal
+     * const UserFinancialGoal = await prisma.userFinancialGoal.delete({
+     *   where: {
+     *     // ... filter to delete one UserFinancialGoal
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserFinancialGoalDeleteArgs>(args: SelectSubset<T, UserFinancialGoalDeleteArgs<ExtArgs>>): Prisma__UserFinancialGoalClient<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserFinancialGoal.
+     * @param {UserFinancialGoalUpdateArgs} args - Arguments to update one UserFinancialGoal.
+     * @example
+     * // Update one UserFinancialGoal
+     * const userFinancialGoal = await prisma.userFinancialGoal.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserFinancialGoalUpdateArgs>(args: SelectSubset<T, UserFinancialGoalUpdateArgs<ExtArgs>>): Prisma__UserFinancialGoalClient<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserFinancialGoals.
+     * @param {UserFinancialGoalDeleteManyArgs} args - Arguments to filter UserFinancialGoals to delete.
+     * @example
+     * // Delete a few UserFinancialGoals
+     * const { count } = await prisma.userFinancialGoal.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserFinancialGoalDeleteManyArgs>(args?: SelectSubset<T, UserFinancialGoalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserFinancialGoals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialGoalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserFinancialGoals
+     * const userFinancialGoal = await prisma.userFinancialGoal.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserFinancialGoalUpdateManyArgs>(args: SelectSubset<T, UserFinancialGoalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserFinancialGoals and returns the data updated in the database.
+     * @param {UserFinancialGoalUpdateManyAndReturnArgs} args - Arguments to update many UserFinancialGoals.
+     * @example
+     * // Update many UserFinancialGoals
+     * const userFinancialGoal = await prisma.userFinancialGoal.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserFinancialGoals and only return the `id`
+     * const userFinancialGoalWithIdOnly = await prisma.userFinancialGoal.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserFinancialGoalUpdateManyAndReturnArgs>(args: SelectSubset<T, UserFinancialGoalUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserFinancialGoal.
+     * @param {UserFinancialGoalUpsertArgs} args - Arguments to update or create a UserFinancialGoal.
+     * @example
+     * // Update or create a UserFinancialGoal
+     * const userFinancialGoal = await prisma.userFinancialGoal.upsert({
+     *   create: {
+     *     // ... data to create a UserFinancialGoal
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserFinancialGoal we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserFinancialGoalUpsertArgs>(args: SelectSubset<T, UserFinancialGoalUpsertArgs<ExtArgs>>): Prisma__UserFinancialGoalClient<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserFinancialGoals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialGoalCountArgs} args - Arguments to filter UserFinancialGoals to count.
+     * @example
+     * // Count the number of UserFinancialGoals
+     * const count = await prisma.userFinancialGoal.count({
+     *   where: {
+     *     // ... the filter for the UserFinancialGoals we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserFinancialGoalCountArgs>(
+      args?: Subset<T, UserFinancialGoalCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserFinancialGoalCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserFinancialGoal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialGoalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserFinancialGoalAggregateArgs>(args: Subset<T, UserFinancialGoalAggregateArgs>): Prisma.PrismaPromise<GetUserFinancialGoalAggregateType<T>>
+
+    /**
+     * Group by UserFinancialGoal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialGoalGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserFinancialGoalGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserFinancialGoalGroupByArgs['orderBy'] }
+        : { orderBy?: UserFinancialGoalGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserFinancialGoalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserFinancialGoalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserFinancialGoal model
+   */
+  readonly fields: UserFinancialGoalFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserFinancialGoal.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserFinancialGoalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    progress<T extends UserFinancialGoal$progressArgs<ExtArgs> = {}>(args?: Subset<T, UserFinancialGoal$progressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserFinancialGoal model
+   */
+  interface UserFinancialGoalFieldRefs {
+    readonly id: FieldRef<"UserFinancialGoal", 'String'>
+    readonly userId: FieldRef<"UserFinancialGoal", 'String'>
+    readonly type: FieldRef<"UserFinancialGoal", 'FinancialGoalType'>
+    readonly year: FieldRef<"UserFinancialGoal", 'Int'>
+    readonly targetItem: FieldRef<"UserFinancialGoal", 'String'>
+    readonly targetAmount: FieldRef<"UserFinancialGoal", 'Float'>
+    readonly targetDate: FieldRef<"UserFinancialGoal", 'DateTime'>
+    readonly label: FieldRef<"UserFinancialGoal", 'String'>
+    readonly createdAt: FieldRef<"UserFinancialGoal", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserFinancialGoal", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserFinancialGoal findUnique
+   */
+  export type UserFinancialGoalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialGoal to fetch.
+     */
+    where: UserFinancialGoalWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialGoal findUniqueOrThrow
+   */
+  export type UserFinancialGoalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialGoal to fetch.
+     */
+    where: UserFinancialGoalWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialGoal findFirst
+   */
+  export type UserFinancialGoalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialGoal to fetch.
+     */
+    where?: UserFinancialGoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialGoals to fetch.
+     */
+    orderBy?: UserFinancialGoalOrderByWithRelationInput | UserFinancialGoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserFinancialGoals.
+     */
+    cursor?: UserFinancialGoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialGoals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialGoals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserFinancialGoals.
+     */
+    distinct?: UserFinancialGoalScalarFieldEnum | UserFinancialGoalScalarFieldEnum[]
+  }
+
+  /**
+   * UserFinancialGoal findFirstOrThrow
+   */
+  export type UserFinancialGoalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialGoal to fetch.
+     */
+    where?: UserFinancialGoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialGoals to fetch.
+     */
+    orderBy?: UserFinancialGoalOrderByWithRelationInput | UserFinancialGoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserFinancialGoals.
+     */
+    cursor?: UserFinancialGoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialGoals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialGoals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserFinancialGoals.
+     */
+    distinct?: UserFinancialGoalScalarFieldEnum | UserFinancialGoalScalarFieldEnum[]
+  }
+
+  /**
+   * UserFinancialGoal findMany
+   */
+  export type UserFinancialGoalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialGoals to fetch.
+     */
+    where?: UserFinancialGoalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialGoals to fetch.
+     */
+    orderBy?: UserFinancialGoalOrderByWithRelationInput | UserFinancialGoalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserFinancialGoals.
+     */
+    cursor?: UserFinancialGoalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialGoals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialGoals.
+     */
+    skip?: number
+    distinct?: UserFinancialGoalScalarFieldEnum | UserFinancialGoalScalarFieldEnum[]
+  }
+
+  /**
+   * UserFinancialGoal create
+   */
+  export type UserFinancialGoalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserFinancialGoal.
+     */
+    data: XOR<UserFinancialGoalCreateInput, UserFinancialGoalUncheckedCreateInput>
+  }
+
+  /**
+   * UserFinancialGoal createMany
+   */
+  export type UserFinancialGoalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserFinancialGoals.
+     */
+    data: UserFinancialGoalCreateManyInput | UserFinancialGoalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserFinancialGoal createManyAndReturn
+   */
+  export type UserFinancialGoalCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserFinancialGoals.
+     */
+    data: UserFinancialGoalCreateManyInput | UserFinancialGoalCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserFinancialGoal update
+   */
+  export type UserFinancialGoalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserFinancialGoal.
+     */
+    data: XOR<UserFinancialGoalUpdateInput, UserFinancialGoalUncheckedUpdateInput>
+    /**
+     * Choose, which UserFinancialGoal to update.
+     */
+    where: UserFinancialGoalWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialGoal updateMany
+   */
+  export type UserFinancialGoalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserFinancialGoals.
+     */
+    data: XOR<UserFinancialGoalUpdateManyMutationInput, UserFinancialGoalUncheckedUpdateManyInput>
+    /**
+     * Filter which UserFinancialGoals to update
+     */
+    where?: UserFinancialGoalWhereInput
+    /**
+     * Limit how many UserFinancialGoals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserFinancialGoal updateManyAndReturn
+   */
+  export type UserFinancialGoalUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * The data used to update UserFinancialGoals.
+     */
+    data: XOR<UserFinancialGoalUpdateManyMutationInput, UserFinancialGoalUncheckedUpdateManyInput>
+    /**
+     * Filter which UserFinancialGoals to update
+     */
+    where?: UserFinancialGoalWhereInput
+    /**
+     * Limit how many UserFinancialGoals to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserFinancialGoal upsert
+   */
+  export type UserFinancialGoalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserFinancialGoal to update in case it exists.
+     */
+    where: UserFinancialGoalWhereUniqueInput
+    /**
+     * In case the UserFinancialGoal found by the `where` argument doesn't exist, create a new UserFinancialGoal with this data.
+     */
+    create: XOR<UserFinancialGoalCreateInput, UserFinancialGoalUncheckedCreateInput>
+    /**
+     * In case the UserFinancialGoal was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserFinancialGoalUpdateInput, UserFinancialGoalUncheckedUpdateInput>
+  }
+
+  /**
+   * UserFinancialGoal delete
+   */
+  export type UserFinancialGoalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+    /**
+     * Filter which UserFinancialGoal to delete.
+     */
+    where: UserFinancialGoalWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialGoal deleteMany
+   */
+  export type UserFinancialGoalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserFinancialGoals to delete
+     */
+    where?: UserFinancialGoalWhereInput
+    /**
+     * Limit how many UserFinancialGoals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserFinancialGoal.progress
+   */
+  export type UserFinancialGoal$progressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+    where?: UserMonthlyProgressWhereInput
+    orderBy?: UserMonthlyProgressOrderByWithRelationInput | UserMonthlyProgressOrderByWithRelationInput[]
+    cursor?: UserMonthlyProgressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserMonthlyProgressScalarFieldEnum | UserMonthlyProgressScalarFieldEnum[]
+  }
+
+  /**
+   * UserFinancialGoal without action
+   */
+  export type UserFinancialGoalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialGoal
+     */
+    select?: UserFinancialGoalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialGoal
+     */
+    omit?: UserFinancialGoalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialGoalInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserFinancialProfile
+   */
+
+  export type AggregateUserFinancialProfile = {
+    _count: UserFinancialProfileCountAggregateOutputType | null
+    _avg: UserFinancialProfileAvgAggregateOutputType | null
+    _sum: UserFinancialProfileSumAggregateOutputType | null
+    _min: UserFinancialProfileMinAggregateOutputType | null
+    _max: UserFinancialProfileMaxAggregateOutputType | null
+  }
+
+  export type UserFinancialProfileAvgAggregateOutputType = {
+    monthlySalary: number | null
+    supplementaryIncome: number | null
+    preferredSavingsRate: number | null
+  }
+
+  export type UserFinancialProfileSumAggregateOutputType = {
+    monthlySalary: number | null
+    supplementaryIncome: number | null
+    preferredSavingsRate: number | null
+  }
+
+  export type UserFinancialProfileMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    monthlySalary: number | null
+    supplementaryIncome: number | null
+    currency: string | null
+    preferredSavingsRate: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserFinancialProfileMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    monthlySalary: number | null
+    supplementaryIncome: number | null
+    currency: string | null
+    preferredSavingsRate: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserFinancialProfileCountAggregateOutputType = {
+    id: number
+    userId: number
+    monthlySalary: number
+    supplementaryIncome: number
+    currency: number
+    preferredSavingsRate: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserFinancialProfileAvgAggregateInputType = {
+    monthlySalary?: true
+    supplementaryIncome?: true
+    preferredSavingsRate?: true
+  }
+
+  export type UserFinancialProfileSumAggregateInputType = {
+    monthlySalary?: true
+    supplementaryIncome?: true
+    preferredSavingsRate?: true
+  }
+
+  export type UserFinancialProfileMinAggregateInputType = {
+    id?: true
+    userId?: true
+    monthlySalary?: true
+    supplementaryIncome?: true
+    currency?: true
+    preferredSavingsRate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserFinancialProfileMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    monthlySalary?: true
+    supplementaryIncome?: true
+    currency?: true
+    preferredSavingsRate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserFinancialProfileCountAggregateInputType = {
+    id?: true
+    userId?: true
+    monthlySalary?: true
+    supplementaryIncome?: true
+    currency?: true
+    preferredSavingsRate?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserFinancialProfileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserFinancialProfile to aggregate.
+     */
+    where?: UserFinancialProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialProfiles to fetch.
+     */
+    orderBy?: UserFinancialProfileOrderByWithRelationInput | UserFinancialProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserFinancialProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserFinancialProfiles
+    **/
+    _count?: true | UserFinancialProfileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserFinancialProfileAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserFinancialProfileSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserFinancialProfileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserFinancialProfileMaxAggregateInputType
+  }
+
+  export type GetUserFinancialProfileAggregateType<T extends UserFinancialProfileAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserFinancialProfile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserFinancialProfile[P]>
+      : GetScalarType<T[P], AggregateUserFinancialProfile[P]>
+  }
+
+
+
+
+  export type UserFinancialProfileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserFinancialProfileWhereInput
+    orderBy?: UserFinancialProfileOrderByWithAggregationInput | UserFinancialProfileOrderByWithAggregationInput[]
+    by: UserFinancialProfileScalarFieldEnum[] | UserFinancialProfileScalarFieldEnum
+    having?: UserFinancialProfileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserFinancialProfileCountAggregateInputType | true
+    _avg?: UserFinancialProfileAvgAggregateInputType
+    _sum?: UserFinancialProfileSumAggregateInputType
+    _min?: UserFinancialProfileMinAggregateInputType
+    _max?: UserFinancialProfileMaxAggregateInputType
+  }
+
+  export type UserFinancialProfileGroupByOutputType = {
+    id: string
+    userId: string
+    monthlySalary: number
+    supplementaryIncome: number
+    currency: string
+    preferredSavingsRate: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: UserFinancialProfileCountAggregateOutputType | null
+    _avg: UserFinancialProfileAvgAggregateOutputType | null
+    _sum: UserFinancialProfileSumAggregateOutputType | null
+    _min: UserFinancialProfileMinAggregateOutputType | null
+    _max: UserFinancialProfileMaxAggregateOutputType | null
+  }
+
+  type GetUserFinancialProfileGroupByPayload<T extends UserFinancialProfileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserFinancialProfileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserFinancialProfileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserFinancialProfileGroupByOutputType[P]>
+            : GetScalarType<T[P], UserFinancialProfileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserFinancialProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    monthlySalary?: boolean
+    supplementaryIncome?: boolean
+    currency?: boolean
+    preferredSavingsRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userFinancialProfile"]>
+
+  export type UserFinancialProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    monthlySalary?: boolean
+    supplementaryIncome?: boolean
+    currency?: boolean
+    preferredSavingsRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userFinancialProfile"]>
+
+  export type UserFinancialProfileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    monthlySalary?: boolean
+    supplementaryIncome?: boolean
+    currency?: boolean
+    preferredSavingsRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userFinancialProfile"]>
+
+  export type UserFinancialProfileSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    monthlySalary?: boolean
+    supplementaryIncome?: boolean
+    currency?: boolean
+    preferredSavingsRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserFinancialProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "monthlySalary" | "supplementaryIncome" | "currency" | "preferredSavingsRate" | "createdAt" | "updatedAt", ExtArgs["result"]["userFinancialProfile"]>
+  export type UserFinancialProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserFinancialProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserFinancialProfileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserFinancialProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserFinancialProfile"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      monthlySalary: number
+      supplementaryIncome: number
+      currency: string
+      preferredSavingsRate: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userFinancialProfile"]>
+    composites: {}
+  }
+
+  type UserFinancialProfileGetPayload<S extends boolean | null | undefined | UserFinancialProfileDefaultArgs> = $Result.GetResult<Prisma.$UserFinancialProfilePayload, S>
+
+  type UserFinancialProfileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserFinancialProfileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserFinancialProfileCountAggregateInputType | true
+    }
+
+  export interface UserFinancialProfileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserFinancialProfile'], meta: { name: 'UserFinancialProfile' } }
+    /**
+     * Find zero or one UserFinancialProfile that matches the filter.
+     * @param {UserFinancialProfileFindUniqueArgs} args - Arguments to find a UserFinancialProfile
+     * @example
+     * // Get one UserFinancialProfile
+     * const userFinancialProfile = await prisma.userFinancialProfile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserFinancialProfileFindUniqueArgs>(args: SelectSubset<T, UserFinancialProfileFindUniqueArgs<ExtArgs>>): Prisma__UserFinancialProfileClient<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserFinancialProfile that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserFinancialProfileFindUniqueOrThrowArgs} args - Arguments to find a UserFinancialProfile
+     * @example
+     * // Get one UserFinancialProfile
+     * const userFinancialProfile = await prisma.userFinancialProfile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserFinancialProfileFindUniqueOrThrowArgs>(args: SelectSubset<T, UserFinancialProfileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserFinancialProfileClient<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserFinancialProfile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialProfileFindFirstArgs} args - Arguments to find a UserFinancialProfile
+     * @example
+     * // Get one UserFinancialProfile
+     * const userFinancialProfile = await prisma.userFinancialProfile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserFinancialProfileFindFirstArgs>(args?: SelectSubset<T, UserFinancialProfileFindFirstArgs<ExtArgs>>): Prisma__UserFinancialProfileClient<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserFinancialProfile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialProfileFindFirstOrThrowArgs} args - Arguments to find a UserFinancialProfile
+     * @example
+     * // Get one UserFinancialProfile
+     * const userFinancialProfile = await prisma.userFinancialProfile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserFinancialProfileFindFirstOrThrowArgs>(args?: SelectSubset<T, UserFinancialProfileFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserFinancialProfileClient<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserFinancialProfiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialProfileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserFinancialProfiles
+     * const userFinancialProfiles = await prisma.userFinancialProfile.findMany()
+     * 
+     * // Get first 10 UserFinancialProfiles
+     * const userFinancialProfiles = await prisma.userFinancialProfile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userFinancialProfileWithIdOnly = await prisma.userFinancialProfile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserFinancialProfileFindManyArgs>(args?: SelectSubset<T, UserFinancialProfileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserFinancialProfile.
+     * @param {UserFinancialProfileCreateArgs} args - Arguments to create a UserFinancialProfile.
+     * @example
+     * // Create one UserFinancialProfile
+     * const UserFinancialProfile = await prisma.userFinancialProfile.create({
+     *   data: {
+     *     // ... data to create a UserFinancialProfile
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserFinancialProfileCreateArgs>(args: SelectSubset<T, UserFinancialProfileCreateArgs<ExtArgs>>): Prisma__UserFinancialProfileClient<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserFinancialProfiles.
+     * @param {UserFinancialProfileCreateManyArgs} args - Arguments to create many UserFinancialProfiles.
+     * @example
+     * // Create many UserFinancialProfiles
+     * const userFinancialProfile = await prisma.userFinancialProfile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserFinancialProfileCreateManyArgs>(args?: SelectSubset<T, UserFinancialProfileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserFinancialProfiles and returns the data saved in the database.
+     * @param {UserFinancialProfileCreateManyAndReturnArgs} args - Arguments to create many UserFinancialProfiles.
+     * @example
+     * // Create many UserFinancialProfiles
+     * const userFinancialProfile = await prisma.userFinancialProfile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserFinancialProfiles and only return the `id`
+     * const userFinancialProfileWithIdOnly = await prisma.userFinancialProfile.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserFinancialProfileCreateManyAndReturnArgs>(args?: SelectSubset<T, UserFinancialProfileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserFinancialProfile.
+     * @param {UserFinancialProfileDeleteArgs} args - Arguments to delete one UserFinancialProfile.
+     * @example
+     * // Delete one UserFinancialProfile
+     * const UserFinancialProfile = await prisma.userFinancialProfile.delete({
+     *   where: {
+     *     // ... filter to delete one UserFinancialProfile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserFinancialProfileDeleteArgs>(args: SelectSubset<T, UserFinancialProfileDeleteArgs<ExtArgs>>): Prisma__UserFinancialProfileClient<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserFinancialProfile.
+     * @param {UserFinancialProfileUpdateArgs} args - Arguments to update one UserFinancialProfile.
+     * @example
+     * // Update one UserFinancialProfile
+     * const userFinancialProfile = await prisma.userFinancialProfile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserFinancialProfileUpdateArgs>(args: SelectSubset<T, UserFinancialProfileUpdateArgs<ExtArgs>>): Prisma__UserFinancialProfileClient<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserFinancialProfiles.
+     * @param {UserFinancialProfileDeleteManyArgs} args - Arguments to filter UserFinancialProfiles to delete.
+     * @example
+     * // Delete a few UserFinancialProfiles
+     * const { count } = await prisma.userFinancialProfile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserFinancialProfileDeleteManyArgs>(args?: SelectSubset<T, UserFinancialProfileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserFinancialProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialProfileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserFinancialProfiles
+     * const userFinancialProfile = await prisma.userFinancialProfile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserFinancialProfileUpdateManyArgs>(args: SelectSubset<T, UserFinancialProfileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserFinancialProfiles and returns the data updated in the database.
+     * @param {UserFinancialProfileUpdateManyAndReturnArgs} args - Arguments to update many UserFinancialProfiles.
+     * @example
+     * // Update many UserFinancialProfiles
+     * const userFinancialProfile = await prisma.userFinancialProfile.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserFinancialProfiles and only return the `id`
+     * const userFinancialProfileWithIdOnly = await prisma.userFinancialProfile.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserFinancialProfileUpdateManyAndReturnArgs>(args: SelectSubset<T, UserFinancialProfileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserFinancialProfile.
+     * @param {UserFinancialProfileUpsertArgs} args - Arguments to update or create a UserFinancialProfile.
+     * @example
+     * // Update or create a UserFinancialProfile
+     * const userFinancialProfile = await prisma.userFinancialProfile.upsert({
+     *   create: {
+     *     // ... data to create a UserFinancialProfile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserFinancialProfile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserFinancialProfileUpsertArgs>(args: SelectSubset<T, UserFinancialProfileUpsertArgs<ExtArgs>>): Prisma__UserFinancialProfileClient<$Result.GetResult<Prisma.$UserFinancialProfilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserFinancialProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialProfileCountArgs} args - Arguments to filter UserFinancialProfiles to count.
+     * @example
+     * // Count the number of UserFinancialProfiles
+     * const count = await prisma.userFinancialProfile.count({
+     *   where: {
+     *     // ... the filter for the UserFinancialProfiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserFinancialProfileCountArgs>(
+      args?: Subset<T, UserFinancialProfileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserFinancialProfileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserFinancialProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialProfileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserFinancialProfileAggregateArgs>(args: Subset<T, UserFinancialProfileAggregateArgs>): Prisma.PrismaPromise<GetUserFinancialProfileAggregateType<T>>
+
+    /**
+     * Group by UserFinancialProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialProfileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserFinancialProfileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserFinancialProfileGroupByArgs['orderBy'] }
+        : { orderBy?: UserFinancialProfileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserFinancialProfileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserFinancialProfileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserFinancialProfile model
+   */
+  readonly fields: UserFinancialProfileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserFinancialProfile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserFinancialProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserFinancialProfile model
+   */
+  interface UserFinancialProfileFieldRefs {
+    readonly id: FieldRef<"UserFinancialProfile", 'String'>
+    readonly userId: FieldRef<"UserFinancialProfile", 'String'>
+    readonly monthlySalary: FieldRef<"UserFinancialProfile", 'Float'>
+    readonly supplementaryIncome: FieldRef<"UserFinancialProfile", 'Float'>
+    readonly currency: FieldRef<"UserFinancialProfile", 'String'>
+    readonly preferredSavingsRate: FieldRef<"UserFinancialProfile", 'Float'>
+    readonly createdAt: FieldRef<"UserFinancialProfile", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserFinancialProfile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserFinancialProfile findUnique
+   */
+  export type UserFinancialProfileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialProfile to fetch.
+     */
+    where: UserFinancialProfileWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialProfile findUniqueOrThrow
+   */
+  export type UserFinancialProfileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialProfile to fetch.
+     */
+    where: UserFinancialProfileWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialProfile findFirst
+   */
+  export type UserFinancialProfileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialProfile to fetch.
+     */
+    where?: UserFinancialProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialProfiles to fetch.
+     */
+    orderBy?: UserFinancialProfileOrderByWithRelationInput | UserFinancialProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserFinancialProfiles.
+     */
+    cursor?: UserFinancialProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserFinancialProfiles.
+     */
+    distinct?: UserFinancialProfileScalarFieldEnum | UserFinancialProfileScalarFieldEnum[]
+  }
+
+  /**
+   * UserFinancialProfile findFirstOrThrow
+   */
+  export type UserFinancialProfileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialProfile to fetch.
+     */
+    where?: UserFinancialProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialProfiles to fetch.
+     */
+    orderBy?: UserFinancialProfileOrderByWithRelationInput | UserFinancialProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserFinancialProfiles.
+     */
+    cursor?: UserFinancialProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserFinancialProfiles.
+     */
+    distinct?: UserFinancialProfileScalarFieldEnum | UserFinancialProfileScalarFieldEnum[]
+  }
+
+  /**
+   * UserFinancialProfile findMany
+   */
+  export type UserFinancialProfileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialProfiles to fetch.
+     */
+    where?: UserFinancialProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialProfiles to fetch.
+     */
+    orderBy?: UserFinancialProfileOrderByWithRelationInput | UserFinancialProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserFinancialProfiles.
+     */
+    cursor?: UserFinancialProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialProfiles.
+     */
+    skip?: number
+    distinct?: UserFinancialProfileScalarFieldEnum | UserFinancialProfileScalarFieldEnum[]
+  }
+
+  /**
+   * UserFinancialProfile create
+   */
+  export type UserFinancialProfileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserFinancialProfile.
+     */
+    data: XOR<UserFinancialProfileCreateInput, UserFinancialProfileUncheckedCreateInput>
+  }
+
+  /**
+   * UserFinancialProfile createMany
+   */
+  export type UserFinancialProfileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserFinancialProfiles.
+     */
+    data: UserFinancialProfileCreateManyInput | UserFinancialProfileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserFinancialProfile createManyAndReturn
+   */
+  export type UserFinancialProfileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserFinancialProfiles.
+     */
+    data: UserFinancialProfileCreateManyInput | UserFinancialProfileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserFinancialProfile update
+   */
+  export type UserFinancialProfileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserFinancialProfile.
+     */
+    data: XOR<UserFinancialProfileUpdateInput, UserFinancialProfileUncheckedUpdateInput>
+    /**
+     * Choose, which UserFinancialProfile to update.
+     */
+    where: UserFinancialProfileWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialProfile updateMany
+   */
+  export type UserFinancialProfileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserFinancialProfiles.
+     */
+    data: XOR<UserFinancialProfileUpdateManyMutationInput, UserFinancialProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which UserFinancialProfiles to update
+     */
+    where?: UserFinancialProfileWhereInput
+    /**
+     * Limit how many UserFinancialProfiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserFinancialProfile updateManyAndReturn
+   */
+  export type UserFinancialProfileUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * The data used to update UserFinancialProfiles.
+     */
+    data: XOR<UserFinancialProfileUpdateManyMutationInput, UserFinancialProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which UserFinancialProfiles to update
+     */
+    where?: UserFinancialProfileWhereInput
+    /**
+     * Limit how many UserFinancialProfiles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserFinancialProfile upsert
+   */
+  export type UserFinancialProfileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserFinancialProfile to update in case it exists.
+     */
+    where: UserFinancialProfileWhereUniqueInput
+    /**
+     * In case the UserFinancialProfile found by the `where` argument doesn't exist, create a new UserFinancialProfile with this data.
+     */
+    create: XOR<UserFinancialProfileCreateInput, UserFinancialProfileUncheckedCreateInput>
+    /**
+     * In case the UserFinancialProfile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserFinancialProfileUpdateInput, UserFinancialProfileUncheckedUpdateInput>
+  }
+
+  /**
+   * UserFinancialProfile delete
+   */
+  export type UserFinancialProfileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+    /**
+     * Filter which UserFinancialProfile to delete.
+     */
+    where: UserFinancialProfileWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialProfile deleteMany
+   */
+  export type UserFinancialProfileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserFinancialProfiles to delete
+     */
+    where?: UserFinancialProfileWhereInput
+    /**
+     * Limit how many UserFinancialProfiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserFinancialProfile without action
+   */
+  export type UserFinancialProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialProfile
+     */
+    select?: UserFinancialProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialProfile
+     */
+    omit?: UserFinancialProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialProfileInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserMonthlyStatement
+   */
+
+  export type AggregateUserMonthlyStatement = {
+    _count: UserMonthlyStatementCountAggregateOutputType | null
+    _avg: UserMonthlyStatementAvgAggregateOutputType | null
+    _sum: UserMonthlyStatementSumAggregateOutputType | null
+    _min: UserMonthlyStatementMinAggregateOutputType | null
+    _max: UserMonthlyStatementMaxAggregateOutputType | null
+  }
+
+  export type UserMonthlyStatementAvgAggregateOutputType = {
+    year: number | null
+    month: number | null
+    salaryReceived: number | null
+    supplementaryIncome: number | null
+    totalExpenses: number | null
+  }
+
+  export type UserMonthlyStatementSumAggregateOutputType = {
+    year: number | null
+    month: number | null
+    salaryReceived: number | null
+    supplementaryIncome: number | null
+    totalExpenses: number | null
+  }
+
+  export type UserMonthlyStatementMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    year: number | null
+    month: number | null
+    salaryReceived: number | null
+    supplementaryIncome: number | null
+    totalExpenses: number | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserMonthlyStatementMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    year: number | null
+    month: number | null
+    salaryReceived: number | null
+    supplementaryIncome: number | null
+    totalExpenses: number | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserMonthlyStatementCountAggregateOutputType = {
+    id: number
+    userId: number
+    year: number
+    month: number
+    salaryReceived: number
+    supplementaryIncome: number
+    totalExpenses: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserMonthlyStatementAvgAggregateInputType = {
+    year?: true
+    month?: true
+    salaryReceived?: true
+    supplementaryIncome?: true
+    totalExpenses?: true
+  }
+
+  export type UserMonthlyStatementSumAggregateInputType = {
+    year?: true
+    month?: true
+    salaryReceived?: true
+    supplementaryIncome?: true
+    totalExpenses?: true
+  }
+
+  export type UserMonthlyStatementMinAggregateInputType = {
+    id?: true
+    userId?: true
+    year?: true
+    month?: true
+    salaryReceived?: true
+    supplementaryIncome?: true
+    totalExpenses?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserMonthlyStatementMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    year?: true
+    month?: true
+    salaryReceived?: true
+    supplementaryIncome?: true
+    totalExpenses?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserMonthlyStatementCountAggregateInputType = {
+    id?: true
+    userId?: true
+    year?: true
+    month?: true
+    salaryReceived?: true
+    supplementaryIncome?: true
+    totalExpenses?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserMonthlyStatementAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserMonthlyStatement to aggregate.
+     */
+    where?: UserMonthlyStatementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMonthlyStatements to fetch.
+     */
+    orderBy?: UserMonthlyStatementOrderByWithRelationInput | UserMonthlyStatementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserMonthlyStatementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMonthlyStatements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMonthlyStatements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserMonthlyStatements
+    **/
+    _count?: true | UserMonthlyStatementCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserMonthlyStatementAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserMonthlyStatementSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserMonthlyStatementMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserMonthlyStatementMaxAggregateInputType
+  }
+
+  export type GetUserMonthlyStatementAggregateType<T extends UserMonthlyStatementAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserMonthlyStatement]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserMonthlyStatement[P]>
+      : GetScalarType<T[P], AggregateUserMonthlyStatement[P]>
+  }
+
+
+
+
+  export type UserMonthlyStatementGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserMonthlyStatementWhereInput
+    orderBy?: UserMonthlyStatementOrderByWithAggregationInput | UserMonthlyStatementOrderByWithAggregationInput[]
+    by: UserMonthlyStatementScalarFieldEnum[] | UserMonthlyStatementScalarFieldEnum
+    having?: UserMonthlyStatementScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserMonthlyStatementCountAggregateInputType | true
+    _avg?: UserMonthlyStatementAvgAggregateInputType
+    _sum?: UserMonthlyStatementSumAggregateInputType
+    _min?: UserMonthlyStatementMinAggregateInputType
+    _max?: UserMonthlyStatementMaxAggregateInputType
+  }
+
+  export type UserMonthlyStatementGroupByOutputType = {
+    id: string
+    userId: string
+    year: number
+    month: number
+    salaryReceived: number
+    supplementaryIncome: number
+    totalExpenses: number
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: UserMonthlyStatementCountAggregateOutputType | null
+    _avg: UserMonthlyStatementAvgAggregateOutputType | null
+    _sum: UserMonthlyStatementSumAggregateOutputType | null
+    _min: UserMonthlyStatementMinAggregateOutputType | null
+    _max: UserMonthlyStatementMaxAggregateOutputType | null
+  }
+
+  type GetUserMonthlyStatementGroupByPayload<T extends UserMonthlyStatementGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserMonthlyStatementGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserMonthlyStatementGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserMonthlyStatementGroupByOutputType[P]>
+            : GetScalarType<T[P], UserMonthlyStatementGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserMonthlyStatementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    year?: boolean
+    month?: boolean
+    salaryReceived?: boolean
+    supplementaryIncome?: boolean
+    totalExpenses?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userMonthlyStatement"]>
+
+  export type UserMonthlyStatementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    year?: boolean
+    month?: boolean
+    salaryReceived?: boolean
+    supplementaryIncome?: boolean
+    totalExpenses?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userMonthlyStatement"]>
+
+  export type UserMonthlyStatementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    year?: boolean
+    month?: boolean
+    salaryReceived?: boolean
+    supplementaryIncome?: boolean
+    totalExpenses?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userMonthlyStatement"]>
+
+  export type UserMonthlyStatementSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    year?: boolean
+    month?: boolean
+    salaryReceived?: boolean
+    supplementaryIncome?: boolean
+    totalExpenses?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserMonthlyStatementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "year" | "month" | "salaryReceived" | "supplementaryIncome" | "totalExpenses" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["userMonthlyStatement"]>
+  export type UserMonthlyStatementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserMonthlyStatementIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserMonthlyStatementIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserMonthlyStatementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserMonthlyStatement"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      year: number
+      month: number
+      salaryReceived: number
+      supplementaryIncome: number
+      totalExpenses: number
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userMonthlyStatement"]>
+    composites: {}
+  }
+
+  type UserMonthlyStatementGetPayload<S extends boolean | null | undefined | UserMonthlyStatementDefaultArgs> = $Result.GetResult<Prisma.$UserMonthlyStatementPayload, S>
+
+  type UserMonthlyStatementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserMonthlyStatementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserMonthlyStatementCountAggregateInputType | true
+    }
+
+  export interface UserMonthlyStatementDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserMonthlyStatement'], meta: { name: 'UserMonthlyStatement' } }
+    /**
+     * Find zero or one UserMonthlyStatement that matches the filter.
+     * @param {UserMonthlyStatementFindUniqueArgs} args - Arguments to find a UserMonthlyStatement
+     * @example
+     * // Get one UserMonthlyStatement
+     * const userMonthlyStatement = await prisma.userMonthlyStatement.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserMonthlyStatementFindUniqueArgs>(args: SelectSubset<T, UserMonthlyStatementFindUniqueArgs<ExtArgs>>): Prisma__UserMonthlyStatementClient<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserMonthlyStatement that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserMonthlyStatementFindUniqueOrThrowArgs} args - Arguments to find a UserMonthlyStatement
+     * @example
+     * // Get one UserMonthlyStatement
+     * const userMonthlyStatement = await prisma.userMonthlyStatement.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserMonthlyStatementFindUniqueOrThrowArgs>(args: SelectSubset<T, UserMonthlyStatementFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserMonthlyStatementClient<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserMonthlyStatement that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyStatementFindFirstArgs} args - Arguments to find a UserMonthlyStatement
+     * @example
+     * // Get one UserMonthlyStatement
+     * const userMonthlyStatement = await prisma.userMonthlyStatement.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserMonthlyStatementFindFirstArgs>(args?: SelectSubset<T, UserMonthlyStatementFindFirstArgs<ExtArgs>>): Prisma__UserMonthlyStatementClient<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserMonthlyStatement that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyStatementFindFirstOrThrowArgs} args - Arguments to find a UserMonthlyStatement
+     * @example
+     * // Get one UserMonthlyStatement
+     * const userMonthlyStatement = await prisma.userMonthlyStatement.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserMonthlyStatementFindFirstOrThrowArgs>(args?: SelectSubset<T, UserMonthlyStatementFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserMonthlyStatementClient<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserMonthlyStatements that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyStatementFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserMonthlyStatements
+     * const userMonthlyStatements = await prisma.userMonthlyStatement.findMany()
+     * 
+     * // Get first 10 UserMonthlyStatements
+     * const userMonthlyStatements = await prisma.userMonthlyStatement.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userMonthlyStatementWithIdOnly = await prisma.userMonthlyStatement.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserMonthlyStatementFindManyArgs>(args?: SelectSubset<T, UserMonthlyStatementFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserMonthlyStatement.
+     * @param {UserMonthlyStatementCreateArgs} args - Arguments to create a UserMonthlyStatement.
+     * @example
+     * // Create one UserMonthlyStatement
+     * const UserMonthlyStatement = await prisma.userMonthlyStatement.create({
+     *   data: {
+     *     // ... data to create a UserMonthlyStatement
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserMonthlyStatementCreateArgs>(args: SelectSubset<T, UserMonthlyStatementCreateArgs<ExtArgs>>): Prisma__UserMonthlyStatementClient<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserMonthlyStatements.
+     * @param {UserMonthlyStatementCreateManyArgs} args - Arguments to create many UserMonthlyStatements.
+     * @example
+     * // Create many UserMonthlyStatements
+     * const userMonthlyStatement = await prisma.userMonthlyStatement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserMonthlyStatementCreateManyArgs>(args?: SelectSubset<T, UserMonthlyStatementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserMonthlyStatements and returns the data saved in the database.
+     * @param {UserMonthlyStatementCreateManyAndReturnArgs} args - Arguments to create many UserMonthlyStatements.
+     * @example
+     * // Create many UserMonthlyStatements
+     * const userMonthlyStatement = await prisma.userMonthlyStatement.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserMonthlyStatements and only return the `id`
+     * const userMonthlyStatementWithIdOnly = await prisma.userMonthlyStatement.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserMonthlyStatementCreateManyAndReturnArgs>(args?: SelectSubset<T, UserMonthlyStatementCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserMonthlyStatement.
+     * @param {UserMonthlyStatementDeleteArgs} args - Arguments to delete one UserMonthlyStatement.
+     * @example
+     * // Delete one UserMonthlyStatement
+     * const UserMonthlyStatement = await prisma.userMonthlyStatement.delete({
+     *   where: {
+     *     // ... filter to delete one UserMonthlyStatement
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserMonthlyStatementDeleteArgs>(args: SelectSubset<T, UserMonthlyStatementDeleteArgs<ExtArgs>>): Prisma__UserMonthlyStatementClient<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserMonthlyStatement.
+     * @param {UserMonthlyStatementUpdateArgs} args - Arguments to update one UserMonthlyStatement.
+     * @example
+     * // Update one UserMonthlyStatement
+     * const userMonthlyStatement = await prisma.userMonthlyStatement.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserMonthlyStatementUpdateArgs>(args: SelectSubset<T, UserMonthlyStatementUpdateArgs<ExtArgs>>): Prisma__UserMonthlyStatementClient<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserMonthlyStatements.
+     * @param {UserMonthlyStatementDeleteManyArgs} args - Arguments to filter UserMonthlyStatements to delete.
+     * @example
+     * // Delete a few UserMonthlyStatements
+     * const { count } = await prisma.userMonthlyStatement.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserMonthlyStatementDeleteManyArgs>(args?: SelectSubset<T, UserMonthlyStatementDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserMonthlyStatements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyStatementUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserMonthlyStatements
+     * const userMonthlyStatement = await prisma.userMonthlyStatement.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserMonthlyStatementUpdateManyArgs>(args: SelectSubset<T, UserMonthlyStatementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserMonthlyStatements and returns the data updated in the database.
+     * @param {UserMonthlyStatementUpdateManyAndReturnArgs} args - Arguments to update many UserMonthlyStatements.
+     * @example
+     * // Update many UserMonthlyStatements
+     * const userMonthlyStatement = await prisma.userMonthlyStatement.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserMonthlyStatements and only return the `id`
+     * const userMonthlyStatementWithIdOnly = await prisma.userMonthlyStatement.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserMonthlyStatementUpdateManyAndReturnArgs>(args: SelectSubset<T, UserMonthlyStatementUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserMonthlyStatement.
+     * @param {UserMonthlyStatementUpsertArgs} args - Arguments to update or create a UserMonthlyStatement.
+     * @example
+     * // Update or create a UserMonthlyStatement
+     * const userMonthlyStatement = await prisma.userMonthlyStatement.upsert({
+     *   create: {
+     *     // ... data to create a UserMonthlyStatement
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserMonthlyStatement we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserMonthlyStatementUpsertArgs>(args: SelectSubset<T, UserMonthlyStatementUpsertArgs<ExtArgs>>): Prisma__UserMonthlyStatementClient<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserMonthlyStatements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyStatementCountArgs} args - Arguments to filter UserMonthlyStatements to count.
+     * @example
+     * // Count the number of UserMonthlyStatements
+     * const count = await prisma.userMonthlyStatement.count({
+     *   where: {
+     *     // ... the filter for the UserMonthlyStatements we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserMonthlyStatementCountArgs>(
+      args?: Subset<T, UserMonthlyStatementCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserMonthlyStatementCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserMonthlyStatement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyStatementAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserMonthlyStatementAggregateArgs>(args: Subset<T, UserMonthlyStatementAggregateArgs>): Prisma.PrismaPromise<GetUserMonthlyStatementAggregateType<T>>
+
+    /**
+     * Group by UserMonthlyStatement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyStatementGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserMonthlyStatementGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserMonthlyStatementGroupByArgs['orderBy'] }
+        : { orderBy?: UserMonthlyStatementGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserMonthlyStatementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserMonthlyStatementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserMonthlyStatement model
+   */
+  readonly fields: UserMonthlyStatementFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserMonthlyStatement.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserMonthlyStatementClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserMonthlyStatement model
+   */
+  interface UserMonthlyStatementFieldRefs {
+    readonly id: FieldRef<"UserMonthlyStatement", 'String'>
+    readonly userId: FieldRef<"UserMonthlyStatement", 'String'>
+    readonly year: FieldRef<"UserMonthlyStatement", 'Int'>
+    readonly month: FieldRef<"UserMonthlyStatement", 'Int'>
+    readonly salaryReceived: FieldRef<"UserMonthlyStatement", 'Float'>
+    readonly supplementaryIncome: FieldRef<"UserMonthlyStatement", 'Float'>
+    readonly totalExpenses: FieldRef<"UserMonthlyStatement", 'Float'>
+    readonly notes: FieldRef<"UserMonthlyStatement", 'String'>
+    readonly createdAt: FieldRef<"UserMonthlyStatement", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserMonthlyStatement", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserMonthlyStatement findUnique
+   */
+  export type UserMonthlyStatementFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMonthlyStatement to fetch.
+     */
+    where: UserMonthlyStatementWhereUniqueInput
+  }
+
+  /**
+   * UserMonthlyStatement findUniqueOrThrow
+   */
+  export type UserMonthlyStatementFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMonthlyStatement to fetch.
+     */
+    where: UserMonthlyStatementWhereUniqueInput
+  }
+
+  /**
+   * UserMonthlyStatement findFirst
+   */
+  export type UserMonthlyStatementFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMonthlyStatement to fetch.
+     */
+    where?: UserMonthlyStatementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMonthlyStatements to fetch.
+     */
+    orderBy?: UserMonthlyStatementOrderByWithRelationInput | UserMonthlyStatementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserMonthlyStatements.
+     */
+    cursor?: UserMonthlyStatementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMonthlyStatements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMonthlyStatements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserMonthlyStatements.
+     */
+    distinct?: UserMonthlyStatementScalarFieldEnum | UserMonthlyStatementScalarFieldEnum[]
+  }
+
+  /**
+   * UserMonthlyStatement findFirstOrThrow
+   */
+  export type UserMonthlyStatementFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMonthlyStatement to fetch.
+     */
+    where?: UserMonthlyStatementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMonthlyStatements to fetch.
+     */
+    orderBy?: UserMonthlyStatementOrderByWithRelationInput | UserMonthlyStatementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserMonthlyStatements.
+     */
+    cursor?: UserMonthlyStatementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMonthlyStatements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMonthlyStatements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserMonthlyStatements.
+     */
+    distinct?: UserMonthlyStatementScalarFieldEnum | UserMonthlyStatementScalarFieldEnum[]
+  }
+
+  /**
+   * UserMonthlyStatement findMany
+   */
+  export type UserMonthlyStatementFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMonthlyStatements to fetch.
+     */
+    where?: UserMonthlyStatementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMonthlyStatements to fetch.
+     */
+    orderBy?: UserMonthlyStatementOrderByWithRelationInput | UserMonthlyStatementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserMonthlyStatements.
+     */
+    cursor?: UserMonthlyStatementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMonthlyStatements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMonthlyStatements.
+     */
+    skip?: number
+    distinct?: UserMonthlyStatementScalarFieldEnum | UserMonthlyStatementScalarFieldEnum[]
+  }
+
+  /**
+   * UserMonthlyStatement create
+   */
+  export type UserMonthlyStatementCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserMonthlyStatement.
+     */
+    data: XOR<UserMonthlyStatementCreateInput, UserMonthlyStatementUncheckedCreateInput>
+  }
+
+  /**
+   * UserMonthlyStatement createMany
+   */
+  export type UserMonthlyStatementCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserMonthlyStatements.
+     */
+    data: UserMonthlyStatementCreateManyInput | UserMonthlyStatementCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserMonthlyStatement createManyAndReturn
+   */
+  export type UserMonthlyStatementCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserMonthlyStatements.
+     */
+    data: UserMonthlyStatementCreateManyInput | UserMonthlyStatementCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserMonthlyStatement update
+   */
+  export type UserMonthlyStatementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserMonthlyStatement.
+     */
+    data: XOR<UserMonthlyStatementUpdateInput, UserMonthlyStatementUncheckedUpdateInput>
+    /**
+     * Choose, which UserMonthlyStatement to update.
+     */
+    where: UserMonthlyStatementWhereUniqueInput
+  }
+
+  /**
+   * UserMonthlyStatement updateMany
+   */
+  export type UserMonthlyStatementUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserMonthlyStatements.
+     */
+    data: XOR<UserMonthlyStatementUpdateManyMutationInput, UserMonthlyStatementUncheckedUpdateManyInput>
+    /**
+     * Filter which UserMonthlyStatements to update
+     */
+    where?: UserMonthlyStatementWhereInput
+    /**
+     * Limit how many UserMonthlyStatements to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserMonthlyStatement updateManyAndReturn
+   */
+  export type UserMonthlyStatementUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * The data used to update UserMonthlyStatements.
+     */
+    data: XOR<UserMonthlyStatementUpdateManyMutationInput, UserMonthlyStatementUncheckedUpdateManyInput>
+    /**
+     * Filter which UserMonthlyStatements to update
+     */
+    where?: UserMonthlyStatementWhereInput
+    /**
+     * Limit how many UserMonthlyStatements to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserMonthlyStatement upsert
+   */
+  export type UserMonthlyStatementUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserMonthlyStatement to update in case it exists.
+     */
+    where: UserMonthlyStatementWhereUniqueInput
+    /**
+     * In case the UserMonthlyStatement found by the `where` argument doesn't exist, create a new UserMonthlyStatement with this data.
+     */
+    create: XOR<UserMonthlyStatementCreateInput, UserMonthlyStatementUncheckedCreateInput>
+    /**
+     * In case the UserMonthlyStatement was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserMonthlyStatementUpdateInput, UserMonthlyStatementUncheckedUpdateInput>
+  }
+
+  /**
+   * UserMonthlyStatement delete
+   */
+  export type UserMonthlyStatementDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+    /**
+     * Filter which UserMonthlyStatement to delete.
+     */
+    where: UserMonthlyStatementWhereUniqueInput
+  }
+
+  /**
+   * UserMonthlyStatement deleteMany
+   */
+  export type UserMonthlyStatementDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserMonthlyStatements to delete
+     */
+    where?: UserMonthlyStatementWhereInput
+    /**
+     * Limit how many UserMonthlyStatements to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserMonthlyStatement without action
+   */
+  export type UserMonthlyStatementDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyStatement
+     */
+    select?: UserMonthlyStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyStatement
+     */
+    omit?: UserMonthlyStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyStatementInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserFinancialEntry
+   */
+
+  export type AggregateUserFinancialEntry = {
+    _count: UserFinancialEntryCountAggregateOutputType | null
+    _avg: UserFinancialEntryAvgAggregateOutputType | null
+    _sum: UserFinancialEntrySumAggregateOutputType | null
+    _min: UserFinancialEntryMinAggregateOutputType | null
+    _max: UserFinancialEntryMaxAggregateOutputType | null
+  }
+
+  export type UserFinancialEntryAvgAggregateOutputType = {
+    year: number | null
+    month: number | null
+    amount: number | null
+  }
+
+  export type UserFinancialEntrySumAggregateOutputType = {
+    year: number | null
+    month: number | null
+    amount: number | null
+  }
+
+  export type UserFinancialEntryMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    year: number | null
+    month: number | null
+    type: $Enums.FinancialEntryType | null
+    amount: number | null
+    note: string | null
+    isConfirmed: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserFinancialEntryMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    year: number | null
+    month: number | null
+    type: $Enums.FinancialEntryType | null
+    amount: number | null
+    note: string | null
+    isConfirmed: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserFinancialEntryCountAggregateOutputType = {
+    id: number
+    userId: number
+    year: number
+    month: number
+    type: number
+    amount: number
+    note: number
+    isConfirmed: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserFinancialEntryAvgAggregateInputType = {
+    year?: true
+    month?: true
+    amount?: true
+  }
+
+  export type UserFinancialEntrySumAggregateInputType = {
+    year?: true
+    month?: true
+    amount?: true
+  }
+
+  export type UserFinancialEntryMinAggregateInputType = {
+    id?: true
+    userId?: true
+    year?: true
+    month?: true
+    type?: true
+    amount?: true
+    note?: true
+    isConfirmed?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserFinancialEntryMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    year?: true
+    month?: true
+    type?: true
+    amount?: true
+    note?: true
+    isConfirmed?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserFinancialEntryCountAggregateInputType = {
+    id?: true
+    userId?: true
+    year?: true
+    month?: true
+    type?: true
+    amount?: true
+    note?: true
+    isConfirmed?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserFinancialEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserFinancialEntry to aggregate.
+     */
+    where?: UserFinancialEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialEntries to fetch.
+     */
+    orderBy?: UserFinancialEntryOrderByWithRelationInput | UserFinancialEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserFinancialEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserFinancialEntries
+    **/
+    _count?: true | UserFinancialEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserFinancialEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserFinancialEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserFinancialEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserFinancialEntryMaxAggregateInputType
+  }
+
+  export type GetUserFinancialEntryAggregateType<T extends UserFinancialEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserFinancialEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserFinancialEntry[P]>
+      : GetScalarType<T[P], AggregateUserFinancialEntry[P]>
+  }
+
+
+
+
+  export type UserFinancialEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserFinancialEntryWhereInput
+    orderBy?: UserFinancialEntryOrderByWithAggregationInput | UserFinancialEntryOrderByWithAggregationInput[]
+    by: UserFinancialEntryScalarFieldEnum[] | UserFinancialEntryScalarFieldEnum
+    having?: UserFinancialEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserFinancialEntryCountAggregateInputType | true
+    _avg?: UserFinancialEntryAvgAggregateInputType
+    _sum?: UserFinancialEntrySumAggregateInputType
+    _min?: UserFinancialEntryMinAggregateInputType
+    _max?: UserFinancialEntryMaxAggregateInputType
+  }
+
+  export type UserFinancialEntryGroupByOutputType = {
+    id: string
+    userId: string
+    year: number
+    month: number
+    type: $Enums.FinancialEntryType
+    amount: number
+    note: string | null
+    isConfirmed: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: UserFinancialEntryCountAggregateOutputType | null
+    _avg: UserFinancialEntryAvgAggregateOutputType | null
+    _sum: UserFinancialEntrySumAggregateOutputType | null
+    _min: UserFinancialEntryMinAggregateOutputType | null
+    _max: UserFinancialEntryMaxAggregateOutputType | null
+  }
+
+  type GetUserFinancialEntryGroupByPayload<T extends UserFinancialEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserFinancialEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserFinancialEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserFinancialEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], UserFinancialEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserFinancialEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    year?: boolean
+    month?: boolean
+    type?: boolean
+    amount?: boolean
+    note?: boolean
+    isConfirmed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userFinancialEntry"]>
+
+  export type UserFinancialEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    year?: boolean
+    month?: boolean
+    type?: boolean
+    amount?: boolean
+    note?: boolean
+    isConfirmed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userFinancialEntry"]>
+
+  export type UserFinancialEntrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    year?: boolean
+    month?: boolean
+    type?: boolean
+    amount?: boolean
+    note?: boolean
+    isConfirmed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userFinancialEntry"]>
+
+  export type UserFinancialEntrySelectScalar = {
+    id?: boolean
+    userId?: boolean
+    year?: boolean
+    month?: boolean
+    type?: boolean
+    amount?: boolean
+    note?: boolean
+    isConfirmed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserFinancialEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "year" | "month" | "type" | "amount" | "note" | "isConfirmed" | "createdAt" | "updatedAt", ExtArgs["result"]["userFinancialEntry"]>
+  export type UserFinancialEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserFinancialEntryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserFinancialEntryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserFinancialEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserFinancialEntry"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      year: number
+      month: number
+      type: $Enums.FinancialEntryType
+      amount: number
+      note: string | null
+      isConfirmed: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userFinancialEntry"]>
+    composites: {}
+  }
+
+  type UserFinancialEntryGetPayload<S extends boolean | null | undefined | UserFinancialEntryDefaultArgs> = $Result.GetResult<Prisma.$UserFinancialEntryPayload, S>
+
+  type UserFinancialEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserFinancialEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserFinancialEntryCountAggregateInputType | true
+    }
+
+  export interface UserFinancialEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserFinancialEntry'], meta: { name: 'UserFinancialEntry' } }
+    /**
+     * Find zero or one UserFinancialEntry that matches the filter.
+     * @param {UserFinancialEntryFindUniqueArgs} args - Arguments to find a UserFinancialEntry
+     * @example
+     * // Get one UserFinancialEntry
+     * const userFinancialEntry = await prisma.userFinancialEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserFinancialEntryFindUniqueArgs>(args: SelectSubset<T, UserFinancialEntryFindUniqueArgs<ExtArgs>>): Prisma__UserFinancialEntryClient<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserFinancialEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserFinancialEntryFindUniqueOrThrowArgs} args - Arguments to find a UserFinancialEntry
+     * @example
+     * // Get one UserFinancialEntry
+     * const userFinancialEntry = await prisma.userFinancialEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserFinancialEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, UserFinancialEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserFinancialEntryClient<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserFinancialEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialEntryFindFirstArgs} args - Arguments to find a UserFinancialEntry
+     * @example
+     * // Get one UserFinancialEntry
+     * const userFinancialEntry = await prisma.userFinancialEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserFinancialEntryFindFirstArgs>(args?: SelectSubset<T, UserFinancialEntryFindFirstArgs<ExtArgs>>): Prisma__UserFinancialEntryClient<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserFinancialEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialEntryFindFirstOrThrowArgs} args - Arguments to find a UserFinancialEntry
+     * @example
+     * // Get one UserFinancialEntry
+     * const userFinancialEntry = await prisma.userFinancialEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserFinancialEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, UserFinancialEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserFinancialEntryClient<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserFinancialEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserFinancialEntries
+     * const userFinancialEntries = await prisma.userFinancialEntry.findMany()
+     * 
+     * // Get first 10 UserFinancialEntries
+     * const userFinancialEntries = await prisma.userFinancialEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userFinancialEntryWithIdOnly = await prisma.userFinancialEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserFinancialEntryFindManyArgs>(args?: SelectSubset<T, UserFinancialEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserFinancialEntry.
+     * @param {UserFinancialEntryCreateArgs} args - Arguments to create a UserFinancialEntry.
+     * @example
+     * // Create one UserFinancialEntry
+     * const UserFinancialEntry = await prisma.userFinancialEntry.create({
+     *   data: {
+     *     // ... data to create a UserFinancialEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserFinancialEntryCreateArgs>(args: SelectSubset<T, UserFinancialEntryCreateArgs<ExtArgs>>): Prisma__UserFinancialEntryClient<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserFinancialEntries.
+     * @param {UserFinancialEntryCreateManyArgs} args - Arguments to create many UserFinancialEntries.
+     * @example
+     * // Create many UserFinancialEntries
+     * const userFinancialEntry = await prisma.userFinancialEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserFinancialEntryCreateManyArgs>(args?: SelectSubset<T, UserFinancialEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserFinancialEntries and returns the data saved in the database.
+     * @param {UserFinancialEntryCreateManyAndReturnArgs} args - Arguments to create many UserFinancialEntries.
+     * @example
+     * // Create many UserFinancialEntries
+     * const userFinancialEntry = await prisma.userFinancialEntry.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserFinancialEntries and only return the `id`
+     * const userFinancialEntryWithIdOnly = await prisma.userFinancialEntry.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserFinancialEntryCreateManyAndReturnArgs>(args?: SelectSubset<T, UserFinancialEntryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserFinancialEntry.
+     * @param {UserFinancialEntryDeleteArgs} args - Arguments to delete one UserFinancialEntry.
+     * @example
+     * // Delete one UserFinancialEntry
+     * const UserFinancialEntry = await prisma.userFinancialEntry.delete({
+     *   where: {
+     *     // ... filter to delete one UserFinancialEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserFinancialEntryDeleteArgs>(args: SelectSubset<T, UserFinancialEntryDeleteArgs<ExtArgs>>): Prisma__UserFinancialEntryClient<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserFinancialEntry.
+     * @param {UserFinancialEntryUpdateArgs} args - Arguments to update one UserFinancialEntry.
+     * @example
+     * // Update one UserFinancialEntry
+     * const userFinancialEntry = await prisma.userFinancialEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserFinancialEntryUpdateArgs>(args: SelectSubset<T, UserFinancialEntryUpdateArgs<ExtArgs>>): Prisma__UserFinancialEntryClient<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserFinancialEntries.
+     * @param {UserFinancialEntryDeleteManyArgs} args - Arguments to filter UserFinancialEntries to delete.
+     * @example
+     * // Delete a few UserFinancialEntries
+     * const { count } = await prisma.userFinancialEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserFinancialEntryDeleteManyArgs>(args?: SelectSubset<T, UserFinancialEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserFinancialEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserFinancialEntries
+     * const userFinancialEntry = await prisma.userFinancialEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserFinancialEntryUpdateManyArgs>(args: SelectSubset<T, UserFinancialEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserFinancialEntries and returns the data updated in the database.
+     * @param {UserFinancialEntryUpdateManyAndReturnArgs} args - Arguments to update many UserFinancialEntries.
+     * @example
+     * // Update many UserFinancialEntries
+     * const userFinancialEntry = await prisma.userFinancialEntry.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserFinancialEntries and only return the `id`
+     * const userFinancialEntryWithIdOnly = await prisma.userFinancialEntry.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserFinancialEntryUpdateManyAndReturnArgs>(args: SelectSubset<T, UserFinancialEntryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserFinancialEntry.
+     * @param {UserFinancialEntryUpsertArgs} args - Arguments to update or create a UserFinancialEntry.
+     * @example
+     * // Update or create a UserFinancialEntry
+     * const userFinancialEntry = await prisma.userFinancialEntry.upsert({
+     *   create: {
+     *     // ... data to create a UserFinancialEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserFinancialEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserFinancialEntryUpsertArgs>(args: SelectSubset<T, UserFinancialEntryUpsertArgs<ExtArgs>>): Prisma__UserFinancialEntryClient<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserFinancialEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialEntryCountArgs} args - Arguments to filter UserFinancialEntries to count.
+     * @example
+     * // Count the number of UserFinancialEntries
+     * const count = await prisma.userFinancialEntry.count({
+     *   where: {
+     *     // ... the filter for the UserFinancialEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserFinancialEntryCountArgs>(
+      args?: Subset<T, UserFinancialEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserFinancialEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserFinancialEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserFinancialEntryAggregateArgs>(args: Subset<T, UserFinancialEntryAggregateArgs>): Prisma.PrismaPromise<GetUserFinancialEntryAggregateType<T>>
+
+    /**
+     * Group by UserFinancialEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFinancialEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserFinancialEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserFinancialEntryGroupByArgs['orderBy'] }
+        : { orderBy?: UserFinancialEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserFinancialEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserFinancialEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserFinancialEntry model
+   */
+  readonly fields: UserFinancialEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserFinancialEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserFinancialEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserFinancialEntry model
+   */
+  interface UserFinancialEntryFieldRefs {
+    readonly id: FieldRef<"UserFinancialEntry", 'String'>
+    readonly userId: FieldRef<"UserFinancialEntry", 'String'>
+    readonly year: FieldRef<"UserFinancialEntry", 'Int'>
+    readonly month: FieldRef<"UserFinancialEntry", 'Int'>
+    readonly type: FieldRef<"UserFinancialEntry", 'FinancialEntryType'>
+    readonly amount: FieldRef<"UserFinancialEntry", 'Float'>
+    readonly note: FieldRef<"UserFinancialEntry", 'String'>
+    readonly isConfirmed: FieldRef<"UserFinancialEntry", 'Boolean'>
+    readonly createdAt: FieldRef<"UserFinancialEntry", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserFinancialEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserFinancialEntry findUnique
+   */
+  export type UserFinancialEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialEntry to fetch.
+     */
+    where: UserFinancialEntryWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialEntry findUniqueOrThrow
+   */
+  export type UserFinancialEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialEntry to fetch.
+     */
+    where: UserFinancialEntryWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialEntry findFirst
+   */
+  export type UserFinancialEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialEntry to fetch.
+     */
+    where?: UserFinancialEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialEntries to fetch.
+     */
+    orderBy?: UserFinancialEntryOrderByWithRelationInput | UserFinancialEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserFinancialEntries.
+     */
+    cursor?: UserFinancialEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserFinancialEntries.
+     */
+    distinct?: UserFinancialEntryScalarFieldEnum | UserFinancialEntryScalarFieldEnum[]
+  }
+
+  /**
+   * UserFinancialEntry findFirstOrThrow
+   */
+  export type UserFinancialEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialEntry to fetch.
+     */
+    where?: UserFinancialEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialEntries to fetch.
+     */
+    orderBy?: UserFinancialEntryOrderByWithRelationInput | UserFinancialEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserFinancialEntries.
+     */
+    cursor?: UserFinancialEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserFinancialEntries.
+     */
+    distinct?: UserFinancialEntryScalarFieldEnum | UserFinancialEntryScalarFieldEnum[]
+  }
+
+  /**
+   * UserFinancialEntry findMany
+   */
+  export type UserFinancialEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserFinancialEntries to fetch.
+     */
+    where?: UserFinancialEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserFinancialEntries to fetch.
+     */
+    orderBy?: UserFinancialEntryOrderByWithRelationInput | UserFinancialEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserFinancialEntries.
+     */
+    cursor?: UserFinancialEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserFinancialEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserFinancialEntries.
+     */
+    skip?: number
+    distinct?: UserFinancialEntryScalarFieldEnum | UserFinancialEntryScalarFieldEnum[]
+  }
+
+  /**
+   * UserFinancialEntry create
+   */
+  export type UserFinancialEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserFinancialEntry.
+     */
+    data: XOR<UserFinancialEntryCreateInput, UserFinancialEntryUncheckedCreateInput>
+  }
+
+  /**
+   * UserFinancialEntry createMany
+   */
+  export type UserFinancialEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserFinancialEntries.
+     */
+    data: UserFinancialEntryCreateManyInput | UserFinancialEntryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserFinancialEntry createManyAndReturn
+   */
+  export type UserFinancialEntryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserFinancialEntries.
+     */
+    data: UserFinancialEntryCreateManyInput | UserFinancialEntryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserFinancialEntry update
+   */
+  export type UserFinancialEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserFinancialEntry.
+     */
+    data: XOR<UserFinancialEntryUpdateInput, UserFinancialEntryUncheckedUpdateInput>
+    /**
+     * Choose, which UserFinancialEntry to update.
+     */
+    where: UserFinancialEntryWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialEntry updateMany
+   */
+  export type UserFinancialEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserFinancialEntries.
+     */
+    data: XOR<UserFinancialEntryUpdateManyMutationInput, UserFinancialEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which UserFinancialEntries to update
+     */
+    where?: UserFinancialEntryWhereInput
+    /**
+     * Limit how many UserFinancialEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserFinancialEntry updateManyAndReturn
+   */
+  export type UserFinancialEntryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * The data used to update UserFinancialEntries.
+     */
+    data: XOR<UserFinancialEntryUpdateManyMutationInput, UserFinancialEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which UserFinancialEntries to update
+     */
+    where?: UserFinancialEntryWhereInput
+    /**
+     * Limit how many UserFinancialEntries to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserFinancialEntry upsert
+   */
+  export type UserFinancialEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserFinancialEntry to update in case it exists.
+     */
+    where: UserFinancialEntryWhereUniqueInput
+    /**
+     * In case the UserFinancialEntry found by the `where` argument doesn't exist, create a new UserFinancialEntry with this data.
+     */
+    create: XOR<UserFinancialEntryCreateInput, UserFinancialEntryUncheckedCreateInput>
+    /**
+     * In case the UserFinancialEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserFinancialEntryUpdateInput, UserFinancialEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * UserFinancialEntry delete
+   */
+  export type UserFinancialEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+    /**
+     * Filter which UserFinancialEntry to delete.
+     */
+    where: UserFinancialEntryWhereUniqueInput
+  }
+
+  /**
+   * UserFinancialEntry deleteMany
+   */
+  export type UserFinancialEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserFinancialEntries to delete
+     */
+    where?: UserFinancialEntryWhereInput
+    /**
+     * Limit how many UserFinancialEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserFinancialEntry without action
+   */
+  export type UserFinancialEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserFinancialEntry
+     */
+    select?: UserFinancialEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserFinancialEntry
+     */
+    omit?: UserFinancialEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserFinancialEntryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserMonthlyProgress
+   */
+
+  export type AggregateUserMonthlyProgress = {
+    _count: UserMonthlyProgressCountAggregateOutputType | null
+    _avg: UserMonthlyProgressAvgAggregateOutputType | null
+    _sum: UserMonthlyProgressSumAggregateOutputType | null
+    _min: UserMonthlyProgressMinAggregateOutputType | null
+    _max: UserMonthlyProgressMaxAggregateOutputType | null
+  }
+
+  export type UserMonthlyProgressAvgAggregateOutputType = {
+    year: number | null
+    month: number | null
+    amount: number | null
+  }
+
+  export type UserMonthlyProgressSumAggregateOutputType = {
+    year: number | null
+    month: number | null
+    amount: number | null
+  }
+
+  export type UserMonthlyProgressMinAggregateOutputType = {
+    id: string | null
+    goalId: string | null
+    year: number | null
+    month: number | null
+    amount: number | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserMonthlyProgressMaxAggregateOutputType = {
+    id: string | null
+    goalId: string | null
+    year: number | null
+    month: number | null
+    amount: number | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserMonthlyProgressCountAggregateOutputType = {
+    id: number
+    goalId: number
+    year: number
+    month: number
+    amount: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserMonthlyProgressAvgAggregateInputType = {
+    year?: true
+    month?: true
+    amount?: true
+  }
+
+  export type UserMonthlyProgressSumAggregateInputType = {
+    year?: true
+    month?: true
+    amount?: true
+  }
+
+  export type UserMonthlyProgressMinAggregateInputType = {
+    id?: true
+    goalId?: true
+    year?: true
+    month?: true
+    amount?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserMonthlyProgressMaxAggregateInputType = {
+    id?: true
+    goalId?: true
+    year?: true
+    month?: true
+    amount?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserMonthlyProgressCountAggregateInputType = {
+    id?: true
+    goalId?: true
+    year?: true
+    month?: true
+    amount?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserMonthlyProgressAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserMonthlyProgress to aggregate.
+     */
+    where?: UserMonthlyProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMonthlyProgresses to fetch.
+     */
+    orderBy?: UserMonthlyProgressOrderByWithRelationInput | UserMonthlyProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserMonthlyProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMonthlyProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMonthlyProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserMonthlyProgresses
+    **/
+    _count?: true | UserMonthlyProgressCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserMonthlyProgressAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserMonthlyProgressSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserMonthlyProgressMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserMonthlyProgressMaxAggregateInputType
+  }
+
+  export type GetUserMonthlyProgressAggregateType<T extends UserMonthlyProgressAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserMonthlyProgress]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserMonthlyProgress[P]>
+      : GetScalarType<T[P], AggregateUserMonthlyProgress[P]>
+  }
+
+
+
+
+  export type UserMonthlyProgressGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserMonthlyProgressWhereInput
+    orderBy?: UserMonthlyProgressOrderByWithAggregationInput | UserMonthlyProgressOrderByWithAggregationInput[]
+    by: UserMonthlyProgressScalarFieldEnum[] | UserMonthlyProgressScalarFieldEnum
+    having?: UserMonthlyProgressScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserMonthlyProgressCountAggregateInputType | true
+    _avg?: UserMonthlyProgressAvgAggregateInputType
+    _sum?: UserMonthlyProgressSumAggregateInputType
+    _min?: UserMonthlyProgressMinAggregateInputType
+    _max?: UserMonthlyProgressMaxAggregateInputType
+  }
+
+  export type UserMonthlyProgressGroupByOutputType = {
+    id: string
+    goalId: string
+    year: number
+    month: number
+    amount: number
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: UserMonthlyProgressCountAggregateOutputType | null
+    _avg: UserMonthlyProgressAvgAggregateOutputType | null
+    _sum: UserMonthlyProgressSumAggregateOutputType | null
+    _min: UserMonthlyProgressMinAggregateOutputType | null
+    _max: UserMonthlyProgressMaxAggregateOutputType | null
+  }
+
+  type GetUserMonthlyProgressGroupByPayload<T extends UserMonthlyProgressGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserMonthlyProgressGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserMonthlyProgressGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserMonthlyProgressGroupByOutputType[P]>
+            : GetScalarType<T[P], UserMonthlyProgressGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserMonthlyProgressSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    goalId?: boolean
+    year?: boolean
+    month?: boolean
+    amount?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    goal?: boolean | UserFinancialGoalDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userMonthlyProgress"]>
+
+  export type UserMonthlyProgressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    goalId?: boolean
+    year?: boolean
+    month?: boolean
+    amount?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    goal?: boolean | UserFinancialGoalDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userMonthlyProgress"]>
+
+  export type UserMonthlyProgressSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    goalId?: boolean
+    year?: boolean
+    month?: boolean
+    amount?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    goal?: boolean | UserFinancialGoalDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userMonthlyProgress"]>
+
+  export type UserMonthlyProgressSelectScalar = {
+    id?: boolean
+    goalId?: boolean
+    year?: boolean
+    month?: boolean
+    amount?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserMonthlyProgressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "goalId" | "year" | "month" | "amount" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["userMonthlyProgress"]>
+  export type UserMonthlyProgressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    goal?: boolean | UserFinancialGoalDefaultArgs<ExtArgs>
+  }
+  export type UserMonthlyProgressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    goal?: boolean | UserFinancialGoalDefaultArgs<ExtArgs>
+  }
+  export type UserMonthlyProgressIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    goal?: boolean | UserFinancialGoalDefaultArgs<ExtArgs>
+  }
+
+  export type $UserMonthlyProgressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserMonthlyProgress"
+    objects: {
+      goal: Prisma.$UserFinancialGoalPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      goalId: string
+      year: number
+      month: number
+      amount: number
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userMonthlyProgress"]>
+    composites: {}
+  }
+
+  type UserMonthlyProgressGetPayload<S extends boolean | null | undefined | UserMonthlyProgressDefaultArgs> = $Result.GetResult<Prisma.$UserMonthlyProgressPayload, S>
+
+  type UserMonthlyProgressCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserMonthlyProgressFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserMonthlyProgressCountAggregateInputType | true
+    }
+
+  export interface UserMonthlyProgressDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserMonthlyProgress'], meta: { name: 'UserMonthlyProgress' } }
+    /**
+     * Find zero or one UserMonthlyProgress that matches the filter.
+     * @param {UserMonthlyProgressFindUniqueArgs} args - Arguments to find a UserMonthlyProgress
+     * @example
+     * // Get one UserMonthlyProgress
+     * const userMonthlyProgress = await prisma.userMonthlyProgress.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserMonthlyProgressFindUniqueArgs>(args: SelectSubset<T, UserMonthlyProgressFindUniqueArgs<ExtArgs>>): Prisma__UserMonthlyProgressClient<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserMonthlyProgress that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserMonthlyProgressFindUniqueOrThrowArgs} args - Arguments to find a UserMonthlyProgress
+     * @example
+     * // Get one UserMonthlyProgress
+     * const userMonthlyProgress = await prisma.userMonthlyProgress.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserMonthlyProgressFindUniqueOrThrowArgs>(args: SelectSubset<T, UserMonthlyProgressFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserMonthlyProgressClient<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserMonthlyProgress that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyProgressFindFirstArgs} args - Arguments to find a UserMonthlyProgress
+     * @example
+     * // Get one UserMonthlyProgress
+     * const userMonthlyProgress = await prisma.userMonthlyProgress.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserMonthlyProgressFindFirstArgs>(args?: SelectSubset<T, UserMonthlyProgressFindFirstArgs<ExtArgs>>): Prisma__UserMonthlyProgressClient<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserMonthlyProgress that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyProgressFindFirstOrThrowArgs} args - Arguments to find a UserMonthlyProgress
+     * @example
+     * // Get one UserMonthlyProgress
+     * const userMonthlyProgress = await prisma.userMonthlyProgress.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserMonthlyProgressFindFirstOrThrowArgs>(args?: SelectSubset<T, UserMonthlyProgressFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserMonthlyProgressClient<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserMonthlyProgresses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyProgressFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserMonthlyProgresses
+     * const userMonthlyProgresses = await prisma.userMonthlyProgress.findMany()
+     * 
+     * // Get first 10 UserMonthlyProgresses
+     * const userMonthlyProgresses = await prisma.userMonthlyProgress.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userMonthlyProgressWithIdOnly = await prisma.userMonthlyProgress.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserMonthlyProgressFindManyArgs>(args?: SelectSubset<T, UserMonthlyProgressFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserMonthlyProgress.
+     * @param {UserMonthlyProgressCreateArgs} args - Arguments to create a UserMonthlyProgress.
+     * @example
+     * // Create one UserMonthlyProgress
+     * const UserMonthlyProgress = await prisma.userMonthlyProgress.create({
+     *   data: {
+     *     // ... data to create a UserMonthlyProgress
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserMonthlyProgressCreateArgs>(args: SelectSubset<T, UserMonthlyProgressCreateArgs<ExtArgs>>): Prisma__UserMonthlyProgressClient<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserMonthlyProgresses.
+     * @param {UserMonthlyProgressCreateManyArgs} args - Arguments to create many UserMonthlyProgresses.
+     * @example
+     * // Create many UserMonthlyProgresses
+     * const userMonthlyProgress = await prisma.userMonthlyProgress.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserMonthlyProgressCreateManyArgs>(args?: SelectSubset<T, UserMonthlyProgressCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserMonthlyProgresses and returns the data saved in the database.
+     * @param {UserMonthlyProgressCreateManyAndReturnArgs} args - Arguments to create many UserMonthlyProgresses.
+     * @example
+     * // Create many UserMonthlyProgresses
+     * const userMonthlyProgress = await prisma.userMonthlyProgress.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserMonthlyProgresses and only return the `id`
+     * const userMonthlyProgressWithIdOnly = await prisma.userMonthlyProgress.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserMonthlyProgressCreateManyAndReturnArgs>(args?: SelectSubset<T, UserMonthlyProgressCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserMonthlyProgress.
+     * @param {UserMonthlyProgressDeleteArgs} args - Arguments to delete one UserMonthlyProgress.
+     * @example
+     * // Delete one UserMonthlyProgress
+     * const UserMonthlyProgress = await prisma.userMonthlyProgress.delete({
+     *   where: {
+     *     // ... filter to delete one UserMonthlyProgress
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserMonthlyProgressDeleteArgs>(args: SelectSubset<T, UserMonthlyProgressDeleteArgs<ExtArgs>>): Prisma__UserMonthlyProgressClient<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserMonthlyProgress.
+     * @param {UserMonthlyProgressUpdateArgs} args - Arguments to update one UserMonthlyProgress.
+     * @example
+     * // Update one UserMonthlyProgress
+     * const userMonthlyProgress = await prisma.userMonthlyProgress.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserMonthlyProgressUpdateArgs>(args: SelectSubset<T, UserMonthlyProgressUpdateArgs<ExtArgs>>): Prisma__UserMonthlyProgressClient<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserMonthlyProgresses.
+     * @param {UserMonthlyProgressDeleteManyArgs} args - Arguments to filter UserMonthlyProgresses to delete.
+     * @example
+     * // Delete a few UserMonthlyProgresses
+     * const { count } = await prisma.userMonthlyProgress.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserMonthlyProgressDeleteManyArgs>(args?: SelectSubset<T, UserMonthlyProgressDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserMonthlyProgresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyProgressUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserMonthlyProgresses
+     * const userMonthlyProgress = await prisma.userMonthlyProgress.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserMonthlyProgressUpdateManyArgs>(args: SelectSubset<T, UserMonthlyProgressUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserMonthlyProgresses and returns the data updated in the database.
+     * @param {UserMonthlyProgressUpdateManyAndReturnArgs} args - Arguments to update many UserMonthlyProgresses.
+     * @example
+     * // Update many UserMonthlyProgresses
+     * const userMonthlyProgress = await prisma.userMonthlyProgress.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserMonthlyProgresses and only return the `id`
+     * const userMonthlyProgressWithIdOnly = await prisma.userMonthlyProgress.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserMonthlyProgressUpdateManyAndReturnArgs>(args: SelectSubset<T, UserMonthlyProgressUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserMonthlyProgress.
+     * @param {UserMonthlyProgressUpsertArgs} args - Arguments to update or create a UserMonthlyProgress.
+     * @example
+     * // Update or create a UserMonthlyProgress
+     * const userMonthlyProgress = await prisma.userMonthlyProgress.upsert({
+     *   create: {
+     *     // ... data to create a UserMonthlyProgress
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserMonthlyProgress we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserMonthlyProgressUpsertArgs>(args: SelectSubset<T, UserMonthlyProgressUpsertArgs<ExtArgs>>): Prisma__UserMonthlyProgressClient<$Result.GetResult<Prisma.$UserMonthlyProgressPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserMonthlyProgresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyProgressCountArgs} args - Arguments to filter UserMonthlyProgresses to count.
+     * @example
+     * // Count the number of UserMonthlyProgresses
+     * const count = await prisma.userMonthlyProgress.count({
+     *   where: {
+     *     // ... the filter for the UserMonthlyProgresses we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserMonthlyProgressCountArgs>(
+      args?: Subset<T, UserMonthlyProgressCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserMonthlyProgressCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserMonthlyProgress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyProgressAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserMonthlyProgressAggregateArgs>(args: Subset<T, UserMonthlyProgressAggregateArgs>): Prisma.PrismaPromise<GetUserMonthlyProgressAggregateType<T>>
+
+    /**
+     * Group by UserMonthlyProgress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMonthlyProgressGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserMonthlyProgressGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserMonthlyProgressGroupByArgs['orderBy'] }
+        : { orderBy?: UserMonthlyProgressGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserMonthlyProgressGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserMonthlyProgressGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserMonthlyProgress model
+   */
+  readonly fields: UserMonthlyProgressFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserMonthlyProgress.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserMonthlyProgressClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    goal<T extends UserFinancialGoalDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserFinancialGoalDefaultArgs<ExtArgs>>): Prisma__UserFinancialGoalClient<$Result.GetResult<Prisma.$UserFinancialGoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserMonthlyProgress model
+   */
+  interface UserMonthlyProgressFieldRefs {
+    readonly id: FieldRef<"UserMonthlyProgress", 'String'>
+    readonly goalId: FieldRef<"UserMonthlyProgress", 'String'>
+    readonly year: FieldRef<"UserMonthlyProgress", 'Int'>
+    readonly month: FieldRef<"UserMonthlyProgress", 'Int'>
+    readonly amount: FieldRef<"UserMonthlyProgress", 'Float'>
+    readonly notes: FieldRef<"UserMonthlyProgress", 'String'>
+    readonly createdAt: FieldRef<"UserMonthlyProgress", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserMonthlyProgress", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserMonthlyProgress findUnique
+   */
+  export type UserMonthlyProgressFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMonthlyProgress to fetch.
+     */
+    where: UserMonthlyProgressWhereUniqueInput
+  }
+
+  /**
+   * UserMonthlyProgress findUniqueOrThrow
+   */
+  export type UserMonthlyProgressFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMonthlyProgress to fetch.
+     */
+    where: UserMonthlyProgressWhereUniqueInput
+  }
+
+  /**
+   * UserMonthlyProgress findFirst
+   */
+  export type UserMonthlyProgressFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMonthlyProgress to fetch.
+     */
+    where?: UserMonthlyProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMonthlyProgresses to fetch.
+     */
+    orderBy?: UserMonthlyProgressOrderByWithRelationInput | UserMonthlyProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserMonthlyProgresses.
+     */
+    cursor?: UserMonthlyProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMonthlyProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMonthlyProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserMonthlyProgresses.
+     */
+    distinct?: UserMonthlyProgressScalarFieldEnum | UserMonthlyProgressScalarFieldEnum[]
+  }
+
+  /**
+   * UserMonthlyProgress findFirstOrThrow
+   */
+  export type UserMonthlyProgressFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMonthlyProgress to fetch.
+     */
+    where?: UserMonthlyProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMonthlyProgresses to fetch.
+     */
+    orderBy?: UserMonthlyProgressOrderByWithRelationInput | UserMonthlyProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserMonthlyProgresses.
+     */
+    cursor?: UserMonthlyProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMonthlyProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMonthlyProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserMonthlyProgresses.
+     */
+    distinct?: UserMonthlyProgressScalarFieldEnum | UserMonthlyProgressScalarFieldEnum[]
+  }
+
+  /**
+   * UserMonthlyProgress findMany
+   */
+  export type UserMonthlyProgressFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMonthlyProgresses to fetch.
+     */
+    where?: UserMonthlyProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMonthlyProgresses to fetch.
+     */
+    orderBy?: UserMonthlyProgressOrderByWithRelationInput | UserMonthlyProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserMonthlyProgresses.
+     */
+    cursor?: UserMonthlyProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMonthlyProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMonthlyProgresses.
+     */
+    skip?: number
+    distinct?: UserMonthlyProgressScalarFieldEnum | UserMonthlyProgressScalarFieldEnum[]
+  }
+
+  /**
+   * UserMonthlyProgress create
+   */
+  export type UserMonthlyProgressCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserMonthlyProgress.
+     */
+    data: XOR<UserMonthlyProgressCreateInput, UserMonthlyProgressUncheckedCreateInput>
+  }
+
+  /**
+   * UserMonthlyProgress createMany
+   */
+  export type UserMonthlyProgressCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserMonthlyProgresses.
+     */
+    data: UserMonthlyProgressCreateManyInput | UserMonthlyProgressCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserMonthlyProgress createManyAndReturn
+   */
+  export type UserMonthlyProgressCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserMonthlyProgresses.
+     */
+    data: UserMonthlyProgressCreateManyInput | UserMonthlyProgressCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserMonthlyProgress update
+   */
+  export type UserMonthlyProgressUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserMonthlyProgress.
+     */
+    data: XOR<UserMonthlyProgressUpdateInput, UserMonthlyProgressUncheckedUpdateInput>
+    /**
+     * Choose, which UserMonthlyProgress to update.
+     */
+    where: UserMonthlyProgressWhereUniqueInput
+  }
+
+  /**
+   * UserMonthlyProgress updateMany
+   */
+  export type UserMonthlyProgressUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserMonthlyProgresses.
+     */
+    data: XOR<UserMonthlyProgressUpdateManyMutationInput, UserMonthlyProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which UserMonthlyProgresses to update
+     */
+    where?: UserMonthlyProgressWhereInput
+    /**
+     * Limit how many UserMonthlyProgresses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserMonthlyProgress updateManyAndReturn
+   */
+  export type UserMonthlyProgressUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * The data used to update UserMonthlyProgresses.
+     */
+    data: XOR<UserMonthlyProgressUpdateManyMutationInput, UserMonthlyProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which UserMonthlyProgresses to update
+     */
+    where?: UserMonthlyProgressWhereInput
+    /**
+     * Limit how many UserMonthlyProgresses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserMonthlyProgress upsert
+   */
+  export type UserMonthlyProgressUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserMonthlyProgress to update in case it exists.
+     */
+    where: UserMonthlyProgressWhereUniqueInput
+    /**
+     * In case the UserMonthlyProgress found by the `where` argument doesn't exist, create a new UserMonthlyProgress with this data.
+     */
+    create: XOR<UserMonthlyProgressCreateInput, UserMonthlyProgressUncheckedCreateInput>
+    /**
+     * In case the UserMonthlyProgress was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserMonthlyProgressUpdateInput, UserMonthlyProgressUncheckedUpdateInput>
+  }
+
+  /**
+   * UserMonthlyProgress delete
+   */
+  export type UserMonthlyProgressDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+    /**
+     * Filter which UserMonthlyProgress to delete.
+     */
+    where: UserMonthlyProgressWhereUniqueInput
+  }
+
+  /**
+   * UserMonthlyProgress deleteMany
+   */
+  export type UserMonthlyProgressDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserMonthlyProgresses to delete
+     */
+    where?: UserMonthlyProgressWhereInput
+    /**
+     * Limit how many UserMonthlyProgresses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserMonthlyProgress without action
+   */
+  export type UserMonthlyProgressDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMonthlyProgress
+     */
+    select?: UserMonthlyProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserMonthlyProgress
+     */
+    omit?: UserMonthlyProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMonthlyProgressInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -40059,6 +47790,98 @@ export namespace Prisma {
   export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
 
 
+  export const UserPersonalTaskScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    title: 'title',
+    description: 'description',
+    status: 'status',
+    priority: 'priority',
+    dueDate: 'dueDate',
+    completedAt: 'completedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserPersonalTaskScalarFieldEnum = (typeof UserPersonalTaskScalarFieldEnum)[keyof typeof UserPersonalTaskScalarFieldEnum]
+
+
+  export const UserFinancialGoalScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    type: 'type',
+    year: 'year',
+    targetItem: 'targetItem',
+    targetAmount: 'targetAmount',
+    targetDate: 'targetDate',
+    label: 'label',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserFinancialGoalScalarFieldEnum = (typeof UserFinancialGoalScalarFieldEnum)[keyof typeof UserFinancialGoalScalarFieldEnum]
+
+
+  export const UserFinancialProfileScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    monthlySalary: 'monthlySalary',
+    supplementaryIncome: 'supplementaryIncome',
+    currency: 'currency',
+    preferredSavingsRate: 'preferredSavingsRate',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserFinancialProfileScalarFieldEnum = (typeof UserFinancialProfileScalarFieldEnum)[keyof typeof UserFinancialProfileScalarFieldEnum]
+
+
+  export const UserMonthlyStatementScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    year: 'year',
+    month: 'month',
+    salaryReceived: 'salaryReceived',
+    supplementaryIncome: 'supplementaryIncome',
+    totalExpenses: 'totalExpenses',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserMonthlyStatementScalarFieldEnum = (typeof UserMonthlyStatementScalarFieldEnum)[keyof typeof UserMonthlyStatementScalarFieldEnum]
+
+
+  export const UserFinancialEntryScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    year: 'year',
+    month: 'month',
+    type: 'type',
+    amount: 'amount',
+    note: 'note',
+    isConfirmed: 'isConfirmed',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserFinancialEntryScalarFieldEnum = (typeof UserFinancialEntryScalarFieldEnum)[keyof typeof UserFinancialEntryScalarFieldEnum]
+
+
+  export const UserMonthlyProgressScalarFieldEnum: {
+    id: 'id',
+    goalId: 'goalId',
+    year: 'year',
+    month: 'month',
+    amount: 'amount',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserMonthlyProgressScalarFieldEnum = (typeof UserMonthlyProgressScalarFieldEnum)[keyof typeof UserMonthlyProgressScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -40323,6 +48146,48 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'PersonalTaskStatus'
+   */
+  export type EnumPersonalTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PersonalTaskStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PersonalTaskStatus[]'
+   */
+  export type ListEnumPersonalTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PersonalTaskStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PersonalTaskPriority'
+   */
+  export type EnumPersonalTaskPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PersonalTaskPriority'>
+    
+
+
+  /**
+   * Reference to a field of type 'PersonalTaskPriority[]'
+   */
+  export type ListEnumPersonalTaskPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PersonalTaskPriority[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'FinancialGoalType'
+   */
+  export type EnumFinancialGoalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialGoalType'>
+    
+
+
+  /**
+   * Reference to a field of type 'FinancialGoalType[]'
+   */
+  export type ListEnumFinancialGoalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialGoalType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -40333,6 +48198,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'FinancialEntryType'
+   */
+  export type EnumFinancialEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialEntryType'>
+    
+
+
+  /**
+   * Reference to a field of type 'FinancialEntryType[]'
+   */
+  export type ListEnumFinancialEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialEntryType[]'>
     
   /**
    * Deep Input Types
@@ -40384,6 +48263,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportListRelationFilter
     pushSubscriptions?: PushSubscriptionListRelationFilter
     invitations?: UserInvitationListRelationFilter
+    personalTasks?: UserPersonalTaskListRelationFilter
+    financialGoals?: UserFinancialGoalListRelationFilter
+    financialProfile?: XOR<UserFinancialProfileNullableScalarRelationFilter, UserFinancialProfileWhereInput> | null
+    monthlyStatements?: UserMonthlyStatementListRelationFilter
+    financialEntries?: UserFinancialEntryListRelationFilter
     followers?: FollowListRelationFilter
     following?: FollowListRelationFilter
   }
@@ -40430,6 +48314,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportOrderByRelationAggregateInput
     pushSubscriptions?: PushSubscriptionOrderByRelationAggregateInput
     invitations?: UserInvitationOrderByRelationAggregateInput
+    personalTasks?: UserPersonalTaskOrderByRelationAggregateInput
+    financialGoals?: UserFinancialGoalOrderByRelationAggregateInput
+    financialProfile?: UserFinancialProfileOrderByWithRelationInput
+    monthlyStatements?: UserMonthlyStatementOrderByRelationAggregateInput
+    financialEntries?: UserFinancialEntryOrderByRelationAggregateInput
     followers?: FollowOrderByRelationAggregateInput
     following?: FollowOrderByRelationAggregateInput
   }
@@ -40479,6 +48368,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportListRelationFilter
     pushSubscriptions?: PushSubscriptionListRelationFilter
     invitations?: UserInvitationListRelationFilter
+    personalTasks?: UserPersonalTaskListRelationFilter
+    financialGoals?: UserFinancialGoalListRelationFilter
+    financialProfile?: XOR<UserFinancialProfileNullableScalarRelationFilter, UserFinancialProfileWhereInput> | null
+    monthlyStatements?: UserMonthlyStatementListRelationFilter
+    financialEntries?: UserFinancialEntryListRelationFilter
     followers?: FollowListRelationFilter
     following?: FollowListRelationFilter
   }, "id" | "email">
@@ -42616,6 +50510,481 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"PushSubscription"> | Date | string
   }
 
+  export type UserPersonalTaskWhereInput = {
+    AND?: UserPersonalTaskWhereInput | UserPersonalTaskWhereInput[]
+    OR?: UserPersonalTaskWhereInput[]
+    NOT?: UserPersonalTaskWhereInput | UserPersonalTaskWhereInput[]
+    id?: StringFilter<"UserPersonalTask"> | string
+    userId?: StringFilter<"UserPersonalTask"> | string
+    title?: StringFilter<"UserPersonalTask"> | string
+    description?: StringNullableFilter<"UserPersonalTask"> | string | null
+    status?: EnumPersonalTaskStatusFilter<"UserPersonalTask"> | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityFilter<"UserPersonalTask"> | $Enums.PersonalTaskPriority
+    dueDate?: DateTimeNullableFilter<"UserPersonalTask"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"UserPersonalTask"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserPersonalTask"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPersonalTask"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserPersonalTaskOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    dueDate?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserPersonalTaskWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: UserPersonalTaskWhereInput | UserPersonalTaskWhereInput[]
+    OR?: UserPersonalTaskWhereInput[]
+    NOT?: UserPersonalTaskWhereInput | UserPersonalTaskWhereInput[]
+    userId?: StringFilter<"UserPersonalTask"> | string
+    title?: StringFilter<"UserPersonalTask"> | string
+    description?: StringNullableFilter<"UserPersonalTask"> | string | null
+    status?: EnumPersonalTaskStatusFilter<"UserPersonalTask"> | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityFilter<"UserPersonalTask"> | $Enums.PersonalTaskPriority
+    dueDate?: DateTimeNullableFilter<"UserPersonalTask"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"UserPersonalTask"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserPersonalTask"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPersonalTask"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type UserPersonalTaskOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    dueDate?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserPersonalTaskCountOrderByAggregateInput
+    _max?: UserPersonalTaskMaxOrderByAggregateInput
+    _min?: UserPersonalTaskMinOrderByAggregateInput
+  }
+
+  export type UserPersonalTaskScalarWhereWithAggregatesInput = {
+    AND?: UserPersonalTaskScalarWhereWithAggregatesInput | UserPersonalTaskScalarWhereWithAggregatesInput[]
+    OR?: UserPersonalTaskScalarWhereWithAggregatesInput[]
+    NOT?: UserPersonalTaskScalarWhereWithAggregatesInput | UserPersonalTaskScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserPersonalTask"> | string
+    userId?: StringWithAggregatesFilter<"UserPersonalTask"> | string
+    title?: StringWithAggregatesFilter<"UserPersonalTask"> | string
+    description?: StringNullableWithAggregatesFilter<"UserPersonalTask"> | string | null
+    status?: EnumPersonalTaskStatusWithAggregatesFilter<"UserPersonalTask"> | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityWithAggregatesFilter<"UserPersonalTask"> | $Enums.PersonalTaskPriority
+    dueDate?: DateTimeNullableWithAggregatesFilter<"UserPersonalTask"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"UserPersonalTask"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserPersonalTask"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserPersonalTask"> | Date | string
+  }
+
+  export type UserFinancialGoalWhereInput = {
+    AND?: UserFinancialGoalWhereInput | UserFinancialGoalWhereInput[]
+    OR?: UserFinancialGoalWhereInput[]
+    NOT?: UserFinancialGoalWhereInput | UserFinancialGoalWhereInput[]
+    id?: StringFilter<"UserFinancialGoal"> | string
+    userId?: StringFilter<"UserFinancialGoal"> | string
+    type?: EnumFinancialGoalTypeFilter<"UserFinancialGoal"> | $Enums.FinancialGoalType
+    year?: IntNullableFilter<"UserFinancialGoal"> | number | null
+    targetItem?: StringNullableFilter<"UserFinancialGoal"> | string | null
+    targetAmount?: FloatFilter<"UserFinancialGoal"> | number
+    targetDate?: DateTimeNullableFilter<"UserFinancialGoal"> | Date | string | null
+    label?: StringNullableFilter<"UserFinancialGoal"> | string | null
+    createdAt?: DateTimeFilter<"UserFinancialGoal"> | Date | string
+    updatedAt?: DateTimeFilter<"UserFinancialGoal"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    progress?: UserMonthlyProgressListRelationFilter
+  }
+
+  export type UserFinancialGoalOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    year?: SortOrderInput | SortOrder
+    targetItem?: SortOrderInput | SortOrder
+    targetAmount?: SortOrder
+    targetDate?: SortOrderInput | SortOrder
+    label?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    progress?: UserMonthlyProgressOrderByRelationAggregateInput
+  }
+
+  export type UserFinancialGoalWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: UserFinancialGoalWhereInput | UserFinancialGoalWhereInput[]
+    OR?: UserFinancialGoalWhereInput[]
+    NOT?: UserFinancialGoalWhereInput | UserFinancialGoalWhereInput[]
+    userId?: StringFilter<"UserFinancialGoal"> | string
+    type?: EnumFinancialGoalTypeFilter<"UserFinancialGoal"> | $Enums.FinancialGoalType
+    year?: IntNullableFilter<"UserFinancialGoal"> | number | null
+    targetItem?: StringNullableFilter<"UserFinancialGoal"> | string | null
+    targetAmount?: FloatFilter<"UserFinancialGoal"> | number
+    targetDate?: DateTimeNullableFilter<"UserFinancialGoal"> | Date | string | null
+    label?: StringNullableFilter<"UserFinancialGoal"> | string | null
+    createdAt?: DateTimeFilter<"UserFinancialGoal"> | Date | string
+    updatedAt?: DateTimeFilter<"UserFinancialGoal"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    progress?: UserMonthlyProgressListRelationFilter
+  }, "id">
+
+  export type UserFinancialGoalOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    year?: SortOrderInput | SortOrder
+    targetItem?: SortOrderInput | SortOrder
+    targetAmount?: SortOrder
+    targetDate?: SortOrderInput | SortOrder
+    label?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserFinancialGoalCountOrderByAggregateInput
+    _avg?: UserFinancialGoalAvgOrderByAggregateInput
+    _max?: UserFinancialGoalMaxOrderByAggregateInput
+    _min?: UserFinancialGoalMinOrderByAggregateInput
+    _sum?: UserFinancialGoalSumOrderByAggregateInput
+  }
+
+  export type UserFinancialGoalScalarWhereWithAggregatesInput = {
+    AND?: UserFinancialGoalScalarWhereWithAggregatesInput | UserFinancialGoalScalarWhereWithAggregatesInput[]
+    OR?: UserFinancialGoalScalarWhereWithAggregatesInput[]
+    NOT?: UserFinancialGoalScalarWhereWithAggregatesInput | UserFinancialGoalScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserFinancialGoal"> | string
+    userId?: StringWithAggregatesFilter<"UserFinancialGoal"> | string
+    type?: EnumFinancialGoalTypeWithAggregatesFilter<"UserFinancialGoal"> | $Enums.FinancialGoalType
+    year?: IntNullableWithAggregatesFilter<"UserFinancialGoal"> | number | null
+    targetItem?: StringNullableWithAggregatesFilter<"UserFinancialGoal"> | string | null
+    targetAmount?: FloatWithAggregatesFilter<"UserFinancialGoal"> | number
+    targetDate?: DateTimeNullableWithAggregatesFilter<"UserFinancialGoal"> | Date | string | null
+    label?: StringNullableWithAggregatesFilter<"UserFinancialGoal"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserFinancialGoal"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserFinancialGoal"> | Date | string
+  }
+
+  export type UserFinancialProfileWhereInput = {
+    AND?: UserFinancialProfileWhereInput | UserFinancialProfileWhereInput[]
+    OR?: UserFinancialProfileWhereInput[]
+    NOT?: UserFinancialProfileWhereInput | UserFinancialProfileWhereInput[]
+    id?: StringFilter<"UserFinancialProfile"> | string
+    userId?: StringFilter<"UserFinancialProfile"> | string
+    monthlySalary?: FloatFilter<"UserFinancialProfile"> | number
+    supplementaryIncome?: FloatFilter<"UserFinancialProfile"> | number
+    currency?: StringFilter<"UserFinancialProfile"> | string
+    preferredSavingsRate?: FloatNullableFilter<"UserFinancialProfile"> | number | null
+    createdAt?: DateTimeFilter<"UserFinancialProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"UserFinancialProfile"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserFinancialProfileOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    monthlySalary?: SortOrder
+    supplementaryIncome?: SortOrder
+    currency?: SortOrder
+    preferredSavingsRate?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserFinancialProfileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: UserFinancialProfileWhereInput | UserFinancialProfileWhereInput[]
+    OR?: UserFinancialProfileWhereInput[]
+    NOT?: UserFinancialProfileWhereInput | UserFinancialProfileWhereInput[]
+    monthlySalary?: FloatFilter<"UserFinancialProfile"> | number
+    supplementaryIncome?: FloatFilter<"UserFinancialProfile"> | number
+    currency?: StringFilter<"UserFinancialProfile"> | string
+    preferredSavingsRate?: FloatNullableFilter<"UserFinancialProfile"> | number | null
+    createdAt?: DateTimeFilter<"UserFinancialProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"UserFinancialProfile"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type UserFinancialProfileOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    monthlySalary?: SortOrder
+    supplementaryIncome?: SortOrder
+    currency?: SortOrder
+    preferredSavingsRate?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserFinancialProfileCountOrderByAggregateInput
+    _avg?: UserFinancialProfileAvgOrderByAggregateInput
+    _max?: UserFinancialProfileMaxOrderByAggregateInput
+    _min?: UserFinancialProfileMinOrderByAggregateInput
+    _sum?: UserFinancialProfileSumOrderByAggregateInput
+  }
+
+  export type UserFinancialProfileScalarWhereWithAggregatesInput = {
+    AND?: UserFinancialProfileScalarWhereWithAggregatesInput | UserFinancialProfileScalarWhereWithAggregatesInput[]
+    OR?: UserFinancialProfileScalarWhereWithAggregatesInput[]
+    NOT?: UserFinancialProfileScalarWhereWithAggregatesInput | UserFinancialProfileScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserFinancialProfile"> | string
+    userId?: StringWithAggregatesFilter<"UserFinancialProfile"> | string
+    monthlySalary?: FloatWithAggregatesFilter<"UserFinancialProfile"> | number
+    supplementaryIncome?: FloatWithAggregatesFilter<"UserFinancialProfile"> | number
+    currency?: StringWithAggregatesFilter<"UserFinancialProfile"> | string
+    preferredSavingsRate?: FloatNullableWithAggregatesFilter<"UserFinancialProfile"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserFinancialProfile"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserFinancialProfile"> | Date | string
+  }
+
+  export type UserMonthlyStatementWhereInput = {
+    AND?: UserMonthlyStatementWhereInput | UserMonthlyStatementWhereInput[]
+    OR?: UserMonthlyStatementWhereInput[]
+    NOT?: UserMonthlyStatementWhereInput | UserMonthlyStatementWhereInput[]
+    id?: StringFilter<"UserMonthlyStatement"> | string
+    userId?: StringFilter<"UserMonthlyStatement"> | string
+    year?: IntFilter<"UserMonthlyStatement"> | number
+    month?: IntFilter<"UserMonthlyStatement"> | number
+    salaryReceived?: FloatFilter<"UserMonthlyStatement"> | number
+    supplementaryIncome?: FloatFilter<"UserMonthlyStatement"> | number
+    totalExpenses?: FloatFilter<"UserMonthlyStatement"> | number
+    notes?: StringNullableFilter<"UserMonthlyStatement"> | string | null
+    createdAt?: DateTimeFilter<"UserMonthlyStatement"> | Date | string
+    updatedAt?: DateTimeFilter<"UserMonthlyStatement"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserMonthlyStatementOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    salaryReceived?: SortOrder
+    supplementaryIncome?: SortOrder
+    totalExpenses?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserMonthlyStatementWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_year_month?: UserMonthlyStatementUserIdYearMonthCompoundUniqueInput
+    AND?: UserMonthlyStatementWhereInput | UserMonthlyStatementWhereInput[]
+    OR?: UserMonthlyStatementWhereInput[]
+    NOT?: UserMonthlyStatementWhereInput | UserMonthlyStatementWhereInput[]
+    userId?: StringFilter<"UserMonthlyStatement"> | string
+    year?: IntFilter<"UserMonthlyStatement"> | number
+    month?: IntFilter<"UserMonthlyStatement"> | number
+    salaryReceived?: FloatFilter<"UserMonthlyStatement"> | number
+    supplementaryIncome?: FloatFilter<"UserMonthlyStatement"> | number
+    totalExpenses?: FloatFilter<"UserMonthlyStatement"> | number
+    notes?: StringNullableFilter<"UserMonthlyStatement"> | string | null
+    createdAt?: DateTimeFilter<"UserMonthlyStatement"> | Date | string
+    updatedAt?: DateTimeFilter<"UserMonthlyStatement"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_year_month">
+
+  export type UserMonthlyStatementOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    salaryReceived?: SortOrder
+    supplementaryIncome?: SortOrder
+    totalExpenses?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserMonthlyStatementCountOrderByAggregateInput
+    _avg?: UserMonthlyStatementAvgOrderByAggregateInput
+    _max?: UserMonthlyStatementMaxOrderByAggregateInput
+    _min?: UserMonthlyStatementMinOrderByAggregateInput
+    _sum?: UserMonthlyStatementSumOrderByAggregateInput
+  }
+
+  export type UserMonthlyStatementScalarWhereWithAggregatesInput = {
+    AND?: UserMonthlyStatementScalarWhereWithAggregatesInput | UserMonthlyStatementScalarWhereWithAggregatesInput[]
+    OR?: UserMonthlyStatementScalarWhereWithAggregatesInput[]
+    NOT?: UserMonthlyStatementScalarWhereWithAggregatesInput | UserMonthlyStatementScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserMonthlyStatement"> | string
+    userId?: StringWithAggregatesFilter<"UserMonthlyStatement"> | string
+    year?: IntWithAggregatesFilter<"UserMonthlyStatement"> | number
+    month?: IntWithAggregatesFilter<"UserMonthlyStatement"> | number
+    salaryReceived?: FloatWithAggregatesFilter<"UserMonthlyStatement"> | number
+    supplementaryIncome?: FloatWithAggregatesFilter<"UserMonthlyStatement"> | number
+    totalExpenses?: FloatWithAggregatesFilter<"UserMonthlyStatement"> | number
+    notes?: StringNullableWithAggregatesFilter<"UserMonthlyStatement"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserMonthlyStatement"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserMonthlyStatement"> | Date | string
+  }
+
+  export type UserFinancialEntryWhereInput = {
+    AND?: UserFinancialEntryWhereInput | UserFinancialEntryWhereInput[]
+    OR?: UserFinancialEntryWhereInput[]
+    NOT?: UserFinancialEntryWhereInput | UserFinancialEntryWhereInput[]
+    id?: StringFilter<"UserFinancialEntry"> | string
+    userId?: StringFilter<"UserFinancialEntry"> | string
+    year?: IntFilter<"UserFinancialEntry"> | number
+    month?: IntFilter<"UserFinancialEntry"> | number
+    type?: EnumFinancialEntryTypeFilter<"UserFinancialEntry"> | $Enums.FinancialEntryType
+    amount?: FloatFilter<"UserFinancialEntry"> | number
+    note?: StringNullableFilter<"UserFinancialEntry"> | string | null
+    isConfirmed?: BoolFilter<"UserFinancialEntry"> | boolean
+    createdAt?: DateTimeFilter<"UserFinancialEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"UserFinancialEntry"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserFinancialEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    note?: SortOrderInput | SortOrder
+    isConfirmed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserFinancialEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: UserFinancialEntryWhereInput | UserFinancialEntryWhereInput[]
+    OR?: UserFinancialEntryWhereInput[]
+    NOT?: UserFinancialEntryWhereInput | UserFinancialEntryWhereInput[]
+    userId?: StringFilter<"UserFinancialEntry"> | string
+    year?: IntFilter<"UserFinancialEntry"> | number
+    month?: IntFilter<"UserFinancialEntry"> | number
+    type?: EnumFinancialEntryTypeFilter<"UserFinancialEntry"> | $Enums.FinancialEntryType
+    amount?: FloatFilter<"UserFinancialEntry"> | number
+    note?: StringNullableFilter<"UserFinancialEntry"> | string | null
+    isConfirmed?: BoolFilter<"UserFinancialEntry"> | boolean
+    createdAt?: DateTimeFilter<"UserFinancialEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"UserFinancialEntry"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type UserFinancialEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    note?: SortOrderInput | SortOrder
+    isConfirmed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserFinancialEntryCountOrderByAggregateInput
+    _avg?: UserFinancialEntryAvgOrderByAggregateInput
+    _max?: UserFinancialEntryMaxOrderByAggregateInput
+    _min?: UserFinancialEntryMinOrderByAggregateInput
+    _sum?: UserFinancialEntrySumOrderByAggregateInput
+  }
+
+  export type UserFinancialEntryScalarWhereWithAggregatesInput = {
+    AND?: UserFinancialEntryScalarWhereWithAggregatesInput | UserFinancialEntryScalarWhereWithAggregatesInput[]
+    OR?: UserFinancialEntryScalarWhereWithAggregatesInput[]
+    NOT?: UserFinancialEntryScalarWhereWithAggregatesInput | UserFinancialEntryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserFinancialEntry"> | string
+    userId?: StringWithAggregatesFilter<"UserFinancialEntry"> | string
+    year?: IntWithAggregatesFilter<"UserFinancialEntry"> | number
+    month?: IntWithAggregatesFilter<"UserFinancialEntry"> | number
+    type?: EnumFinancialEntryTypeWithAggregatesFilter<"UserFinancialEntry"> | $Enums.FinancialEntryType
+    amount?: FloatWithAggregatesFilter<"UserFinancialEntry"> | number
+    note?: StringNullableWithAggregatesFilter<"UserFinancialEntry"> | string | null
+    isConfirmed?: BoolWithAggregatesFilter<"UserFinancialEntry"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"UserFinancialEntry"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserFinancialEntry"> | Date | string
+  }
+
+  export type UserMonthlyProgressWhereInput = {
+    AND?: UserMonthlyProgressWhereInput | UserMonthlyProgressWhereInput[]
+    OR?: UserMonthlyProgressWhereInput[]
+    NOT?: UserMonthlyProgressWhereInput | UserMonthlyProgressWhereInput[]
+    id?: StringFilter<"UserMonthlyProgress"> | string
+    goalId?: StringFilter<"UserMonthlyProgress"> | string
+    year?: IntFilter<"UserMonthlyProgress"> | number
+    month?: IntFilter<"UserMonthlyProgress"> | number
+    amount?: FloatFilter<"UserMonthlyProgress"> | number
+    notes?: StringNullableFilter<"UserMonthlyProgress"> | string | null
+    createdAt?: DateTimeFilter<"UserMonthlyProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"UserMonthlyProgress"> | Date | string
+    goal?: XOR<UserFinancialGoalScalarRelationFilter, UserFinancialGoalWhereInput>
+  }
+
+  export type UserMonthlyProgressOrderByWithRelationInput = {
+    id?: SortOrder
+    goalId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    amount?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    goal?: UserFinancialGoalOrderByWithRelationInput
+  }
+
+  export type UserMonthlyProgressWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    goalId_year_month?: UserMonthlyProgressGoalIdYearMonthCompoundUniqueInput
+    AND?: UserMonthlyProgressWhereInput | UserMonthlyProgressWhereInput[]
+    OR?: UserMonthlyProgressWhereInput[]
+    NOT?: UserMonthlyProgressWhereInput | UserMonthlyProgressWhereInput[]
+    goalId?: StringFilter<"UserMonthlyProgress"> | string
+    year?: IntFilter<"UserMonthlyProgress"> | number
+    month?: IntFilter<"UserMonthlyProgress"> | number
+    amount?: FloatFilter<"UserMonthlyProgress"> | number
+    notes?: StringNullableFilter<"UserMonthlyProgress"> | string | null
+    createdAt?: DateTimeFilter<"UserMonthlyProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"UserMonthlyProgress"> | Date | string
+    goal?: XOR<UserFinancialGoalScalarRelationFilter, UserFinancialGoalWhereInput>
+  }, "id" | "goalId_year_month">
+
+  export type UserMonthlyProgressOrderByWithAggregationInput = {
+    id?: SortOrder
+    goalId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    amount?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserMonthlyProgressCountOrderByAggregateInput
+    _avg?: UserMonthlyProgressAvgOrderByAggregateInput
+    _max?: UserMonthlyProgressMaxOrderByAggregateInput
+    _min?: UserMonthlyProgressMinOrderByAggregateInput
+    _sum?: UserMonthlyProgressSumOrderByAggregateInput
+  }
+
+  export type UserMonthlyProgressScalarWhereWithAggregatesInput = {
+    AND?: UserMonthlyProgressScalarWhereWithAggregatesInput | UserMonthlyProgressScalarWhereWithAggregatesInput[]
+    OR?: UserMonthlyProgressScalarWhereWithAggregatesInput[]
+    NOT?: UserMonthlyProgressScalarWhereWithAggregatesInput | UserMonthlyProgressScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserMonthlyProgress"> | string
+    goalId?: StringWithAggregatesFilter<"UserMonthlyProgress"> | string
+    year?: IntWithAggregatesFilter<"UserMonthlyProgress"> | number
+    month?: IntWithAggregatesFilter<"UserMonthlyProgress"> | number
+    amount?: FloatWithAggregatesFilter<"UserMonthlyProgress"> | number
+    notes?: StringNullableWithAggregatesFilter<"UserMonthlyProgress"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserMonthlyProgress"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserMonthlyProgress"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -42658,6 +51027,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -42704,6 +51078,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -42750,6 +51129,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -42796,6 +51180,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -45027,6 +53416,522 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserPersonalTaskCreateInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.PersonalTaskStatus
+    priority?: $Enums.PersonalTaskPriority
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPersonalTasksInput
+  }
+
+  export type UserPersonalTaskUncheckedCreateInput = {
+    id?: string
+    userId: string
+    title: string
+    description?: string | null
+    status?: $Enums.PersonalTaskStatus
+    priority?: $Enums.PersonalTaskPriority
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPersonalTaskUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPersonalTaskStatusFieldUpdateOperationsInput | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityFieldUpdateOperationsInput | $Enums.PersonalTaskPriority
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPersonalTasksNestedInput
+  }
+
+  export type UserPersonalTaskUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPersonalTaskStatusFieldUpdateOperationsInput | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityFieldUpdateOperationsInput | $Enums.PersonalTaskPriority
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPersonalTaskCreateManyInput = {
+    id?: string
+    userId: string
+    title: string
+    description?: string | null
+    status?: $Enums.PersonalTaskStatus
+    priority?: $Enums.PersonalTaskPriority
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPersonalTaskUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPersonalTaskStatusFieldUpdateOperationsInput | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityFieldUpdateOperationsInput | $Enums.PersonalTaskPriority
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPersonalTaskUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPersonalTaskStatusFieldUpdateOperationsInput | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityFieldUpdateOperationsInput | $Enums.PersonalTaskPriority
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialGoalCreateInput = {
+    id?: string
+    type?: $Enums.FinancialGoalType
+    year?: number | null
+    targetItem?: string | null
+    targetAmount: number
+    targetDate?: Date | string | null
+    label?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFinancialGoalsInput
+    progress?: UserMonthlyProgressCreateNestedManyWithoutGoalInput
+  }
+
+  export type UserFinancialGoalUncheckedCreateInput = {
+    id?: string
+    userId: string
+    type?: $Enums.FinancialGoalType
+    year?: number | null
+    targetItem?: string | null
+    targetAmount: number
+    targetDate?: Date | string | null
+    label?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    progress?: UserMonthlyProgressUncheckedCreateNestedManyWithoutGoalInput
+  }
+
+  export type UserFinancialGoalUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumFinancialGoalTypeFieldUpdateOperationsInput | $Enums.FinancialGoalType
+    year?: NullableIntFieldUpdateOperationsInput | number | null
+    targetItem?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAmount?: FloatFieldUpdateOperationsInput | number
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFinancialGoalsNestedInput
+    progress?: UserMonthlyProgressUpdateManyWithoutGoalNestedInput
+  }
+
+  export type UserFinancialGoalUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumFinancialGoalTypeFieldUpdateOperationsInput | $Enums.FinancialGoalType
+    year?: NullableIntFieldUpdateOperationsInput | number | null
+    targetItem?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAmount?: FloatFieldUpdateOperationsInput | number
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    progress?: UserMonthlyProgressUncheckedUpdateManyWithoutGoalNestedInput
+  }
+
+  export type UserFinancialGoalCreateManyInput = {
+    id?: string
+    userId: string
+    type?: $Enums.FinancialGoalType
+    year?: number | null
+    targetItem?: string | null
+    targetAmount: number
+    targetDate?: Date | string | null
+    label?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialGoalUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumFinancialGoalTypeFieldUpdateOperationsInput | $Enums.FinancialGoalType
+    year?: NullableIntFieldUpdateOperationsInput | number | null
+    targetItem?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAmount?: FloatFieldUpdateOperationsInput | number
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialGoalUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumFinancialGoalTypeFieldUpdateOperationsInput | $Enums.FinancialGoalType
+    year?: NullableIntFieldUpdateOperationsInput | number | null
+    targetItem?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAmount?: FloatFieldUpdateOperationsInput | number
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialProfileCreateInput = {
+    id?: string
+    monthlySalary?: number
+    supplementaryIncome?: number
+    currency?: string
+    preferredSavingsRate?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFinancialProfileInput
+  }
+
+  export type UserFinancialProfileUncheckedCreateInput = {
+    id?: string
+    userId: string
+    monthlySalary?: number
+    supplementaryIncome?: number
+    currency?: string
+    preferredSavingsRate?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialProfileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    monthlySalary?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    preferredSavingsRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFinancialProfileNestedInput
+  }
+
+  export type UserFinancialProfileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    monthlySalary?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    preferredSavingsRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialProfileCreateManyInput = {
+    id?: string
+    userId: string
+    monthlySalary?: number
+    supplementaryIncome?: number
+    currency?: string
+    preferredSavingsRate?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialProfileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    monthlySalary?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    preferredSavingsRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialProfileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    monthlySalary?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    preferredSavingsRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyStatementCreateInput = {
+    id?: string
+    year: number
+    month: number
+    salaryReceived?: number
+    supplementaryIncome?: number
+    totalExpenses?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutMonthlyStatementsInput
+  }
+
+  export type UserMonthlyStatementUncheckedCreateInput = {
+    id?: string
+    userId: string
+    year: number
+    month: number
+    salaryReceived?: number
+    supplementaryIncome?: number
+    totalExpenses?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMonthlyStatementUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    salaryReceived?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    totalExpenses?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMonthlyStatementsNestedInput
+  }
+
+  export type UserMonthlyStatementUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    salaryReceived?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    totalExpenses?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyStatementCreateManyInput = {
+    id?: string
+    userId: string
+    year: number
+    month: number
+    salaryReceived?: number
+    supplementaryIncome?: number
+    totalExpenses?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMonthlyStatementUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    salaryReceived?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    totalExpenses?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyStatementUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    salaryReceived?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    totalExpenses?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialEntryCreateInput = {
+    id?: string
+    year: number
+    month: number
+    type: $Enums.FinancialEntryType
+    amount: number
+    note?: string | null
+    isConfirmed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFinancialEntriesInput
+  }
+
+  export type UserFinancialEntryUncheckedCreateInput = {
+    id?: string
+    userId: string
+    year: number
+    month: number
+    type: $Enums.FinancialEntryType
+    amount: number
+    note?: string | null
+    isConfirmed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialEntryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    type?: EnumFinancialEntryTypeFieldUpdateOperationsInput | $Enums.FinancialEntryType
+    amount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    isConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFinancialEntriesNestedInput
+  }
+
+  export type UserFinancialEntryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    type?: EnumFinancialEntryTypeFieldUpdateOperationsInput | $Enums.FinancialEntryType
+    amount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    isConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialEntryCreateManyInput = {
+    id?: string
+    userId: string
+    year: number
+    month: number
+    type: $Enums.FinancialEntryType
+    amount: number
+    note?: string | null
+    isConfirmed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialEntryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    type?: EnumFinancialEntryTypeFieldUpdateOperationsInput | $Enums.FinancialEntryType
+    amount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    isConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialEntryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    type?: EnumFinancialEntryTypeFieldUpdateOperationsInput | $Enums.FinancialEntryType
+    amount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    isConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyProgressCreateInput = {
+    id?: string
+    year: number
+    month: number
+    amount?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    goal: UserFinancialGoalCreateNestedOneWithoutProgressInput
+  }
+
+  export type UserMonthlyProgressUncheckedCreateInput = {
+    id?: string
+    goalId: string
+    year: number
+    month: number
+    amount?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMonthlyProgressUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    goal?: UserFinancialGoalUpdateOneRequiredWithoutProgressNestedInput
+  }
+
+  export type UserMonthlyProgressUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    goalId?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyProgressCreateManyInput = {
+    id?: string
+    goalId: string
+    year: number
+    month: number
+    amount?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMonthlyProgressUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyProgressUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    goalId?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -45209,6 +54114,35 @@ export namespace Prisma {
     none?: UserInvitationWhereInput
   }
 
+  export type UserPersonalTaskListRelationFilter = {
+    every?: UserPersonalTaskWhereInput
+    some?: UserPersonalTaskWhereInput
+    none?: UserPersonalTaskWhereInput
+  }
+
+  export type UserFinancialGoalListRelationFilter = {
+    every?: UserFinancialGoalWhereInput
+    some?: UserFinancialGoalWhereInput
+    none?: UserFinancialGoalWhereInput
+  }
+
+  export type UserFinancialProfileNullableScalarRelationFilter = {
+    is?: UserFinancialProfileWhereInput | null
+    isNot?: UserFinancialProfileWhereInput | null
+  }
+
+  export type UserMonthlyStatementListRelationFilter = {
+    every?: UserMonthlyStatementWhereInput
+    some?: UserMonthlyStatementWhereInput
+    none?: UserMonthlyStatementWhereInput
+  }
+
+  export type UserFinancialEntryListRelationFilter = {
+    every?: UserFinancialEntryWhereInput
+    some?: UserFinancialEntryWhereInput
+    none?: UserFinancialEntryWhereInput
+  }
+
   export type FollowListRelationFilter = {
     every?: FollowWhereInput
     some?: FollowWhereInput
@@ -45277,6 +54211,22 @@ export namespace Prisma {
   }
 
   export type UserInvitationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserPersonalTaskOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserFinancialGoalOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserMonthlyStatementOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserFinancialEntryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -46838,6 +55788,439 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type EnumPersonalTaskStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PersonalTaskStatus | EnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PersonalTaskStatus[] | ListEnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PersonalTaskStatus[] | ListEnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPersonalTaskStatusFilter<$PrismaModel> | $Enums.PersonalTaskStatus
+  }
+
+  export type EnumPersonalTaskPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.PersonalTaskPriority | EnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.PersonalTaskPriority[] | ListEnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PersonalTaskPriority[] | ListEnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumPersonalTaskPriorityFilter<$PrismaModel> | $Enums.PersonalTaskPriority
+  }
+
+  export type UserPersonalTaskCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    dueDate?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPersonalTaskMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    dueDate?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPersonalTaskMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    dueDate?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumPersonalTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PersonalTaskStatus | EnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PersonalTaskStatus[] | ListEnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PersonalTaskStatus[] | ListEnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPersonalTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.PersonalTaskStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPersonalTaskStatusFilter<$PrismaModel>
+    _max?: NestedEnumPersonalTaskStatusFilter<$PrismaModel>
+  }
+
+  export type EnumPersonalTaskPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PersonalTaskPriority | EnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.PersonalTaskPriority[] | ListEnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PersonalTaskPriority[] | ListEnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumPersonalTaskPriorityWithAggregatesFilter<$PrismaModel> | $Enums.PersonalTaskPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPersonalTaskPriorityFilter<$PrismaModel>
+    _max?: NestedEnumPersonalTaskPriorityFilter<$PrismaModel>
+  }
+
+  export type EnumFinancialGoalTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialGoalType | EnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialGoalType[] | ListEnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialGoalType[] | ListEnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialGoalTypeFilter<$PrismaModel> | $Enums.FinancialGoalType
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type UserMonthlyProgressListRelationFilter = {
+    every?: UserMonthlyProgressWhereInput
+    some?: UserMonthlyProgressWhereInput
+    none?: UserMonthlyProgressWhereInput
+  }
+
+  export type UserMonthlyProgressOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserFinancialGoalCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    year?: SortOrder
+    targetItem?: SortOrder
+    targetAmount?: SortOrder
+    targetDate?: SortOrder
+    label?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserFinancialGoalAvgOrderByAggregateInput = {
+    year?: SortOrder
+    targetAmount?: SortOrder
+  }
+
+  export type UserFinancialGoalMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    year?: SortOrder
+    targetItem?: SortOrder
+    targetAmount?: SortOrder
+    targetDate?: SortOrder
+    label?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserFinancialGoalMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    year?: SortOrder
+    targetItem?: SortOrder
+    targetAmount?: SortOrder
+    targetDate?: SortOrder
+    label?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserFinancialGoalSumOrderByAggregateInput = {
+    year?: SortOrder
+    targetAmount?: SortOrder
+  }
+
+  export type EnumFinancialGoalTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialGoalType | EnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialGoalType[] | ListEnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialGoalType[] | ListEnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialGoalTypeWithAggregatesFilter<$PrismaModel> | $Enums.FinancialGoalType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFinancialGoalTypeFilter<$PrismaModel>
+    _max?: NestedEnumFinancialGoalTypeFilter<$PrismaModel>
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type UserFinancialProfileCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    monthlySalary?: SortOrder
+    supplementaryIncome?: SortOrder
+    currency?: SortOrder
+    preferredSavingsRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserFinancialProfileAvgOrderByAggregateInput = {
+    monthlySalary?: SortOrder
+    supplementaryIncome?: SortOrder
+    preferredSavingsRate?: SortOrder
+  }
+
+  export type UserFinancialProfileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    monthlySalary?: SortOrder
+    supplementaryIncome?: SortOrder
+    currency?: SortOrder
+    preferredSavingsRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserFinancialProfileMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    monthlySalary?: SortOrder
+    supplementaryIncome?: SortOrder
+    currency?: SortOrder
+    preferredSavingsRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserFinancialProfileSumOrderByAggregateInput = {
+    monthlySalary?: SortOrder
+    supplementaryIncome?: SortOrder
+    preferredSavingsRate?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type UserMonthlyStatementUserIdYearMonthCompoundUniqueInput = {
+    userId: string
+    year: number
+    month: number
+  }
+
+  export type UserMonthlyStatementCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    salaryReceived?: SortOrder
+    supplementaryIncome?: SortOrder
+    totalExpenses?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMonthlyStatementAvgOrderByAggregateInput = {
+    year?: SortOrder
+    month?: SortOrder
+    salaryReceived?: SortOrder
+    supplementaryIncome?: SortOrder
+    totalExpenses?: SortOrder
+  }
+
+  export type UserMonthlyStatementMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    salaryReceived?: SortOrder
+    supplementaryIncome?: SortOrder
+    totalExpenses?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMonthlyStatementMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    salaryReceived?: SortOrder
+    supplementaryIncome?: SortOrder
+    totalExpenses?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMonthlyStatementSumOrderByAggregateInput = {
+    year?: SortOrder
+    month?: SortOrder
+    salaryReceived?: SortOrder
+    supplementaryIncome?: SortOrder
+    totalExpenses?: SortOrder
+  }
+
+  export type EnumFinancialEntryTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialEntryType | EnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialEntryType[] | ListEnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialEntryType[] | ListEnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialEntryTypeFilter<$PrismaModel> | $Enums.FinancialEntryType
+  }
+
+  export type UserFinancialEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    note?: SortOrder
+    isConfirmed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserFinancialEntryAvgOrderByAggregateInput = {
+    year?: SortOrder
+    month?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type UserFinancialEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    note?: SortOrder
+    isConfirmed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserFinancialEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    note?: SortOrder
+    isConfirmed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserFinancialEntrySumOrderByAggregateInput = {
+    year?: SortOrder
+    month?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EnumFinancialEntryTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialEntryType | EnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialEntryType[] | ListEnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialEntryType[] | ListEnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialEntryTypeWithAggregatesFilter<$PrismaModel> | $Enums.FinancialEntryType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFinancialEntryTypeFilter<$PrismaModel>
+    _max?: NestedEnumFinancialEntryTypeFilter<$PrismaModel>
+  }
+
+  export type UserFinancialGoalScalarRelationFilter = {
+    is?: UserFinancialGoalWhereInput
+    isNot?: UserFinancialGoalWhereInput
+  }
+
+  export type UserMonthlyProgressGoalIdYearMonthCompoundUniqueInput = {
+    goalId: string
+    year: number
+    month: number
+  }
+
+  export type UserMonthlyProgressCountOrderByAggregateInput = {
+    id?: SortOrder
+    goalId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    amount?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMonthlyProgressAvgOrderByAggregateInput = {
+    year?: SortOrder
+    month?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type UserMonthlyProgressMaxOrderByAggregateInput = {
+    id?: SortOrder
+    goalId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    amount?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMonthlyProgressMinOrderByAggregateInput = {
+    id?: SortOrder
+    goalId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    amount?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMonthlyProgressSumOrderByAggregateInput = {
+    year?: SortOrder
+    month?: SortOrder
+    amount?: SortOrder
+  }
+
   export type AnnouncementCreateNestedManyWithoutPublisherInput = {
     create?: XOR<AnnouncementCreateWithoutPublisherInput, AnnouncementUncheckedCreateWithoutPublisherInput> | AnnouncementCreateWithoutPublisherInput[] | AnnouncementUncheckedCreateWithoutPublisherInput[]
     connectOrCreate?: AnnouncementCreateOrConnectWithoutPublisherInput | AnnouncementCreateOrConnectWithoutPublisherInput[]
@@ -46954,6 +56337,40 @@ export namespace Prisma {
     connectOrCreate?: UserInvitationCreateOrConnectWithoutUserInput | UserInvitationCreateOrConnectWithoutUserInput[]
     createMany?: UserInvitationCreateManyUserInputEnvelope
     connect?: UserInvitationWhereUniqueInput | UserInvitationWhereUniqueInput[]
+  }
+
+  export type UserPersonalTaskCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserPersonalTaskCreateWithoutUserInput, UserPersonalTaskUncheckedCreateWithoutUserInput> | UserPersonalTaskCreateWithoutUserInput[] | UserPersonalTaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPersonalTaskCreateOrConnectWithoutUserInput | UserPersonalTaskCreateOrConnectWithoutUserInput[]
+    createMany?: UserPersonalTaskCreateManyUserInputEnvelope
+    connect?: UserPersonalTaskWhereUniqueInput | UserPersonalTaskWhereUniqueInput[]
+  }
+
+  export type UserFinancialGoalCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserFinancialGoalCreateWithoutUserInput, UserFinancialGoalUncheckedCreateWithoutUserInput> | UserFinancialGoalCreateWithoutUserInput[] | UserFinancialGoalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserFinancialGoalCreateOrConnectWithoutUserInput | UserFinancialGoalCreateOrConnectWithoutUserInput[]
+    createMany?: UserFinancialGoalCreateManyUserInputEnvelope
+    connect?: UserFinancialGoalWhereUniqueInput | UserFinancialGoalWhereUniqueInput[]
+  }
+
+  export type UserFinancialProfileCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserFinancialProfileCreateWithoutUserInput, UserFinancialProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserFinancialProfileCreateOrConnectWithoutUserInput
+    connect?: UserFinancialProfileWhereUniqueInput
+  }
+
+  export type UserMonthlyStatementCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserMonthlyStatementCreateWithoutUserInput, UserMonthlyStatementUncheckedCreateWithoutUserInput> | UserMonthlyStatementCreateWithoutUserInput[] | UserMonthlyStatementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserMonthlyStatementCreateOrConnectWithoutUserInput | UserMonthlyStatementCreateOrConnectWithoutUserInput[]
+    createMany?: UserMonthlyStatementCreateManyUserInputEnvelope
+    connect?: UserMonthlyStatementWhereUniqueInput | UserMonthlyStatementWhereUniqueInput[]
+  }
+
+  export type UserFinancialEntryCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserFinancialEntryCreateWithoutUserInput, UserFinancialEntryUncheckedCreateWithoutUserInput> | UserFinancialEntryCreateWithoutUserInput[] | UserFinancialEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserFinancialEntryCreateOrConnectWithoutUserInput | UserFinancialEntryCreateOrConnectWithoutUserInput[]
+    createMany?: UserFinancialEntryCreateManyUserInputEnvelope
+    connect?: UserFinancialEntryWhereUniqueInput | UserFinancialEntryWhereUniqueInput[]
   }
 
   export type FollowCreateNestedManyWithoutFollowingInput = {
@@ -47086,6 +56503,40 @@ export namespace Prisma {
     connectOrCreate?: UserInvitationCreateOrConnectWithoutUserInput | UserInvitationCreateOrConnectWithoutUserInput[]
     createMany?: UserInvitationCreateManyUserInputEnvelope
     connect?: UserInvitationWhereUniqueInput | UserInvitationWhereUniqueInput[]
+  }
+
+  export type UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserPersonalTaskCreateWithoutUserInput, UserPersonalTaskUncheckedCreateWithoutUserInput> | UserPersonalTaskCreateWithoutUserInput[] | UserPersonalTaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPersonalTaskCreateOrConnectWithoutUserInput | UserPersonalTaskCreateOrConnectWithoutUserInput[]
+    createMany?: UserPersonalTaskCreateManyUserInputEnvelope
+    connect?: UserPersonalTaskWhereUniqueInput | UserPersonalTaskWhereUniqueInput[]
+  }
+
+  export type UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserFinancialGoalCreateWithoutUserInput, UserFinancialGoalUncheckedCreateWithoutUserInput> | UserFinancialGoalCreateWithoutUserInput[] | UserFinancialGoalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserFinancialGoalCreateOrConnectWithoutUserInput | UserFinancialGoalCreateOrConnectWithoutUserInput[]
+    createMany?: UserFinancialGoalCreateManyUserInputEnvelope
+    connect?: UserFinancialGoalWhereUniqueInput | UserFinancialGoalWhereUniqueInput[]
+  }
+
+  export type UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserFinancialProfileCreateWithoutUserInput, UserFinancialProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserFinancialProfileCreateOrConnectWithoutUserInput
+    connect?: UserFinancialProfileWhereUniqueInput
+  }
+
+  export type UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserMonthlyStatementCreateWithoutUserInput, UserMonthlyStatementUncheckedCreateWithoutUserInput> | UserMonthlyStatementCreateWithoutUserInput[] | UserMonthlyStatementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserMonthlyStatementCreateOrConnectWithoutUserInput | UserMonthlyStatementCreateOrConnectWithoutUserInput[]
+    createMany?: UserMonthlyStatementCreateManyUserInputEnvelope
+    connect?: UserMonthlyStatementWhereUniqueInput | UserMonthlyStatementWhereUniqueInput[]
+  }
+
+  export type UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserFinancialEntryCreateWithoutUserInput, UserFinancialEntryUncheckedCreateWithoutUserInput> | UserFinancialEntryCreateWithoutUserInput[] | UserFinancialEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserFinancialEntryCreateOrConnectWithoutUserInput | UserFinancialEntryCreateOrConnectWithoutUserInput[]
+    createMany?: UserFinancialEntryCreateManyUserInputEnvelope
+    connect?: UserFinancialEntryWhereUniqueInput | UserFinancialEntryWhereUniqueInput[]
   }
 
   export type FollowUncheckedCreateNestedManyWithoutFollowingInput = {
@@ -47360,6 +56811,72 @@ export namespace Prisma {
     deleteMany?: UserInvitationScalarWhereInput | UserInvitationScalarWhereInput[]
   }
 
+  export type UserPersonalTaskUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserPersonalTaskCreateWithoutUserInput, UserPersonalTaskUncheckedCreateWithoutUserInput> | UserPersonalTaskCreateWithoutUserInput[] | UserPersonalTaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPersonalTaskCreateOrConnectWithoutUserInput | UserPersonalTaskCreateOrConnectWithoutUserInput[]
+    upsert?: UserPersonalTaskUpsertWithWhereUniqueWithoutUserInput | UserPersonalTaskUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserPersonalTaskCreateManyUserInputEnvelope
+    set?: UserPersonalTaskWhereUniqueInput | UserPersonalTaskWhereUniqueInput[]
+    disconnect?: UserPersonalTaskWhereUniqueInput | UserPersonalTaskWhereUniqueInput[]
+    delete?: UserPersonalTaskWhereUniqueInput | UserPersonalTaskWhereUniqueInput[]
+    connect?: UserPersonalTaskWhereUniqueInput | UserPersonalTaskWhereUniqueInput[]
+    update?: UserPersonalTaskUpdateWithWhereUniqueWithoutUserInput | UserPersonalTaskUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserPersonalTaskUpdateManyWithWhereWithoutUserInput | UserPersonalTaskUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserPersonalTaskScalarWhereInput | UserPersonalTaskScalarWhereInput[]
+  }
+
+  export type UserFinancialGoalUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserFinancialGoalCreateWithoutUserInput, UserFinancialGoalUncheckedCreateWithoutUserInput> | UserFinancialGoalCreateWithoutUserInput[] | UserFinancialGoalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserFinancialGoalCreateOrConnectWithoutUserInput | UserFinancialGoalCreateOrConnectWithoutUserInput[]
+    upsert?: UserFinancialGoalUpsertWithWhereUniqueWithoutUserInput | UserFinancialGoalUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserFinancialGoalCreateManyUserInputEnvelope
+    set?: UserFinancialGoalWhereUniqueInput | UserFinancialGoalWhereUniqueInput[]
+    disconnect?: UserFinancialGoalWhereUniqueInput | UserFinancialGoalWhereUniqueInput[]
+    delete?: UserFinancialGoalWhereUniqueInput | UserFinancialGoalWhereUniqueInput[]
+    connect?: UserFinancialGoalWhereUniqueInput | UserFinancialGoalWhereUniqueInput[]
+    update?: UserFinancialGoalUpdateWithWhereUniqueWithoutUserInput | UserFinancialGoalUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserFinancialGoalUpdateManyWithWhereWithoutUserInput | UserFinancialGoalUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserFinancialGoalScalarWhereInput | UserFinancialGoalScalarWhereInput[]
+  }
+
+  export type UserFinancialProfileUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserFinancialProfileCreateWithoutUserInput, UserFinancialProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserFinancialProfileCreateOrConnectWithoutUserInput
+    upsert?: UserFinancialProfileUpsertWithoutUserInput
+    disconnect?: UserFinancialProfileWhereInput | boolean
+    delete?: UserFinancialProfileWhereInput | boolean
+    connect?: UserFinancialProfileWhereUniqueInput
+    update?: XOR<XOR<UserFinancialProfileUpdateToOneWithWhereWithoutUserInput, UserFinancialProfileUpdateWithoutUserInput>, UserFinancialProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserMonthlyStatementUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserMonthlyStatementCreateWithoutUserInput, UserMonthlyStatementUncheckedCreateWithoutUserInput> | UserMonthlyStatementCreateWithoutUserInput[] | UserMonthlyStatementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserMonthlyStatementCreateOrConnectWithoutUserInput | UserMonthlyStatementCreateOrConnectWithoutUserInput[]
+    upsert?: UserMonthlyStatementUpsertWithWhereUniqueWithoutUserInput | UserMonthlyStatementUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserMonthlyStatementCreateManyUserInputEnvelope
+    set?: UserMonthlyStatementWhereUniqueInput | UserMonthlyStatementWhereUniqueInput[]
+    disconnect?: UserMonthlyStatementWhereUniqueInput | UserMonthlyStatementWhereUniqueInput[]
+    delete?: UserMonthlyStatementWhereUniqueInput | UserMonthlyStatementWhereUniqueInput[]
+    connect?: UserMonthlyStatementWhereUniqueInput | UserMonthlyStatementWhereUniqueInput[]
+    update?: UserMonthlyStatementUpdateWithWhereUniqueWithoutUserInput | UserMonthlyStatementUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserMonthlyStatementUpdateManyWithWhereWithoutUserInput | UserMonthlyStatementUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserMonthlyStatementScalarWhereInput | UserMonthlyStatementScalarWhereInput[]
+  }
+
+  export type UserFinancialEntryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserFinancialEntryCreateWithoutUserInput, UserFinancialEntryUncheckedCreateWithoutUserInput> | UserFinancialEntryCreateWithoutUserInput[] | UserFinancialEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserFinancialEntryCreateOrConnectWithoutUserInput | UserFinancialEntryCreateOrConnectWithoutUserInput[]
+    upsert?: UserFinancialEntryUpsertWithWhereUniqueWithoutUserInput | UserFinancialEntryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserFinancialEntryCreateManyUserInputEnvelope
+    set?: UserFinancialEntryWhereUniqueInput | UserFinancialEntryWhereUniqueInput[]
+    disconnect?: UserFinancialEntryWhereUniqueInput | UserFinancialEntryWhereUniqueInput[]
+    delete?: UserFinancialEntryWhereUniqueInput | UserFinancialEntryWhereUniqueInput[]
+    connect?: UserFinancialEntryWhereUniqueInput | UserFinancialEntryWhereUniqueInput[]
+    update?: UserFinancialEntryUpdateWithWhereUniqueWithoutUserInput | UserFinancialEntryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserFinancialEntryUpdateManyWithWhereWithoutUserInput | UserFinancialEntryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserFinancialEntryScalarWhereInput | UserFinancialEntryScalarWhereInput[]
+  }
+
   export type FollowUpdateManyWithoutFollowingNestedInput = {
     create?: XOR<FollowCreateWithoutFollowingInput, FollowUncheckedCreateWithoutFollowingInput> | FollowCreateWithoutFollowingInput[] | FollowUncheckedCreateWithoutFollowingInput[]
     connectOrCreate?: FollowCreateOrConnectWithoutFollowingInput | FollowCreateOrConnectWithoutFollowingInput[]
@@ -47620,6 +57137,72 @@ export namespace Prisma {
     update?: UserInvitationUpdateWithWhereUniqueWithoutUserInput | UserInvitationUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserInvitationUpdateManyWithWhereWithoutUserInput | UserInvitationUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserInvitationScalarWhereInput | UserInvitationScalarWhereInput[]
+  }
+
+  export type UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserPersonalTaskCreateWithoutUserInput, UserPersonalTaskUncheckedCreateWithoutUserInput> | UserPersonalTaskCreateWithoutUserInput[] | UserPersonalTaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPersonalTaskCreateOrConnectWithoutUserInput | UserPersonalTaskCreateOrConnectWithoutUserInput[]
+    upsert?: UserPersonalTaskUpsertWithWhereUniqueWithoutUserInput | UserPersonalTaskUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserPersonalTaskCreateManyUserInputEnvelope
+    set?: UserPersonalTaskWhereUniqueInput | UserPersonalTaskWhereUniqueInput[]
+    disconnect?: UserPersonalTaskWhereUniqueInput | UserPersonalTaskWhereUniqueInput[]
+    delete?: UserPersonalTaskWhereUniqueInput | UserPersonalTaskWhereUniqueInput[]
+    connect?: UserPersonalTaskWhereUniqueInput | UserPersonalTaskWhereUniqueInput[]
+    update?: UserPersonalTaskUpdateWithWhereUniqueWithoutUserInput | UserPersonalTaskUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserPersonalTaskUpdateManyWithWhereWithoutUserInput | UserPersonalTaskUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserPersonalTaskScalarWhereInput | UserPersonalTaskScalarWhereInput[]
+  }
+
+  export type UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserFinancialGoalCreateWithoutUserInput, UserFinancialGoalUncheckedCreateWithoutUserInput> | UserFinancialGoalCreateWithoutUserInput[] | UserFinancialGoalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserFinancialGoalCreateOrConnectWithoutUserInput | UserFinancialGoalCreateOrConnectWithoutUserInput[]
+    upsert?: UserFinancialGoalUpsertWithWhereUniqueWithoutUserInput | UserFinancialGoalUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserFinancialGoalCreateManyUserInputEnvelope
+    set?: UserFinancialGoalWhereUniqueInput | UserFinancialGoalWhereUniqueInput[]
+    disconnect?: UserFinancialGoalWhereUniqueInput | UserFinancialGoalWhereUniqueInput[]
+    delete?: UserFinancialGoalWhereUniqueInput | UserFinancialGoalWhereUniqueInput[]
+    connect?: UserFinancialGoalWhereUniqueInput | UserFinancialGoalWhereUniqueInput[]
+    update?: UserFinancialGoalUpdateWithWhereUniqueWithoutUserInput | UserFinancialGoalUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserFinancialGoalUpdateManyWithWhereWithoutUserInput | UserFinancialGoalUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserFinancialGoalScalarWhereInput | UserFinancialGoalScalarWhereInput[]
+  }
+
+  export type UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserFinancialProfileCreateWithoutUserInput, UserFinancialProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserFinancialProfileCreateOrConnectWithoutUserInput
+    upsert?: UserFinancialProfileUpsertWithoutUserInput
+    disconnect?: UserFinancialProfileWhereInput | boolean
+    delete?: UserFinancialProfileWhereInput | boolean
+    connect?: UserFinancialProfileWhereUniqueInput
+    update?: XOR<XOR<UserFinancialProfileUpdateToOneWithWhereWithoutUserInput, UserFinancialProfileUpdateWithoutUserInput>, UserFinancialProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserMonthlyStatementCreateWithoutUserInput, UserMonthlyStatementUncheckedCreateWithoutUserInput> | UserMonthlyStatementCreateWithoutUserInput[] | UserMonthlyStatementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserMonthlyStatementCreateOrConnectWithoutUserInput | UserMonthlyStatementCreateOrConnectWithoutUserInput[]
+    upsert?: UserMonthlyStatementUpsertWithWhereUniqueWithoutUserInput | UserMonthlyStatementUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserMonthlyStatementCreateManyUserInputEnvelope
+    set?: UserMonthlyStatementWhereUniqueInput | UserMonthlyStatementWhereUniqueInput[]
+    disconnect?: UserMonthlyStatementWhereUniqueInput | UserMonthlyStatementWhereUniqueInput[]
+    delete?: UserMonthlyStatementWhereUniqueInput | UserMonthlyStatementWhereUniqueInput[]
+    connect?: UserMonthlyStatementWhereUniqueInput | UserMonthlyStatementWhereUniqueInput[]
+    update?: UserMonthlyStatementUpdateWithWhereUniqueWithoutUserInput | UserMonthlyStatementUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserMonthlyStatementUpdateManyWithWhereWithoutUserInput | UserMonthlyStatementUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserMonthlyStatementScalarWhereInput | UserMonthlyStatementScalarWhereInput[]
+  }
+
+  export type UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserFinancialEntryCreateWithoutUserInput, UserFinancialEntryUncheckedCreateWithoutUserInput> | UserFinancialEntryCreateWithoutUserInput[] | UserFinancialEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserFinancialEntryCreateOrConnectWithoutUserInput | UserFinancialEntryCreateOrConnectWithoutUserInput[]
+    upsert?: UserFinancialEntryUpsertWithWhereUniqueWithoutUserInput | UserFinancialEntryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserFinancialEntryCreateManyUserInputEnvelope
+    set?: UserFinancialEntryWhereUniqueInput | UserFinancialEntryWhereUniqueInput[]
+    disconnect?: UserFinancialEntryWhereUniqueInput | UserFinancialEntryWhereUniqueInput[]
+    delete?: UserFinancialEntryWhereUniqueInput | UserFinancialEntryWhereUniqueInput[]
+    connect?: UserFinancialEntryWhereUniqueInput | UserFinancialEntryWhereUniqueInput[]
+    update?: UserFinancialEntryUpdateWithWhereUniqueWithoutUserInput | UserFinancialEntryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserFinancialEntryUpdateManyWithWhereWithoutUserInput | UserFinancialEntryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserFinancialEntryScalarWhereInput | UserFinancialEntryScalarWhereInput[]
   }
 
   export type FollowUncheckedUpdateManyWithoutFollowingNestedInput = {
@@ -49316,6 +58899,164 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPushSubscriptionsInput, UserUpdateWithoutPushSubscriptionsInput>, UserUncheckedUpdateWithoutPushSubscriptionsInput>
   }
 
+  export type UserCreateNestedOneWithoutPersonalTasksInput = {
+    create?: XOR<UserCreateWithoutPersonalTasksInput, UserUncheckedCreateWithoutPersonalTasksInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPersonalTasksInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumPersonalTaskStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PersonalTaskStatus
+  }
+
+  export type EnumPersonalTaskPriorityFieldUpdateOperationsInput = {
+    set?: $Enums.PersonalTaskPriority
+  }
+
+  export type UserUpdateOneRequiredWithoutPersonalTasksNestedInput = {
+    create?: XOR<UserCreateWithoutPersonalTasksInput, UserUncheckedCreateWithoutPersonalTasksInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPersonalTasksInput
+    upsert?: UserUpsertWithoutPersonalTasksInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPersonalTasksInput, UserUpdateWithoutPersonalTasksInput>, UserUncheckedUpdateWithoutPersonalTasksInput>
+  }
+
+  export type UserCreateNestedOneWithoutFinancialGoalsInput = {
+    create?: XOR<UserCreateWithoutFinancialGoalsInput, UserUncheckedCreateWithoutFinancialGoalsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFinancialGoalsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserMonthlyProgressCreateNestedManyWithoutGoalInput = {
+    create?: XOR<UserMonthlyProgressCreateWithoutGoalInput, UserMonthlyProgressUncheckedCreateWithoutGoalInput> | UserMonthlyProgressCreateWithoutGoalInput[] | UserMonthlyProgressUncheckedCreateWithoutGoalInput[]
+    connectOrCreate?: UserMonthlyProgressCreateOrConnectWithoutGoalInput | UserMonthlyProgressCreateOrConnectWithoutGoalInput[]
+    createMany?: UserMonthlyProgressCreateManyGoalInputEnvelope
+    connect?: UserMonthlyProgressWhereUniqueInput | UserMonthlyProgressWhereUniqueInput[]
+  }
+
+  export type UserMonthlyProgressUncheckedCreateNestedManyWithoutGoalInput = {
+    create?: XOR<UserMonthlyProgressCreateWithoutGoalInput, UserMonthlyProgressUncheckedCreateWithoutGoalInput> | UserMonthlyProgressCreateWithoutGoalInput[] | UserMonthlyProgressUncheckedCreateWithoutGoalInput[]
+    connectOrCreate?: UserMonthlyProgressCreateOrConnectWithoutGoalInput | UserMonthlyProgressCreateOrConnectWithoutGoalInput[]
+    createMany?: UserMonthlyProgressCreateManyGoalInputEnvelope
+    connect?: UserMonthlyProgressWhereUniqueInput | UserMonthlyProgressWhereUniqueInput[]
+  }
+
+  export type EnumFinancialGoalTypeFieldUpdateOperationsInput = {
+    set?: $Enums.FinancialGoalType
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutFinancialGoalsNestedInput = {
+    create?: XOR<UserCreateWithoutFinancialGoalsInput, UserUncheckedCreateWithoutFinancialGoalsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFinancialGoalsInput
+    upsert?: UserUpsertWithoutFinancialGoalsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFinancialGoalsInput, UserUpdateWithoutFinancialGoalsInput>, UserUncheckedUpdateWithoutFinancialGoalsInput>
+  }
+
+  export type UserMonthlyProgressUpdateManyWithoutGoalNestedInput = {
+    create?: XOR<UserMonthlyProgressCreateWithoutGoalInput, UserMonthlyProgressUncheckedCreateWithoutGoalInput> | UserMonthlyProgressCreateWithoutGoalInput[] | UserMonthlyProgressUncheckedCreateWithoutGoalInput[]
+    connectOrCreate?: UserMonthlyProgressCreateOrConnectWithoutGoalInput | UserMonthlyProgressCreateOrConnectWithoutGoalInput[]
+    upsert?: UserMonthlyProgressUpsertWithWhereUniqueWithoutGoalInput | UserMonthlyProgressUpsertWithWhereUniqueWithoutGoalInput[]
+    createMany?: UserMonthlyProgressCreateManyGoalInputEnvelope
+    set?: UserMonthlyProgressWhereUniqueInput | UserMonthlyProgressWhereUniqueInput[]
+    disconnect?: UserMonthlyProgressWhereUniqueInput | UserMonthlyProgressWhereUniqueInput[]
+    delete?: UserMonthlyProgressWhereUniqueInput | UserMonthlyProgressWhereUniqueInput[]
+    connect?: UserMonthlyProgressWhereUniqueInput | UserMonthlyProgressWhereUniqueInput[]
+    update?: UserMonthlyProgressUpdateWithWhereUniqueWithoutGoalInput | UserMonthlyProgressUpdateWithWhereUniqueWithoutGoalInput[]
+    updateMany?: UserMonthlyProgressUpdateManyWithWhereWithoutGoalInput | UserMonthlyProgressUpdateManyWithWhereWithoutGoalInput[]
+    deleteMany?: UserMonthlyProgressScalarWhereInput | UserMonthlyProgressScalarWhereInput[]
+  }
+
+  export type UserMonthlyProgressUncheckedUpdateManyWithoutGoalNestedInput = {
+    create?: XOR<UserMonthlyProgressCreateWithoutGoalInput, UserMonthlyProgressUncheckedCreateWithoutGoalInput> | UserMonthlyProgressCreateWithoutGoalInput[] | UserMonthlyProgressUncheckedCreateWithoutGoalInput[]
+    connectOrCreate?: UserMonthlyProgressCreateOrConnectWithoutGoalInput | UserMonthlyProgressCreateOrConnectWithoutGoalInput[]
+    upsert?: UserMonthlyProgressUpsertWithWhereUniqueWithoutGoalInput | UserMonthlyProgressUpsertWithWhereUniqueWithoutGoalInput[]
+    createMany?: UserMonthlyProgressCreateManyGoalInputEnvelope
+    set?: UserMonthlyProgressWhereUniqueInput | UserMonthlyProgressWhereUniqueInput[]
+    disconnect?: UserMonthlyProgressWhereUniqueInput | UserMonthlyProgressWhereUniqueInput[]
+    delete?: UserMonthlyProgressWhereUniqueInput | UserMonthlyProgressWhereUniqueInput[]
+    connect?: UserMonthlyProgressWhereUniqueInput | UserMonthlyProgressWhereUniqueInput[]
+    update?: UserMonthlyProgressUpdateWithWhereUniqueWithoutGoalInput | UserMonthlyProgressUpdateWithWhereUniqueWithoutGoalInput[]
+    updateMany?: UserMonthlyProgressUpdateManyWithWhereWithoutGoalInput | UserMonthlyProgressUpdateManyWithWhereWithoutGoalInput[]
+    deleteMany?: UserMonthlyProgressScalarWhereInput | UserMonthlyProgressScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutFinancialProfileInput = {
+    create?: XOR<UserCreateWithoutFinancialProfileInput, UserUncheckedCreateWithoutFinancialProfileInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFinancialProfileInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutFinancialProfileNestedInput = {
+    create?: XOR<UserCreateWithoutFinancialProfileInput, UserUncheckedCreateWithoutFinancialProfileInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFinancialProfileInput
+    upsert?: UserUpsertWithoutFinancialProfileInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFinancialProfileInput, UserUpdateWithoutFinancialProfileInput>, UserUncheckedUpdateWithoutFinancialProfileInput>
+  }
+
+  export type UserCreateNestedOneWithoutMonthlyStatementsInput = {
+    create?: XOR<UserCreateWithoutMonthlyStatementsInput, UserUncheckedCreateWithoutMonthlyStatementsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMonthlyStatementsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutMonthlyStatementsNestedInput = {
+    create?: XOR<UserCreateWithoutMonthlyStatementsInput, UserUncheckedCreateWithoutMonthlyStatementsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMonthlyStatementsInput
+    upsert?: UserUpsertWithoutMonthlyStatementsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMonthlyStatementsInput, UserUpdateWithoutMonthlyStatementsInput>, UserUncheckedUpdateWithoutMonthlyStatementsInput>
+  }
+
+  export type UserCreateNestedOneWithoutFinancialEntriesInput = {
+    create?: XOR<UserCreateWithoutFinancialEntriesInput, UserUncheckedCreateWithoutFinancialEntriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFinancialEntriesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumFinancialEntryTypeFieldUpdateOperationsInput = {
+    set?: $Enums.FinancialEntryType
+  }
+
+  export type UserUpdateOneRequiredWithoutFinancialEntriesNestedInput = {
+    create?: XOR<UserCreateWithoutFinancialEntriesInput, UserUncheckedCreateWithoutFinancialEntriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFinancialEntriesInput
+    upsert?: UserUpsertWithoutFinancialEntriesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFinancialEntriesInput, UserUpdateWithoutFinancialEntriesInput>, UserUncheckedUpdateWithoutFinancialEntriesInput>
+  }
+
+  export type UserFinancialGoalCreateNestedOneWithoutProgressInput = {
+    create?: XOR<UserFinancialGoalCreateWithoutProgressInput, UserFinancialGoalUncheckedCreateWithoutProgressInput>
+    connectOrCreate?: UserFinancialGoalCreateOrConnectWithoutProgressInput
+    connect?: UserFinancialGoalWhereUniqueInput
+  }
+
+  export type UserFinancialGoalUpdateOneRequiredWithoutProgressNestedInput = {
+    create?: XOR<UserFinancialGoalCreateWithoutProgressInput, UserFinancialGoalUncheckedCreateWithoutProgressInput>
+    connectOrCreate?: UserFinancialGoalCreateOrConnectWithoutProgressInput
+    upsert?: UserFinancialGoalUpsertWithoutProgressInput
+    connect?: UserFinancialGoalWhereUniqueInput
+    update?: XOR<XOR<UserFinancialGoalUpdateToOneWithWhereWithoutProgressInput, UserFinancialGoalUpdateWithoutProgressInput>, UserFinancialGoalUncheckedUpdateWithoutProgressInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -49725,6 +59466,106 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTaskPriorityFilter<$PrismaModel>
     _max?: NestedEnumTaskPriorityFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPersonalTaskStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PersonalTaskStatus | EnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PersonalTaskStatus[] | ListEnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PersonalTaskStatus[] | ListEnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPersonalTaskStatusFilter<$PrismaModel> | $Enums.PersonalTaskStatus
+  }
+
+  export type NestedEnumPersonalTaskPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.PersonalTaskPriority | EnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.PersonalTaskPriority[] | ListEnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PersonalTaskPriority[] | ListEnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumPersonalTaskPriorityFilter<$PrismaModel> | $Enums.PersonalTaskPriority
+  }
+
+  export type NestedEnumPersonalTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PersonalTaskStatus | EnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PersonalTaskStatus[] | ListEnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PersonalTaskStatus[] | ListEnumPersonalTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPersonalTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.PersonalTaskStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPersonalTaskStatusFilter<$PrismaModel>
+    _max?: NestedEnumPersonalTaskStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPersonalTaskPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PersonalTaskPriority | EnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.PersonalTaskPriority[] | ListEnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PersonalTaskPriority[] | ListEnumPersonalTaskPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumPersonalTaskPriorityWithAggregatesFilter<$PrismaModel> | $Enums.PersonalTaskPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPersonalTaskPriorityFilter<$PrismaModel>
+    _max?: NestedEnumPersonalTaskPriorityFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFinancialGoalTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialGoalType | EnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialGoalType[] | ListEnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialGoalType[] | ListEnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialGoalTypeFilter<$PrismaModel> | $Enums.FinancialGoalType
+  }
+
+  export type NestedEnumFinancialGoalTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialGoalType | EnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialGoalType[] | ListEnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialGoalType[] | ListEnumFinancialGoalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialGoalTypeWithAggregatesFilter<$PrismaModel> | $Enums.FinancialGoalType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFinancialGoalTypeFilter<$PrismaModel>
+    _max?: NestedEnumFinancialGoalTypeFilter<$PrismaModel>
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFinancialEntryTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialEntryType | EnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialEntryType[] | ListEnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialEntryType[] | ListEnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialEntryTypeFilter<$PrismaModel> | $Enums.FinancialEntryType
+  }
+
+  export type NestedEnumFinancialEntryTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialEntryType | EnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialEntryType[] | ListEnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialEntryType[] | ListEnumFinancialEntryTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialEntryTypeWithAggregatesFilter<$PrismaModel> | $Enums.FinancialEntryType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFinancialEntryTypeFilter<$PrismaModel>
+    _max?: NestedEnumFinancialEntryTypeFilter<$PrismaModel>
   }
 
   export type AnnouncementCreateWithoutPublisherInput = {
@@ -50229,6 +60070,169 @@ export namespace Prisma {
 
   export type UserInvitationCreateManyUserInputEnvelope = {
     data: UserInvitationCreateManyUserInput | UserInvitationCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserPersonalTaskCreateWithoutUserInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.PersonalTaskStatus
+    priority?: $Enums.PersonalTaskPriority
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPersonalTaskUncheckedCreateWithoutUserInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.PersonalTaskStatus
+    priority?: $Enums.PersonalTaskPriority
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPersonalTaskCreateOrConnectWithoutUserInput = {
+    where: UserPersonalTaskWhereUniqueInput
+    create: XOR<UserPersonalTaskCreateWithoutUserInput, UserPersonalTaskUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserPersonalTaskCreateManyUserInputEnvelope = {
+    data: UserPersonalTaskCreateManyUserInput | UserPersonalTaskCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserFinancialGoalCreateWithoutUserInput = {
+    id?: string
+    type?: $Enums.FinancialGoalType
+    year?: number | null
+    targetItem?: string | null
+    targetAmount: number
+    targetDate?: Date | string | null
+    label?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    progress?: UserMonthlyProgressCreateNestedManyWithoutGoalInput
+  }
+
+  export type UserFinancialGoalUncheckedCreateWithoutUserInput = {
+    id?: string
+    type?: $Enums.FinancialGoalType
+    year?: number | null
+    targetItem?: string | null
+    targetAmount: number
+    targetDate?: Date | string | null
+    label?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    progress?: UserMonthlyProgressUncheckedCreateNestedManyWithoutGoalInput
+  }
+
+  export type UserFinancialGoalCreateOrConnectWithoutUserInput = {
+    where: UserFinancialGoalWhereUniqueInput
+    create: XOR<UserFinancialGoalCreateWithoutUserInput, UserFinancialGoalUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserFinancialGoalCreateManyUserInputEnvelope = {
+    data: UserFinancialGoalCreateManyUserInput | UserFinancialGoalCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserFinancialProfileCreateWithoutUserInput = {
+    id?: string
+    monthlySalary?: number
+    supplementaryIncome?: number
+    currency?: string
+    preferredSavingsRate?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialProfileUncheckedCreateWithoutUserInput = {
+    id?: string
+    monthlySalary?: number
+    supplementaryIncome?: number
+    currency?: string
+    preferredSavingsRate?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialProfileCreateOrConnectWithoutUserInput = {
+    where: UserFinancialProfileWhereUniqueInput
+    create: XOR<UserFinancialProfileCreateWithoutUserInput, UserFinancialProfileUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserMonthlyStatementCreateWithoutUserInput = {
+    id?: string
+    year: number
+    month: number
+    salaryReceived?: number
+    supplementaryIncome?: number
+    totalExpenses?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMonthlyStatementUncheckedCreateWithoutUserInput = {
+    id?: string
+    year: number
+    month: number
+    salaryReceived?: number
+    supplementaryIncome?: number
+    totalExpenses?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMonthlyStatementCreateOrConnectWithoutUserInput = {
+    where: UserMonthlyStatementWhereUniqueInput
+    create: XOR<UserMonthlyStatementCreateWithoutUserInput, UserMonthlyStatementUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserMonthlyStatementCreateManyUserInputEnvelope = {
+    data: UserMonthlyStatementCreateManyUserInput | UserMonthlyStatementCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserFinancialEntryCreateWithoutUserInput = {
+    id?: string
+    year: number
+    month: number
+    type: $Enums.FinancialEntryType
+    amount: number
+    note?: string | null
+    isConfirmed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialEntryUncheckedCreateWithoutUserInput = {
+    id?: string
+    year: number
+    month: number
+    type: $Enums.FinancialEntryType
+    amount: number
+    note?: string | null
+    isConfirmed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialEntryCreateOrConnectWithoutUserInput = {
+    where: UserFinancialEntryWhereUniqueInput
+    create: XOR<UserFinancialEntryCreateWithoutUserInput, UserFinancialEntryUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserFinancialEntryCreateManyUserInputEnvelope = {
+    data: UserFinancialEntryCreateManyUserInput | UserFinancialEntryCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -50753,6 +60757,165 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"UserInvitation"> | Date | string
   }
 
+  export type UserPersonalTaskUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserPersonalTaskWhereUniqueInput
+    update: XOR<UserPersonalTaskUpdateWithoutUserInput, UserPersonalTaskUncheckedUpdateWithoutUserInput>
+    create: XOR<UserPersonalTaskCreateWithoutUserInput, UserPersonalTaskUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserPersonalTaskUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserPersonalTaskWhereUniqueInput
+    data: XOR<UserPersonalTaskUpdateWithoutUserInput, UserPersonalTaskUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserPersonalTaskUpdateManyWithWhereWithoutUserInput = {
+    where: UserPersonalTaskScalarWhereInput
+    data: XOR<UserPersonalTaskUpdateManyMutationInput, UserPersonalTaskUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserPersonalTaskScalarWhereInput = {
+    AND?: UserPersonalTaskScalarWhereInput | UserPersonalTaskScalarWhereInput[]
+    OR?: UserPersonalTaskScalarWhereInput[]
+    NOT?: UserPersonalTaskScalarWhereInput | UserPersonalTaskScalarWhereInput[]
+    id?: StringFilter<"UserPersonalTask"> | string
+    userId?: StringFilter<"UserPersonalTask"> | string
+    title?: StringFilter<"UserPersonalTask"> | string
+    description?: StringNullableFilter<"UserPersonalTask"> | string | null
+    status?: EnumPersonalTaskStatusFilter<"UserPersonalTask"> | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityFilter<"UserPersonalTask"> | $Enums.PersonalTaskPriority
+    dueDate?: DateTimeNullableFilter<"UserPersonalTask"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"UserPersonalTask"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserPersonalTask"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPersonalTask"> | Date | string
+  }
+
+  export type UserFinancialGoalUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserFinancialGoalWhereUniqueInput
+    update: XOR<UserFinancialGoalUpdateWithoutUserInput, UserFinancialGoalUncheckedUpdateWithoutUserInput>
+    create: XOR<UserFinancialGoalCreateWithoutUserInput, UserFinancialGoalUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserFinancialGoalUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserFinancialGoalWhereUniqueInput
+    data: XOR<UserFinancialGoalUpdateWithoutUserInput, UserFinancialGoalUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserFinancialGoalUpdateManyWithWhereWithoutUserInput = {
+    where: UserFinancialGoalScalarWhereInput
+    data: XOR<UserFinancialGoalUpdateManyMutationInput, UserFinancialGoalUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserFinancialGoalScalarWhereInput = {
+    AND?: UserFinancialGoalScalarWhereInput | UserFinancialGoalScalarWhereInput[]
+    OR?: UserFinancialGoalScalarWhereInput[]
+    NOT?: UserFinancialGoalScalarWhereInput | UserFinancialGoalScalarWhereInput[]
+    id?: StringFilter<"UserFinancialGoal"> | string
+    userId?: StringFilter<"UserFinancialGoal"> | string
+    type?: EnumFinancialGoalTypeFilter<"UserFinancialGoal"> | $Enums.FinancialGoalType
+    year?: IntNullableFilter<"UserFinancialGoal"> | number | null
+    targetItem?: StringNullableFilter<"UserFinancialGoal"> | string | null
+    targetAmount?: FloatFilter<"UserFinancialGoal"> | number
+    targetDate?: DateTimeNullableFilter<"UserFinancialGoal"> | Date | string | null
+    label?: StringNullableFilter<"UserFinancialGoal"> | string | null
+    createdAt?: DateTimeFilter<"UserFinancialGoal"> | Date | string
+    updatedAt?: DateTimeFilter<"UserFinancialGoal"> | Date | string
+  }
+
+  export type UserFinancialProfileUpsertWithoutUserInput = {
+    update: XOR<UserFinancialProfileUpdateWithoutUserInput, UserFinancialProfileUncheckedUpdateWithoutUserInput>
+    create: XOR<UserFinancialProfileCreateWithoutUserInput, UserFinancialProfileUncheckedCreateWithoutUserInput>
+    where?: UserFinancialProfileWhereInput
+  }
+
+  export type UserFinancialProfileUpdateToOneWithWhereWithoutUserInput = {
+    where?: UserFinancialProfileWhereInput
+    data: XOR<UserFinancialProfileUpdateWithoutUserInput, UserFinancialProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserFinancialProfileUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    monthlySalary?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    preferredSavingsRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialProfileUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    monthlySalary?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    preferredSavingsRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyStatementUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserMonthlyStatementWhereUniqueInput
+    update: XOR<UserMonthlyStatementUpdateWithoutUserInput, UserMonthlyStatementUncheckedUpdateWithoutUserInput>
+    create: XOR<UserMonthlyStatementCreateWithoutUserInput, UserMonthlyStatementUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserMonthlyStatementUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserMonthlyStatementWhereUniqueInput
+    data: XOR<UserMonthlyStatementUpdateWithoutUserInput, UserMonthlyStatementUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserMonthlyStatementUpdateManyWithWhereWithoutUserInput = {
+    where: UserMonthlyStatementScalarWhereInput
+    data: XOR<UserMonthlyStatementUpdateManyMutationInput, UserMonthlyStatementUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserMonthlyStatementScalarWhereInput = {
+    AND?: UserMonthlyStatementScalarWhereInput | UserMonthlyStatementScalarWhereInput[]
+    OR?: UserMonthlyStatementScalarWhereInput[]
+    NOT?: UserMonthlyStatementScalarWhereInput | UserMonthlyStatementScalarWhereInput[]
+    id?: StringFilter<"UserMonthlyStatement"> | string
+    userId?: StringFilter<"UserMonthlyStatement"> | string
+    year?: IntFilter<"UserMonthlyStatement"> | number
+    month?: IntFilter<"UserMonthlyStatement"> | number
+    salaryReceived?: FloatFilter<"UserMonthlyStatement"> | number
+    supplementaryIncome?: FloatFilter<"UserMonthlyStatement"> | number
+    totalExpenses?: FloatFilter<"UserMonthlyStatement"> | number
+    notes?: StringNullableFilter<"UserMonthlyStatement"> | string | null
+    createdAt?: DateTimeFilter<"UserMonthlyStatement"> | Date | string
+    updatedAt?: DateTimeFilter<"UserMonthlyStatement"> | Date | string
+  }
+
+  export type UserFinancialEntryUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserFinancialEntryWhereUniqueInput
+    update: XOR<UserFinancialEntryUpdateWithoutUserInput, UserFinancialEntryUncheckedUpdateWithoutUserInput>
+    create: XOR<UserFinancialEntryCreateWithoutUserInput, UserFinancialEntryUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserFinancialEntryUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserFinancialEntryWhereUniqueInput
+    data: XOR<UserFinancialEntryUpdateWithoutUserInput, UserFinancialEntryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserFinancialEntryUpdateManyWithWhereWithoutUserInput = {
+    where: UserFinancialEntryScalarWhereInput
+    data: XOR<UserFinancialEntryUpdateManyMutationInput, UserFinancialEntryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserFinancialEntryScalarWhereInput = {
+    AND?: UserFinancialEntryScalarWhereInput | UserFinancialEntryScalarWhereInput[]
+    OR?: UserFinancialEntryScalarWhereInput[]
+    NOT?: UserFinancialEntryScalarWhereInput | UserFinancialEntryScalarWhereInput[]
+    id?: StringFilter<"UserFinancialEntry"> | string
+    userId?: StringFilter<"UserFinancialEntry"> | string
+    year?: IntFilter<"UserFinancialEntry"> | number
+    month?: IntFilter<"UserFinancialEntry"> | number
+    type?: EnumFinancialEntryTypeFilter<"UserFinancialEntry"> | $Enums.FinancialEntryType
+    amount?: FloatFilter<"UserFinancialEntry"> | number
+    note?: StringNullableFilter<"UserFinancialEntry"> | string | null
+    isConfirmed?: BoolFilter<"UserFinancialEntry"> | boolean
+    createdAt?: DateTimeFilter<"UserFinancialEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"UserFinancialEntry"> | Date | string
+  }
+
   export type FollowUpsertWithWhereUniqueWithoutFollowingInput = {
     where: FollowWhereUniqueInput
     update: XOR<FollowUpdateWithoutFollowingInput, FollowUncheckedUpdateWithoutFollowingInput>
@@ -50836,6 +60999,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -50881,6 +61049,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -50966,6 +61139,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -51011,6 +61189,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -51164,6 +61347,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
   }
 
@@ -51209,6 +61397,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
   }
 
@@ -51259,6 +61452,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
 
@@ -51304,6 +61502,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
 
@@ -51365,6 +61568,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
   }
 
@@ -51410,6 +61618,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
   }
 
@@ -51466,6 +61679,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
 
@@ -51511,6 +61729,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
 
@@ -51824,6 +62047,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -51869,6 +62097,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -51971,6 +62204,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -52016,6 +62254,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -52096,6 +62339,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -52141,6 +62389,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -52389,6 +62642,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -52434,6 +62692,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -52614,6 +62877,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -52659,6 +62927,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -52759,6 +63032,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -52804,6 +63082,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -53032,6 +63315,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -53077,6 +63365,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -53169,6 +63462,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -53214,6 +63512,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -53310,6 +63613,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -53355,6 +63663,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -53475,6 +63788,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -53520,6 +63838,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -53621,6 +63944,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -53666,6 +63994,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -53727,6 +64060,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -53772,6 +64110,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -53817,6 +64160,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -53862,6 +64210,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -53945,6 +64298,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -53990,6 +64348,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -54590,6 +64953,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -54635,6 +65003,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -54734,6 +65107,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -54779,6 +65157,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -55062,6 +65445,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -55107,6 +65495,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -55207,6 +65600,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -55252,6 +65650,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -55330,6 +65733,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -55375,6 +65783,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -55530,6 +65943,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -55575,6 +65993,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -55667,6 +66090,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -55712,6 +66140,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -55806,6 +66239,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -55851,6 +66289,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -55968,6 +66411,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -56013,6 +66461,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -56063,6 +66516,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -56108,6 +66566,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -56268,6 +66731,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -56313,6 +66781,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -56369,6 +66842,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -56414,6 +66892,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -56545,6 +67028,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -56590,6 +67078,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -56728,6 +67221,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -56773,6 +67271,11 @@ export namespace Prisma {
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -57003,6 +67506,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -57048,6 +67556,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -57148,6 +67661,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -57193,6 +67711,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
   }
@@ -57238,6 +67761,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
   }
@@ -57283,6 +67811,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
   }
@@ -57344,6 +67877,11 @@ export namespace Prisma {
     taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
   }
@@ -57389,8 +67927,1221 @@ export namespace Prisma {
     taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
     departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserCreateWithoutPersonalTasksInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutPersonalTasksInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutPersonalTasksInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPersonalTasksInput, UserUncheckedCreateWithoutPersonalTasksInput>
+  }
+
+  export type UserUpsertWithoutPersonalTasksInput = {
+    update: XOR<UserUpdateWithoutPersonalTasksInput, UserUncheckedUpdateWithoutPersonalTasksInput>
+    create: XOR<UserCreateWithoutPersonalTasksInput, UserUncheckedCreateWithoutPersonalTasksInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPersonalTasksInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPersonalTasksInput, UserUncheckedUpdateWithoutPersonalTasksInput>
+  }
+
+  export type UserUpdateWithoutPersonalTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPersonalTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserCreateWithoutFinancialGoalsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutFinancialGoalsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutFinancialGoalsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFinancialGoalsInput, UserUncheckedCreateWithoutFinancialGoalsInput>
+  }
+
+  export type UserMonthlyProgressCreateWithoutGoalInput = {
+    id?: string
+    year: number
+    month: number
+    amount?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMonthlyProgressUncheckedCreateWithoutGoalInput = {
+    id?: string
+    year: number
+    month: number
+    amount?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMonthlyProgressCreateOrConnectWithoutGoalInput = {
+    where: UserMonthlyProgressWhereUniqueInput
+    create: XOR<UserMonthlyProgressCreateWithoutGoalInput, UserMonthlyProgressUncheckedCreateWithoutGoalInput>
+  }
+
+  export type UserMonthlyProgressCreateManyGoalInputEnvelope = {
+    data: UserMonthlyProgressCreateManyGoalInput | UserMonthlyProgressCreateManyGoalInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutFinancialGoalsInput = {
+    update: XOR<UserUpdateWithoutFinancialGoalsInput, UserUncheckedUpdateWithoutFinancialGoalsInput>
+    create: XOR<UserCreateWithoutFinancialGoalsInput, UserUncheckedCreateWithoutFinancialGoalsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFinancialGoalsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFinancialGoalsInput, UserUncheckedUpdateWithoutFinancialGoalsInput>
+  }
+
+  export type UserUpdateWithoutFinancialGoalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFinancialGoalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserMonthlyProgressUpsertWithWhereUniqueWithoutGoalInput = {
+    where: UserMonthlyProgressWhereUniqueInput
+    update: XOR<UserMonthlyProgressUpdateWithoutGoalInput, UserMonthlyProgressUncheckedUpdateWithoutGoalInput>
+    create: XOR<UserMonthlyProgressCreateWithoutGoalInput, UserMonthlyProgressUncheckedCreateWithoutGoalInput>
+  }
+
+  export type UserMonthlyProgressUpdateWithWhereUniqueWithoutGoalInput = {
+    where: UserMonthlyProgressWhereUniqueInput
+    data: XOR<UserMonthlyProgressUpdateWithoutGoalInput, UserMonthlyProgressUncheckedUpdateWithoutGoalInput>
+  }
+
+  export type UserMonthlyProgressUpdateManyWithWhereWithoutGoalInput = {
+    where: UserMonthlyProgressScalarWhereInput
+    data: XOR<UserMonthlyProgressUpdateManyMutationInput, UserMonthlyProgressUncheckedUpdateManyWithoutGoalInput>
+  }
+
+  export type UserMonthlyProgressScalarWhereInput = {
+    AND?: UserMonthlyProgressScalarWhereInput | UserMonthlyProgressScalarWhereInput[]
+    OR?: UserMonthlyProgressScalarWhereInput[]
+    NOT?: UserMonthlyProgressScalarWhereInput | UserMonthlyProgressScalarWhereInput[]
+    id?: StringFilter<"UserMonthlyProgress"> | string
+    goalId?: StringFilter<"UserMonthlyProgress"> | string
+    year?: IntFilter<"UserMonthlyProgress"> | number
+    month?: IntFilter<"UserMonthlyProgress"> | number
+    amount?: FloatFilter<"UserMonthlyProgress"> | number
+    notes?: StringNullableFilter<"UserMonthlyProgress"> | string | null
+    createdAt?: DateTimeFilter<"UserMonthlyProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"UserMonthlyProgress"> | Date | string
+  }
+
+  export type UserCreateWithoutFinancialProfileInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutFinancialProfileInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutFinancialProfileInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFinancialProfileInput, UserUncheckedCreateWithoutFinancialProfileInput>
+  }
+
+  export type UserUpsertWithoutFinancialProfileInput = {
+    update: XOR<UserUpdateWithoutFinancialProfileInput, UserUncheckedUpdateWithoutFinancialProfileInput>
+    create: XOR<UserCreateWithoutFinancialProfileInput, UserUncheckedCreateWithoutFinancialProfileInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFinancialProfileInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFinancialProfileInput, UserUncheckedUpdateWithoutFinancialProfileInput>
+  }
+
+  export type UserUpdateWithoutFinancialProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFinancialProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserCreateWithoutMonthlyStatementsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutMonthlyStatementsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutMonthlyStatementsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMonthlyStatementsInput, UserUncheckedCreateWithoutMonthlyStatementsInput>
+  }
+
+  export type UserUpsertWithoutMonthlyStatementsInput = {
+    update: XOR<UserUpdateWithoutMonthlyStatementsInput, UserUncheckedUpdateWithoutMonthlyStatementsInput>
+    create: XOR<UserCreateWithoutMonthlyStatementsInput, UserUncheckedCreateWithoutMonthlyStatementsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMonthlyStatementsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMonthlyStatementsInput, UserUncheckedUpdateWithoutMonthlyStatementsInput>
+  }
+
+  export type UserUpdateWithoutMonthlyStatementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMonthlyStatementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserCreateWithoutFinancialEntriesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutFinancialEntriesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutFinancialEntriesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFinancialEntriesInput, UserUncheckedCreateWithoutFinancialEntriesInput>
+  }
+
+  export type UserUpsertWithoutFinancialEntriesInput = {
+    update: XOR<UserUpdateWithoutFinancialEntriesInput, UserUncheckedUpdateWithoutFinancialEntriesInput>
+    create: XOR<UserCreateWithoutFinancialEntriesInput, UserUncheckedCreateWithoutFinancialEntriesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFinancialEntriesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFinancialEntriesInput, UserUncheckedUpdateWithoutFinancialEntriesInput>
+  }
+
+  export type UserUpdateWithoutFinancialEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFinancialEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserFinancialGoalCreateWithoutProgressInput = {
+    id?: string
+    type?: $Enums.FinancialGoalType
+    year?: number | null
+    targetItem?: string | null
+    targetAmount: number
+    targetDate?: Date | string | null
+    label?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFinancialGoalsInput
+  }
+
+  export type UserFinancialGoalUncheckedCreateWithoutProgressInput = {
+    id?: string
+    userId: string
+    type?: $Enums.FinancialGoalType
+    year?: number | null
+    targetItem?: string | null
+    targetAmount: number
+    targetDate?: Date | string | null
+    label?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialGoalCreateOrConnectWithoutProgressInput = {
+    where: UserFinancialGoalWhereUniqueInput
+    create: XOR<UserFinancialGoalCreateWithoutProgressInput, UserFinancialGoalUncheckedCreateWithoutProgressInput>
+  }
+
+  export type UserFinancialGoalUpsertWithoutProgressInput = {
+    update: XOR<UserFinancialGoalUpdateWithoutProgressInput, UserFinancialGoalUncheckedUpdateWithoutProgressInput>
+    create: XOR<UserFinancialGoalCreateWithoutProgressInput, UserFinancialGoalUncheckedCreateWithoutProgressInput>
+    where?: UserFinancialGoalWhereInput
+  }
+
+  export type UserFinancialGoalUpdateToOneWithWhereWithoutProgressInput = {
+    where?: UserFinancialGoalWhereInput
+    data: XOR<UserFinancialGoalUpdateWithoutProgressInput, UserFinancialGoalUncheckedUpdateWithoutProgressInput>
+  }
+
+  export type UserFinancialGoalUpdateWithoutProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumFinancialGoalTypeFieldUpdateOperationsInput | $Enums.FinancialGoalType
+    year?: NullableIntFieldUpdateOperationsInput | number | null
+    targetItem?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAmount?: FloatFieldUpdateOperationsInput | number
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFinancialGoalsNestedInput
+  }
+
+  export type UserFinancialGoalUncheckedUpdateWithoutProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumFinancialGoalTypeFieldUpdateOperationsInput | $Enums.FinancialGoalType
+    year?: NullableIntFieldUpdateOperationsInput | number | null
+    targetItem?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAmount?: FloatFieldUpdateOperationsInput | number
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AnnouncementCreateManyPublisherInput = {
@@ -57536,6 +69287,54 @@ export namespace Prisma {
     date: Date | string
     location: string
     maxGuests?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPersonalTaskCreateManyUserInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.PersonalTaskStatus
+    priority?: $Enums.PersonalTaskPriority
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialGoalCreateManyUserInput = {
+    id?: string
+    type?: $Enums.FinancialGoalType
+    year?: number | null
+    targetItem?: string | null
+    targetAmount: number
+    targetDate?: Date | string | null
+    label?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMonthlyStatementCreateManyUserInput = {
+    id?: string
+    year: number
+    month: number
+    salaryReceived?: number
+    supplementaryIncome?: number
+    totalExpenses?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserFinancialEntryCreateManyUserInput = {
+    id?: string
+    year: number
+    month: number
+    type: $Enums.FinancialEntryType
+    amount: number
+    note?: string | null
+    isConfirmed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -58017,6 +69816,152 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
     maxGuests?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPersonalTaskUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPersonalTaskStatusFieldUpdateOperationsInput | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityFieldUpdateOperationsInput | $Enums.PersonalTaskPriority
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPersonalTaskUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPersonalTaskStatusFieldUpdateOperationsInput | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityFieldUpdateOperationsInput | $Enums.PersonalTaskPriority
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPersonalTaskUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPersonalTaskStatusFieldUpdateOperationsInput | $Enums.PersonalTaskStatus
+    priority?: EnumPersonalTaskPriorityFieldUpdateOperationsInput | $Enums.PersonalTaskPriority
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialGoalUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumFinancialGoalTypeFieldUpdateOperationsInput | $Enums.FinancialGoalType
+    year?: NullableIntFieldUpdateOperationsInput | number | null
+    targetItem?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAmount?: FloatFieldUpdateOperationsInput | number
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    progress?: UserMonthlyProgressUpdateManyWithoutGoalNestedInput
+  }
+
+  export type UserFinancialGoalUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumFinancialGoalTypeFieldUpdateOperationsInput | $Enums.FinancialGoalType
+    year?: NullableIntFieldUpdateOperationsInput | number | null
+    targetItem?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAmount?: FloatFieldUpdateOperationsInput | number
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    progress?: UserMonthlyProgressUncheckedUpdateManyWithoutGoalNestedInput
+  }
+
+  export type UserFinancialGoalUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumFinancialGoalTypeFieldUpdateOperationsInput | $Enums.FinancialGoalType
+    year?: NullableIntFieldUpdateOperationsInput | number | null
+    targetItem?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAmount?: FloatFieldUpdateOperationsInput | number
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyStatementUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    salaryReceived?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    totalExpenses?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyStatementUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    salaryReceived?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    totalExpenses?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyStatementUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    salaryReceived?: FloatFieldUpdateOperationsInput | number
+    supplementaryIncome?: FloatFieldUpdateOperationsInput | number
+    totalExpenses?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialEntryUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    type?: EnumFinancialEntryTypeFieldUpdateOperationsInput | $Enums.FinancialEntryType
+    amount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    isConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialEntryUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    type?: EnumFinancialEntryTypeFieldUpdateOperationsInput | $Enums.FinancialEntryType
+    amount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    isConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserFinancialEntryUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    type?: EnumFinancialEntryTypeFieldUpdateOperationsInput | $Enums.FinancialEntryType
+    amount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    isConfirmed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -58871,6 +70816,46 @@ export namespace Prisma {
     fileType?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyProgressCreateManyGoalInput = {
+    id?: string
+    year: number
+    month: number
+    amount?: number
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMonthlyProgressUpdateWithoutGoalInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyProgressUncheckedUpdateWithoutGoalInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMonthlyProgressUncheckedUpdateManyWithoutGoalInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    amount?: FloatFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

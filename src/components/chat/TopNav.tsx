@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Search } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Search, Wallet, Lightbulb, BarChart3, TrendingUp, Lock, Unlock } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { UserSearch } from '@/src/components/chat/UserSearch';
 import { useFeedSearch } from '@/src/contexts/FeedSearchContext';
+import { useFinances } from '@/src/contexts/FinancesContext';
 import { toast } from 'sonner';
 import { useRouter, usePathname } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/auth-client';
@@ -27,6 +28,8 @@ export function TopNav() {
     const [showOrgRequestDialog, setShowOrgRequestDialog] = useState(false);
 
     const isOrganizationsPage = pathname?.startsWith('/chat/organizations');
+    const isFinancesPage = pathname?.startsWith('/chat/finances');
+    const finances = useFinances();
     // Page événements : /chat/organizations/[id]/events
     const eventsMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/events\/?$/);
     const eventsOrgId = eventsMatch?.[1];
@@ -159,9 +162,74 @@ export function TopNav() {
         }
     };
 
+    // Ne pas afficher la top bar quand la page finances est verrouillée
+    if (isFinancesPage && finances?.isLocked) {
+        return null;
+    }
+
     return (
-        <header className="fixed top-0 w-full left-0 bg-background border-b border-border z-50 h-16 flex items-center justify-between px-3 md:px-4">
-            {isNotificationsPage ? (
+        <header className={`fixed top-0 w-full left-0 z-50 h-16 flex items-center justify-between px-3 md:px-4 ${isFinancesPage ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-b border-emerald-200/50 dark:border-emerald-800/30' : 'bg-background border-b border-border'}`}>
+            {isFinancesPage && finances ? (
+                /* Top bar page Finances : titre, portefeuille, icônes recommandations/graphique/entrées/code */
+                <div className="flex items-center justify-between w-full gap-2 min-w-0 overflow-hidden">
+                    <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
+                        <Wallet className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                        <div className="min-w-0 flex-1">
+                            <h2 className="font-semibold text-foreground truncate">Gestion Financière</h2>
+                            <p className="text-xs text-muted-foreground truncate">
+                                Portefeuille: <span className="font-medium text-emerald-600 dark:text-emerald-400">{finances.totalPortfolio.toLocaleString()} FCFA</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-0.5 shrink-0">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showRecs ? 'text-amber-500 bg-amber-500/10' : 'text-muted-foreground hover:text-foreground'}`}
+                            onClick={() => finances.setShowRecs(!finances.showRecs)}
+                            title="Recommandations"
+                        >
+                            <Lightbulb className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showGraph ? 'text-emerald-600 bg-emerald-500/10 dark:text-emerald-400' : 'text-muted-foreground hover:text-foreground'}`}
+                            onClick={() => finances.setShowGraph(!finances.showGraph)}
+                            title="Graphique"
+                        >
+                            <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showEntries ? 'text-emerald-600 bg-emerald-500/10 dark:text-emerald-400' : 'text-muted-foreground hover:text-foreground'}`}
+                            onClick={() => finances.setShowEntries(!finances.showEntries)}
+                            title="Entrées & Dépenses"
+                        >
+                            <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.isLocked ? 'text-destructive' : 'text-muted-foreground hover:text-foreground'}`}
+                            onClick={() => window.dispatchEvent(new CustomEvent('finances-toggle-lock'))}
+                            title={finances.isLocked ? 'Déverrouiller' : 'Verrouiller'}
+                        >
+                            {finances.isLocked ? <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Unlock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 sm:h-9 sm:w-9 text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400"
+                            onClick={() => router.push('/chat/settings')}
+                            title="Paramètres"
+                        >
+                            <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </Button>
+                    </div>
+                </div>
+            ) : isNotificationsPage ? (
                 /* Page Actualités : barre de recherche dans le top bar */
                 <div className="flex items-center gap-2 w-full min-w-0 flex-1">
                     <div className="relative flex-1 min-w-0 max-w-xl">
@@ -358,7 +426,7 @@ export function TopNav() {
                 </div>
             )}
 
-            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && (
+            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && (
                 <div className="flex items-center gap-2">
                     {!isOrganizationsPage && <UserSearch />}
 

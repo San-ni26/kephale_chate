@@ -111,7 +111,8 @@ export async function POST(request: NextRequest) {
         const description = `Abonnement ${plan} - ${amount} FCFA`.replace(/[#/$_&]/g, ' ');
 
         const channels = process.env.CINETPAY_CHANNELS || 'ALL';
-        const defaultCountry = process.env.CINETPAY_DEFAULT_COUNTRY || 'SN';
+        // Par défaut, on utilise le Mali (ML) comme pays
+        const defaultCountry = process.env.CINETPAY_DEFAULT_COUNTRY || 'ML';
 
         const payload: Record<string, unknown> = {
             apikey,
@@ -132,7 +133,8 @@ export async function POST(request: NextRequest) {
         const custEmail = customer_email?.trim() || `contact-${transactionId}@placeholder.local`;
         const custPhone = customer_phone_number?.trim() || '770000000';
         const custAddress = customer_address?.trim() || address?.trim() || 'Adresse non renseignée';
-        const custCity = customer_city?.trim() || 'Ville';
+        // Si aucune ville n'est fournie, on prend Bamako par défaut (Mali)
+        const custCity = customer_city?.trim() || 'Bamako';
         const custCountry = (customer_country?.trim() || defaultCountry).toUpperCase().slice(0, 2);
         const custState = (customer_state?.trim() || defaultCountry).toUpperCase().slice(0, 2);
         const custZip = customer_zip_code?.trim() || '00000';

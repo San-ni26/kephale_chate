@@ -446,6 +446,80 @@ exports.Prisma.PushSubscriptionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserPersonalTaskScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  dueDate: 'dueDate',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserFinancialGoalScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  year: 'year',
+  targetItem: 'targetItem',
+  targetAmount: 'targetAmount',
+  targetDate: 'targetDate',
+  label: 'label',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserFinancialProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  monthlySalary: 'monthlySalary',
+  supplementaryIncome: 'supplementaryIncome',
+  currency: 'currency',
+  preferredSavingsRate: 'preferredSavingsRate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserMonthlyStatementScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  year: 'year',
+  month: 'month',
+  salaryReceived: 'salaryReceived',
+  supplementaryIncome: 'supplementaryIncome',
+  totalExpenses: 'totalExpenses',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserFinancialEntryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  year: 'year',
+  month: 'month',
+  type: 'type',
+  amount: 'amount',
+  note: 'note',
+  isConfirmed: 'isConfirmed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserMonthlyProgressScalarFieldEnum = {
+  id: 'id',
+  goalId: 'goalId',
+  year: 'year',
+  month: 'month',
+  amount: 'amount',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -548,6 +622,31 @@ exports.TaskPriority = exports.$Enums.TaskPriority = {
   URGENT: 'URGENT'
 };
 
+exports.PersonalTaskStatus = exports.$Enums.PersonalTaskStatus = {
+  TODO: 'TODO',
+  IN_PROGRESS: 'IN_PROGRESS',
+  DONE: 'DONE',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.PersonalTaskPriority = exports.$Enums.PersonalTaskPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+};
+
+exports.FinancialGoalType = exports.$Enums.FinancialGoalType = {
+  ANNUAL_SAVINGS: 'ANNUAL_SAVINGS',
+  MATERIAL_PURCHASE: 'MATERIAL_PURCHASE'
+};
+
+exports.FinancialEntryType = exports.$Enums.FinancialEntryType = {
+  SALARY: 'SALARY',
+  SUPPLEMENTARY_INCOME: 'SUPPLEMENTARY_INCOME',
+  EXPENSE: 'EXPENSE'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   UserInvitation: 'UserInvitation',
@@ -579,7 +678,13 @@ exports.Prisma.ModelName = {
   TaskMessage: 'TaskMessage',
   TaskAttachment: 'TaskAttachment',
   DepartmentMonthlyReport: 'DepartmentMonthlyReport',
-  PushSubscription: 'PushSubscription'
+  PushSubscription: 'PushSubscription',
+  UserPersonalTask: 'UserPersonalTask',
+  UserFinancialGoal: 'UserFinancialGoal',
+  UserFinancialProfile: 'UserFinancialProfile',
+  UserMonthlyStatement: 'UserMonthlyStatement',
+  UserFinancialEntry: 'UserFinancialEntry',
+  UserMonthlyProgress: 'UserMonthlyProgress'
 };
 
 /**
