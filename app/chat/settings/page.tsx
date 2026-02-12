@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LogOut, Trash2, Smartphone, Shield, User, Upload, Plus, Copy, Users, Edit, CreditCard, CheckCircle, Mail, ListTodo } from "lucide-react";
+import { LogOut, Trash2, Smartphone, Shield, User, Upload, Plus, Copy, Users, Edit, CreditCard, CheckCircle, Mail, ListTodo, MessageSquare, ShieldCheck } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
 import { Skeleton } from "@/src/components/ui/skeleton";
@@ -682,6 +682,18 @@ export default function SettingsPage() {
                         <CardTitle className="text-sm uppercase text-muted-foreground font-bold">Actions</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
+                        <Button asChild variant="ghost" className="w-full justify-start text-foreground hover:text-foreground hover:bg-muted">
+                            <Link href="/chat">
+                                <MessageSquare className="mr-2 h-4 w-4" /> Aller dans chat
+                            </Link>
+                        </Button>
+                        {user?.role === "SUPER_ADMIN" && (
+                            <Button asChild variant="ghost" className="w-full justify-start text-foreground hover:text-foreground hover:bg-muted">
+                                <Link href="/admin">
+                                    <ShieldCheck className="mr-2 h-4 w-4" /> Aller dans admin
+                                </Link>
+                            </Button>
+                        )}
                         <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-foreground hover:text-foreground hover:bg-muted">
                             <LogOut className="mr-2 h-4 w-4" /> Déconnexion
                         </Button>

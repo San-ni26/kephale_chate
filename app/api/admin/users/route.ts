@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url);
         const country = searchParams.get('country');
         const status = searchParams.get('status'); // 'online', 'offline', 'banned'
+        const search = searchParams.get('search')?.trim();
         const page = parseInt(searchParams.get('page') || '1');
         const limit = parseInt(searchParams.get('limit') || '50');
 
@@ -27,6 +28,19 @@ export async function GET(request: NextRequest) {
         } else if (status === 'banned') {
             where.isBanned = true;
         }
+
+        // Recherche par email ou nom (obligatoire pour éviter de charger tous les users)
+        if (!search || search.length < 2) {
+            return NextResponse.json(
+                { users: [], pagination: { total: 0, page: 1, limit, totalPages: 0 } },
+                { status: 200 }
+            );
+        }
+
+        where.OR = [
+            { email: { contains: search, mode: 'insensitive' } },
+            { name: { contains: search, mode: 'insensitive' } },
+        ];
 
         const [users, total] = await Promise.all([
             prisma.user.findMany({
@@ -46,7 +60,16 @@ export async function GET(request: NextRequest) {
                     currentLocation: true,
                     deviceInfo: true,
                     createdAt: true,
+                    updatedAt: true,
                     canPublishNotifications: true,
+                    isFirstLogin: true,
+                    _count: {
+                        select: {
+                            sentMessages: true,
+                            orgMemberships: true,
+                            deptMemberships: true,
+                        },
+                    },
                 },
                 orderBy: {
                     createdAt: 'desc',

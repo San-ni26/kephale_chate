@@ -368,6 +368,29 @@ exports.Prisma.PendingSubscriptionPaymentScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PaymentOrderScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  plan: 'plan',
+  name: 'name',
+  logo: 'logo',
+  address: 'address',
+  requestId: 'requestId',
+  amountFcfa: 'amountFcfa',
+  status: 'status',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  rejectedAt: 'rejectedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PaymentSettingScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value'
+};
+
 exports.Prisma.SubscriptionScalarFieldEnum = {
   id: 'id',
   orgId: 'orgId',
@@ -663,6 +686,12 @@ exports.RequestStatus = exports.$Enums.RequestStatus = {
   COMPLETED: 'COMPLETED'
 };
 
+exports.PaymentOrderStatus = exports.$Enums.PaymentOrderStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
 exports.SubscriptionPlan = exports.$Enums.SubscriptionPlan = {
   FREE: 'FREE',
   BASIC: 'BASIC',
@@ -748,6 +777,8 @@ exports.Prisma.ModelName = {
   AnnouncementRead: 'AnnouncementRead',
   OrganizationRequest: 'OrganizationRequest',
   PendingSubscriptionPayment: 'PendingSubscriptionPayment',
+  PaymentOrder: 'PaymentOrder',
+  PaymentSetting: 'PaymentSetting',
   Subscription: 'Subscription',
   EventInvitation: 'EventInvitation',
   EventDepartmentBroadcast: 'EventDepartmentBroadcast',

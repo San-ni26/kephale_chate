@@ -36,8 +36,8 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL('/chat', request.url));
     }
 
-    // Check admin routes
-    if (pathname.startsWith('/admin') && user?.role !== 'SUPER_ADMIN') {
+    // Check admin routes (ADMIN ou SUPER_ADMIN)
+    if (pathname.startsWith('/admin') && user?.role !== 'SUPER_ADMIN' && user?.role !== 'ADMIN') {
         return NextResponse.redirect(new URL('/chat', request.url));
     }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/src/components/ui/dialog";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -8,7 +8,7 @@ import { Label } from "@/src/components/ui/label";
 import { Textarea } from "@/src/components/ui/textarea";
 import { toast } from "sonner";
 import { fetchWithAuth } from "@/src/lib/auth-client";
-import { Loader2, Check, Upload, Building2, MapPin, CreditCard, Smartphone, FlaskConical } from "lucide-react";
+import { Loader2, Check, Building2, CreditCard, Smartphone, FileText, Clock } from "lucide-react";
 
 interface OrganizationCompletionWizardProps {
     open: boolean;
@@ -91,6 +91,8 @@ export default function OrganizationCompletionWizard({
 }: OrganizationCompletionWizardProps) {
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [paymentMode, setPaymentMode] = useState<'CINETPAY' | 'MANUAL'>('CINETPAY');
+    const [createdOrder, setCreatedOrder] = useState<{ id: string; status: string } | null>(null);
 
     // Form data
     const [name, setName] = useState("");
@@ -99,6 +101,34 @@ export default function OrganizationCompletionWizard({
     const [selectedPlan, setSelectedPlan] = useState<string>("FREE");
     const [paymentProvider, setPaymentProvider] = useState<'ORANGE_MONEY' | 'MOOV' | ''>('');
     const [phone, setPhone] = useState('');
+
+    useEffect(() => {
+        if (!open) return;
+        fetchWithAuth('/api/payments/mode')
+            .then((r) => r.json())
+            .then((d) => setPaymentMode(d.mode || 'CINETPAY'))
+            .catch(() => {});
+    }, [open]);
+
+    useEffect(() => {
+        if (!createdOrder || createdOrder.status !== 'PENDING') return;
+        const interval = setInterval(async () => {
+            try {
+                const res = await fetchWithAuth('/api/payments/orders');
+                const data = await res.json();
+                const order = data.orders?.find((o: { id: string }) => o.id === createdOrder.id);
+                if (order?.status === 'APPROVED') {
+                    toast.success('Organisation créée avec succès !');
+                    setCreatedOrder(null);
+                    onSuccess();
+                } else if (order?.status === 'REJECTED') {
+                    toast.error('Votre ordre de paiement a été rejeté.');
+                    setCreatedOrder(null);
+                }
+            } catch { /* ignore */ }
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [createdOrder, onSuccess]);
 
     const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -123,9 +153,20 @@ export default function OrganizationCompletionWizard({
         setLoading(true);
 
         try {
-            // 1) Si plan payant : enregistrement en attente + CinetPay, puis redirection
             if (selectedPlan !== 'FREE') {
-                const payRes = await fetchWithAuth('/api/payments/paytech/subscribe', {
+                if (paymentMode === 'CINETPAY') {
+                    sessionStorage.setItem('orgPaymentData', JSON.stringify({
+                        plan: selectedPlan,
+                        name: trimmedName,
+                        logo: logo || undefined,
+                        address: address?.trim() || undefined,
+                        requestId: requestId || undefined,
+                    }));
+                    window.location.href = '/chat/organizations/payment';
+                    return;
+                }
+
+                const orderRes = await fetchWithAuth('/api/payments/orders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -134,26 +175,21 @@ export default function OrganizationCompletionWizard({
                         logo: logo || undefined,
                         address: address?.trim() || undefined,
                         requestId: requestId || undefined,
-                        customer_name: trimmedName,
-                        customer_phone_number: phone.trim() || undefined,
                     }),
                 });
 
-                const payData = await payRes.json();
+                const orderData = await orderRes.json();
 
-                if (!payRes.ok || payData.status !== 'success') {
-                    toast.error(
-                        payData.error ||
-                        'Le paiement de l’abonnement a échoué. Veuillez réessayer.',
-                    );
+                if (!orderRes.ok) {
+                    toast.error(orderData.error || 'Erreur lors de la création de l\'ordre');
                     setLoading(false);
                     return;
                 }
-                if (payData.paymentUrl) {
-                    toast.success('Redirection vers la page de paiement CinetPay...');
-                    window.location.href = payData.paymentUrl;
-                    return;
-                }
+
+                setCreatedOrder({ id: orderData.order.id, status: orderData.order.status });
+                toast.success('Ordre créé. En attente de validation par l\'administrateur.');
+                setLoading(false);
+                return;
             }
 
             // 2) Création / complétion de l'organisation avec le plan choisi
@@ -179,15 +215,13 @@ export default function OrganizationCompletionWizard({
                 ? `Organisation créée avec succès ! Code d'accès: ${data.code}`
                 : 'Organisation créée avec succès !');
 
-            // Reset form
             setStep(1);
             setName("");
             setLogo("");
             setAddress("");
             setSelectedPlan("FREE");
             setPaymentProvider('');
-            setPhone('');
-
+            setCreatedOrder(null);
             onSuccess();
 
         } catch (error) {
@@ -253,6 +287,20 @@ export default function OrganizationCompletionWizard({
                 );
 
             case 2:
+                if (createdOrder) {
+                    return (
+                        <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                            <div className="flex items-center gap-3 p-4 rounded-lg bg-amber-500/10 border border-amber-500/30">
+                                <Clock className="w-8 h-8 text-amber-500 animate-pulse" />
+                                <div>
+                                    <p className="font-semibold text-foreground">Ordre en cours de traitement</p>
+                                    <p className="text-sm text-muted-foreground">L&apos;administrateur Kephale validera votre ordre. Vous serez notifié dès que l&apos;organisation sera créée.</p>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+
                 return (
                     <div className="flex flex-col min-h-[420px]">
                         <p className="text-sm text-muted-foreground mb-4">
@@ -298,64 +346,24 @@ export default function OrganizationCompletionWizard({
                             ))}
                         </div>
 
-                        {/* Section paiement : centrée au milieu, opérateur uniquement, mode dev */}
                         {selectedPlan !== 'FREE' && (
                             <div className="flex-1 flex items-center justify-center py-6">
-                                <div className="space-y-3 border border-border rounded-lg p-4 bg-muted/30 max-w-md w-full mx-auto relative">
-                                    <div className="absolute -top-2 right-3 flex items-center gap-1.5 bg-warning/20 text-warning text-xs font-medium px-2 py-1 rounded-full border border-amber-500/30">
-                                        <FlaskConical className="w-3.5 h-3.5" />
-                                        Mode développement
+                                <div className="space-y-3 border border-border rounded-lg p-4 bg-muted/30 max-w-md w-full mx-auto">
+                                    <div className="text-center space-y-1">
+                                        <p className="text-sm font-medium text-foreground">
+                                            {paymentMode === 'MANUAL' ? 'Ordre de paiement' : 'Paiement en ligne'}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            Montant : <span className="font-semibold text-foreground">
+                                                {(PLAN_PRICES_FCFA[selectedPlan] ?? 0).toLocaleString('fr-FR')} FCFA
+                                            </span>
+                                        </p>
+                                        {paymentMode === 'MANUAL' && (
+                                            <p className="text-xs text-muted-foreground">
+                                                Un ordre sera créé. L&apos;admin Kephale validera et créera l&apos;organisation.
+                                            </p>
+                                        )}
                                     </div>
-                                    {(() => {
-                                        const base = PLAN_PRICES_FCFA[selectedPlan] ?? 0;
-                                        const feeRate = 0.02;
-                                        const total = Math.round(base * (1 + feeRate));
-
-                                        return (
-                                            <>
-                                                <div className="text-center space-y-1">
-                                                    <p className="text-sm font-medium text-foreground">
-                                                        Détails du paiement
-                                                    </p>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        Montant :{' '}
-                                                        <span className="font-semibold text-foreground">
-                                                            {base.toLocaleString('fr-FR')} FCFA
-                                                        </span>
-                                                        {' '}(total avec frais :{' '}
-                                                        <span className="font-semibold text-foreground">
-                                                            {total.toLocaleString('fr-FR')} FCFA
-                                                        </span>
-                                                        )
-                                                    </p>
-                                                </div>
-
-                                                <div className="space-y-2">
-                                                    <Label className="text-center block">Choisir l&apos;opérateur Mobile Money</Label>
-                                                    <div className="flex flex-wrap gap-3 justify-center">
-                                                        <Button
-                                                            type="button"
-                                                            variant={paymentProvider === 'ORANGE_MONEY' ? 'default' : 'outline'}
-                                                            className={`flex-1 min-w-[140px] gap-2 ${paymentProvider === 'ORANGE_MONEY' ? 'bg-orange-600 hover:bg-orange-700 text-white border-orange-600' : ''}`}
-                                                            onClick={() => setPaymentProvider('ORANGE_MONEY')}
-                                                        >
-                                                            <Smartphone className="w-4 h-4" />
-                                                            Orange Money
-                                                        </Button>
-                                                        <Button
-                                                            type="button"
-                                                            variant={paymentProvider === 'MOOV' ? 'default' : 'outline'}
-                                                            className={`flex-1 min-w-[140px] gap-2 ${paymentProvider === 'MOOV' ? 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600' : ''}`}
-                                                            onClick={() => setPaymentProvider('MOOV')}
-                                                        >
-                                                            <Smartphone className="w-4 h-4" />
-                                                            Moov
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                            </>
-                                        );
-                                    })()}
                                 </div>
                             </div>
                         )}
@@ -443,13 +451,19 @@ export default function OrganizationCompletionWizard({
                         <Button
                             className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={handleSubmit}
-                            disabled={loading || !name}
+                            disabled={loading || !name || !!createdOrder}
                         >
                             {loading ? (
                                 <>
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Création...
+                                    {selectedPlan !== 'FREE' && paymentMode === 'MANUAL' ? 'Création de l\'ordre...' : 'Création...'}
                                 </>
+                            ) : createdOrder ? (
+                                'En attente...'
+                            ) : selectedPlan !== 'FREE' && paymentMode === 'MANUAL' ? (
+                                'Créer l\'ordre de paiement'
+                            ) : selectedPlan !== 'FREE' && paymentMode === 'CINETPAY' ? (
+                                'Procéder au paiement'
                             ) : (
                                 'Créer l\'Organisation'
                             )}

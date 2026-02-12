@@ -481,6 +481,38 @@ model PendingSubscriptionPayment {
   @@index([userId])
 }
 
+enum PaymentOrderStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model PaymentOrder {
+  id          String            @id @default(cuid())
+  userId      String
+  plan        String
+  name        String
+  logo        String?           @db.Text
+  address     String?           @db.Text
+  requestId   String?
+  amountFcfa  Int
+  status      PaymentOrderStatus @default(PENDING)
+  approvedBy  String?
+  approvedAt  DateTime?
+  rejectedAt  DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model PaymentSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @db.Text
+}
+
 model Subscription {
   id                String           @id @default(cuid())
   orgId             String           @unique
