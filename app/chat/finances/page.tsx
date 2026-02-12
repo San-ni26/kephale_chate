@@ -555,21 +555,23 @@ export default function FinancesPage() {
     }
 
     return (
-        <div className="p-4 max-w-2xl mx-auto space-y-5 pt-20 min-h-screen bg-background">
+        <div className="p-4 space-y-5 pt-20 pb-20  bg-background">
             {/* Gestion Financière - style finance minimaliste */}
             <Card className="bg-card border-0 shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 pt-5 px-5">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1  px-5">
                     <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                         <Wallet className="h-3.5 w-3.5" />
                         Gestion Financière
                     </CardTitle>
+                    {/* 
                     <Button size="sm" variant="ghost" onClick={openProfileDialog} className="text-muted-foreground hover:text-foreground h-8">
                         <Edit className="h-3.5 w-3.5 mr-1" />
                         {profile ? "Modifier" : "Configurer"}
                     </Button>
+                     */}
                 </CardHeader>
-                <CardContent className="px-5 pb-5">
-                    <div className="py-4">
+                <CardContent className="px-5 ">
+                    <div className="py-1">
                         <p className="text-xs text-muted-foreground mb-0.5">Portefeuille</p>
                         <p className="text-2xl font-semibold text-primary tracking-tight">
                             {finances?.totalPortfolio.toLocaleString() ?? 0} <span className="text-sm font-normal text-muted-foreground">FCFA</span>

@@ -186,52 +186,56 @@ export default function DepartmentGoalsTab({
                         Objectifs du département
                     </CardTitle>
                     {canManage && (
-                        <div className="flex items-center gap-2">
-                            <Select value={period} onValueChange={(v) => { setPeriod(v); updatePeriodKey(v); }}>
-                                <SelectTrigger className="w-[140px]">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="MONTHLY">Mensuel</SelectItem>
-                                    <SelectItem value="QUARTERLY">Trimestriel</SelectItem>
-                                    <SelectItem value="YEARLY">Annuel</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            {period === 'MONTHLY' && (
-                                <Input
-                                    type="month"
-                                    value={periodKey}
-                                    onChange={(e) => setPeriodKey(e.target.value)}
-                                    className="w-[180px]"
-                                />
-                            )}
-                            {period === 'QUARTERLY' && (
-                                <Select value={periodKey} onValueChange={setPeriodKey}>
-                                    <SelectTrigger className="w-[120px]">
+                        <div style={{ display: 'flex' }}>
+                            <div>
+                                <Select value={period} onValueChange={(v) => { setPeriod(v); updatePeriodKey(v); }}>
+                                    <SelectTrigger className="w-[140px]">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {[1, 2, 3, 4].map((q) => (
-                                            <SelectItem key={q} value={`${new Date().getFullYear()}-Q${q}`}>
-                                                T{q} {new Date().getFullYear()}
-                                            </SelectItem>
-                                        ))}
+                                        <SelectItem value="MONTHLY">Mensuel</SelectItem>
+                                        <SelectItem value="QUARTERLY">Trimestriel</SelectItem>
+                                        <SelectItem value="YEARLY">Annuel</SelectItem>
                                     </SelectContent>
                                 </Select>
-                            )}
-                            {period === 'YEARLY' && (
-                                <Input
-                                    type="number"
-                                    value={periodKey}
-                                    onChange={(e) => setPeriodKey(e.target.value)}
-                                    className="w-[100px]"
-                                    placeholder="Année"
-                                />
-                            )}
+                                {period === 'MONTHLY' && (
+                                    <Input
+                                        type="month"
+                                        value={periodKey}
+                                        onChange={(e) => setPeriodKey(e.target.value)}
+                                        className="w-[180px]"
+                                    />
+                                )}
+                                {period === 'QUARTERLY' && (
+                                    <Select value={periodKey} onValueChange={setPeriodKey}>
+                                        <SelectTrigger className="w-[120px]">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {[1, 2, 3, 4].map((q) => (
+                                                <SelectItem key={q} value={`${new Date().getFullYear()}-Q${q}`}>
+                                                    T{q} {new Date().getFullYear()}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                                {period === 'YEARLY' && (
+                                    <Input
+                                        type="number"
+                                        value={periodKey}
+                                        onChange={(e) => setPeriodKey(e.target.value)}
+                                        className="w-[100px]"
+                                        placeholder="Année"
+                                    />
+                                )}
+                            </div>
                             <Button size="sm" onClick={() => setShowCreate(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground">
                                 <Plus className="w-4 h-4 mr-2" />
                                 Nouvel objectif
                             </Button>
+
+
                         </div>
                     )}
                 </div>

@@ -439,7 +439,7 @@ export default function DepartmentDetailPage() {
     };
 
     const handleDeleteTask = async (task: Task) => {
-        if (!confirm(`Supprimer la tâche « ${task.title } » ?`)) return;
+        if (!confirm(`Supprimer la tâche « ${task.title} » ?`)) return;
         setDeletingTaskId(task.id);
         try {
             const res = await fetchWithAuth(
@@ -641,8 +641,9 @@ export default function DepartmentDetailPage() {
                     Ouvrir le chat
                 </Button>
             </div>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-                <TabsList>
+
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 pb-4 ">
+                <TabsList style={{ height: 'auto', paddingBottom: '10px', }} className="flex-wrap sm:flex-wrap overflow-visible mb-4">
                     {canAddOrRemoveMember && (
                         <TabsTrigger value="members" className="flex items-center gap-2">
                             <UsersIcon className="w-4 h-4" />
@@ -676,122 +677,122 @@ export default function DepartmentDetailPage() {
                 </TabsList>
 
                 {canAddOrRemoveMember && (
-                <TabsContent value="members">
-                    <Card className="bg-card border-border">
-                        <CardHeader>
-                            <div className="flex items-center justify-between">
-                                <CardTitle className="text-1xl text-foreground flex items-center gap-2">
-                                    <UsersIcon className="w-5 h-5 " />
-                                    Membres du département
-                                </CardTitle>
-                                {canAddOrRemoveMember && (
-                                    <Button
-                                        size="sm"
-                                        onClick={() => setShowAddMemberDialog(true)}
-                                        className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                                    >
-                                        <UserPlus className="w-4 h-4 mr-2" />
-                                        Ajouter un membre
-                                    </Button>
-                                )}
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            {department.members.length === 0 ? (
-                                <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
-                                    <UsersIcon className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                                    <p className="text-muted-foreground">Aucun membre dans ce département</p>
+                    <TabsContent value="members">
+                        <Card className="bg-card border-border">
+                            <CardHeader>
+                                <div className="flex items-center justify-between">
+                                    <CardTitle className="text-1xl text-foreground flex items-center gap-2">
+                                        <UsersIcon className="w-5 h-5 " />
+                                        Membres du département
+                                    </CardTitle>
                                     {canAddOrRemoveMember && (
-                                        <>
-                                            <p className="text-sm text-muted-foreground mb-4">Ajoutez des membres pour commencer</p>
-                                            <Button
-                                                size="sm"
-                                                onClick={() => setShowAddMemberDialog(true)}
-                                                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                                            >
-                                                <UserPlus className="w-4 h-4 mr-2" />
-                                                Ajouter un membre
-                                            </Button>
-                                        </>
+                                        <Button
+                                            size="sm"
+                                            onClick={() => setShowAddMemberDialog(true)}
+                                            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                                        >
+                                            <UserPlus className="w-4 h-4 mr-2" />
+                                            Ajouter un membre
+                                        </Button>
                                     )}
                                 </div>
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {department.members.map((member) => (
-                                        <Card
-                                            key={member.id}
-                                            className="bg-muted/50 border-border hover:border-primary/50 transition"
-                                        >
-                                            <CardContent className="pt-6">
-                                                <div className="flex items-start justify-between">
-                                                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                                                        <Avatar className="h-12 w-12 border border-border">
-                                                            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${member.user.name || member.user.email}`} />
-                                                            <AvatarFallback>
-                                                                {(member.user.name || member.user.email)[0].toUpperCase()}
-                                                            </AvatarFallback>
-                                                        </Avatar>
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="flex items-center gap-2">
-                                                                <p className="text-sm font-semibold text-foreground truncate">
-                                                                    {member.user.name || 'Sans nom'}
+                            </CardHeader>
+                            <CardContent>
+                                {department.members.length === 0 ? (
+                                    <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+                                        <UsersIcon className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                                        <p className="text-muted-foreground">Aucun membre dans ce département</p>
+                                        {canAddOrRemoveMember && (
+                                            <>
+                                                <p className="text-sm text-muted-foreground mb-4">Ajoutez des membres pour commencer</p>
+                                                <Button
+                                                    size="sm"
+                                                    onClick={() => setShowAddMemberDialog(true)}
+                                                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                                                >
+                                                    <UserPlus className="w-4 h-4 mr-2" />
+                                                    Ajouter un membre
+                                                </Button>
+                                            </>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {department.members.map((member) => (
+                                            <Card
+                                                key={member.id}
+                                                className="bg-muted/50 border-border hover:border-primary/50 transition"
+                                            >
+                                                <CardContent className="pt-6">
+                                                    <div className="flex items-start justify-between">
+                                                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                                                            <Avatar className="h-12 w-12 border border-border">
+                                                                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${member.user.name || member.user.email}`} />
+                                                                <AvatarFallback>
+                                                                    {(member.user.name || member.user.email)[0].toUpperCase()}
+                                                                </AvatarFallback>
+                                                            </Avatar>
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="flex items-center gap-2">
+                                                                    <p className="text-sm font-semibold text-foreground truncate">
+                                                                        {member.user.name || 'Sans nom'}
+                                                                    </p>
+                                                                    {department.headId === member.user.id && (
+                                                                        <span className="shrink-0 text-primary" title="Chef du département">
+                                                                            <Crown className="w-4 h-4" />
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                                <p className="text-xs text-muted-foreground truncate">
+                                                                    {member.user.email}
                                                                 </p>
-                                                                {department.headId === member.user.id && (
-                                                                    <span className="shrink-0 text-primary" title="Chef du département">
-                                                                        <Crown className="w-4 h-4" />
+                                                                <div className="flex items-center gap-2 mt-2">
+                                                                    <div className={`w-2 h-2 rounded-full ${member.user.isOnline ? 'bg-green-500' : 'bg-gray-400'
+                                                                        }`} />
+                                                                    <span className="text-xs text-muted-foreground">
+                                                                        {member.user.isOnline ? 'En ligne' : 'Hors ligne'}
                                                                     </span>
+                                                                </div>
+                                                                {canManageHead && (
+                                                                    <Button
+                                                                        variant="outline"
+                                                                        size="sm"
+                                                                        className="mt-2"
+                                                                        disabled={updatingHead || department.headId === member.user.id}
+                                                                        onClick={() => handleSetDepartmentHead(member.user.id)}
+                                                                    >
+                                                                        {department.headId === member.user.id ? (
+                                                                            <Crown className="w-3 h-3 mr-1 text-primary" />
+                                                                        ) : null}
+                                                                        {department.headId === member.user.id ? 'Chef' : 'Nommer chef'}
+                                                                    </Button>
                                                                 )}
                                                             </div>
-                                                            <p className="text-xs text-muted-foreground truncate">
-                                                                {member.user.email}
-                                                            </p>
-                                                            <div className="flex items-center gap-2 mt-2">
-                                                                <div className={`w-2 h-2 rounded-full ${member.user.isOnline ? 'bg-green-500' : 'bg-gray-400'
-                                                                    }`} />
-                                                                <span className="text-xs text-muted-foreground">
-                                                                    {member.user.isOnline ? 'En ligne' : 'Hors ligne'}
-                                                                </span>
-                                                            </div>
-                                                            {canManageHead && (
-                                                                <Button
-                                                                    variant="outline"
-                                                                    size="sm"
-                                                                    className="mt-2"
-                                                                    disabled={updatingHead || department.headId === member.user.id}
-                                                                    onClick={() => handleSetDepartmentHead(member.user.id)}
-                                                                >
-                                                                    {department.headId === member.user.id ? (
-                                                                        <Crown className="w-3 h-3 mr-1 text-primary" />
-                                                                    ) : null}
-                                                                    {department.headId === member.user.id ? 'Chef' : 'Nommer chef'}
-                                                                </Button>
-                                                            )}
                                                         </div>
+                                                        {canAddOrRemoveMember && member.user.id !== orgOwnerId && member.user.id !== currentUser?.id && (
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={() => handleRemoveMember(member.id, member.user.name || member.user.email)}
+                                                                disabled={removingMemberId === member.id}
+                                                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                            >
+                                                                {removingMemberId === member.id ? (
+                                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                                ) : (
+                                                                    <X className="w-4 h-4" />
+                                                                )}
+                                                            </Button>
+                                                        )}
                                                     </div>
-                                                    {canAddOrRemoveMember && member.user.id !== orgOwnerId && member.user.id !== currentUser?.id && (
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            onClick={() => handleRemoveMember(member.id, member.user.name || member.user.email)}
-                                                            disabled={removingMemberId === member.id}
-                                                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                                        >
-                                                            {removingMemberId === member.id ? (
-                                                                <Loader2 className="w-4 h-4 animate-spin" />
-                                                            ) : (
-                                                                <X className="w-4 h-4" />
-                                                            )}
-                                                        </Button>
-                                                    )}
-                                                </div>
-                                            </CardContent>
-                                        </Card>
-                                    ))}
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
-                </TabsContent>
+                                                </CardContent>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
                 )}
 
                 <TabsContent value="tasks">
