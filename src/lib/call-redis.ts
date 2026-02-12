@@ -77,6 +77,14 @@ export async function isUserInCall(userId: string): Promise<boolean> {
 }
 
 /**
+ * Obtenir l'état d'appel d'un utilisateur
+ */
+export async function getCallState(userId: string): Promise<CallState | null> {
+    const result = await getUsersInCall([userId]);
+    return result[userId] ?? null;
+}
+
+/**
  * Obtenir l'état d'appel de plusieurs utilisateurs
  */
 export async function getUsersInCall(userIds: string[]): Promise<Record<string, CallState | null>> {
@@ -121,6 +129,39 @@ export async function setPendingCall(
         return true;
     } catch (err) {
         console.error('[Call] setPendingCall error:', err);
+        return false;
+    }
+}
+
+/**
+ * Récupérer un appel en attente (sans supprimer)
+ */
+export async function getPendingCall(recipientId: string): Promise<PendingCall | null> {
+    const redis = getRedis();
+    if (!redis) return null;
+
+    try {
+        const key = `${PENDING_PREFIX}${recipientId}`;
+        const data = await redis.get(key);
+        return data ? (typeof data === 'string' ? JSON.parse(data) : data) as PendingCall : null;
+    } catch (err) {
+        console.error('[Call] getPendingCall error:', err);
+        return null;
+    }
+}
+
+/**
+ * Supprimer un appel en attente (ex: après rejet)
+ */
+export async function clearPendingCall(recipientId: string): Promise<boolean> {
+    const redis = getRedis();
+    if (!redis) return false;
+
+    try {
+        await redis.del(`${PENDING_PREFIX}${recipientId}`);
+        return true;
+    } catch (err) {
+        console.error('[Call] clearPendingCall error:', err);
         return false;
     }
 }

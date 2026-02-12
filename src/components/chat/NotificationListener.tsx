@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 import { usePathname, useRouter } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/auth-client';
 
+const PENDING_CALL_KEY = 'pendingIncomingCall';
+
 export function NotificationListener() {
     const pathname = usePathname();
     const router = useRouter();
@@ -68,11 +70,37 @@ export function NotificationListener() {
 
             const callerDisplay = data.callerName || 'Quelqu\'un';
 
+            const rejectCall = async () => {
+                try {
+                    await fetchWithAuth('/api/call/signal', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ event: 'call:reject', callerId: data.callerId }),
+                    });
+                    sessionStorage.removeItem(PENDING_CALL_KEY);
+                } catch (e) {
+                    console.error('[Call] Reject failed:', e);
+                }
+            };
+
+            const answerCall = () => {
+                try {
+                    sessionStorage.setItem(PENDING_CALL_KEY, JSON.stringify(data));
+                    routerRef.current.push(`/chat/discussion/${data.conversationId}`);
+                } catch (e) {
+                    console.error('[Call] Navigate failed:', e);
+                }
+            };
+
             toast(`Appel de ${callerDisplay}`, {
-                description: 'Cliquez pour repondre',
+                description: 'Cliquez pour repondre ou raccrocher',
                 action: {
                     label: 'Repondre',
-                    onClick: () => routerRef.current.push(`/chat/discussion/${data.conversationId}`)
+                    onClick: answerCall,
+                },
+                cancel: {
+                    label: 'Raccrocher',
+                    onClick: rejectCall,
                 },
                 duration: 30000,
             });

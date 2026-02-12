@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, PhoneIncoming, PhoneOff, Mic, MicOff, Clock } from 'lucide-react';
+import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, PhoneIncoming, PhoneOff, Mic, MicOff, Clock, Volume2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import useSWR from 'swr';
@@ -134,6 +134,7 @@ export default function DiscussionPage() {
     const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
     const [incomingCallData, setIncomingCallData] = useState<{ callerId: string; callerName?: string; offer: any; conversationId: string } | null>(null);
     const [isMuted, setIsMuted] = useState(false);
+    const [isSpeakerOn, setIsSpeakerOn] = useState(false);
     const [callDuration, setCallDuration] = useState(0);
     const callTimerRef = useRef<NodeJS.Timeout | null>(null);
     const callTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -195,6 +196,53 @@ export default function DiscussionPage() {
     // Refs for call state
     const isCallActiveRef = useRef(isCallActive);
     isCallActiveRef.current = isCallActive;
+
+    // --- Check call status on mount : appel actif ou en attente quand on rentre dans l'app ---
+    useEffect(() => {
+        if (!conversationId) return;
+
+        const checkCallStatus = async () => {
+            try {
+                const res = await fetchWithAuth('/api/call/status?claim=1');
+                if (!res.ok) return;
+                const { activeCall, pendingCall } = await res.json();
+
+                if (activeCall && activeCall.conversationId !== conversationId) {
+                    router.push(`/chat/discussion/${activeCall.conversationId}`);
+                    return;
+                }
+                if (pendingCall && pendingCall.conversationId !== conversationId) {
+                    router.push(`/chat/discussion/${pendingCall.conversationId}`);
+                    return;
+                }
+                if (pendingCall && pendingCall.conversationId === conversationId) {
+                    setIncomingCallData(pendingCall);
+                    setIsIncomingCall(true);
+                    setCallStatus('ringing');
+                    return;
+                }
+            } catch {
+                // Ignorer
+            }
+
+            const stored = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('pendingIncomingCall');
+            if (stored) {
+                try {
+                    const data = JSON.parse(stored);
+                    if (data.conversationId === conversationId) {
+                        sessionStorage.removeItem('pendingIncomingCall');
+                        setIncomingCallData(data);
+                        setIsIncomingCall(true);
+                        setCallStatus('ringing');
+                    }
+                } catch {
+                    sessionStorage.removeItem('pendingIncomingCall');
+                }
+            }
+        };
+
+        checkCallStatus();
+    }, [conversationId, router]);
 
     // --- Mark as read when viewing conversation ---
     useEffect(() => {
@@ -326,6 +374,7 @@ export default function DiscussionPage() {
         setRemoteStream(null);
         setCallDuration(0);
         setIsMuted(false);
+        setIsSpeakerOn(false);
     }, []);
 
     // endCall: actively ends the call and notifies the remote user
@@ -429,6 +478,30 @@ export default function DiscussionPage() {
             setIsMuted(prev => !prev);
         }
     }, []);
+
+    const toggleSpeaker = useCallback(async () => {
+        const audio = remoteAudioRef.current;
+        if (!audio || typeof (audio as any).setSinkId !== 'function') return;
+        try {
+            if (isSpeakerOn) {
+                await (audio as any).setSinkId('');
+            } else {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const outputs = devices.filter((d) => d.kind === 'audiooutput');
+                const speaker = outputs.find(
+                    (d) =>
+                        d.label.toLowerCase().includes('speaker') ||
+                        d.label.toLowerCase().includes('haut-parleur')
+                ) || outputs[0];
+                if (speaker?.deviceId) {
+                    await (audio as any).setSinkId(speaker.deviceId);
+                }
+            }
+            setIsSpeakerOn((prev) => !prev);
+        } catch (e) {
+            console.warn('[Call] Speaker toggle:', e);
+        }
+    }, [isSpeakerOn]);
 
     // WebRTC Call Signaling via Pusher userChannel
     useEffect(() => {
@@ -1042,6 +1115,16 @@ export default function DiscussionPage() {
                                             {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
                                         </Button>
                                         <span className="text-white/60 text-xs">{isMuted ? 'Unmute' : 'Mute'}</span>
+                                    </div>
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Button
+                                            size="lg"
+                                            className={`rounded-full w-14 h-14 shadow-lg ${isSpeakerOn ? 'bg-primary/40 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                                            onClick={toggleSpeaker}
+                                        >
+                                            <Volume2 className="w-6 h-6" />
+                                        </Button>
+                                        <span className="text-white/60 text-xs">Haut-parleur</span>
                                     </div>
                                     <div className="flex flex-col items-center gap-2">
                                         <Button

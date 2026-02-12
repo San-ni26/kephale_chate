@@ -7,6 +7,7 @@ import {
     setUserInCall,
     setUserCallEnded,
     setPendingCall,
+    clearPendingCall,
 } from '@/src/lib/call-redis';
 
 /**
@@ -95,6 +96,9 @@ export async function POST(request: NextRequest) {
                 if (!callerId) {
                     return NextResponse.json({ error: 'Missing callerId' }, { status: 400 });
                 }
+
+                // Supprimer l'appel en attente (destinataire = user connecté)
+                await clearPendingCall(user.userId);
 
                 // Fin d'appel pour les deux (Redis)
                 await setUserCallEnded(user.userId);
