@@ -78,6 +78,68 @@ export async function sendOTPEmail(email: string, otpCode: string, name?: string
 }
 
 /**
+ * Send OTP email for password reset
+ */
+export async function sendPasswordResetOTPEmail(email: string, otpCode: string, name?: string): Promise<boolean> {
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
+      to: email,
+      subject: 'Réinitialisation de mot de passe - Chat Kephale',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%); padding: 30px; text-align: center; color: white; }
+            .header h1 { margin: 0; font-size: 24px; }
+            .content { padding: 40px 30px; }
+            .otp-code { background: #fef2f2; border: 2px dashed #dc2626; border-radius: 8px; padding: 20px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1e293b; margin: 30px 0; }
+            .info { color: #64748b; font-size: 14px; line-height: 1.6; }
+            .footer { background: #f8fafc; padding: 20px; text-align: center; color: #94a3b8; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🔐 Réinitialisation de mot de passe</h1>
+            </div>
+            <div class="content">
+              <h2 style="color: #1e293b; margin-top: 0;">Bonjour ${name || 'Utilisateur'},</h2>
+              <p style="color: #475569; font-size: 16px;">Vous avez demandé à réinitialiser votre mot de passe. Voici votre code de vérification :</p>
+              <div class="otp-code">${otpCode}</div>
+              <div class="info">
+                <p>⏱️ Ce code est valide pendant <strong>10 minutes</strong>.</p>
+                <p>🔒 Ne partagez jamais ce code avec qui que ce soit.</p>
+                <p>❓ Si vous n'avez pas demandé cette réinitialisation, ignorez cet email et vérifiez la sécurité de votre compte.</p>
+              </div>
+            </div>
+            <div class="footer">
+              <p>&copy; 2024 Chat Kephale - Application de messagerie sécurisée</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error('Error sending password reset OTP email:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('=================================================================');
+      console.log('DEV MODE: Password reset email failed. OTP code:', otpCode);
+      console.log('=================================================================');
+      return true;
+    }
+    return false;
+  }
+}
+
+/**
  * Send welcome email after successful registration
  */
 export async function sendWelcomeEmail(email: string, name: string): Promise<boolean> {
