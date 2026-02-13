@@ -475,6 +475,8 @@ model PendingSubscriptionPayment {
   logo          String?  @db.Text
   address       String?  @db.Text
   requestId     String?
+  orgId         String?  // Si renseigné = upgrade d'un abonnement existant
+  type          String   @default("CREATE") // CREATE | UPGRADE
   createdAt     DateTime @default(now())
 
   @@index([transactionId])
@@ -495,6 +497,8 @@ model PaymentOrder {
   logo        String?           @db.Text
   address     String?           @db.Text
   requestId   String?
+  orgId       String?           // Si renseigné = upgrade d'un abonnement existant
+  type        String            @default("CREATE") // CREATE | UPGRADE
   amountFcfa  Int
   status      PaymentOrderStatus @default(PENDING)
   approvedBy  String?

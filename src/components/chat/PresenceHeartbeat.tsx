@@ -9,7 +9,7 @@
 import { useEffect, useRef } from 'react';
 import { getUser, fetchWithAuth } from '@/src/lib/auth-client';
 
-const HEARTBEAT_INTERVAL_MS = 25_000; // 25 secondes (TTL Redis = 60s)
+const HEARTBEAT_INTERVAL_MS = 30_000; // 30 secondes (TTL Redis = 60s) — limite les écritures Redis
 
 export function PresenceHeartbeat() {
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { notifyDepartmentNewMessage } from '@/src/lib/notify-department';
 
 export async function GET(
     request: NextRequest,
@@ -234,6 +235,23 @@ export async function POST(
                 },
             },
         });
+
+        try {
+            const department = await prisma.department.findUnique({
+                where: { id: deptId },
+                select: { name: true },
+            });
+            await notifyDepartmentNewMessage({
+                orgId,
+                deptId,
+                messageId: message.id,
+                senderId: userId,
+                senderName: message.sender?.name || 'Un membre',
+                departmentName: department?.name ?? undefined,
+            });
+        } catch (notifErr) {
+            console.error('[Dept messages] Notify error:', notifErr);
+        }
 
         return NextResponse.json({ message }, { status: 201 });
     } catch (error) {

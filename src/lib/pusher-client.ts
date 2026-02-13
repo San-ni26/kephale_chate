@@ -24,7 +24,9 @@ export function getPusherClient(): PusherClient | null {
     const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
 
     if (!key || !cluster) {
-        console.error('[Pusher] Missing env vars: NEXT_PUBLIC_PUSHER_KEY, NEXT_PUBLIC_PUSHER_CLUSTER');
+        if (process.env.NODE_ENV === 'development') {
+            console.error('[Pusher] Missing env vars: NEXT_PUBLIC_PUSHER_KEY, NEXT_PUBLIC_PUSHER_CLUSTER');
+        }
         return null;
     }
 
@@ -32,12 +34,11 @@ export function getPusherClient(): PusherClient | null {
         return pusherClientInstance;
     }
 
-    // Enable Pusher debug logging in development
+    // Enable Pusher debug logging in development only
     if (process.env.NODE_ENV === 'development') {
         PusherClient.logToConsole = true;
+        console.log('[Pusher] Initializing client - key:', key?.substring(0, 6) + '...', 'cluster:', cluster);
     }
-
-    console.log('[Pusher] Initializing client - key:', key?.substring(0, 6) + '...', 'cluster:', cluster);
 
     try {
         pusherClientInstance = new PusherClient(key, {
@@ -51,7 +52,9 @@ export function getPusherClient(): PusherClient | null {
             },
         });
     } catch (err) {
-        console.error('[Pusher] Failed to create client:', err);
+        if (process.env.NODE_ENV === 'development') {
+            console.error('[Pusher] Failed to create client:', err);
+        }
         return null;
     }
 
@@ -80,7 +83,9 @@ export function acquireUserChannel(): Channel | null {
     userChannelInstance = client.subscribe(channelName);
 
     userChannelInstance.bind('pusher:subscription_succeeded', () => {
-        console.log('[Pusher] Subscribed to user channel:', channelName);
+        if (process.env.NODE_ENV === 'development') {
+            console.log('[Pusher] Subscribed to user channel:', channelName);
+        }
     });
 
     userChannelInstance.bind('pusher:subscription_error', (err: any) => {

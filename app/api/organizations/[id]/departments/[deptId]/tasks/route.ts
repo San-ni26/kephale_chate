@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { notifyDepartmentTaskAssigned } from '@/src/lib/notify-department';
 
 export async function POST(
     request: NextRequest,
@@ -91,6 +92,19 @@ export async function POST(
                 attachments: true,
             }
         });
+
+        try {
+            await notifyDepartmentTaskAssigned({
+                orgId,
+                deptId,
+                taskId: task.id,
+                taskTitle: task.title,
+                assigneeId: task.assigneeId,
+                creatorName: task.creator?.name || 'Un membre',
+            });
+        } catch (notifErr) {
+            console.error('[Dept tasks] Notify assignee error:', notifErr);
+        }
 
         return NextResponse.json({ task });
     } catch (error) {

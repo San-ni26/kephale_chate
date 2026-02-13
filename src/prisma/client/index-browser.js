@@ -365,6 +365,8 @@ exports.Prisma.PendingSubscriptionPaymentScalarFieldEnum = {
   logo: 'logo',
   address: 'address',
   requestId: 'requestId',
+  orgId: 'orgId',
+  type: 'type',
   createdAt: 'createdAt'
 };
 
@@ -376,6 +378,8 @@ exports.Prisma.PaymentOrderScalarFieldEnum = {
   logo: 'logo',
   address: 'address',
   requestId: 'requestId',
+  orgId: 'orgId',
+  type: 'type',
   amountFcfa: 'amountFcfa',
   status: 'status',
   approvedBy: 'approvedBy',

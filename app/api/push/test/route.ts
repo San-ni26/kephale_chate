@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
         }
 
         const payload = JSON.stringify({
-            title: 'Test Notification Kephale',
+            title: 'Test Notification',
             body: 'Les notifications fonctionnent! ' + new Date().toLocaleTimeString('fr-FR'),
             icon: '/icons/icon-192x192.png',
             url: '/chat',

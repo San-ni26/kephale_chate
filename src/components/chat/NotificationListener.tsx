@@ -26,35 +26,65 @@ export function NotificationListener() {
         const handleNewNotification = (data: {
             id: string;
             content: string;
-            messageId: string;
-            conversationId: string;
-            senderName: string;
+            messageId?: string;
+            conversationId?: string;
+            senderName?: string;
             createdAt: string;
+            orgId?: string;
+            deptId?: string;
+            type?: string;
         }) => {
-            console.log('[Notification] Received:', data.senderName);
-
             const currentPath = pathnameRef.current;
-            if (currentPath?.includes(`/chat/discussion/${data.conversationId}`)) return;
 
-            toast(data.senderName, {
-                description: data.content,
-                action: {
-                    label: 'Voir',
-                    onClick: () => routerRef.current.push(`/chat/discussion/${data.conversationId}`)
-                },
-                duration: 5000,
-            });
+            // Discussion privée : ne pas notifier si l'utilisateur est déjà dans cette conversation
+            if (data.conversationId) {
+                if (currentPath?.includes(`/chat/discussion/${data.conversationId}`)) return;
+                if (process.env.NODE_ENV === 'development') {
+                    console.log('[Notification] Received:', data.senderName);
+                }
+                toast(data.senderName ?? 'Nouveau message', {
+                    description: data.content,
+                    action: {
+                        label: 'Voir',
+                        onClick: () => routerRef.current.push(`/chat/discussion/${data.conversationId}`)
+                    },
+                    duration: 5000,
+                });
+                if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                    try {
+                        new Notification(data.senderName ?? 'Nouveau message', {
+                            body: data.content,
+                            icon: '/icons/icon-192x192.png',
+                            tag: 'msg-' + data.conversationId,
+                        });
+                    } catch (e) {}
+                }
+                return;
+            }
 
-            // Also try to show a native browser notification (for when tab is not focused)
-            if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-                try {
-                    new Notification(data.senderName, {
-                        body: data.content,
-                        icon: '/icons/icon-192x192.png',
-                        tag: 'msg-' + data.conversationId,
-                    });
-                } catch (e) {
-                    // Silently fail - native notifications may not work in all contexts
+            // Discussion département : ne pas notifier si l'utilisateur est déjà dans le chat du département
+            if (data.orgId && data.deptId) {
+                const deptChatPath = `/chat/organizations/${data.orgId}/departments/${data.deptId}/chat`;
+                if (currentPath === deptChatPath || currentPath?.startsWith(deptChatPath + '?')) return;
+                if (process.env.NODE_ENV === 'development') {
+                    console.log('[Notification] Received (département):', data.content);
+                }
+                toast('Discussion département', {
+                    description: data.content,
+                    action: {
+                        label: 'Voir',
+                        onClick: () => routerRef.current.push(deptChatPath)
+                    },
+                    duration: 5000,
+                });
+                if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                    try {
+                        new Notification('Discussion département', {
+                            body: data.content,
+                            icon: '/icons/icon-192x192.png',
+                            tag: 'dept-' + data.deptId,
+                        });
+                    } catch (e) {}
                 }
             }
         };
@@ -138,7 +168,9 @@ export function NotificationListener() {
             const hasPush = 'PushManager' in window;
             const hasNotif = typeof Notification !== 'undefined';
 
-            console.log('[Push] Support check - SW:', hasSW, 'Push:', hasPush, 'Notification:', hasNotif);
+            if (process.env.NODE_ENV === 'development') {
+                console.log('[Push] Support check - SW:', hasSW, 'Push:', hasPush, 'Notification:', hasNotif);
+            }
 
             if (!hasNotif) {
                 console.warn('[Push] Notifications API not available (Safari needs PWA installed on Home Screen)');
@@ -147,12 +179,16 @@ export function NotificationListener() {
 
             // Step 2: Request permission
             let permission = Notification.permission;
-            console.log('[Push] Current permission:', permission);
+            if (process.env.NODE_ENV === 'development') {
+                console.log('[Push] Current permission:', permission);
+            }
 
             if (permission === 'default') {
                 try {
                     permission = await Notification.requestPermission();
-                    console.log('[Push] Permission after request:', permission);
+                    if (process.env.NODE_ENV === 'development') {
+                        console.log('[Push] Permission after request:', permission);
+                    }
                 } catch (e) {
                     console.error('[Push] Permission request failed:', e);
                     return;
@@ -166,7 +202,9 @@ export function NotificationListener() {
 
             // Step 3: Register push subscription if SW + Push are available
             if (!hasSW || !hasPush) {
-                console.log('[Push] SW/Push not available, using in-app notifications only');
+                if (process.env.NODE_ENV === 'development') {
+                    console.log('[Push] SW/Push not available, using in-app notifications only');
+                }
                 return;
             }
 
@@ -213,7 +251,9 @@ export function NotificationListener() {
                     return;
                 }
 
-                console.log('[Push] SW active:', registration.active.scriptURL);
+                if (process.env.NODE_ENV === 'development') {
+                    console.log('[Push] SW active:', registration.active.scriptURL);
+                }
 
                 // Get or create subscription
                 let subscription = await registration.pushManager.getSubscription();
@@ -229,9 +269,9 @@ export function NotificationListener() {
                         userVisibleOnly: true,
                         applicationServerKey: urlBase64ToUint8Array(vapidKey),
                     });
-                    console.log('[Push] New subscription created');
+                    if (process.env.NODE_ENV === 'development') console.log('[Push] New subscription created');
                 } else {
-                    console.log('[Push] Existing subscription found');
+                    if (process.env.NODE_ENV === 'development') console.log('[Push] Existing subscription found');
                 }
 
                 // Step 4: Send to server with auth
@@ -248,7 +288,7 @@ export function NotificationListener() {
                 });
 
                 if (res.ok) {
-                    console.log('[Push] Subscription saved to server');
+                    if (process.env.NODE_ENV === 'development') console.log('[Push] Subscription saved to server');
                     pushRegistered.current = true;
                 } else {
                     console.error('[Push] Server save failed:', res.status);

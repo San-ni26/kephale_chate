@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
@@ -17,11 +17,16 @@ import {
     SelectValue,
 } from "@/src/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
-import { Loader2, Building2, Trash2, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import {
+    Loader2, Building2, Trash2, ArrowLeft, ChevronDown, ChevronUp,
+    Crown, Check, AlertTriangle, Clock, CreditCard, ArrowUpRight, ArrowDownRight,
+    Users, LayoutGrid, Infinity as InfinityIcon, Zap
+} from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
+// ─── Types ───
 interface Organization {
     id: string;
     name: string;
@@ -48,6 +53,80 @@ interface OrgMember {
     role: "OWNER" | "ADMIN" | "MEMBER";
 }
 
+interface PendingOrder {
+    id: string;
+    plan: string;
+    amountFcfa: number;
+    status: string;
+    createdAt: string;
+}
+
+interface PendingPayment {
+    id: string;
+    plan: string;
+    transactionId: string;
+    createdAt: string;
+}
+
+// ─── Plans ───
+const PLANS = [
+    {
+        key: "FREE",
+        label: "Gratuit",
+        price: 0,
+        maxDepartments: 2,
+        maxMembers: 5,
+        features: ["2 départements", "5 membres / dépt", "Essai 1 mois"],
+        color: "border-muted",
+        badge: null,
+    },
+    {
+        key: "BASIC",
+        label: "Basic",
+        price: 5000,
+        maxDepartments: 5,
+        maxMembers: 20,
+        features: ["5 départements", "20 membres / dépt", "Support standard"],
+        color: "border-blue-500/50",
+        badge: null,
+    },
+    {
+        key: "PROFESSIONAL",
+        label: "Professional",
+        price: 15000,
+        maxDepartments: 15,
+        maxMembers: 50,
+        features: ["15 départements", "50 membres / dépt", "Support prioritaire"],
+        color: "border-violet-500/50",
+        badge: "Populaire",
+    },
+    {
+        key: "ENTERPRISE",
+        label: "Enterprise",
+        price: 50000,
+        maxDepartments: 999999,
+        maxMembers: 999999,
+        features: ["Départements illimités", "Membres illimités", "Support dédié"],
+        color: "border-amber-500/50",
+        badge: "Premium",
+    },
+] as const;
+
+const PLAN_ORDER: Record<string, number> = {
+    FREE: 0,
+    BASIC: 1,
+    PROFESSIONAL: 2,
+    ENTERPRISE: 3,
+};
+
+function getPlanLabel(plan: string) {
+    return PLANS.find((p) => p.key === plan)?.label || plan;
+}
+
+function getPlanPrice(plan: string) {
+    return PLANS.find((p) => p.key === plan)?.price ?? 0;
+}
+
 export default function OrganizationSettingsPage() {
     const params = useParams();
     const router = useRouter();
@@ -65,9 +144,20 @@ export default function OrganizationSettingsPage() {
     );
     const orgMembers: OrgMember[] = membersData?.members ?? [];
 
+    // Upgrade status
+    const { data: upgradeData, mutate: mutateUpgrade } = useSWR(
+        orgId ? `/api/organizations/${orgId}/upgrade` : null,
+        fetcher,
+        { refreshInterval: 15000 }
+    );
+    const pendingOrders: PendingOrder[] = upgradeData?.pendingOrders ?? [];
+    const pendingPayments: PendingPayment[] = upgradeData?.pendingPayments ?? [];
+    const hasPendingUpgrade = pendingOrders.length > 0 || pendingPayments.length > 0;
+
     const [editOrgForm, setEditOrgForm] = useState({ name: "", logo: "", address: "" });
-    const [newPlan, setNewPlan] = useState<string>("");
+    const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const [updatingOrg, setUpdatingOrg] = useState(false);
+    const [upgradingPlan, setUpgradingPlan] = useState(false);
     const [deletingOrg, setDeletingOrg] = useState(false);
     const [deleteConfirmText, setDeleteConfirmText] = useState("");
     const [logoImageError, setLogoImageError] = useState(false);
@@ -77,6 +167,7 @@ export default function OrganizationSettingsPage() {
     const [updatingRoleUserId, setUpdatingRoleUserId] = useState<string | null>(null);
     const [removingMemberUserId, setRemovingMemberUserId] = useState<string | null>(null);
     const [showMembersList, setShowMembersList] = useState(true);
+    const [showPlanSelector, setShowPlanSelector] = useState(false);
 
     useEffect(() => {
         if (!org) return;
@@ -85,7 +176,6 @@ export default function OrganizationSettingsPage() {
             logo: org.logo || "",
             address: org.address || "",
         });
-        setNewPlan(org.subscription?.plan || "FREE");
     }, [org]);
 
     const MAX_LOGO_SIZE = 2 * 1024 * 1024; // 2 Mo
@@ -147,29 +237,66 @@ export default function OrganizationSettingsPage() {
         }
     };
 
-    const handleChangePlan = async () => {
-        if (!orgId || !newPlan) return;
-        setUpdatingOrg(true);
+    // ─── Changement d'abonnement avec paiement ───
+    const handleUpgradePlan = useCallback(async (plan: string) => {
+        if (!orgId || !plan) return;
+
+        const currentPlan = org?.subscription?.plan || "FREE";
+        if (plan === currentPlan) {
+            toast.info("Vous êtes déjà sur ce plan");
+            return;
+        }
+
+        setUpgradingPlan(true);
+        setSelectedPlan(plan);
+
         try {
-            const res = await fetchWithAuth(`/api/organizations/${orgId}`, {
-                method: "PATCH",
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/upgrade`, {
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plan: newPlan }),
+                body: JSON.stringify({ plan }),
             });
-            if (res.ok) {
-                toast.success("Abonnement mis à jour");
-                mutateOrg();
-            } else {
-                const err = await res.json();
-                toast.error(err.error || "Erreur");
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                toast.error(data.error || "Erreur lors du changement d'abonnement");
+                return;
+            }
+
+            switch (data.mode) {
+                case "FREE_DOWNGRADE":
+                    toast.success("Abonnement mis à jour vers le plan gratuit");
+                    mutateOrg();
+                    setShowPlanSelector(false);
+                    break;
+
+                case "CINETPAY":
+                    if (data.paymentUrl) {
+                        toast.success("Redirection vers la page de paiement...");
+                        window.location.href = data.paymentUrl;
+                        return;
+                    }
+                    toast.error("Erreur de redirection vers le paiement");
+                    break;
+
+                case "MANUAL":
+                    toast.success(data.message || "Demande envoyée, en attente d'approbation");
+                    mutateUpgrade();
+                    setShowPlanSelector(false);
+                    break;
+
+                default:
+                    toast.error("Mode de paiement inconnu");
             }
         } catch (e) {
-            console.error("Change plan error:", e);
+            console.error("Upgrade plan error:", e);
             toast.error("Erreur serveur");
         } finally {
-            setUpdatingOrg(false);
+            setUpgradingPlan(false);
+            setSelectedPlan(null);
         }
-    };
+    }, [orgId, org, mutateOrg, mutateUpgrade]);
 
     const handleUpdateMemberRole = async (userId: string, role: "ADMIN" | "MEMBER") => {
         if (!orgId) return;
@@ -262,6 +389,9 @@ export default function OrganizationSettingsPage() {
         );
     }
 
+    const currentPlan = org.subscription?.plan || "FREE";
+    const currentPlanConfig = PLANS.find((p) => p.key === currentPlan);
+
     const isSubscriptionExpired = Boolean(
         org.subscription?.endDate &&
         new Date(org.subscription.endDate) < new Date()
@@ -271,102 +401,308 @@ export default function OrganizationSettingsPage() {
         <div className="min-h-screen bg-background mt-14 md:mt-16 pb-20 md:pb-6 ">
             <div className="mx-auto w-full max-w-4xl px-4 md:px-6 lg:px-8 py-6 space-y-6 pb-25">
 
-
-                {/* Abonnement */}
+                {/* ═══════════ Abonnement actuel ═══════════ */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Abonnement</CardTitle>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <Crown className="w-5 h-5 text-amber-500" />
+                                <CardTitle>Abonnement</CardTitle>
+                            </div>
+                            {currentPlanConfig && (
+                                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                                    currentPlan === "FREE"
+                                        ? "bg-muted text-muted-foreground"
+                                        : currentPlan === "BASIC"
+                                        ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                                        : currentPlan === "PROFESSIONAL"
+                                        ? "bg-violet-500/10 text-violet-600 dark:text-violet-400"
+                                        : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                                }`}>
+                                    {currentPlanConfig.label}
+                                </span>
+                            )}
+                        </div>
                     </CardHeader>
                     <CardContent className="space-y-4 text-sm">
                         {org.subscription ? (
                             <>
-                                <div className="rounded-lg border border-border p-3 space-y-1">
-                                    <p>
-                                        <span className="text-muted-foreground">
-                                            Plan actuel :
-                                        </span>{" "}
-                                        <strong>{org.subscription.plan}</strong>
-                                    </p>
-                                    <p>
-                                        <span className="text-muted-foreground">
-                                            Début :
-                                        </span>{" "}
-                                        {org.subscription.startDate
-                                            ? format(
-                                                new Date(org.subscription.startDate),
-                                                "d MMMM yyyy",
-                                                { locale: fr }
-                                            )
-                                            : "—"}
-                                    </p>
-                                    <p>
-                                        <span className="text-muted-foreground">
-                                            Fin :
-                                        </span>{" "}
-                                        {org.subscription.endDate
-                                            ? format(
-                                                new Date(org.subscription.endDate),
-                                                "d MMMM yyyy",
-                                                { locale: fr }
-                                            )
-                                            : "Sans fin"}
-                                    </p>
-                                    <p>
-                                        <span className="text-muted-foreground">
-                                            Départements :
-                                        </span>{" "}
-                                        {org._count.departments} /{" "}
-                                        {org.subscription.maxDepartments}
-                                    </p>
-                                    <p>
-                                        <span className="text-muted-foreground">
-                                            Membres max/dépt :
-                                        </span>{" "}
-                                        {org.subscription.maxMembersPerDept}
-                                    </p>
+                                {/* Info abonnement actuel */}
+                                <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <p className="text-xs text-muted-foreground">Plan actuel</p>
+                                            <p className="font-semibold text-base">{getPlanLabel(currentPlan)}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-muted-foreground">Prix mensuel</p>
+                                            <p className="font-semibold text-base">
+                                                {getPlanPrice(currentPlan) === 0
+                                                    ? "Gratuit"
+                                                    : `${getPlanPrice(currentPlan).toLocaleString("fr-FR")} FCFA`}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-muted-foreground">Début</p>
+                                            <p className="font-medium">
+                                                {org.subscription.startDate
+                                                    ? format(new Date(org.subscription.startDate), "d MMMM yyyy", { locale: fr })
+                                                    : "—"}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-muted-foreground">Expiration</p>
+                                            <p className={`font-medium ${isSubscriptionExpired ? "text-destructive" : ""}`}>
+                                                {org.subscription.endDate
+                                                    ? format(new Date(org.subscription.endDate), "d MMMM yyyy", { locale: fr })
+                                                    : "Sans fin"}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-4 pt-2 border-t border-border">
+                                        <div className="flex items-center gap-1.5">
+                                            <LayoutGrid className="w-4 h-4 text-muted-foreground" />
+                                            <span className="text-sm">
+                                                <strong>{org._count.departments}</strong> / {org.subscription.maxDepartments >= 999999 ? <InfinityIcon className="inline w-3.5 h-3.5" /> : org.subscription.maxDepartments} départements
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-1.5">
+                                            <Users className="w-4 h-4 text-muted-foreground" />
+                                            <span className="text-sm">
+                                                {org.subscription.maxMembersPerDept >= 999999 ? <><InfinityIcon className="inline w-3.5 h-3.5" /> membres/dépt</> : <><strong>{org.subscription.maxMembersPerDept}</strong> membres max/dépt</>}
+                                            </span>
+                                        </div>
+                                    </div>
+
                                     {isSubscriptionExpired && (
-                                        <p className="text-destructive font-medium mt-2">
-                                            Abonnement expiré. Mettez à jour pour
-                                            continuer à utiliser les fonctionnalités.
-                                        </p>
+                                        <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive">
+                                            <AlertTriangle className="w-4 h-4 shrink-0" />
+                                            <p className="text-sm font-medium">
+                                                Votre abonnement a expiré. Renouvelez ou changez de plan pour continuer.
+                                            </p>
+                                        </div>
                                     )}
                                 </div>
-                                <div className="flex flex-wrap items-center gap-2">
-                                    <Select value={newPlan} onValueChange={setNewPlan}>
-                                        <SelectTrigger className="w-[180px]">
-                                            <SelectValue placeholder="Changer de plan" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="FREE">Gratuit</SelectItem>
-                                            <SelectItem value="BASIC">Basic</SelectItem>
-                                            <SelectItem value="PROFESSIONAL">
-                                                Professional
-                                            </SelectItem>
-                                            <SelectItem value="ENTERPRISE">
-                                                Enterprise
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <Button
-                                        size="sm"
-                                        onClick={handleChangePlan}
-                                        disabled={
-                                            updatingOrg ||
-                                            newPlan ===
-                                            (org.subscription?.plan || "FREE")
-                                        }
-                                    >
-                                        {updatingOrg ? (
-                                            <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                                        ) : null}
-                                        Mettre à jour l&apos;abonnement
-                                    </Button>
-                                </div>
+
+                                {/* Demande(s) en attente */}
+                                {hasPendingUpgrade && (
+                                    <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 space-y-2">
+                                        <div className="flex items-center gap-2">
+                                            <Clock className="w-4 h-4 text-amber-600" />
+                                            <p className="text-sm font-semibold text-amber-700 dark:text-amber-400">
+                                                Changement d&apos;abonnement en cours
+                                            </p>
+                                        </div>
+                                        {pendingOrders.map((o) => (
+                                            <div key={o.id} className="flex items-center justify-between text-sm bg-background/60 rounded p-2">
+                                                <span>
+                                                    Passage au plan <strong>{getPlanLabel(o.plan)}</strong> ({o.amountFcfa.toLocaleString("fr-FR")} FCFA)
+                                                </span>
+                                                <span className="text-xs text-amber-600 font-medium px-2 py-0.5 bg-amber-500/10 rounded-full">
+                                                    En attente d&apos;approbation
+                                                </span>
+                                            </div>
+                                        ))}
+                                        {pendingPayments.map((p) => (
+                                            <div key={p.id} className="flex items-center justify-between text-sm bg-background/60 rounded p-2">
+                                                <span>
+                                                    Paiement en cours pour le plan <strong>{getPlanLabel(p.plan)}</strong>
+                                                </span>
+                                                <span className="text-xs text-blue-600 font-medium px-2 py-0.5 bg-blue-500/10 rounded-full">
+                                                    Paiement en attente
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Bouton pour ouvrir le sélecteur de plan */}
+                                <Button
+                                    variant={showPlanSelector ? "outline" : "default"}
+                                    size="sm"
+                                    onClick={() => setShowPlanSelector(!showPlanSelector)}
+                                    disabled={hasPendingUpgrade}
+                                    className="gap-2"
+                                >
+                                    {showPlanSelector ? (
+                                        <>
+                                            <ChevronUp className="w-4 h-4" />
+                                            Fermer
+                                        </>
+                                    ) : (
+                                        <>
+                                            <CreditCard className="w-4 h-4" />
+                                            {isSubscriptionExpired
+                                                ? "Renouveler l\u2019abonnement"
+                                                : "Changer de plan"}
+                                        </>
+                                    )}
+                                </Button>
+
+                                {/* ─── Sélecteur de plan avec prix ─── */}
+                                {showPlanSelector && (
+                                    <div className="space-y-3 pt-2">
+                                        <p className="text-sm text-muted-foreground">
+                                            Choisissez un nouveau plan. Le paiement sera traité automatiquement.
+                                        </p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            {PLANS.map((plan) => {
+                                                const isCurrent = plan.key === currentPlan;
+                                                const isUpgrade = PLAN_ORDER[plan.key] > PLAN_ORDER[currentPlan];
+                                                const isDowngrade = PLAN_ORDER[plan.key] < PLAN_ORDER[currentPlan];
+                                                const isProcessing = upgradingPlan && selectedPlan === plan.key;
+
+                                                return (
+                                                    <div
+                                                        key={plan.key}
+                                                        className={`relative rounded-xl border-2 p-4 transition-all ${
+                                                            isCurrent
+                                                                ? "border-primary bg-primary/5"
+                                                                : `${plan.color} hover:shadow-md`
+                                                        }`}
+                                                    >
+                                                        {/* Badge populaire/premium */}
+                                                        {plan.badge && (
+                                                            <span className={`absolute -top-2.5 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                                                plan.key === "PROFESSIONAL"
+                                                                    ? "bg-violet-500 text-white"
+                                                                    : "bg-amber-500 text-white"
+                                                            }`}>
+                                                                {plan.badge}
+                                                            </span>
+                                                        )}
+
+                                                        <div className="space-y-2">
+                                                            <div className="flex items-center justify-between">
+                                                                <h4 className="font-semibold">{plan.label}</h4>
+                                                                {isCurrent && (
+                                                                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
+                                                                        Actuel
+                                                                    </span>
+                                                                )}
+                                                            </div>
+
+                                                            <p className="text-xl font-bold">
+                                                                {plan.price === 0
+                                                                    ? "Gratuit"
+                                                                    : `${plan.price.toLocaleString("fr-FR")} FCFA`}
+                                                                {plan.price > 0 && (
+                                                                    <span className="text-xs font-normal text-muted-foreground"> / mois</span>
+                                                                )}
+                                                            </p>
+
+                                                            <ul className="space-y-1">
+                                                                {plan.features.map((f, i) => (
+                                                                    <li key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                                                        <Check className="w-3 h-3 text-green-500 shrink-0" />
+                                                                        {f}
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+
+                                                            {!isCurrent && (
+                                                                <Button
+                                                                    size="sm"
+                                                                    variant={isUpgrade ? "default" : "outline"}
+                                                                    className="w-full mt-2 gap-1.5"
+                                                                    disabled={upgradingPlan}
+                                                                    onClick={() => handleUpgradePlan(plan.key)}
+                                                                >
+                                                                    {isProcessing ? (
+                                                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                                                    ) : isUpgrade ? (
+                                                                        <>
+                                                                            <ArrowUpRight className="w-3.5 h-3.5" />
+                                                                            Passer au {plan.label}
+                                                                        </>
+                                                                    ) : isDowngrade ? (
+                                                                        <>
+                                                                            <ArrowDownRight className="w-3.5 h-3.5" />
+                                                                            Rétrograder
+                                                                        </>
+                                                                    ) : null}
+                                                                </Button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        <p className="text-xs text-muted-foreground mt-2">
+                                            * Les frais de transaction (2%) s&apos;appliquent sur les paiements en ligne.
+                                            Les changements prennent effet immédiatement après le paiement.
+                                        </p>
+                                    </div>
+                                )}
                             </>
                         ) : (
-                            <p className="text-muted-foreground">
-                                Aucun abonnement défini pour cette organisation.
-                            </p>
+                            <div className="space-y-3">
+                                <p className="text-muted-foreground">
+                                    Aucun abonnement défini pour cette organisation.
+                                </p>
+                                <Button
+                                    size="sm"
+                                    onClick={() => setShowPlanSelector(true)}
+                                    className="gap-2"
+                                >
+                                    <Zap className="w-4 h-4" />
+                                    Souscrire à un abonnement
+                                </Button>
+
+                                {showPlanSelector && (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                                        {PLANS.filter((p) => p.key !== "FREE").map((plan) => {
+                                            const isProcessing = upgradingPlan && selectedPlan === plan.key;
+                                            return (
+                                                <div
+                                                    key={plan.key}
+                                                    className={`relative rounded-xl border-2 p-4 ${plan.color} hover:shadow-md transition-all`}
+                                                >
+                                                    {plan.badge && (
+                                                        <span className={`absolute -top-2.5 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                                            plan.key === "PROFESSIONAL"
+                                                                ? "bg-violet-500 text-white"
+                                                                : "bg-amber-500 text-white"
+                                                        }`}>
+                                                            {plan.badge}
+                                                        </span>
+                                                    )}
+                                                    <h4 className="font-semibold">{plan.label}</h4>
+                                                    <p className="text-xl font-bold mt-1">
+                                                        {plan.price.toLocaleString("fr-FR")} FCFA
+                                                        <span className="text-xs font-normal text-muted-foreground"> / mois</span>
+                                                    </p>
+                                                    <ul className="space-y-1 mt-2">
+                                                        {plan.features.map((f, i) => (
+                                                            <li key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                                                <Check className="w-3 h-3 text-green-500 shrink-0" />
+                                                                {f}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                    <Button
+                                                        size="sm"
+                                                        className="w-full mt-3 gap-1.5"
+                                                        disabled={upgradingPlan}
+                                                        onClick={() => handleUpgradePlan(plan.key)}
+                                                    >
+                                                        {isProcessing ? (
+                                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                                        ) : (
+                                                            <>
+                                                                <CreditCard className="w-3.5 h-3.5" />
+                                                                Souscrire
+                                                            </>
+                                                        )}
+                                                    </Button>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
                         )}
                     </CardContent>
                 </Card>

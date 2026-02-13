@@ -90,12 +90,12 @@ export function useWebSocket(
 
         // Connection state handlers
         const onConnected = () => {
-            console.log('[Pusher] Connected');
+            if (process.env.NODE_ENV === 'development') console.log('[Pusher] Connected');
             setIsConnected(true);
         };
 
         const onDisconnected = () => {
-            console.log('[Pusher] Disconnected');
+            if (process.env.NODE_ENV === 'development') console.log('[Pusher] Disconnected');
             setIsConnected(false);
         };
 
@@ -138,7 +138,9 @@ export function useWebSocket(
         const existingChannel = pusher.channel(channelName);
 
         if (!existingChannel || !existingChannel.subscribed) {
-            console.log('[Pusher] Re-subscribing to conversation after reconnect:', convId);
+            if (process.env.NODE_ENV === 'development') {
+                console.log('[Pusher] Re-subscribing to conversation after reconnect:', convId);
+            }
             joinConversationInternal(convId);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -152,7 +154,9 @@ export function useWebSocket(
         const channel = pusher.subscribe(channelName) as PresenceChannel;
 
         channel.bind('pusher:subscription_succeeded', () => {
-            console.log('[Pusher] Joined conversation:', conversationId);
+            if (process.env.NODE_ENV === 'development') {
+                console.log('[Pusher] Joined conversation:', conversationId);
+            }
         });
 
         channel.bind('pusher:subscription_error', (err: any) => {

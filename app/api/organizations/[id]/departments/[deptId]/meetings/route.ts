@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { notifyDepartmentNewMeeting } from '@/src/lib/notify-department';
 
 async function checkDeptAccess(orgId: string, deptId: string, userId: string) {
     const orgMember = await prisma.organizationMember.findFirst({
@@ -92,6 +93,20 @@ export async function POST(
                 },
             },
         });
+
+        try {
+            await notifyDepartmentNewMeeting({
+                orgId,
+                deptId,
+                meetingId: meeting.id,
+                meetingTitle: meeting.title,
+                meetingDate: meeting.meetingDate,
+                createdBy: payload.userId,
+                creatorName: meeting.creator?.name ?? undefined,
+            });
+        } catch (notifErr) {
+            console.error('[Dept meetings] Notify error:', notifErr);
+        }
 
         return NextResponse.json({ meeting });
     } catch (error) {

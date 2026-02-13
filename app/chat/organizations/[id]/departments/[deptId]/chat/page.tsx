@@ -108,6 +108,15 @@ export default function DepartmentChatPage() {
 
     const currentUser = getUser();
 
+    const dedupeMessagesById = (list: Message[]) => {
+        const seen = new Set<string>();
+        return list.filter((m) => {
+            if (seen.has(m.id)) return false;
+            seen.add(m.id);
+            return true;
+        });
+    };
+
     // Polling for new messages
     useEffect(() => {
         const interval = setInterval(() => {
@@ -172,7 +181,7 @@ export default function DepartmentChatPage() {
             const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/messages`);
             if (response.ok) {
                 const data = await response.json();
-                setMessages(data.messages || []);
+                setMessages(dedupeMessagesById(data.messages || []));
                 setPinnedEvents(data.pinnedEvents || []);
                 if (!silent) scrollToBottom();
             }
@@ -258,7 +267,7 @@ export default function DepartmentChatPage() {
 
             if (response.ok) {
                 const data = await response.json();
-                setMessages(prev => [...prev, data.message]);
+                setMessages(prev => dedupeMessagesById([...prev, data.message]));
                 scrollToBottom();
             } else {
                 toast.error("Erreur d'envoi du message vocal");
@@ -314,7 +323,7 @@ export default function DepartmentChatPage() {
 
             if (response.ok) {
                 const data = await response.json();
-                setMessages(prev => [...prev, data.message]);
+                setMessages(prev => dedupeMessagesById([...prev, data.message]));
                 scrollToBottom();
             } else {
                 const error = await response.json();
@@ -497,7 +506,7 @@ export default function DepartmentChatPage() {
                 )}
 
                 <div className="space-y-2">
-                {messages.map((message) => {
+                {dedupeMessagesById(messages).map((message) => {
                     const isOwn = message.senderId === currentUser?.id;
                     const canEdit = canEditOrDelete(message);
                     const decryptedContent = decryptMessageContent(message);

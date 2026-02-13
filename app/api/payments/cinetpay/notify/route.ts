@@ -77,6 +77,54 @@ export async function POST(request: NextRequest) {
         const startDate = new Date();
         const endDate = calculateSubscriptionEndDate(startDate, plan);
 
+        // === UPGRADE : mise à jour de l'abonnement existant ===
+        if (pending.type === 'UPGRADE' && pending.orgId) {
+            await prisma.$transaction(async (tx) => {
+                const existingSub = await tx.subscription.findUnique({
+                    where: { orgId: pending.orgId! },
+                });
+
+                if (existingSub) {
+                    await tx.subscription.update({
+                        where: { orgId: pending.orgId! },
+                        data: {
+                            plan,
+                            startDate,
+                            endDate,
+                            maxDepartments: limits.maxDepartments,
+                            maxMembersPerDept: limits.maxMembersPerDept,
+                            isActive: true,
+                        },
+                    });
+                } else {
+                    await tx.subscription.create({
+                        data: {
+                            orgId: pending.orgId!,
+                            plan,
+                            startDate,
+                            endDate,
+                            maxDepartments: limits.maxDepartments,
+                            maxMembersPerDept: limits.maxMembersPerDept,
+                            isActive: true,
+                        },
+                    });
+                }
+
+                await tx.pendingSubscriptionPayment.delete({
+                    where: { id: pending.id },
+                });
+            });
+
+            console.log('CinetPay: abonnement mis à jour après paiement', {
+                transaction_id: cpmTransId,
+                orgId: pending.orgId,
+                plan: pending.plan,
+            });
+
+            return new NextResponse(null, { status: 200 });
+        }
+
+        // === CREATE : création d'une nouvelle organisation ===
         let code = generateOrganizationCode();
         let codeExists = await prisma.organization.findUnique({ where: { code } });
         while (codeExists) {

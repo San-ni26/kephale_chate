@@ -30,7 +30,9 @@ export async function notifyNewMessage(message: any, conversationId: string) {
             conversationId,
             message,
         });
-        console.log('[Notify] Broadcast message:new to conversation:', conversationId);
+        if (process.env.NODE_ENV === 'development') {
+            console.log('[Notify] Broadcast message:new to conversation:', conversationId);
+        }
     } catch (err) {
         console.error('[Notify] Error broadcasting message via Pusher:', err);
     }
@@ -57,7 +59,9 @@ export async function notifyNewMessage(message: any, conversationId: string) {
         return;
     }
 
-    console.log('[Notify] Notifying', groupMembers.length, 'members');
+    if (process.env.NODE_ENV === 'development') {
+        console.log('[Notify] Notifying', groupMembers.length, 'members');
+    }
 
     // 3. Create notifications and send push for each member
     const notificationPromises = groupMembers.map(async (member) => {
@@ -98,7 +102,9 @@ export async function notifyNewMessage(message: any, conversationId: string) {
                 where: { userId: member.userId }
             });
 
-            console.log(`[Notify] User ${member.userId} has ${subscriptions.length} push subscription(s)`);
+            if (process.env.NODE_ENV === 'development') {
+                console.log(`[Notify] User ${member.userId} has ${subscriptions.length} push subscription(s)`);
+            }
 
             if (subscriptions.length > 0) {
                 const senderName = message.sender?.name || 'Utilisateur';
@@ -123,12 +129,16 @@ export async function notifyNewMessage(message: any, conversationId: string) {
                                 auth: sub.auth
                             }
                         }, payload);
-                        console.log(`[Notify] Push sent to ${sub.endpoint.substring(0, 50)}...`);
+                        if (process.env.NODE_ENV === 'development') {
+                            console.log(`[Notify] Push sent to ${sub.endpoint.substring(0, 50)}...`);
+                        }
                     } catch (err: any) {
                         console.error(`[Notify] Push failed for ${sub.endpoint.substring(0, 50)}:`, err.statusCode || err.message);
                         // Clean up dead subscriptions
                         if (err.statusCode === 410 || err.statusCode === 404) {
-                            console.log(`[Notify] Removing dead subscription: ${sub.endpoint.substring(0, 50)}`);
+                            if (process.env.NODE_ENV === 'development') {
+                                console.log(`[Notify] Removing dead subscription: ${sub.endpoint.substring(0, 50)}`);
+                            }
                             await prisma.pushSubscription.delete({
                                 where: { endpoint: sub.endpoint }
                             }).catch(() => {});
@@ -155,7 +165,9 @@ export async function notifyIncomingCall(
     offer: any,
     conversationId: string
 ) {
-    console.log(`[Call] Notifying ${recipientId} of incoming call from ${callerName}`);
+    if (process.env.NODE_ENV === 'development') {
+        console.log(`[Call] Notifying ${recipientId} of incoming call from ${callerName}`);
+    }
 
     // Send via Pusher (real-time, if user is online in-app)
     try {
@@ -165,7 +177,7 @@ export async function notifyIncomingCall(
             offer,
             conversationId,
         });
-        console.log('[Call] Pusher call:incoming sent');
+        if (process.env.NODE_ENV === 'development') console.log('[Call] Pusher call:incoming sent');
     } catch (err) {
         console.error('[Call] Error sending call via Pusher:', err);
     }
@@ -176,7 +188,9 @@ export async function notifyIncomingCall(
             where: { userId: recipientId }
         });
 
-        console.log(`[Call] Recipient has ${subscriptions.length} push subscription(s)`);
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`[Call] Recipient has ${subscriptions.length} push subscription(s)`);
+        }
 
         if (subscriptions.length > 0) {
             const payload = JSON.stringify({
@@ -197,7 +211,9 @@ export async function notifyIncomingCall(
                         endpoint: sub.endpoint,
                         keys: { p256dh: sub.p256dh, auth: sub.auth }
                     }, payload);
-                    console.log(`[Call] Push sent to ${sub.endpoint.substring(0, 50)}...`);
+                    if (process.env.NODE_ENV === 'development') {
+                        console.log(`[Call] Push sent to ${sub.endpoint.substring(0, 50)}...`);
+                    }
                 } catch (err: any) {
                     console.error(`[Call] Push failed:`, err.statusCode || err.message);
                     if (err.statusCode === 410 || err.statusCode === 404) {

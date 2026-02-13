@@ -3,10 +3,18 @@
  * Compatible Vercel - utilise Upstash Redis (REST API)
  */
 
-import { getRedis } from './redis';
+import { getRedis as getRedisImpl } from './redis';
+
+/** Exposé pour les modules qui importent depuis presence (ex. api/admin/performance). */
+export const getRedis = getRedisImpl;
 
 const PRESENCE_PREFIX = 'presence:user:';
 const PRESENCE_TTL_SEC = 60; // Considéré offline après 60s sans heartbeat
+
+/** Indique si Redis est configuré (pour le tableau de bord admin). */
+export function isRedisAvailable(): boolean {
+    return getRedis() !== null;
+}
 
 /**
  * Marquer un utilisateur comme en ligne
@@ -70,4 +78,32 @@ export async function getOnlineUserIds(userIds: string[]): Promise<Record<string
     }
 
     return result;
+}
+
+const PRESENCE_KEY_PATTERN = 'presence:user:*';
+
+/**
+ * Nombre d'utilisateurs actuellement en ligne (clés Redis presence).
+ * Utilisé pour le tableau de bord admin / performances.
+ */
+export async function getOnlineUsersCount(): Promise<number> {
+    const redis = getRedis();
+    if (!redis) return 0;
+
+    try {
+        let cursor = 0;
+        let total = 0;
+        do {
+            const [nextCursor, keys] = await redis.scan(cursor, {
+                match: PRESENCE_KEY_PATTERN,
+                count: 200,
+            });
+            cursor = typeof nextCursor === 'string' ? parseInt(nextCursor, 10) : nextCursor;
+            total += Array.isArray(keys) ? keys.length : 0;
+        } while (cursor !== 0);
+        return total;
+    } catch (err) {
+        console.error('[Presence] getOnlineUsersCount error:', err);
+        return 0;
+    }
 }

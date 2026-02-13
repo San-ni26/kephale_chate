@@ -9,6 +9,7 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { z } from 'zod';
 import { SUBSCRIPTION_PLANS } from '@/src/lib/subscription';
+import { notifySuperAdminNewPaymentOrder } from '@/src/lib/notify-payment-order';
 
 const createOrderSchema = z.object({
     plan: z.enum(['BASIC', 'PROFESSIONAL', 'ENTERPRISE']),
@@ -50,6 +51,18 @@ export async function POST(request: NextRequest) {
                 status: 'PENDING',
             },
         });
+
+        try {
+            await notifySuperAdminNewPaymentOrder({
+                orderId: order.id,
+                plan: order.plan,
+                name: order.name,
+                amountFcfa: order.amountFcfa,
+                type: 'CREATE',
+            });
+        } catch (notifErr) {
+            console.error('[Payments/orders] Notify super admin error:', notifErr);
+        }
 
         return NextResponse.json({ order }, { status: 201 });
     } catch (error) {

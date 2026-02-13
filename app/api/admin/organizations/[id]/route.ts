@@ -77,3 +77,27 @@ export async function GET(
         return NextResponse.json({ error: 'Erreur' }, { status: 500 });
     }
 }
+
+/** DELETE: Supprimer une organisation (admin only) */
+export async function DELETE(
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const authError = await requireAdmin(request);
+    if (authError) return authError;
+
+    const { id } = await params;
+
+    try {
+        const org = await prisma.organization.findUnique({ where: { id } });
+        if (!org) {
+            return NextResponse.json({ error: 'Organisation non trouvée' }, { status: 404 });
+        }
+
+        await prisma.organization.delete({ where: { id } });
+        return NextResponse.json({ message: 'Organisation supprimée' });
+    } catch (error) {
+        console.error('Delete organization error:', error);
+        return NextResponse.json({ error: 'Erreur lors de la suppression' }, { status: 500 });
+    }
+}

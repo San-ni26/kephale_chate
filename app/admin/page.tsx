@@ -145,6 +145,16 @@ interface AdminStats {
     onlineUsers?: number;
 }
 
+interface PerformanceStats {
+    onlineUsers: number;
+    pushSubscriptions: number;
+    notificationsLast24h: number;
+    messagesLast24h: number;
+    notificationsUnread: number;
+    redisAvailable: boolean;
+    timestamp: string;
+}
+
 /** Extrait lat/lng de location ou currentLocation */
 function getCoords(loc: { latitude?: number; longitude?: number } | null | undefined): { lat: number; lng: number } | null {
     if (!loc || typeof loc !== "object") return null;
@@ -217,26 +227,49 @@ export default function AdminDashboard() {
     const [orgDetailLoading, setOrgDetailLoading] = useState(false);
     const [deleteUser, setDeleteUser] = useState<User | null>(null);
     const [deleting, setDeleting] = useState(false);
+    const [deleteOrg, setDeleteOrg] = useState<Organization | null>(null);
+    const [deletingOrg, setDeletingOrg] = useState(false);
 
-    // Ne charger les users que lors d'une recherche (min 2 caractères)
+    const [showAllUsers, setShowAllUsers] = useState(false);
+    const [orgsLoaded, setOrgsLoaded] = useState(false); // true après clic sur "Afficher les organisations" ou après recherche
+    const [performanceStats, setPerformanceStats] = useState<PerformanceStats | null>(null);
+    const [performanceLoading, setPerformanceLoading] = useState(false);
+
+    // Charger les users: recherche (min 2 car.) ou "afficher tous" (all=1)
     useEffect(() => {
         if (activeTab !== "users") return;
-        if (searchQuery.trim().length < 2) {
+        if (!showAllUsers && searchQuery.trim().length < 2) {
             setUsers([]);
             setTotalPages(0);
             return;
         }
         fetchUsers();
-    }, [activeTab, searchQuery, page, countryFilter, statusFilter]);
+    }, [activeTab, searchQuery, page, countryFilter, statusFilter, showAllUsers]);
 
     useEffect(() => {
         if (activeTab === "orders") fetchOrders();
-        if (activeTab === "organizations") fetchOrganizations();
-    }, [activeTab, orgSearchQuery]);
+    }, [activeTab]);
 
     useEffect(() => {
         if (activeTab === "settings") fetchPaymentMode();
     }, [activeTab]);
+
+    useEffect(() => {
+        if (activeTab === "performance") fetchPerformance();
+    }, [activeTab]);
+
+    const fetchPerformance = async () => {
+        setPerformanceLoading(true);
+        try {
+            const res = await fetchWithAuth("/api/admin/performance");
+            const data = await res.json();
+            if (res.ok) setPerformanceStats(data);
+        } catch {
+            toast.error("Erreur chargement des performances");
+        } finally {
+            setPerformanceLoading(false);
+        }
+    };
 
     useEffect(() => {
         fetchOrders();
@@ -246,13 +279,17 @@ export default function AdminDashboard() {
             .catch(() => { });
     }, []);
 
-    const fetchOrganizations = async () => {
+    const fetchOrganizations = async (search?: string) => {
         setOrgsLoading(true);
         try {
-            const params = orgSearchQuery.trim().length >= 2 ? `?search=${encodeURIComponent(orgSearchQuery.trim())}` : "";
+            const q = search !== undefined ? search : orgSearchQuery.trim();
+            const params = q.length >= 2 ? `?search=${encodeURIComponent(q)}` : "";
             const res = await fetchWithAuth(`/api/admin/organizations${params}`);
             const data = await res.json();
-            if (res.ok) setOrganizations(data.organizations || []);
+            if (res.ok) {
+                setOrganizations(data.organizations || []);
+                setOrgsLoaded(true);
+            }
         } catch {
             toast.error("Erreur chargement des organisations");
         } finally {
@@ -329,15 +366,15 @@ export default function AdminDashboard() {
     };
 
     const fetchUsers = async () => {
-        if (searchQuery.trim().length < 2) return;
+        if (!showAllUsers && searchQuery.trim().length < 2) return;
         try {
             setLoading(true);
             const params = new URLSearchParams({
                 page: page.toString(),
-                limit: "20",
-                search: searchQuery.trim(),
+                limit: "30",
             });
-
+            if (showAllUsers) params.append("all", "1");
+            if (searchQuery.trim().length >= 2) params.append("search", searchQuery.trim());
             if (countryFilter) params.append("country", countryFilter);
             if (statusFilter !== "all") params.append("status", statusFilter);
 
@@ -346,10 +383,9 @@ export default function AdminDashboard() {
 
             if (response.ok) {
                 setUsers(data.users);
-                setTotalPages(data.pagination.totalPages);
-
+                setTotalPages(data.pagination?.totalPages ?? 1);
                 setStats({
-                    totalUsers: data.pagination.total,
+                    totalUsers: data.pagination?.total ?? 0,
                     onlineUsers: data.users.filter((u: User) => u.isOnline).length,
                     bannedUsers: data.users.filter((u: User) => u.isBanned).length,
                     verifiedUsers: data.users.filter((u: User) => u.isVerified).length,
@@ -359,6 +395,27 @@ export default function AdminDashboard() {
             toast.error("Erreur lors du chargement des utilisateurs");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDeleteOrg = async () => {
+        if (!deleteOrg) return;
+        setDeletingOrg(true);
+        try {
+            const res = await fetchWithAuth(`/api/admin/organizations/${deleteOrg.id}`, { method: "DELETE" });
+            const data = await res.json();
+            if (res.ok) {
+                toast.success("Organisation supprimée");
+                setDeleteOrg(null);
+                setOrgDetail(null);
+                fetchOrganizations();
+            } else {
+                toast.error(data.error || "Erreur lors de la suppression");
+            }
+        } catch {
+            toast.error("Erreur réseau");
+        } finally {
+            setDeletingOrg(false);
         }
     };
 
@@ -432,7 +489,7 @@ export default function AdminDashboard() {
     };
 
     const navItems: Array<{
-        id: "users" | "organizations" | "orders" | "settings";
+        id: "users" | "organizations" | "orders" | "performance" | "settings";
         icon: typeof Users;
         label: string;
         count?: number;
@@ -442,6 +499,7 @@ export default function AdminDashboard() {
         { id: "users", icon: Users, label: "Utilisateurs", count: adminStats?.totalUsers, subCount: adminStats?.onlineUsers },
         { id: "organizations", icon: Building2, label: "Organisations", count: adminStats?.totalOrgs },
         { id: "orders", icon: CreditCard, label: "Ordres", count: orders.filter((o) => o.status === "PENDING").length, pending: true },
+        { id: "performance", icon: Activity, label: "Performances" },
         { id: "settings", icon: Settings, label: "Paramètres" },
     ];
 
@@ -492,7 +550,7 @@ export default function AdminDashboard() {
                             <div className="relative flex-1">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
                                 <Input
-                                    placeholder="Rechercher un utilisateur par email ou nom (min. 2 caractères)..."
+                                    placeholder={showAllUsers ? "Filtrer par email ou nom..." : "Rechercher par email ou nom (min. 2 caractères)..."}
                                     value={searchQuery}
                                     onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
                                     className="pl-10 bg-neutral-900 border-neutral-700 text-white placeholder:text-neutral-500"
@@ -509,20 +567,38 @@ export default function AdminDashboard() {
                                     <SelectItem value="banned" className="text-white focus:bg-neutral-800">Bannis</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <Button
+                                variant={showAllUsers ? "default" : "outline"}
+                                className={showAllUsers ? "bg-white text-black hover:bg-neutral-200" : "border-neutral-600"}
+                                onClick={() => { setShowAllUsers(!showAllUsers); setPage(1); }}
+                            >
+                                <Users className="w-4 h-4 mr-2" />
+                                {showAllUsers ? "Tous les utilisateurs" : "Afficher tous"}
+                            </Button>
                         </div>
                     )}
-                    {/* Recherche organisations (visible sur onglet Organizations) */}
+                    {/* Organisations : pas de chargement auto, bouton + recherche */}
                     {activeTab === "organizations" && (
                         <div className="flex flex-col sm:flex-row gap-3 pb-4">
                             <div className="relative flex-1">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
                                 <Input
-                                    placeholder="Rechercher par nom ou code d'organisation..."
+                                    placeholder="Rechercher par nom ou code (min. 2 caractères)..."
                                     value={orgSearchQuery}
                                     onChange={(e) => setOrgSearchQuery(e.target.value)}
+                                    onKeyDown={(e) => e.key === "Enter" && orgSearchQuery.trim().length >= 2 && fetchOrganizations(orgSearchQuery.trim())}
                                     className="pl-10 bg-neutral-900 border-neutral-700 text-white placeholder:text-neutral-500"
                                 />
                             </div>
+                            <Button variant="outline" className="border-neutral-600" onClick={() => fetchOrganizations("")}>
+                                Afficher les organisations
+                            </Button>
+                            {orgSearchQuery.trim().length >= 2 && (
+                                <Button variant="default" className="bg-white text-black hover:bg-neutral-200" onClick={() => fetchOrganizations(orgSearchQuery.trim())}>
+                                <Search className="w-4 h-4 mr-2" />
+                                Rechercher
+                            </Button>
+                            )}
                         </div>
                     )}
                 </div>
@@ -622,20 +698,90 @@ export default function AdminDashboard() {
                         </Card>
                     </TabsContent>
 
+                    {/* Performances / Ressources système */}
+                    <TabsContent value="performance" className="mt-4">
+                        <Card className="bg-neutral-900 border-neutral-800">
+                            <CardHeader>
+                                <CardTitle className="text-white flex items-center gap-2">
+                                    <Activity className="w-5 h-5" />
+                                    Performances et ressources
+                                </CardTitle>
+                                <p className="text-sm text-neutral-400">
+                                    Utilisation en temps réel : présence, notifications, push, messages. Rafraîchir pour mettre à jour.
+                                </p>
+                            </CardHeader>
+                            <CardContent>
+                                {performanceLoading ? (
+                                    <div className="text-center py-8 text-neutral-400">Chargement...</div>
+                                ) : !performanceStats ? (
+                                    <div className="text-center py-8 text-neutral-400">Aucune donnée</div>
+                                ) : (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
+                                            <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Utilisateurs en ligne</p>
+                                            <p className="text-2xl font-bold text-green-400 mt-1">{performanceStats.onlineUsers}</p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">Présence Redis (heartbeat)</p>
+                                        </div>
+                                        <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
+                                            <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Abonnements Push</p>
+                                            <p className="text-2xl font-bold text-white mt-1">{performanceStats.pushSubscriptions}</p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">Appareils notifiables (Web Push)</p>
+                                        </div>
+                                        <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
+                                            <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Notifications (24h)</p>
+                                            <p className="text-2xl font-bold text-white mt-1">{performanceStats.notificationsLast24h}</p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">Créées dans les dernières 24h</p>
+                                        </div>
+                                        <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
+                                            <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Messages (24h)</p>
+                                            <p className="text-2xl font-bold text-white mt-1">{performanceStats.messagesLast24h}</p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">Envoyés dans les dernières 24h</p>
+                                        </div>
+                                        <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
+                                            <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Notifications non lues</p>
+                                            <p className="text-2xl font-bold text-amber-400 mt-1">{performanceStats.notificationsUnread}</p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">Total en base</p>
+                                        </div>
+                                        <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700 flex flex-col justify-center">
+                                            <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Redis (présence)</p>
+                                            <p className={`text-lg font-semibold mt-1 ${performanceStats.redisAvailable ? "text-green-400" : "text-red-400"}`}>
+                                                {performanceStats.redisAvailable ? "Disponible" : "Indisponible"}
+                                            </p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">
+                                                {performanceStats.redisAvailable ? "Présence et appels en attente OK" : "Configurer UPSTASH_REDIS_*"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                                {performanceStats && (
+                                    <p className="text-xs text-neutral-500 mt-4">
+                                        Dernière mise à jour : {new Date(performanceStats.timestamp).toLocaleString("fr-FR")}
+                                    </p>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
                     {/* Organizations */}
                     <TabsContent value="organizations" className="mt-4">
                         <Card className="bg-neutral-900 border-neutral-800">
                             <CardHeader>
                                 <CardTitle className="text-white">Organisations</CardTitle>
                                 <p className="text-sm text-neutral-400">
-                                    {orgSearchQuery.trim().length >= 2 ? "Résultats de la recherche" : "Liste des organisations (recherchez par nom ou code)"}
+                                    Cliquez sur &quot;Afficher les organisations&quot; pour charger la liste, ou recherchez par nom ou code.
                                 </p>
                             </CardHeader>
                             <CardContent>
-                                {orgsLoading ? (
+                                {!orgsLoaded && !orgsLoading ? (
+                                    <div className="text-center py-12 text-neutral-500">
+                                        <Building2 className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                                        <p className="font-medium">Aucune liste chargée</p>
+                                        <p className="text-sm mt-1">Cliquez sur &quot;Afficher les organisations&quot; pour afficher toutes les organisations, ou saisissez une recherche puis &quot;Rechercher&quot;</p>
+                                    </div>
+                                ) : orgsLoading ? (
                                     <div className="text-center py-8 text-neutral-400">Chargement...</div>
                                 ) : organizations.length === 0 ? (
-                                    <div className="text-center py-8 text-neutral-400">Aucune organisation</div>
+                                    <div className="text-center py-8 text-neutral-400">Aucune organisation trouvée</div>
                                 ) : (
                                     <div className="space-y-4">
                                         {organizations.map((org) => (
@@ -655,6 +801,9 @@ export default function AdminDashboard() {
                                                     <Button size="sm" variant="outline" className="border-neutral-600" onClick={() => openOrgDetail(org)}>
                                                         <Eye className="w-4 h-4 mr-1" />
                                                         Détails
+                                                    </Button>
+                                                    <Button size="sm" variant="outline" className="border-red-500 text-red-400 hover:bg-red-500/10" onClick={() => setDeleteOrg(org)} title="Supprimer l'organisation">
+                                                        <Trash2 className="w-4 h-4" />
                                                     </Button>
                                                 </div>
                                             </div>
@@ -721,11 +870,11 @@ export default function AdminDashboard() {
                                 <p className="text-sm text-neutral-400">Résultats de la recherche</p>
                             </CardHeader>
                             <CardContent>
-                                {searchQuery.trim().length < 2 ? (
+                                {!showAllUsers && searchQuery.trim().length < 2 ? (
                                     <div className="text-center py-12 text-neutral-500">
                                         <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
                                         <p className="font-medium">Recherchez un utilisateur</p>
-                                        <p className="text-sm mt-1">Saisissez au moins 2 caractères (email ou nom) pour afficher les résultats</p>
+                                        <p className="text-sm mt-1">Saisissez au moins 2 caractères (email ou nom) ou cliquez sur &quot;Afficher tous&quot;</p>
                                     </div>
                                 ) : loading ? (
                                     <div className="text-center py-8 text-neutral-400">Chargement...</div>
@@ -808,7 +957,7 @@ export default function AdminDashboard() {
                                     </div>
                                 )}
 
-                                {searchQuery.trim().length >= 2 && users.length > 0 && totalPages > 1 && (
+                                {(showAllUsers || searchQuery.trim().length >= 2) && users.length > 0 && totalPages > 1 && (
                                     <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
                                         <Button
                                             variant="outline"
@@ -1062,6 +1211,10 @@ export default function AdminDashboard() {
                                     <p className="text-sm text-neutral-500 w-full">
                                         {orgDetail.organization._count?.members ?? 0} membres • {orgDetail.organization._count?.departments ?? 0} départements • {orgDetail.organization._count?.events ?? 0} événements
                                     </p>
+                                    <Button size="sm" variant="outline" className="border-red-500 text-red-600" onClick={() => { setDeleteOrg(orgDetail.organization as Organization); setOrgDetail(null); }}>
+                                        <Trash2 className="w-4 h-4 mr-1" />
+                                        Supprimer l&apos;organisation
+                                    </Button>
                                 </div>
                             </div>
                         </>
@@ -1071,7 +1224,25 @@ export default function AdminDashboard() {
                 </DialogContent>
             </Dialog>
 
-            {/* Delete Confirmation */}
+            {/* Delete org confirmation */}
+            <Dialog open={!!deleteOrg} onOpenChange={(open) => !open && setDeleteOrg(null)}>
+                <DialogContent className="max-w-md bg-white text-black border-neutral-200">
+                    <DialogHeader>
+                        <DialogTitle>Supprimer l&apos;organisation ?</DialogTitle>
+                        <DialogDescription>
+                            Cette action est irréversible. L&apos;organisation &quot;{deleteOrg?.name}&quot; et toutes ses données (départements, membres, tâches, etc.) seront supprimées définitivement.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex justify-end gap-2 mt-4">
+                        <Button variant="outline" onClick={() => setDeleteOrg(null)}>Annuler</Button>
+                        <Button variant="destructive" onClick={handleDeleteOrg} disabled={deletingOrg}>
+                            {deletingOrg ? "Suppression..." : "Supprimer"}
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Delete User Confirmation */}
             <Dialog open={!!deleteUser} onOpenChange={(open) => !open && setDeleteUser(null)}>
                 <DialogContent className="max-w-md bg-white text-black border-neutral-200">
                     <DialogHeader>

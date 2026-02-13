@@ -48,12 +48,58 @@ export async function PATCH(
             return NextResponse.json({ message: 'Ordre rejeté' });
         }
 
-        // Approve: créer l'organisation
         const plan = order.plan as SubscriptionPlan;
         const limits = getSubscriptionLimits(plan);
         const startDate = new Date();
         const endDate = calculateSubscriptionEndDate(startDate, plan);
 
+        // === UPGRADE : mise à jour de l'abonnement existant ===
+        if (order.type === 'UPGRADE' && order.orgId) {
+            await prisma.$transaction(async (tx) => {
+                const existingSub = await tx.subscription.findUnique({
+                    where: { orgId: order.orgId! },
+                });
+
+                if (existingSub) {
+                    await tx.subscription.update({
+                        where: { orgId: order.orgId! },
+                        data: {
+                            plan,
+                            startDate,
+                            endDate,
+                            maxDepartments: limits.maxDepartments,
+                            maxMembersPerDept: limits.maxMembersPerDept,
+                            isActive: true,
+                        },
+                    });
+                } else {
+                    await tx.subscription.create({
+                        data: {
+                            orgId: order.orgId!,
+                            plan,
+                            startDate,
+                            endDate,
+                            maxDepartments: limits.maxDepartments,
+                            maxMembersPerDept: limits.maxMembersPerDept,
+                            isActive: true,
+                        },
+                    });
+                }
+
+                await tx.paymentOrder.update({
+                    where: { id },
+                    data: {
+                        status: 'APPROVED',
+                        approvedBy: user!.userId,
+                        approvedAt: new Date(),
+                    },
+                });
+            });
+
+            return NextResponse.json({ message: 'Abonnement mis à jour avec succès' });
+        }
+
+        // === CREATE : créer l'organisation ===
         let code = generateOrganizationCode();
         let codeExists = await prisma.organization.findUnique({ where: { code } });
         while (codeExists) {

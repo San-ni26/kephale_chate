@@ -31554,6 +31554,8 @@ export namespace Prisma {
     logo: string | null
     address: string | null
     requestId: string | null
+    orgId: string | null
+    type: string | null
     createdAt: Date | null
   }
 
@@ -31566,6 +31568,8 @@ export namespace Prisma {
     logo: string | null
     address: string | null
     requestId: string | null
+    orgId: string | null
+    type: string | null
     createdAt: Date | null
   }
 
@@ -31578,6 +31582,8 @@ export namespace Prisma {
     logo: number
     address: number
     requestId: number
+    orgId: number
+    type: number
     createdAt: number
     _all: number
   }
@@ -31592,6 +31598,8 @@ export namespace Prisma {
     logo?: true
     address?: true
     requestId?: true
+    orgId?: true
+    type?: true
     createdAt?: true
   }
 
@@ -31604,6 +31612,8 @@ export namespace Prisma {
     logo?: true
     address?: true
     requestId?: true
+    orgId?: true
+    type?: true
     createdAt?: true
   }
 
@@ -31616,6 +31626,8 @@ export namespace Prisma {
     logo?: true
     address?: true
     requestId?: true
+    orgId?: true
+    type?: true
     createdAt?: true
     _all?: true
   }
@@ -31701,6 +31713,8 @@ export namespace Prisma {
     logo: string | null
     address: string | null
     requestId: string | null
+    orgId: string | null
+    type: string
     createdAt: Date
     _count: PendingSubscriptionPaymentCountAggregateOutputType | null
     _min: PendingSubscriptionPaymentMinAggregateOutputType | null
@@ -31730,6 +31744,8 @@ export namespace Prisma {
     logo?: boolean
     address?: boolean
     requestId?: boolean
+    orgId?: boolean
+    type?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["pendingSubscriptionPayment"]>
 
@@ -31742,6 +31758,8 @@ export namespace Prisma {
     logo?: boolean
     address?: boolean
     requestId?: boolean
+    orgId?: boolean
+    type?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["pendingSubscriptionPayment"]>
 
@@ -31754,6 +31772,8 @@ export namespace Prisma {
     logo?: boolean
     address?: boolean
     requestId?: boolean
+    orgId?: boolean
+    type?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["pendingSubscriptionPayment"]>
 
@@ -31766,10 +31786,12 @@ export namespace Prisma {
     logo?: boolean
     address?: boolean
     requestId?: boolean
+    orgId?: boolean
+    type?: boolean
     createdAt?: boolean
   }
 
-  export type PendingSubscriptionPaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "transactionId" | "userId" | "plan" | "name" | "logo" | "address" | "requestId" | "createdAt", ExtArgs["result"]["pendingSubscriptionPayment"]>
+  export type PendingSubscriptionPaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "transactionId" | "userId" | "plan" | "name" | "logo" | "address" | "requestId" | "orgId" | "type" | "createdAt", ExtArgs["result"]["pendingSubscriptionPayment"]>
 
   export type $PendingSubscriptionPaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PendingSubscriptionPayment"
@@ -31783,6 +31805,8 @@ export namespace Prisma {
       logo: string | null
       address: string | null
       requestId: string | null
+      orgId: string | null
+      type: string
       createdAt: Date
     }, ExtArgs["result"]["pendingSubscriptionPayment"]>
     composites: {}
@@ -32215,6 +32239,8 @@ export namespace Prisma {
     readonly logo: FieldRef<"PendingSubscriptionPayment", 'String'>
     readonly address: FieldRef<"PendingSubscriptionPayment", 'String'>
     readonly requestId: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly orgId: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly type: FieldRef<"PendingSubscriptionPayment", 'String'>
     readonly createdAt: FieldRef<"PendingSubscriptionPayment", 'DateTime'>
   }
     
@@ -32610,6 +32636,8 @@ export namespace Prisma {
     logo: string | null
     address: string | null
     requestId: string | null
+    orgId: string | null
+    type: string | null
     amountFcfa: number | null
     status: $Enums.PaymentOrderStatus | null
     approvedBy: string | null
@@ -32627,6 +32655,8 @@ export namespace Prisma {
     logo: string | null
     address: string | null
     requestId: string | null
+    orgId: string | null
+    type: string | null
     amountFcfa: number | null
     status: $Enums.PaymentOrderStatus | null
     approvedBy: string | null
@@ -32644,6 +32674,8 @@ export namespace Prisma {
     logo: number
     address: number
     requestId: number
+    orgId: number
+    type: number
     amountFcfa: number
     status: number
     approvedBy: number
@@ -32671,6 +32703,8 @@ export namespace Prisma {
     logo?: true
     address?: true
     requestId?: true
+    orgId?: true
+    type?: true
     amountFcfa?: true
     status?: true
     approvedBy?: true
@@ -32688,6 +32722,8 @@ export namespace Prisma {
     logo?: true
     address?: true
     requestId?: true
+    orgId?: true
+    type?: true
     amountFcfa?: true
     status?: true
     approvedBy?: true
@@ -32705,6 +32741,8 @@ export namespace Prisma {
     logo?: true
     address?: true
     requestId?: true
+    orgId?: true
+    type?: true
     amountFcfa?: true
     status?: true
     approvedBy?: true
@@ -32809,6 +32847,8 @@ export namespace Prisma {
     logo: string | null
     address: string | null
     requestId: string | null
+    orgId: string | null
+    type: string
     amountFcfa: number
     status: $Enums.PaymentOrderStatus
     approvedBy: string | null
@@ -32845,6 +32885,8 @@ export namespace Prisma {
     logo?: boolean
     address?: boolean
     requestId?: boolean
+    orgId?: boolean
+    type?: boolean
     amountFcfa?: boolean
     status?: boolean
     approvedBy?: boolean
@@ -32862,6 +32904,8 @@ export namespace Prisma {
     logo?: boolean
     address?: boolean
     requestId?: boolean
+    orgId?: boolean
+    type?: boolean
     amountFcfa?: boolean
     status?: boolean
     approvedBy?: boolean
@@ -32879,6 +32923,8 @@ export namespace Prisma {
     logo?: boolean
     address?: boolean
     requestId?: boolean
+    orgId?: boolean
+    type?: boolean
     amountFcfa?: boolean
     status?: boolean
     approvedBy?: boolean
@@ -32896,6 +32942,8 @@ export namespace Prisma {
     logo?: boolean
     address?: boolean
     requestId?: boolean
+    orgId?: boolean
+    type?: boolean
     amountFcfa?: boolean
     status?: boolean
     approvedBy?: boolean
@@ -32905,7 +32953,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type PaymentOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "plan" | "name" | "logo" | "address" | "requestId" | "amountFcfa" | "status" | "approvedBy" | "approvedAt" | "rejectedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentOrder"]>
+  export type PaymentOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "plan" | "name" | "logo" | "address" | "requestId" | "orgId" | "type" | "amountFcfa" | "status" | "approvedBy" | "approvedAt" | "rejectedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentOrder"]>
 
   export type $PaymentOrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PaymentOrder"
@@ -32918,6 +32966,8 @@ export namespace Prisma {
       logo: string | null
       address: string | null
       requestId: string | null
+      orgId: string | null
+      type: string
       amountFcfa: number
       status: $Enums.PaymentOrderStatus
       approvedBy: string | null
@@ -33355,6 +33405,8 @@ export namespace Prisma {
     readonly logo: FieldRef<"PaymentOrder", 'String'>
     readonly address: FieldRef<"PaymentOrder", 'String'>
     readonly requestId: FieldRef<"PaymentOrder", 'String'>
+    readonly orgId: FieldRef<"PaymentOrder", 'String'>
+    readonly type: FieldRef<"PaymentOrder", 'String'>
     readonly amountFcfa: FieldRef<"PaymentOrder", 'Int'>
     readonly status: FieldRef<"PaymentOrder", 'PaymentOrderStatus'>
     readonly approvedBy: FieldRef<"PaymentOrder", 'String'>
@@ -57709,6 +57761,8 @@ export namespace Prisma {
     logo: 'logo',
     address: 'address',
     requestId: 'requestId',
+    orgId: 'orgId',
+    type: 'type',
     createdAt: 'createdAt'
   };
 
@@ -57723,6 +57777,8 @@ export namespace Prisma {
     logo: 'logo',
     address: 'address',
     requestId: 'requestId',
+    orgId: 'orgId',
+    type: 'type',
     amountFcfa: 'amountFcfa',
     status: 'status',
     approvedBy: 'approvedBy',
@@ -60100,6 +60156,8 @@ export namespace Prisma {
     logo?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
     address?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
     requestId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    orgId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    type?: StringFilter<"PendingSubscriptionPayment"> | string
     createdAt?: DateTimeFilter<"PendingSubscriptionPayment"> | Date | string
   }
 
@@ -60112,6 +60170,8 @@ export namespace Prisma {
     logo?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
+    orgId?: SortOrderInput | SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -60127,6 +60187,8 @@ export namespace Prisma {
     logo?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
     address?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
     requestId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    orgId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    type?: StringFilter<"PendingSubscriptionPayment"> | string
     createdAt?: DateTimeFilter<"PendingSubscriptionPayment"> | Date | string
   }, "id" | "transactionId">
 
@@ -60139,6 +60201,8 @@ export namespace Prisma {
     logo?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
+    orgId?: SortOrderInput | SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
     _count?: PendingSubscriptionPaymentCountOrderByAggregateInput
     _max?: PendingSubscriptionPaymentMaxOrderByAggregateInput
@@ -60157,6 +60221,8 @@ export namespace Prisma {
     logo?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
     address?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
     requestId?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
+    orgId?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
+    type?: StringWithAggregatesFilter<"PendingSubscriptionPayment"> | string
     createdAt?: DateTimeWithAggregatesFilter<"PendingSubscriptionPayment"> | Date | string
   }
 
@@ -60171,6 +60237,8 @@ export namespace Prisma {
     logo?: StringNullableFilter<"PaymentOrder"> | string | null
     address?: StringNullableFilter<"PaymentOrder"> | string | null
     requestId?: StringNullableFilter<"PaymentOrder"> | string | null
+    orgId?: StringNullableFilter<"PaymentOrder"> | string | null
+    type?: StringFilter<"PaymentOrder"> | string
     amountFcfa?: IntFilter<"PaymentOrder"> | number
     status?: EnumPaymentOrderStatusFilter<"PaymentOrder"> | $Enums.PaymentOrderStatus
     approvedBy?: StringNullableFilter<"PaymentOrder"> | string | null
@@ -60188,6 +60256,8 @@ export namespace Prisma {
     logo?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
+    orgId?: SortOrderInput | SortOrder
+    type?: SortOrder
     amountFcfa?: SortOrder
     status?: SortOrder
     approvedBy?: SortOrderInput | SortOrder
@@ -60208,6 +60278,8 @@ export namespace Prisma {
     logo?: StringNullableFilter<"PaymentOrder"> | string | null
     address?: StringNullableFilter<"PaymentOrder"> | string | null
     requestId?: StringNullableFilter<"PaymentOrder"> | string | null
+    orgId?: StringNullableFilter<"PaymentOrder"> | string | null
+    type?: StringFilter<"PaymentOrder"> | string
     amountFcfa?: IntFilter<"PaymentOrder"> | number
     status?: EnumPaymentOrderStatusFilter<"PaymentOrder"> | $Enums.PaymentOrderStatus
     approvedBy?: StringNullableFilter<"PaymentOrder"> | string | null
@@ -60225,6 +60297,8 @@ export namespace Prisma {
     logo?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
+    orgId?: SortOrderInput | SortOrder
+    type?: SortOrder
     amountFcfa?: SortOrder
     status?: SortOrder
     approvedBy?: SortOrderInput | SortOrder
@@ -60250,6 +60324,8 @@ export namespace Prisma {
     logo?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
     address?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
     requestId?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
+    orgId?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
+    type?: StringWithAggregatesFilter<"PaymentOrder"> | string
     amountFcfa?: IntWithAggregatesFilter<"PaymentOrder"> | number
     status?: EnumPaymentOrderStatusWithAggregatesFilter<"PaymentOrder"> | $Enums.PaymentOrderStatus
     approvedBy?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
@@ -63608,6 +63684,8 @@ export namespace Prisma {
     logo?: string | null
     address?: string | null
     requestId?: string | null
+    orgId?: string | null
+    type?: string
     createdAt?: Date | string
   }
 
@@ -63620,6 +63698,8 @@ export namespace Prisma {
     logo?: string | null
     address?: string | null
     requestId?: string | null
+    orgId?: string | null
+    type?: string
     createdAt?: Date | string
   }
 
@@ -63632,6 +63712,8 @@ export namespace Prisma {
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -63644,6 +63726,8 @@ export namespace Prisma {
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -63656,6 +63740,8 @@ export namespace Prisma {
     logo?: string | null
     address?: string | null
     requestId?: string | null
+    orgId?: string | null
+    type?: string
     createdAt?: Date | string
   }
 
@@ -63668,6 +63754,8 @@ export namespace Prisma {
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -63680,6 +63768,8 @@ export namespace Prisma {
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -63691,6 +63781,8 @@ export namespace Prisma {
     logo?: string | null
     address?: string | null
     requestId?: string | null
+    orgId?: string | null
+    type?: string
     amountFcfa: number
     status?: $Enums.PaymentOrderStatus
     approvedBy?: string | null
@@ -63708,6 +63800,8 @@ export namespace Prisma {
     logo?: string | null
     address?: string | null
     requestId?: string | null
+    orgId?: string | null
+    type?: string
     amountFcfa: number
     status?: $Enums.PaymentOrderStatus
     approvedBy?: string | null
@@ -63725,6 +63819,8 @@ export namespace Prisma {
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     amountFcfa?: IntFieldUpdateOperationsInput | number
     status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
     approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63742,6 +63838,8 @@ export namespace Prisma {
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     amountFcfa?: IntFieldUpdateOperationsInput | number
     status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
     approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63759,6 +63857,8 @@ export namespace Prisma {
     logo?: string | null
     address?: string | null
     requestId?: string | null
+    orgId?: string | null
+    type?: string
     amountFcfa: number
     status?: $Enums.PaymentOrderStatus
     approvedBy?: string | null
@@ -63776,6 +63876,8 @@ export namespace Prisma {
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     amountFcfa?: IntFieldUpdateOperationsInput | number
     status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
     approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63793,6 +63895,8 @@ export namespace Prisma {
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     amountFcfa?: IntFieldUpdateOperationsInput | number
     status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
     approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67010,6 +67114,8 @@ export namespace Prisma {
     logo?: SortOrder
     address?: SortOrder
     requestId?: SortOrder
+    orgId?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -67022,6 +67128,8 @@ export namespace Prisma {
     logo?: SortOrder
     address?: SortOrder
     requestId?: SortOrder
+    orgId?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -67034,6 +67142,8 @@ export namespace Prisma {
     logo?: SortOrder
     address?: SortOrder
     requestId?: SortOrder
+    orgId?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -67052,6 +67162,8 @@ export namespace Prisma {
     logo?: SortOrder
     address?: SortOrder
     requestId?: SortOrder
+    orgId?: SortOrder
+    type?: SortOrder
     amountFcfa?: SortOrder
     status?: SortOrder
     approvedBy?: SortOrder
@@ -67073,6 +67185,8 @@ export namespace Prisma {
     logo?: SortOrder
     address?: SortOrder
     requestId?: SortOrder
+    orgId?: SortOrder
+    type?: SortOrder
     amountFcfa?: SortOrder
     status?: SortOrder
     approvedBy?: SortOrder
@@ -67090,6 +67204,8 @@ export namespace Prisma {
     logo?: SortOrder
     address?: SortOrder
     requestId?: SortOrder
+    orgId?: SortOrder
+    type?: SortOrder
     amountFcfa?: SortOrder
     status?: SortOrder
     approvedBy?: SortOrder

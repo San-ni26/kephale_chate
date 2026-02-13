@@ -20,7 +20,7 @@ self.addEventListener('push', function (event) {
     } catch (e) {
         console.error('[SW] Failed to parse push data:', e);
         data = {
-            title: 'Kephale Chat',
+            title: 'Chat',
             body: event.data.text() || 'Nouveau message',
         };
     }
@@ -71,8 +71,8 @@ self.addEventListener('push', function (event) {
                 }
             }
 
-            console.log('[SW] Showing notification:', data.title || 'Kephale Chat');
-            return self.registration.showNotification(data.title || 'Kephale Chat', options);
+            console.log('[SW] Showing notification:', data.title || 'Chat');
+            return self.registration.showNotification(data.title || 'Chat', options);
         })
     );
 });
