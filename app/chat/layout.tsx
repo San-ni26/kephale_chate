@@ -1,6 +1,7 @@
 import { BottomNav } from "@/src/components/chat/BottomNav";
 import { TopNav } from "@/src/components/chat/TopNav";
 import { EnablePushBanner } from "@/src/components/chat/EnablePushBanner";
+import { NotificationPermissionModal } from "@/src/components/chat/NotificationPermissionModal";
 import { PWAInstaller } from "@/src/components/PWAInstaller";
 import { PresenceHeartbeat } from "@/src/components/chat/PresenceHeartbeat";
 import { CallStatusChecker } from "@/src/components/chat/CallStatusChecker";
@@ -40,6 +41,7 @@ export default function ChatLayout({
                     </div>
 
                     <PWAInstaller />
+                    <NotificationPermissionModal />
                     <PresenceHeartbeat />
                     <CallStatusChecker />
                 </div>
