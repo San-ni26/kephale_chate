@@ -1,13 +1,17 @@
-
 import webpush from 'web-push';
 
-if (!process.env.VAPID_PRIVATE_KEY || !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
-    console.warn('VAPID keys must be set for web push notifications.');
-} else {
+const VAPID_SET =
+    Boolean(process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY);
+
+if (VAPID_SET) {
     webpush.setVapidDetails(
         process.env.VAPID_SUBJECT || 'mailto:admin@chatkephale.com',
-        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-        process.env.VAPID_PRIVATE_KEY
+        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+        process.env.VAPID_PRIVATE_KEY!
+    );
+} else if (process.env.NODE_ENV === 'production') {
+    console.error(
+        '[Push] VAPID keys missing. Set VAPID_PRIVATE_KEY and NEXT_PUBLIC_VAPID_PUBLIC_KEY for notifications when app is closed.'
     );
 }
 
@@ -20,6 +24,11 @@ export interface PushSubscriptionData {
 }
 
 export async function sendPushNotification(subscription: PushSubscriptionData, payload: string | object) {
+    if (!VAPID_SET) {
+        throw new Error(
+            'Web Push: VAPID keys not set. Add VAPID_PRIVATE_KEY and NEXT_PUBLIC_VAPID_PUBLIC_KEY to env (generate with: npx web-push generate-vapid-keys).'
+        );
+    }
     try {
         const payloadString = typeof payload === 'string' ? payload : JSON.stringify(payload);
 

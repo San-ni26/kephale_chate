@@ -43,6 +43,8 @@ export function getPusherClient(): PusherClient | null {
     try {
         pusherClientInstance = new PusherClient(key, {
             cluster,
+            // Garder la connexion plus longtemps avant déconnexion pour inactivité (défaut 120s)
+            activityTimeout: 300000, // 5 min (ms)
             channelAuthorization: {
                 transport: 'ajax',
                 endpoint: '/api/pusher/auth',

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 // import { Geist, Geist_Mono } from "next/font/google"; // Google Fonts temporarily disabled due to fetch error
 import "./globals.css";
 import { ServiceWorkerRegistration } from "@/src/components/ServiceWorkerRegistration";
+import { NotificationListener } from "@/src/components/chat/NotificationListener";
 
 /*
 const geistSans = Geist({
@@ -65,6 +66,7 @@ export default function RootLayout({
         className={`antialiased`}
       >
         <ServiceWorkerRegistration />
+        <NotificationListener />
         {children}
       </body>
     </html>

@@ -82,7 +82,7 @@ export async function notifyNewMessage(message: any, conversationId: string) {
             return;
         }
 
-        // Emit to user's private Pusher channel (in-app toast)
+        // Emit to user's private Pusher channel (in-app toast) — payload sérialisable pour Pusher
         try {
             await emitToUser(member.userId, 'notification:new', {
                 id: notification.id,
@@ -90,7 +90,10 @@ export async function notifyNewMessage(message: any, conversationId: string) {
                 messageId: message.id,
                 conversationId: conversationId,
                 senderName: message.sender?.name || 'Utilisateur',
-                createdAt: notification.createdAt
+                createdAt:
+                    notification.createdAt instanceof Date
+                        ? notification.createdAt.toISOString()
+                        : String(notification.createdAt),
             });
         } catch (err) {
             console.error(`[Notify] Error sending Pusher notification to user ${member.userId}:`, err);
