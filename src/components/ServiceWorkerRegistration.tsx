@@ -24,6 +24,7 @@ export function ServiceWorkerRegistration() {
 
                 const registration = await navigator.serviceWorker.register('/sw.js', {
                     updateViaCache: 'none',
+                    scope: '/', // Nécessaire pour recevoir les push quand l'app est fermée
                 });
 
                 if (registration.waiting) {

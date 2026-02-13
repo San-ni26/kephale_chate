@@ -9,20 +9,19 @@
 self.addEventListener('push', function (event) {
     console.log('[SW] Push event received');
 
-    if (!event.data) {
-        console.log('[SW] Push event has no data');
-        return;
-    }
-
-    var data;
-    try {
-        data = event.data.json();
-    } catch (e) {
-        console.error('[SW] Failed to parse push data:', e);
-        data = {
-            title: 'Chat',
-            body: event.data.text() || 'Nouveau message',
-        };
+    var data = {};
+    if (event.data) {
+        try {
+            data = event.data.json();
+        } catch (e) {
+            console.error('[SW] Failed to parse push data:', e);
+            data = {
+                title: 'Chat',
+                body: event.data.text() || 'Nouveau message',
+            };
+        }
+    } else {
+        data = { title: 'Kephale', body: 'Nouveau message' };
     }
 
     console.log('[SW] Push data parsed:', data.title, data.type);
@@ -66,7 +65,7 @@ self.addEventListener('push', function (event) {
                 for (var i = 0; i < clientList.length; i++) {
                     if (clientList[i].focused && clientList[i].url && clientList[i].url.indexOf(data.url) !== -1) {
                         console.log('[SW] User is viewing conversation, skip notification');
-                        return;
+                        return Promise.resolve();
                     }
                 }
             }
