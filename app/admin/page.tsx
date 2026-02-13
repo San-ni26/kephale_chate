@@ -40,6 +40,8 @@ import {
     Activity,
     LogOut,
     MessageSquare,
+    RefreshCw,
+    List,
 } from "lucide-react";
 import { fetchWithAuth, clearAuth } from "@/src/lib/auth-client";
 import { toast } from "sonner";
@@ -145,14 +147,39 @@ interface AdminStats {
     onlineUsers?: number;
 }
 
+interface PerformanceDetails {
+    recentNotifications: Array<{
+        id: string;
+        content: string;
+        isRead: boolean;
+        createdAt: string;
+        user: { email: string; name: string | null } | null;
+    }>;
+    recentMessages: Array<{
+        id: string;
+        content: string;
+        createdAt: string;
+        sender: { email: string; name: string | null };
+    }>;
+    pushSubscriptionsSample: Array<{
+        id: string;
+        endpoint: string;
+        createdAt: string;
+        user: { email: string; name: string | null };
+    }>;
+}
+
 interface PerformanceStats {
     onlineUsers: number;
     pushSubscriptions: number;
+    pushSubscriptionsUsers?: number;
+    pushSubscriptionsUsersWithMultiple?: number;
     notificationsLast24h: number;
     messagesLast24h: number;
     notificationsUnread: number;
     redisAvailable: boolean;
     timestamp: string;
+    details?: PerformanceDetails;
 }
 
 /** Extrait lat/lng de location ou currentLocation */
@@ -234,6 +261,9 @@ export default function AdminDashboard() {
     const [orgsLoaded, setOrgsLoaded] = useState(false); // true après clic sur "Afficher les organisations" ou après recherche
     const [performanceStats, setPerformanceStats] = useState<PerformanceStats | null>(null);
     const [performanceLoading, setPerformanceLoading] = useState(false);
+    const [performanceDetailsOpen, setPerformanceDetailsOpen] = useState(false);
+    const [performanceDeleteConfirm, setPerformanceDeleteConfirm] = useState<"push" | "notifications-unread" | "notifications-all" | null>(null);
+    const [performanceDeleting, setPerformanceDeleting] = useState(false);
 
     // Charger les users: recherche (min 2 car.) ou "afficher tous" (all=1)
     useEffect(() => {
@@ -258,16 +288,46 @@ export default function AdminDashboard() {
         if (activeTab === "performance") fetchPerformance();
     }, [activeTab]);
 
-    const fetchPerformance = async () => {
+    const fetchPerformance = async (withDetails = false) => {
         setPerformanceLoading(true);
         try {
-            const res = await fetchWithAuth("/api/admin/performance");
+            const url = withDetails ? "/api/admin/performance?details=1" : "/api/admin/performance";
+            const res = await fetchWithAuth(url);
             const data = await res.json();
             if (res.ok) setPerformanceStats(data);
         } catch {
             toast.error("Erreur chargement des performances");
         } finally {
             setPerformanceLoading(false);
+        }
+    };
+
+    const openPerformanceDetails = async () => {
+        setPerformanceDetailsOpen(true);
+        if (!performanceStats?.details) await fetchPerformance(true);
+    };
+
+    const handlePerformanceDelete = async () => {
+        if (!performanceDeleteConfirm) return;
+        setPerformanceDeleting(true);
+        try {
+            let url: string;
+            if (performanceDeleteConfirm === "push") url = "/api/admin/push-subscriptions?all=1";
+            else if (performanceDeleteConfirm === "notifications-unread") url = "/api/admin/notifications?unreadOnly=1";
+            else url = "/api/admin/notifications?all=1";
+            const res = await fetchWithAuth(url, { method: "DELETE" });
+            const data = await res.json();
+            if (res.ok) {
+                toast.success(data.message ?? "Suppression effectuée");
+                setPerformanceDeleteConfirm(null);
+                fetchPerformance();
+            } else {
+                toast.error(data.error ?? "Erreur");
+            }
+        } catch {
+            toast.error("Erreur réseau");
+        } finally {
+            setPerformanceDeleting(false);
         }
     };
 
@@ -702,45 +762,91 @@ export default function AdminDashboard() {
                     <TabsContent value="performance" className="mt-4">
                         <Card className="bg-neutral-900 border-neutral-800">
                             <CardHeader>
-                                <CardTitle className="text-white flex items-center gap-2">
-                                    <Activity className="w-5 h-5" />
-                                    Performances et ressources
-                                </CardTitle>
-                                <p className="text-sm text-neutral-400">
-                                    Utilisation en temps réel : présence, notifications, push, messages. Rafraîchir pour mettre à jour.
-                                </p>
+                                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                                    <div>
+                                        <CardTitle className="text-white flex items-center gap-2">
+                                            <Activity className="w-5 h-5" />
+                                            Performances et ressources
+                                        </CardTitle>
+                                        <p className="text-sm text-neutral-400 mt-1">
+                                            Utilisation en temps réel : présence, notifications, push, messages.
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="border-neutral-600"
+                                            onClick={() => fetchPerformance()}
+                                            disabled={performanceLoading}
+                                        >
+                                            <RefreshCw className={`w-4 h-4 mr-2 ${performanceLoading ? "animate-spin" : ""}`} />
+                                            Rafraîchir
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="border-neutral-600"
+                                            onClick={openPerformanceDetails}
+                                        >
+                                            <List className="w-4 h-4 mr-2" />
+                                            Voir les détails
+                                        </Button>
+                                    </div>
+                                </div>
                             </CardHeader>
                             <CardContent>
-                                {performanceLoading ? (
+                                {performanceLoading && !performanceStats ? (
                                     <div className="text-center py-8 text-neutral-400">Chargement...</div>
                                 ) : !performanceStats ? (
-                                    <div className="text-center py-8 text-neutral-400">Aucune donnée</div>
+                                    <div className="text-center py-8 text-neutral-400">
+                                        <p>Aucune donnée.</p>
+                                        <p className="text-sm mt-2">Cliquez sur &quot;Rafraîchir&quot; pour charger les métriques.</p>
+                                    </div>
                                 ) : (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                         <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
                                             <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Utilisateurs en ligne</p>
                                             <p className="text-2xl font-bold text-green-400 mt-1">{performanceStats.onlineUsers}</p>
-                                            <p className="text-xs text-neutral-500 mt-0.5">Présence Redis (heartbeat)</p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">
+                                                {performanceStats.onlineUsers === 0 && !performanceStats.redisAvailable
+                                                    ? "Redis indisponible — configurer UPSTASH_REDIS_*"
+                                                    : performanceStats.onlineUsers === 0
+                                                        ? "Aucun utilisateur connecté (heartbeat 30s)"
+                                                        : "Présence Redis (heartbeat 30s)"}
+                                            </p>
                                         </div>
                                         <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
                                             <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Abonnements Push</p>
                                             <p className="text-2xl font-bold text-white mt-1">{performanceStats.pushSubscriptions}</p>
-                                            <p className="text-xs text-neutral-500 mt-0.5">Appareils notifiables (Web Push)</p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">
+                                                {performanceStats.pushSubscriptions === 0
+                                                    ? "Aucun appareil enregistré pour les notifications"
+                                                    : performanceStats.pushSubscriptionsUsers != null
+                                                        ? `${performanceStats.pushSubscriptionsUsers} utilisateur(s)${(performanceStats.pushSubscriptionsUsersWithMultiple ?? 0) > 0 ? `, dont ${performanceStats.pushSubscriptionsUsersWithMultiple} avec plusieurs appareils` : ""}`
+                                                        : "Appareils notifiables (Web Push)"}
+                                            </p>
                                         </div>
                                         <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
                                             <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Notifications (24h)</p>
                                             <p className="text-2xl font-bold text-white mt-1">{performanceStats.notificationsLast24h}</p>
-                                            <p className="text-xs text-neutral-500 mt-0.5">Créées dans les dernières 24h</p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">
+                                                {performanceStats.notificationsLast24h === 0 ? "Aucune notification créée dans les 24h" : "Créées dans les dernières 24h"}
+                                            </p>
                                         </div>
                                         <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
                                             <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Messages (24h)</p>
                                             <p className="text-2xl font-bold text-white mt-1">{performanceStats.messagesLast24h}</p>
-                                            <p className="text-xs text-neutral-500 mt-0.5">Envoyés dans les dernières 24h</p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">
+                                                {performanceStats.messagesLast24h === 0 ? "Aucun message envoyé dans les 24h" : "Envoyés dans les dernières 24h"}
+                                            </p>
                                         </div>
                                         <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700">
                                             <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Notifications non lues</p>
                                             <p className="text-2xl font-bold text-amber-400 mt-1">{performanceStats.notificationsUnread}</p>
-                                            <p className="text-xs text-neutral-500 mt-0.5">Total en base</p>
+                                            <p className="text-xs text-neutral-500 mt-0.5">
+                                                {performanceStats.notificationsUnread === 0 ? "Toutes lues" : "Total en base"}
+                                            </p>
                                         </div>
                                         <div className="p-4 rounded-lg bg-neutral-800/50 border border-neutral-700 flex flex-col justify-center">
                                             <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Redis (présence)</p>
@@ -754,12 +860,150 @@ export default function AdminDashboard() {
                                     </div>
                                 )}
                                 {performanceStats && (
-                                    <p className="text-xs text-neutral-500 mt-4">
-                                        Dernière mise à jour : {new Date(performanceStats.timestamp).toLocaleString("fr-FR")}
-                                    </p>
+                                    <>
+                                        <div className="mt-6 pt-4 border-t border-neutral-800">
+                                            <p className="text-sm font-medium text-neutral-400 mb-3">Nettoyage des ressources</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                                                    onClick={() => setPerformanceDeleteConfirm("push")}
+                                                    disabled={performanceStats.pushSubscriptions === 0}
+                                                >
+                                                    <Trash2 className="w-4 h-4 mr-2" />
+                                                    Supprimer les abonnements Push
+                                                </Button>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                                                    onClick={() => setPerformanceDeleteConfirm("notifications-unread")}
+                                                    disabled={performanceStats.notificationsUnread === 0}
+                                                >
+                                                    <Trash2 className="w-4 h-4 mr-2" />
+                                                    Supprimer les notifications non lues
+                                                </Button>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                                                    onClick={() => setPerformanceDeleteConfirm("notifications-all")}
+                                                >
+                                                    <Trash2 className="w-4 h-4 mr-2" />
+                                                    Supprimer toutes les notifications
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        <p className="text-xs text-neutral-500 mt-4">
+                                            Dernière mise à jour : {new Date(performanceStats.timestamp).toLocaleString("fr-FR")}
+                                        </p>
+                                    </>
                                 )}
                             </CardContent>
                         </Card>
+
+                        {/* Dialog Détails des ressources */}
+                        <Dialog open={performanceDetailsOpen} onOpenChange={setPerformanceDetailsOpen}>
+                            <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto bg-neutral-900 border-neutral-800 text-white">
+                                <DialogHeader>
+                                    <DialogTitle className="text-white flex items-center gap-2">
+                                        <List className="w-5 h-5" />
+                                        Détails des ressources
+                                    </DialogTitle>
+                                    <DialogDescription className="text-neutral-400">
+                                        Dernières notifications, messages et abonnements push (échantillons).
+                                    </DialogDescription>
+                                </DialogHeader>
+                                {performanceLoading && !performanceStats?.details ? (
+                                    <div className="py-8 text-center text-neutral-400">Chargement des détails...</div>
+                                ) : performanceStats?.details ? (
+                                    <div className="space-y-6 pt-2">
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-neutral-300 mb-2">Dernières notifications (15)</h4>
+                                            <ul className="space-y-2 max-h-48 overflow-y-auto rounded border border-neutral-700 p-2 bg-neutral-800/50">
+                                                {performanceStats.details.recentNotifications.length === 0 ? (
+                                                    <li className="text-sm text-neutral-500">Aucune notification</li>
+                                                ) : (
+                                                    performanceStats.details.recentNotifications.map((n) => (
+                                                        <li key={n.id} className="text-sm flex flex-wrap items-baseline gap-2">
+                                                            <span className="text-neutral-400 shrink-0">{new Date(n.createdAt).toLocaleString("fr-FR")}</span>
+                                                            <span className={n.isRead ? "text-neutral-400" : "text-amber-400"}>{n.isRead ? "Lu" : "Non lu"}</span>
+                                                            <span className="truncate">{n.content}</span>
+                                                            {n.user && <span className="text-neutral-500 text-xs">({n.user.email})</span>}
+                                                        </li>
+                                                    ))
+                                                )}
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-neutral-300 mb-2">Derniers messages (15)</h4>
+                                            <ul className="space-y-2 max-h-48 overflow-y-auto rounded border border-neutral-700 p-2 bg-neutral-800/50">
+                                                {performanceStats.details.recentMessages.length === 0 ? (
+                                                    <li className="text-sm text-neutral-500">Aucun message</li>
+                                                ) : (
+                                                    performanceStats.details.recentMessages.map((m) => (
+                                                        <li key={m.id} className="text-sm flex flex-wrap items-baseline gap-2">
+                                                            <span className="text-neutral-400 shrink-0">{new Date(m.createdAt).toLocaleString("fr-FR")}</span>
+                                                            <span className="text-neutral-500 text-xs">{m.sender.email}</span>
+                                                            <span className="truncate">{m.content.slice(0, 80)}{m.content.length > 80 ? "…" : ""}</span>
+                                                        </li>
+                                                    ))
+                                                )}
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-neutral-300 mb-2">Abonnements Push (15 derniers)</h4>
+                                            <ul className="space-y-2 max-h-48 overflow-y-auto rounded border border-neutral-700 p-2 bg-neutral-800/50">
+                                                {performanceStats.details.pushSubscriptionsSample.length === 0 ? (
+                                                    <li className="text-sm text-neutral-500">Aucun abonnement</li>
+                                                ) : (
+                                                    performanceStats.details.pushSubscriptionsSample.map((s) => (
+                                                        <li key={s.id} className="text-sm flex flex-wrap items-baseline gap-2">
+                                                            <span className="text-neutral-400 shrink-0">{new Date(s.createdAt).toLocaleString("fr-FR")}</span>
+                                                            <span className="text-neutral-500">{s.user.email}</span>
+                                                            <span className="text-neutral-600 text-xs truncate max-w-[200px]" title={s.endpoint}>{s.endpoint.slice(0, 50)}…</span>
+                                                        </li>
+                                                    ))
+                                                )}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="py-8 text-center text-neutral-500">Ouvrez à nouveau &quot;Voir les détails&quot; pour charger.</div>
+                                )}
+                            </DialogContent>
+                        </Dialog>
+
+                        {/* Confirmation suppression ressources */}
+                        <Dialog open={performanceDeleteConfirm !== null} onOpenChange={(open) => !open && setPerformanceDeleteConfirm(null)}>
+                            <DialogContent className="bg-neutral-900 border-neutral-800 text-white">
+                                <DialogHeader>
+                                    <DialogTitle className="text-white">Confirmer la suppression</DialogTitle>
+                                    <DialogDescription className="text-neutral-400">
+                                        {performanceDeleteConfirm === "push" &&
+                                            "Tous les abonnements Push seront supprimés. Les utilisateurs devront réautoriser les notifications pour en recevoir à nouveau."}
+                                        {performanceDeleteConfirm === "notifications-unread" &&
+                                            "Toutes les notifications non lues seront supprimées définitivement."}
+                                        {performanceDeleteConfirm === "notifications-all" &&
+                                            "Toutes les notifications (lues et non lues) seront supprimées définitivement."}
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="flex justify-end gap-2 pt-4">
+                                    <Button variant="outline" className="border-neutral-600" onClick={() => setPerformanceDeleteConfirm(null)} disabled={performanceDeleting}>
+                                        Annuler
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        className="bg-red-600 hover:bg-red-700"
+                                        onClick={handlePerformanceDelete}
+                                        disabled={performanceDeleting}
+                                    >
+                                        {performanceDeleting ? "Suppression…" : "Supprimer"}
+                                    </Button>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </TabsContent>
 
                     {/* Organizations */}
