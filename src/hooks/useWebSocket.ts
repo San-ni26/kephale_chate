@@ -100,9 +100,20 @@ export function useWebSocket(
         };
 
         const onErr = (err: any) => {
-            console.error('[Pusher] Connection error:', err);
             setIsConnected(false);
-            onErrorRef.current?.({ message: err?.message || err?.data?.message || 'Connection error' });
+            const message =
+                err?.message ||
+                err?.data?.message ||
+                (typeof err?.data === 'string' ? err.data : null) ||
+                err?.type ||
+                'Connection error';
+            const hasDetails = err && Object.keys(err).length > 0 && (err.message || err.data || err.type);
+            if (hasDetails && process.env.NODE_ENV === 'development') {
+                console.warn('[Pusher] Connection error:', message, err);
+            } else if (!hasDetails && process.env.NODE_ENV === 'development') {
+                console.warn('[Pusher] Connexion interrompue (réessai automatique).');
+            }
+            onErrorRef.current?.({ message });
         };
 
         client.connection.bind('connected', onConnected);

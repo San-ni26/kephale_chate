@@ -119,8 +119,11 @@ export async function DELETE(
             );
         }
 
-        await prisma.user.delete({
-            where: { id },
+        // Supprimer en transaction : d’abord les messages envoyés (FK sans CASCADE en base),
+        // puis l’utilisateur (les autres relations ont onDelete: Cascade).
+        await prisma.$transaction(async (tx) => {
+            await tx.message.deleteMany({ where: { senderId: id } });
+            await tx.user.delete({ where: { id } });
         });
 
         return NextResponse.json({ message: 'Utilisateur supprimé' });
