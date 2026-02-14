@@ -6,12 +6,16 @@ import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { User, Search, MessageSquarePlus, Building2, Users, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet } from 'lucide-react';
+import { User, Search, MessageSquarePlus, Building2, Users, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet, Trash2 } from 'lucide-react';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
+import { fetchWithAuth } from '@/src/lib/auth-client';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import { Input } from '@/src/components/ui/input';
 import { Button } from '@/src/components/ui/button';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
+import { DeleteConversationDialog } from '@/src/components/chat/DeleteConversationDialog';
 
 interface Conversation {
     id: string;
@@ -39,12 +43,15 @@ interface Conversation {
 
 export function ConversationSidebar() {
     const pathname = usePathname();
+    const router = useRouter();
     const { data: profileData } = useSWR('/api/users/profile', fetcher);
     const { data: conversationsData, mutate: mutateConversations } = useSWR('/api/conversations', fetcher, {
         refreshInterval: 15000, // Refresh every 15s pour mise à jour présence (Redis)
     });
     const [searchQuery, setSearchQuery] = useState('');
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
+    const [deleteLoading, setDeleteLoading] = useState(false);
 
     const conversations: Conversation[] = conversationsData?.conversations || [];
     const currentUserId = profileData?.profile?.id;
@@ -92,6 +99,35 @@ export function ConversationSidebar() {
 
     function getOtherMember(chat: Conversation) {
         return chat.members.find(m => m.user.id !== currentUserId)?.user;
+    }
+
+    function openDeleteDialog(e: React.MouseEvent, conversationId: string) {
+        e.preventDefault();
+        e.stopPropagation();
+        setConversationToDelete(conversationId);
+    }
+
+    async function confirmDeleteConversation() {
+        if (!conversationToDelete) return;
+        setDeleteLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/conversations/${conversationToDelete}`, { method: 'DELETE' });
+            if (res.ok) {
+                toast.success('Discussion supprimée');
+                setConversationToDelete(null);
+                mutateConversations();
+                if (pathname === `/chat/discussion/${conversationToDelete}`) {
+                    router.push('/chat');
+                }
+            } else {
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.error || 'Impossible de supprimer');
+            }
+        } catch {
+            toast.error('Erreur réseau');
+        } finally {
+            setDeleteLoading(false);
+        }
     }
 
     return (
@@ -184,12 +220,21 @@ export function ConversationSidebar() {
                                                     <h3 className={`text-sm truncate ${unread > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground'}`}>
                                                         {chatName}
                                                     </h3>
-                                                    <div className="flex items-center gap-2 shrink-0 ml-2">
+                                                    <div className="flex items-center gap-1 shrink-0 ml-2">
                                                         {lastMessage && (
                                                             <span className={`text-[10px] ${unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
                                                                 {formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr })}
                                                             </span>
                                                         )}
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => openDeleteDialog(e, chat.id)}
+                                                            className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-opacity"
+                                                            title="Supprimer la discussion"
+                                                            aria-label="Supprimer la discussion"
+                                                        >
+                                                            <Trash2 className="w-3.5 h-3.5" />
+                                                        </button>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center justify-between">
@@ -219,6 +264,13 @@ export function ConversationSidebar() {
                     </div>
                 )}
             </div>
+
+            <DeleteConversationDialog
+                open={conversationToDelete !== null}
+                onOpenChange={(open) => !open && setConversationToDelete(null)}
+                onConfirm={confirmDeleteConversation}
+                loading={deleteLoading}
+            />
 
             {/* Desktop Navigation */}
             <div className="p-2 border-t border-border bg-muted/20">

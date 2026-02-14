@@ -1,14 +1,17 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { User, MessageSquarePlus, Lock } from 'lucide-react';
+import { User, MessageSquarePlus, Lock, Trash2 } from 'lucide-react';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
+import { fetchWithAuth } from '@/src/lib/auth-client';
+import { toast } from 'sonner';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
+import { DeleteConversationDialog } from '@/src/components/chat/DeleteConversationDialog';
 
 interface Conversation {
     id: string;
@@ -44,6 +47,34 @@ export default function ChatListPage() {
     });
 
     const { userChannel, isConnected } = useWebSocket();
+    const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+
+    function openDeleteDialog(e: React.MouseEvent, conversationId: string) {
+        e.preventDefault();
+        e.stopPropagation();
+        setConversationToDelete(conversationId);
+    }
+
+    async function confirmDeleteConversation() {
+        if (!conversationToDelete) return;
+        setDeleteLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/conversations/${conversationToDelete}`, { method: 'DELETE' });
+            if (res.ok) {
+                toast.success('Discussion supprimée');
+                setConversationToDelete(null);
+                mutateConversations();
+            } else {
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.error || 'Impossible de supprimer');
+            }
+        } catch {
+            toast.error('Erreur réseau');
+        } finally {
+            setDeleteLoading(false);
+        }
+    }
 
     // Refresh when new notification arrives
     useEffect(() => {
@@ -122,7 +153,7 @@ export default function ChatListPage() {
 
                             return (
                                 <Link href={`/chat/discussion/${chat.id}`} key={chat.id}>
-                                    <div className="flex items-center py-3 px-2 border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer">
+                                    <div className="flex items-center py-3 px-2 border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer group">
                                         {/* Avatar with online indicator */}
                                         <div className="relative flex-shrink-0">
                                             <Avatar className="h-12 w-12 border border-border/50">
@@ -142,9 +173,20 @@ export default function ChatListPage() {
                                                 <h3 className={`truncate text-[15px] ${unread > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground'}`}>
                                                     {chatName}
                                                 </h3>
-                                                <span className={`text-xs shrink-0 ml-2 ${unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
-                                                    {lastMessage ? formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr }) : ''}
-                                                </span>
+                                                <div className="flex items-center gap-1 shrink-0 ml-2">
+                                                    <span className={`text-xs ${unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
+                                                        {lastMessage ? formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr }) : ''}
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => openDeleteDialog(e, chat.id)}
+                                                        className="p-1.5 rounded-full hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
+                                                        title="Supprimer la discussion"
+                                                        aria-label="Supprimer la discussion"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div className="flex items-center justify-between">
                                                 <p className={`text-sm truncate pr-2 ${unread > 0 ? 'text-foreground/90 font-medium' : 'text-muted-foreground'}`}>
@@ -172,6 +214,13 @@ export default function ChatListPage() {
                     </div>
                 )}
             </div>
+
+            <DeleteConversationDialog
+                open={conversationToDelete !== null}
+                onOpenChange={(open) => !open && setConversationToDelete(null)}
+                onConfirm={confirmDeleteConversation}
+                loading={deleteLoading}
+            />
 
             {/* Desktop View: Placeholder */}
             <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-muted/20 text-center p-8 h-full">

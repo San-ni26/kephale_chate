@@ -19,6 +19,37 @@ interface SearchResult {
     lastSeen: Date | null;
 }
 
+/** Retourne l'email masqué (ex: j•••@g•••.com). */
+function maskEmail(email: string): string {
+    if (!email) return "•••";
+    const at = email.indexOf("@");
+    if (at <= 0) return "•••@•••";
+    const local = email.slice(0, at);
+    const domain = email.slice(at + 1);
+    const dot = domain.lastIndexOf(".");
+    const domainName = dot > 0 ? domain.slice(0, dot) : domain;
+    const tld = dot > 0 ? domain.slice(dot) : "";
+    return local[0] + "•••@" + (domainName[0] ?? "") + "•••" + tld;
+}
+
+/**
+ * Toujours masquer l'email sauf si la recherche contient @ ET que la partie avant @
+ * correspond à la partie avant @ de CET email (ex: recherche "marie@" → afficher marie.dupont@gmail.com).
+ * Sans @ dans la recherche, les emails restent masqués pour tous les résultats.
+ */
+function displayEmail(email: string, searchQuery: string): string {
+    if (!email) return "•••";
+    const q = searchQuery.trim().toLowerCase();
+    const atEmail = email.indexOf("@");
+    const emailLocal = atEmail > 0 ? email.toLowerCase().slice(0, atEmail) : "";
+
+    if (q.includes("@")) {
+        const beforeAt = q.split("@")[0].trim();
+        if (beforeAt.length >= 2 && emailLocal.includes(beforeAt)) return email;
+    }
+    return maskEmail(email);
+}
+
 export function UserSearch() {
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState("");
@@ -178,17 +209,12 @@ export function UserSearch() {
                                                     <p className="font-medium text-foreground truncate">
                                                         {user.name || "Sans nom"}
                                                     </p>
-                                                    <Badge
-                                                        variant={user.isOnline ? "default" : "secondary"}
-                                                        className={`text-[10px] px-1.5 h-5 ${user.isOnline ? "bg-success hover:bg-success/90" : "bg-muted-foreground/30 text-muted-foreground hover:bg-muted-foreground/40"}`}
-                                                    >
-                                                        {user.isOnline ? "En ligne" : "Hors ligne"}
-                                                    </Badge>
+
                                                 </div>
                                                 <div className="flex items-center gap-3 mt-1">
                                                     <span className="text-xs text-muted-foreground flex items-center gap-1 truncate">
-                                                        <Mail className="h-3 w-3" />
-                                                        {user.email}
+                                                        <Mail className="h-3 w-3 flex-shrink-0" />
+                                                        {displayEmail(user.email, query)}
                                                     </span>
                                                 </div>
                                             </div>
