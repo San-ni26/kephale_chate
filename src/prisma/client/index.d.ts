@@ -94,6 +94,16 @@ export type DepartmentMember = $Result.DefaultSelection<Prisma.$DepartmentMember
  */
 export type Group = $Result.DefaultSelection<Prisma.$GroupPayload>
 /**
+ * Model GroupDocument
+ * 
+ */
+export type GroupDocument = $Result.DefaultSelection<Prisma.$GroupDocumentPayload>
+/**
+ * Model GroupNote
+ * 
+ */
+export type GroupNote = $Result.DefaultSelection<Prisma.$GroupNotePayload>
+/**
  * Model GroupMember
  * 
  */
@@ -277,6 +287,15 @@ export const DecisionVoteType: {
 export type DecisionVoteType = (typeof DecisionVoteType)[keyof typeof DecisionVoteType]
 
 
+export const NoteTextSize: {
+  SMALL: 'SMALL',
+  NORMAL: 'NORMAL',
+  LARGE: 'LARGE'
+};
+
+export type NoteTextSize = (typeof NoteTextSize)[keyof typeof NoteTextSize]
+
+
 export const UserRole: {
   USER: 'USER',
   ADMIN: 'ADMIN',
@@ -425,6 +444,10 @@ export const InvitationType: typeof $Enums.InvitationType
 export type DecisionVoteType = $Enums.DecisionVoteType
 
 export const DecisionVoteType: typeof $Enums.DecisionVoteType
+
+export type NoteTextSize = $Enums.NoteTextSize
+
+export const NoteTextSize: typeof $Enums.NoteTextSize
 
 export type UserRole = $Enums.UserRole
 
@@ -758,6 +781,26 @@ export class PrismaClient<
     * ```
     */
   get group(): Prisma.GroupDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.groupDocument`: Exposes CRUD operations for the **GroupDocument** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GroupDocuments
+    * const groupDocuments = await prisma.groupDocument.findMany()
+    * ```
+    */
+  get groupDocument(): Prisma.GroupDocumentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.groupNote`: Exposes CRUD operations for the **GroupNote** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GroupNotes
+    * const groupNotes = await prisma.groupNote.findMany()
+    * ```
+    */
+  get groupNote(): Prisma.GroupNoteDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.groupMember`: Exposes CRUD operations for the **GroupMember** model.
@@ -1508,6 +1551,8 @@ export namespace Prisma {
     DecisionVote: 'DecisionVote',
     DepartmentMember: 'DepartmentMember',
     Group: 'Group',
+    GroupDocument: 'GroupDocument',
+    GroupNote: 'GroupNote',
     GroupMember: 'GroupMember',
     Message: 'Message',
     Attachment: 'Attachment',
@@ -1553,7 +1598,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
+      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "group" | "groupDocument" | "groupNote" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2738,6 +2783,154 @@ export namespace Prisma {
           count: {
             args: Prisma.GroupCountArgs<ExtArgs>
             result: $Utils.Optional<GroupCountAggregateOutputType> | number
+          }
+        }
+      }
+      GroupDocument: {
+        payload: Prisma.$GroupDocumentPayload<ExtArgs>
+        fields: Prisma.GroupDocumentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GroupDocumentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GroupDocumentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload>
+          }
+          findFirst: {
+            args: Prisma.GroupDocumentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GroupDocumentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload>
+          }
+          findMany: {
+            args: Prisma.GroupDocumentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload>[]
+          }
+          create: {
+            args: Prisma.GroupDocumentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload>
+          }
+          createMany: {
+            args: Prisma.GroupDocumentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GroupDocumentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload>[]
+          }
+          delete: {
+            args: Prisma.GroupDocumentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload>
+          }
+          update: {
+            args: Prisma.GroupDocumentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload>
+          }
+          deleteMany: {
+            args: Prisma.GroupDocumentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GroupDocumentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GroupDocumentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload>[]
+          }
+          upsert: {
+            args: Prisma.GroupDocumentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupDocumentPayload>
+          }
+          aggregate: {
+            args: Prisma.GroupDocumentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGroupDocument>
+          }
+          groupBy: {
+            args: Prisma.GroupDocumentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GroupDocumentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GroupDocumentCountArgs<ExtArgs>
+            result: $Utils.Optional<GroupDocumentCountAggregateOutputType> | number
+          }
+        }
+      }
+      GroupNote: {
+        payload: Prisma.$GroupNotePayload<ExtArgs>
+        fields: Prisma.GroupNoteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GroupNoteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GroupNoteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload>
+          }
+          findFirst: {
+            args: Prisma.GroupNoteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GroupNoteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload>
+          }
+          findMany: {
+            args: Prisma.GroupNoteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload>[]
+          }
+          create: {
+            args: Prisma.GroupNoteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload>
+          }
+          createMany: {
+            args: Prisma.GroupNoteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GroupNoteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload>[]
+          }
+          delete: {
+            args: Prisma.GroupNoteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload>
+          }
+          update: {
+            args: Prisma.GroupNoteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload>
+          }
+          deleteMany: {
+            args: Prisma.GroupNoteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GroupNoteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GroupNoteUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload>[]
+          }
+          upsert: {
+            args: Prisma.GroupNoteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNotePayload>
+          }
+          aggregate: {
+            args: Prisma.GroupNoteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGroupNote>
+          }
+          groupBy: {
+            args: Prisma.GroupNoteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GroupNoteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GroupNoteCountArgs<ExtArgs>
+            result: $Utils.Optional<GroupNoteCountAggregateOutputType> | number
           }
         }
       }
@@ -5085,6 +5278,8 @@ export namespace Prisma {
     decisionVote?: DecisionVoteOmit
     departmentMember?: DepartmentMemberOmit
     group?: GroupOmit
+    groupDocument?: GroupDocumentOmit
+    groupNote?: GroupNoteOmit
     groupMember?: GroupMemberOmit
     message?: MessageOmit
     attachment?: AttachmentOmit
@@ -5223,6 +5418,7 @@ export namespace Prisma {
     followers: number
     following: number
     uploadedDepartmentDocuments: number
+    groupNotes: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5254,6 +5450,7 @@ export namespace Prisma {
     followers?: boolean | UserCountOutputTypeCountFollowersArgs
     following?: boolean | UserCountOutputTypeCountFollowingArgs
     uploadedDepartmentDocuments?: boolean | UserCountOutputTypeCountUploadedDepartmentDocumentsArgs
+    groupNotes?: boolean | UserCountOutputTypeCountGroupNotesArgs
   }
 
   // Custom InputTypes
@@ -5461,6 +5658,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountUploadedDepartmentDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DepartmentDocumentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountGroupNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupNoteWhereInput
   }
 
 
@@ -5725,11 +5929,13 @@ export namespace Prisma {
   export type GroupCountOutputType = {
     members: number
     messages: number
+    documents: number
   }
 
   export type GroupCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | GroupCountOutputTypeCountMembersArgs
     messages?: boolean | GroupCountOutputTypeCountMessagesArgs
+    documents?: boolean | GroupCountOutputTypeCountDocumentsArgs
   }
 
   // Custom InputTypes
@@ -5755,6 +5961,44 @@ export namespace Prisma {
    */
   export type GroupCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MessageWhereInput
+  }
+
+  /**
+   * GroupCountOutputType without action
+   */
+  export type GroupCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupDocumentWhereInput
+  }
+
+
+  /**
+   * Count Type GroupDocumentCountOutputType
+   */
+
+  export type GroupDocumentCountOutputType = {
+    notes: number
+  }
+
+  export type GroupDocumentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    notes?: boolean | GroupDocumentCountOutputTypeCountNotesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * GroupDocumentCountOutputType without action
+   */
+  export type GroupDocumentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocumentCountOutputType
+     */
+    select?: GroupDocumentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * GroupDocumentCountOutputType without action
+   */
+  export type GroupDocumentCountOutputTypeCountNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupNoteWhereInput
   }
 
 
@@ -6411,6 +6655,7 @@ export namespace Prisma {
     followers?: boolean | User$followersArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
     uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
+    groupNotes?: boolean | User$groupNotesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -6527,6 +6772,7 @@ export namespace Prisma {
     followers?: boolean | User$followersArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
     uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
+    groupNotes?: boolean | User$groupNotesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6565,6 +6811,7 @@ export namespace Prisma {
       followers: Prisma.$FollowPayload<ExtArgs>[]
       following: Prisma.$FollowPayload<ExtArgs>[]
       uploadedDepartmentDocuments: Prisma.$DepartmentDocumentPayload<ExtArgs>[]
+      groupNotes: Prisma.$GroupNotePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7015,6 +7262,7 @@ export namespace Prisma {
     followers<T extends User$followersArgs<ExtArgs> = {}>(args?: Subset<T, User$followersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     following<T extends User$followingArgs<ExtArgs> = {}>(args?: Subset<T, User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     uploadedDepartmentDocuments<T extends User$uploadedDepartmentDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$uploadedDepartmentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    groupNotes<T extends User$groupNotesArgs<ExtArgs> = {}>(args?: Subset<T, User$groupNotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8163,6 +8411,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DepartmentDocumentScalarFieldEnum | DepartmentDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * User.groupNotes
+   */
+  export type User$groupNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    where?: GroupNoteWhereInput
+    orderBy?: GroupNoteOrderByWithRelationInput | GroupNoteOrderByWithRelationInput[]
+    cursor?: GroupNoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GroupNoteScalarFieldEnum | GroupNoteScalarFieldEnum[]
   }
 
   /**
@@ -24264,6 +24536,7 @@ export namespace Prisma {
     department?: boolean | Group$departmentArgs<ExtArgs>
     members?: boolean | Group$membersArgs<ExtArgs>
     messages?: boolean | Group$messagesArgs<ExtArgs>
+    documents?: boolean | Group$documentsArgs<ExtArgs>
     _count?: boolean | GroupCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["group"]>
 
@@ -24301,6 +24574,7 @@ export namespace Prisma {
     department?: boolean | Group$departmentArgs<ExtArgs>
     members?: boolean | Group$membersArgs<ExtArgs>
     messages?: boolean | Group$messagesArgs<ExtArgs>
+    documents?: boolean | Group$documentsArgs<ExtArgs>
     _count?: boolean | GroupCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type GroupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24316,6 +24590,7 @@ export namespace Prisma {
       department: Prisma.$DepartmentPayload<ExtArgs> | null
       members: Prisma.$GroupMemberPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
+      documents: Prisma.$GroupDocumentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -24721,6 +24996,7 @@ export namespace Prisma {
     department<T extends Group$departmentArgs<ExtArgs> = {}>(args?: Subset<T, Group$departmentArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     members<T extends Group$membersArgs<ExtArgs> = {}>(args?: Subset<T, Group$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     messages<T extends Group$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Group$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    documents<T extends Group$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Group$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -25219,6 +25495,30 @@ export namespace Prisma {
   }
 
   /**
+   * Group.documents
+   */
+  export type Group$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+    where?: GroupDocumentWhereInput
+    orderBy?: GroupDocumentOrderByWithRelationInput | GroupDocumentOrderByWithRelationInput[]
+    cursor?: GroupDocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GroupDocumentScalarFieldEnum | GroupDocumentScalarFieldEnum[]
+  }
+
+  /**
    * Group without action
    */
   export type GroupDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -25234,6 +25534,2246 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: GroupInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GroupDocument
+   */
+
+  export type AggregateGroupDocument = {
+    _count: GroupDocumentCountAggregateOutputType | null
+    _min: GroupDocumentMinAggregateOutputType | null
+    _max: GroupDocumentMaxAggregateOutputType | null
+  }
+
+  export type GroupDocumentMinAggregateOutputType = {
+    id: string | null
+    groupId: string | null
+    title: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GroupDocumentMaxAggregateOutputType = {
+    id: string | null
+    groupId: string | null
+    title: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GroupDocumentCountAggregateOutputType = {
+    id: number
+    groupId: number
+    title: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GroupDocumentMinAggregateInputType = {
+    id?: true
+    groupId?: true
+    title?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GroupDocumentMaxAggregateInputType = {
+    id?: true
+    groupId?: true
+    title?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GroupDocumentCountAggregateInputType = {
+    id?: true
+    groupId?: true
+    title?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GroupDocumentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupDocument to aggregate.
+     */
+    where?: GroupDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupDocuments to fetch.
+     */
+    orderBy?: GroupDocumentOrderByWithRelationInput | GroupDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GroupDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GroupDocuments
+    **/
+    _count?: true | GroupDocumentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GroupDocumentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GroupDocumentMaxAggregateInputType
+  }
+
+  export type GetGroupDocumentAggregateType<T extends GroupDocumentAggregateArgs> = {
+        [P in keyof T & keyof AggregateGroupDocument]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGroupDocument[P]>
+      : GetScalarType<T[P], AggregateGroupDocument[P]>
+  }
+
+
+
+
+  export type GroupDocumentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupDocumentWhereInput
+    orderBy?: GroupDocumentOrderByWithAggregationInput | GroupDocumentOrderByWithAggregationInput[]
+    by: GroupDocumentScalarFieldEnum[] | GroupDocumentScalarFieldEnum
+    having?: GroupDocumentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GroupDocumentCountAggregateInputType | true
+    _min?: GroupDocumentMinAggregateInputType
+    _max?: GroupDocumentMaxAggregateInputType
+  }
+
+  export type GroupDocumentGroupByOutputType = {
+    id: string
+    groupId: string
+    title: string
+    createdAt: Date
+    updatedAt: Date
+    _count: GroupDocumentCountAggregateOutputType | null
+    _min: GroupDocumentMinAggregateOutputType | null
+    _max: GroupDocumentMaxAggregateOutputType | null
+  }
+
+  type GetGroupDocumentGroupByPayload<T extends GroupDocumentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GroupDocumentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GroupDocumentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GroupDocumentGroupByOutputType[P]>
+            : GetScalarType<T[P], GroupDocumentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GroupDocumentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    groupId?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+    notes?: boolean | GroupDocument$notesArgs<ExtArgs>
+    _count?: boolean | GroupDocumentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupDocument"]>
+
+  export type GroupDocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    groupId?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupDocument"]>
+
+  export type GroupDocumentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    groupId?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupDocument"]>
+
+  export type GroupDocumentSelectScalar = {
+    id?: boolean
+    groupId?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GroupDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "groupId" | "title" | "createdAt" | "updatedAt", ExtArgs["result"]["groupDocument"]>
+  export type GroupDocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+    notes?: boolean | GroupDocument$notesArgs<ExtArgs>
+    _count?: boolean | GroupDocumentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type GroupDocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+  }
+  export type GroupDocumentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+  }
+
+  export type $GroupDocumentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GroupDocument"
+    objects: {
+      group: Prisma.$GroupPayload<ExtArgs>
+      notes: Prisma.$GroupNotePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      groupId: string
+      title: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["groupDocument"]>
+    composites: {}
+  }
+
+  type GroupDocumentGetPayload<S extends boolean | null | undefined | GroupDocumentDefaultArgs> = $Result.GetResult<Prisma.$GroupDocumentPayload, S>
+
+  type GroupDocumentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GroupDocumentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GroupDocumentCountAggregateInputType | true
+    }
+
+  export interface GroupDocumentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GroupDocument'], meta: { name: 'GroupDocument' } }
+    /**
+     * Find zero or one GroupDocument that matches the filter.
+     * @param {GroupDocumentFindUniqueArgs} args - Arguments to find a GroupDocument
+     * @example
+     * // Get one GroupDocument
+     * const groupDocument = await prisma.groupDocument.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GroupDocumentFindUniqueArgs>(args: SelectSubset<T, GroupDocumentFindUniqueArgs<ExtArgs>>): Prisma__GroupDocumentClient<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GroupDocument that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GroupDocumentFindUniqueOrThrowArgs} args - Arguments to find a GroupDocument
+     * @example
+     * // Get one GroupDocument
+     * const groupDocument = await prisma.groupDocument.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GroupDocumentFindUniqueOrThrowArgs>(args: SelectSubset<T, GroupDocumentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GroupDocumentClient<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupDocument that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupDocumentFindFirstArgs} args - Arguments to find a GroupDocument
+     * @example
+     * // Get one GroupDocument
+     * const groupDocument = await prisma.groupDocument.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GroupDocumentFindFirstArgs>(args?: SelectSubset<T, GroupDocumentFindFirstArgs<ExtArgs>>): Prisma__GroupDocumentClient<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupDocument that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupDocumentFindFirstOrThrowArgs} args - Arguments to find a GroupDocument
+     * @example
+     * // Get one GroupDocument
+     * const groupDocument = await prisma.groupDocument.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GroupDocumentFindFirstOrThrowArgs>(args?: SelectSubset<T, GroupDocumentFindFirstOrThrowArgs<ExtArgs>>): Prisma__GroupDocumentClient<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GroupDocuments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupDocumentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GroupDocuments
+     * const groupDocuments = await prisma.groupDocument.findMany()
+     * 
+     * // Get first 10 GroupDocuments
+     * const groupDocuments = await prisma.groupDocument.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const groupDocumentWithIdOnly = await prisma.groupDocument.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GroupDocumentFindManyArgs>(args?: SelectSubset<T, GroupDocumentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GroupDocument.
+     * @param {GroupDocumentCreateArgs} args - Arguments to create a GroupDocument.
+     * @example
+     * // Create one GroupDocument
+     * const GroupDocument = await prisma.groupDocument.create({
+     *   data: {
+     *     // ... data to create a GroupDocument
+     *   }
+     * })
+     * 
+     */
+    create<T extends GroupDocumentCreateArgs>(args: SelectSubset<T, GroupDocumentCreateArgs<ExtArgs>>): Prisma__GroupDocumentClient<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GroupDocuments.
+     * @param {GroupDocumentCreateManyArgs} args - Arguments to create many GroupDocuments.
+     * @example
+     * // Create many GroupDocuments
+     * const groupDocument = await prisma.groupDocument.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GroupDocumentCreateManyArgs>(args?: SelectSubset<T, GroupDocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GroupDocuments and returns the data saved in the database.
+     * @param {GroupDocumentCreateManyAndReturnArgs} args - Arguments to create many GroupDocuments.
+     * @example
+     * // Create many GroupDocuments
+     * const groupDocument = await prisma.groupDocument.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GroupDocuments and only return the `id`
+     * const groupDocumentWithIdOnly = await prisma.groupDocument.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GroupDocumentCreateManyAndReturnArgs>(args?: SelectSubset<T, GroupDocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GroupDocument.
+     * @param {GroupDocumentDeleteArgs} args - Arguments to delete one GroupDocument.
+     * @example
+     * // Delete one GroupDocument
+     * const GroupDocument = await prisma.groupDocument.delete({
+     *   where: {
+     *     // ... filter to delete one GroupDocument
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GroupDocumentDeleteArgs>(args: SelectSubset<T, GroupDocumentDeleteArgs<ExtArgs>>): Prisma__GroupDocumentClient<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GroupDocument.
+     * @param {GroupDocumentUpdateArgs} args - Arguments to update one GroupDocument.
+     * @example
+     * // Update one GroupDocument
+     * const groupDocument = await prisma.groupDocument.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GroupDocumentUpdateArgs>(args: SelectSubset<T, GroupDocumentUpdateArgs<ExtArgs>>): Prisma__GroupDocumentClient<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GroupDocuments.
+     * @param {GroupDocumentDeleteManyArgs} args - Arguments to filter GroupDocuments to delete.
+     * @example
+     * // Delete a few GroupDocuments
+     * const { count } = await prisma.groupDocument.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GroupDocumentDeleteManyArgs>(args?: SelectSubset<T, GroupDocumentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupDocuments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupDocumentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GroupDocuments
+     * const groupDocument = await prisma.groupDocument.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GroupDocumentUpdateManyArgs>(args: SelectSubset<T, GroupDocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupDocuments and returns the data updated in the database.
+     * @param {GroupDocumentUpdateManyAndReturnArgs} args - Arguments to update many GroupDocuments.
+     * @example
+     * // Update many GroupDocuments
+     * const groupDocument = await prisma.groupDocument.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GroupDocuments and only return the `id`
+     * const groupDocumentWithIdOnly = await prisma.groupDocument.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GroupDocumentUpdateManyAndReturnArgs>(args: SelectSubset<T, GroupDocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GroupDocument.
+     * @param {GroupDocumentUpsertArgs} args - Arguments to update or create a GroupDocument.
+     * @example
+     * // Update or create a GroupDocument
+     * const groupDocument = await prisma.groupDocument.upsert({
+     *   create: {
+     *     // ... data to create a GroupDocument
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GroupDocument we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GroupDocumentUpsertArgs>(args: SelectSubset<T, GroupDocumentUpsertArgs<ExtArgs>>): Prisma__GroupDocumentClient<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GroupDocuments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupDocumentCountArgs} args - Arguments to filter GroupDocuments to count.
+     * @example
+     * // Count the number of GroupDocuments
+     * const count = await prisma.groupDocument.count({
+     *   where: {
+     *     // ... the filter for the GroupDocuments we want to count
+     *   }
+     * })
+    **/
+    count<T extends GroupDocumentCountArgs>(
+      args?: Subset<T, GroupDocumentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GroupDocumentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GroupDocument.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupDocumentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GroupDocumentAggregateArgs>(args: Subset<T, GroupDocumentAggregateArgs>): Prisma.PrismaPromise<GetGroupDocumentAggregateType<T>>
+
+    /**
+     * Group by GroupDocument.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupDocumentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GroupDocumentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GroupDocumentGroupByArgs['orderBy'] }
+        : { orderBy?: GroupDocumentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GroupDocumentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGroupDocumentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GroupDocument model
+   */
+  readonly fields: GroupDocumentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GroupDocument.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GroupDocumentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    group<T extends GroupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GroupDefaultArgs<ExtArgs>>): Prisma__GroupClient<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    notes<T extends GroupDocument$notesArgs<ExtArgs> = {}>(args?: Subset<T, GroupDocument$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GroupDocument model
+   */
+  interface GroupDocumentFieldRefs {
+    readonly id: FieldRef<"GroupDocument", 'String'>
+    readonly groupId: FieldRef<"GroupDocument", 'String'>
+    readonly title: FieldRef<"GroupDocument", 'String'>
+    readonly createdAt: FieldRef<"GroupDocument", 'DateTime'>
+    readonly updatedAt: FieldRef<"GroupDocument", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GroupDocument findUnique
+   */
+  export type GroupDocumentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupDocument to fetch.
+     */
+    where: GroupDocumentWhereUniqueInput
+  }
+
+  /**
+   * GroupDocument findUniqueOrThrow
+   */
+  export type GroupDocumentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupDocument to fetch.
+     */
+    where: GroupDocumentWhereUniqueInput
+  }
+
+  /**
+   * GroupDocument findFirst
+   */
+  export type GroupDocumentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupDocument to fetch.
+     */
+    where?: GroupDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupDocuments to fetch.
+     */
+    orderBy?: GroupDocumentOrderByWithRelationInput | GroupDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupDocuments.
+     */
+    cursor?: GroupDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupDocuments.
+     */
+    distinct?: GroupDocumentScalarFieldEnum | GroupDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * GroupDocument findFirstOrThrow
+   */
+  export type GroupDocumentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupDocument to fetch.
+     */
+    where?: GroupDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupDocuments to fetch.
+     */
+    orderBy?: GroupDocumentOrderByWithRelationInput | GroupDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupDocuments.
+     */
+    cursor?: GroupDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupDocuments.
+     */
+    distinct?: GroupDocumentScalarFieldEnum | GroupDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * GroupDocument findMany
+   */
+  export type GroupDocumentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupDocuments to fetch.
+     */
+    where?: GroupDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupDocuments to fetch.
+     */
+    orderBy?: GroupDocumentOrderByWithRelationInput | GroupDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GroupDocuments.
+     */
+    cursor?: GroupDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupDocuments.
+     */
+    skip?: number
+    distinct?: GroupDocumentScalarFieldEnum | GroupDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * GroupDocument create
+   */
+  export type GroupDocumentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GroupDocument.
+     */
+    data: XOR<GroupDocumentCreateInput, GroupDocumentUncheckedCreateInput>
+  }
+
+  /**
+   * GroupDocument createMany
+   */
+  export type GroupDocumentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GroupDocuments.
+     */
+    data: GroupDocumentCreateManyInput | GroupDocumentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GroupDocument createManyAndReturn
+   */
+  export type GroupDocumentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * The data used to create many GroupDocuments.
+     */
+    data: GroupDocumentCreateManyInput | GroupDocumentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GroupDocument update
+   */
+  export type GroupDocumentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GroupDocument.
+     */
+    data: XOR<GroupDocumentUpdateInput, GroupDocumentUncheckedUpdateInput>
+    /**
+     * Choose, which GroupDocument to update.
+     */
+    where: GroupDocumentWhereUniqueInput
+  }
+
+  /**
+   * GroupDocument updateMany
+   */
+  export type GroupDocumentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GroupDocuments.
+     */
+    data: XOR<GroupDocumentUpdateManyMutationInput, GroupDocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupDocuments to update
+     */
+    where?: GroupDocumentWhereInput
+    /**
+     * Limit how many GroupDocuments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupDocument updateManyAndReturn
+   */
+  export type GroupDocumentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * The data used to update GroupDocuments.
+     */
+    data: XOR<GroupDocumentUpdateManyMutationInput, GroupDocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupDocuments to update
+     */
+    where?: GroupDocumentWhereInput
+    /**
+     * Limit how many GroupDocuments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GroupDocument upsert
+   */
+  export type GroupDocumentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GroupDocument to update in case it exists.
+     */
+    where: GroupDocumentWhereUniqueInput
+    /**
+     * In case the GroupDocument found by the `where` argument doesn't exist, create a new GroupDocument with this data.
+     */
+    create: XOR<GroupDocumentCreateInput, GroupDocumentUncheckedCreateInput>
+    /**
+     * In case the GroupDocument was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GroupDocumentUpdateInput, GroupDocumentUncheckedUpdateInput>
+  }
+
+  /**
+   * GroupDocument delete
+   */
+  export type GroupDocumentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+    /**
+     * Filter which GroupDocument to delete.
+     */
+    where: GroupDocumentWhereUniqueInput
+  }
+
+  /**
+   * GroupDocument deleteMany
+   */
+  export type GroupDocumentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupDocuments to delete
+     */
+    where?: GroupDocumentWhereInput
+    /**
+     * Limit how many GroupDocuments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupDocument.notes
+   */
+  export type GroupDocument$notesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    where?: GroupNoteWhereInput
+    orderBy?: GroupNoteOrderByWithRelationInput | GroupNoteOrderByWithRelationInput[]
+    cursor?: GroupNoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GroupNoteScalarFieldEnum | GroupNoteScalarFieldEnum[]
+  }
+
+  /**
+   * GroupDocument without action
+   */
+  export type GroupDocumentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupDocument
+     */
+    select?: GroupDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupDocument
+     */
+    omit?: GroupDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupDocumentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GroupNote
+   */
+
+  export type AggregateGroupNote = {
+    _count: GroupNoteCountAggregateOutputType | null
+    _avg: GroupNoteAvgAggregateOutputType | null
+    _sum: GroupNoteSumAggregateOutputType | null
+    _min: GroupNoteMinAggregateOutputType | null
+    _max: GroupNoteMaxAggregateOutputType | null
+  }
+
+  export type GroupNoteAvgAggregateOutputType = {
+    order: number | null
+  }
+
+  export type GroupNoteSumAggregateOutputType = {
+    order: number | null
+  }
+
+  export type GroupNoteMinAggregateOutputType = {
+    id: string | null
+    documentId: string | null
+    title: string | null
+    content: string | null
+    textSize: $Enums.NoteTextSize | null
+    order: number | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GroupNoteMaxAggregateOutputType = {
+    id: string | null
+    documentId: string | null
+    title: string | null
+    content: string | null
+    textSize: $Enums.NoteTextSize | null
+    order: number | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GroupNoteCountAggregateOutputType = {
+    id: number
+    documentId: number
+    title: number
+    content: number
+    textSize: number
+    order: number
+    createdBy: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GroupNoteAvgAggregateInputType = {
+    order?: true
+  }
+
+  export type GroupNoteSumAggregateInputType = {
+    order?: true
+  }
+
+  export type GroupNoteMinAggregateInputType = {
+    id?: true
+    documentId?: true
+    title?: true
+    content?: true
+    textSize?: true
+    order?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GroupNoteMaxAggregateInputType = {
+    id?: true
+    documentId?: true
+    title?: true
+    content?: true
+    textSize?: true
+    order?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GroupNoteCountAggregateInputType = {
+    id?: true
+    documentId?: true
+    title?: true
+    content?: true
+    textSize?: true
+    order?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GroupNoteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupNote to aggregate.
+     */
+    where?: GroupNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupNotes to fetch.
+     */
+    orderBy?: GroupNoteOrderByWithRelationInput | GroupNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GroupNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GroupNotes
+    **/
+    _count?: true | GroupNoteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GroupNoteAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GroupNoteSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GroupNoteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GroupNoteMaxAggregateInputType
+  }
+
+  export type GetGroupNoteAggregateType<T extends GroupNoteAggregateArgs> = {
+        [P in keyof T & keyof AggregateGroupNote]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGroupNote[P]>
+      : GetScalarType<T[P], AggregateGroupNote[P]>
+  }
+
+
+
+
+  export type GroupNoteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupNoteWhereInput
+    orderBy?: GroupNoteOrderByWithAggregationInput | GroupNoteOrderByWithAggregationInput[]
+    by: GroupNoteScalarFieldEnum[] | GroupNoteScalarFieldEnum
+    having?: GroupNoteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GroupNoteCountAggregateInputType | true
+    _avg?: GroupNoteAvgAggregateInputType
+    _sum?: GroupNoteSumAggregateInputType
+    _min?: GroupNoteMinAggregateInputType
+    _max?: GroupNoteMaxAggregateInputType
+  }
+
+  export type GroupNoteGroupByOutputType = {
+    id: string
+    documentId: string
+    title: string
+    content: string
+    textSize: $Enums.NoteTextSize
+    order: number
+    createdBy: string
+    createdAt: Date
+    updatedAt: Date
+    _count: GroupNoteCountAggregateOutputType | null
+    _avg: GroupNoteAvgAggregateOutputType | null
+    _sum: GroupNoteSumAggregateOutputType | null
+    _min: GroupNoteMinAggregateOutputType | null
+    _max: GroupNoteMaxAggregateOutputType | null
+  }
+
+  type GetGroupNoteGroupByPayload<T extends GroupNoteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GroupNoteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GroupNoteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GroupNoteGroupByOutputType[P]>
+            : GetScalarType<T[P], GroupNoteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GroupNoteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    documentId?: boolean
+    title?: boolean
+    content?: boolean
+    textSize?: boolean
+    order?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    document?: boolean | GroupDocumentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupNote"]>
+
+  export type GroupNoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    documentId?: boolean
+    title?: boolean
+    content?: boolean
+    textSize?: boolean
+    order?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    document?: boolean | GroupDocumentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupNote"]>
+
+  export type GroupNoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    documentId?: boolean
+    title?: boolean
+    content?: boolean
+    textSize?: boolean
+    order?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    document?: boolean | GroupDocumentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupNote"]>
+
+  export type GroupNoteSelectScalar = {
+    id?: boolean
+    documentId?: boolean
+    title?: boolean
+    content?: boolean
+    textSize?: boolean
+    order?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GroupNoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "documentId" | "title" | "content" | "textSize" | "order" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["groupNote"]>
+  export type GroupNoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | GroupDocumentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GroupNoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | GroupDocumentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GroupNoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | GroupDocumentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $GroupNotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GroupNote"
+    objects: {
+      document: Prisma.$GroupDocumentPayload<ExtArgs>
+      creator: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      documentId: string
+      title: string
+      content: string
+      textSize: $Enums.NoteTextSize
+      order: number
+      createdBy: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["groupNote"]>
+    composites: {}
+  }
+
+  type GroupNoteGetPayload<S extends boolean | null | undefined | GroupNoteDefaultArgs> = $Result.GetResult<Prisma.$GroupNotePayload, S>
+
+  type GroupNoteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GroupNoteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GroupNoteCountAggregateInputType | true
+    }
+
+  export interface GroupNoteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GroupNote'], meta: { name: 'GroupNote' } }
+    /**
+     * Find zero or one GroupNote that matches the filter.
+     * @param {GroupNoteFindUniqueArgs} args - Arguments to find a GroupNote
+     * @example
+     * // Get one GroupNote
+     * const groupNote = await prisma.groupNote.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GroupNoteFindUniqueArgs>(args: SelectSubset<T, GroupNoteFindUniqueArgs<ExtArgs>>): Prisma__GroupNoteClient<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GroupNote that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GroupNoteFindUniqueOrThrowArgs} args - Arguments to find a GroupNote
+     * @example
+     * // Get one GroupNote
+     * const groupNote = await prisma.groupNote.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GroupNoteFindUniqueOrThrowArgs>(args: SelectSubset<T, GroupNoteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GroupNoteClient<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupNote that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteFindFirstArgs} args - Arguments to find a GroupNote
+     * @example
+     * // Get one GroupNote
+     * const groupNote = await prisma.groupNote.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GroupNoteFindFirstArgs>(args?: SelectSubset<T, GroupNoteFindFirstArgs<ExtArgs>>): Prisma__GroupNoteClient<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupNote that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteFindFirstOrThrowArgs} args - Arguments to find a GroupNote
+     * @example
+     * // Get one GroupNote
+     * const groupNote = await prisma.groupNote.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GroupNoteFindFirstOrThrowArgs>(args?: SelectSubset<T, GroupNoteFindFirstOrThrowArgs<ExtArgs>>): Prisma__GroupNoteClient<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GroupNotes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GroupNotes
+     * const groupNotes = await prisma.groupNote.findMany()
+     * 
+     * // Get first 10 GroupNotes
+     * const groupNotes = await prisma.groupNote.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const groupNoteWithIdOnly = await prisma.groupNote.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GroupNoteFindManyArgs>(args?: SelectSubset<T, GroupNoteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GroupNote.
+     * @param {GroupNoteCreateArgs} args - Arguments to create a GroupNote.
+     * @example
+     * // Create one GroupNote
+     * const GroupNote = await prisma.groupNote.create({
+     *   data: {
+     *     // ... data to create a GroupNote
+     *   }
+     * })
+     * 
+     */
+    create<T extends GroupNoteCreateArgs>(args: SelectSubset<T, GroupNoteCreateArgs<ExtArgs>>): Prisma__GroupNoteClient<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GroupNotes.
+     * @param {GroupNoteCreateManyArgs} args - Arguments to create many GroupNotes.
+     * @example
+     * // Create many GroupNotes
+     * const groupNote = await prisma.groupNote.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GroupNoteCreateManyArgs>(args?: SelectSubset<T, GroupNoteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GroupNotes and returns the data saved in the database.
+     * @param {GroupNoteCreateManyAndReturnArgs} args - Arguments to create many GroupNotes.
+     * @example
+     * // Create many GroupNotes
+     * const groupNote = await prisma.groupNote.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GroupNotes and only return the `id`
+     * const groupNoteWithIdOnly = await prisma.groupNote.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GroupNoteCreateManyAndReturnArgs>(args?: SelectSubset<T, GroupNoteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GroupNote.
+     * @param {GroupNoteDeleteArgs} args - Arguments to delete one GroupNote.
+     * @example
+     * // Delete one GroupNote
+     * const GroupNote = await prisma.groupNote.delete({
+     *   where: {
+     *     // ... filter to delete one GroupNote
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GroupNoteDeleteArgs>(args: SelectSubset<T, GroupNoteDeleteArgs<ExtArgs>>): Prisma__GroupNoteClient<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GroupNote.
+     * @param {GroupNoteUpdateArgs} args - Arguments to update one GroupNote.
+     * @example
+     * // Update one GroupNote
+     * const groupNote = await prisma.groupNote.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GroupNoteUpdateArgs>(args: SelectSubset<T, GroupNoteUpdateArgs<ExtArgs>>): Prisma__GroupNoteClient<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GroupNotes.
+     * @param {GroupNoteDeleteManyArgs} args - Arguments to filter GroupNotes to delete.
+     * @example
+     * // Delete a few GroupNotes
+     * const { count } = await prisma.groupNote.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GroupNoteDeleteManyArgs>(args?: SelectSubset<T, GroupNoteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupNotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GroupNotes
+     * const groupNote = await prisma.groupNote.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GroupNoteUpdateManyArgs>(args: SelectSubset<T, GroupNoteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupNotes and returns the data updated in the database.
+     * @param {GroupNoteUpdateManyAndReturnArgs} args - Arguments to update many GroupNotes.
+     * @example
+     * // Update many GroupNotes
+     * const groupNote = await prisma.groupNote.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GroupNotes and only return the `id`
+     * const groupNoteWithIdOnly = await prisma.groupNote.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GroupNoteUpdateManyAndReturnArgs>(args: SelectSubset<T, GroupNoteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GroupNote.
+     * @param {GroupNoteUpsertArgs} args - Arguments to update or create a GroupNote.
+     * @example
+     * // Update or create a GroupNote
+     * const groupNote = await prisma.groupNote.upsert({
+     *   create: {
+     *     // ... data to create a GroupNote
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GroupNote we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GroupNoteUpsertArgs>(args: SelectSubset<T, GroupNoteUpsertArgs<ExtArgs>>): Prisma__GroupNoteClient<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GroupNotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteCountArgs} args - Arguments to filter GroupNotes to count.
+     * @example
+     * // Count the number of GroupNotes
+     * const count = await prisma.groupNote.count({
+     *   where: {
+     *     // ... the filter for the GroupNotes we want to count
+     *   }
+     * })
+    **/
+    count<T extends GroupNoteCountArgs>(
+      args?: Subset<T, GroupNoteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GroupNoteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GroupNote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GroupNoteAggregateArgs>(args: Subset<T, GroupNoteAggregateArgs>): Prisma.PrismaPromise<GetGroupNoteAggregateType<T>>
+
+    /**
+     * Group by GroupNote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GroupNoteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GroupNoteGroupByArgs['orderBy'] }
+        : { orderBy?: GroupNoteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GroupNoteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGroupNoteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GroupNote model
+   */
+  readonly fields: GroupNoteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GroupNote.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GroupNoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    document<T extends GroupDocumentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GroupDocumentDefaultArgs<ExtArgs>>): Prisma__GroupDocumentClient<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GroupNote model
+   */
+  interface GroupNoteFieldRefs {
+    readonly id: FieldRef<"GroupNote", 'String'>
+    readonly documentId: FieldRef<"GroupNote", 'String'>
+    readonly title: FieldRef<"GroupNote", 'String'>
+    readonly content: FieldRef<"GroupNote", 'String'>
+    readonly textSize: FieldRef<"GroupNote", 'NoteTextSize'>
+    readonly order: FieldRef<"GroupNote", 'Int'>
+    readonly createdBy: FieldRef<"GroupNote", 'String'>
+    readonly createdAt: FieldRef<"GroupNote", 'DateTime'>
+    readonly updatedAt: FieldRef<"GroupNote", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GroupNote findUnique
+   */
+  export type GroupNoteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupNote to fetch.
+     */
+    where: GroupNoteWhereUniqueInput
+  }
+
+  /**
+   * GroupNote findUniqueOrThrow
+   */
+  export type GroupNoteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupNote to fetch.
+     */
+    where: GroupNoteWhereUniqueInput
+  }
+
+  /**
+   * GroupNote findFirst
+   */
+  export type GroupNoteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupNote to fetch.
+     */
+    where?: GroupNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupNotes to fetch.
+     */
+    orderBy?: GroupNoteOrderByWithRelationInput | GroupNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupNotes.
+     */
+    cursor?: GroupNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupNotes.
+     */
+    distinct?: GroupNoteScalarFieldEnum | GroupNoteScalarFieldEnum[]
+  }
+
+  /**
+   * GroupNote findFirstOrThrow
+   */
+  export type GroupNoteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupNote to fetch.
+     */
+    where?: GroupNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupNotes to fetch.
+     */
+    orderBy?: GroupNoteOrderByWithRelationInput | GroupNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupNotes.
+     */
+    cursor?: GroupNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupNotes.
+     */
+    distinct?: GroupNoteScalarFieldEnum | GroupNoteScalarFieldEnum[]
+  }
+
+  /**
+   * GroupNote findMany
+   */
+  export type GroupNoteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupNotes to fetch.
+     */
+    where?: GroupNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupNotes to fetch.
+     */
+    orderBy?: GroupNoteOrderByWithRelationInput | GroupNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GroupNotes.
+     */
+    cursor?: GroupNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupNotes.
+     */
+    skip?: number
+    distinct?: GroupNoteScalarFieldEnum | GroupNoteScalarFieldEnum[]
+  }
+
+  /**
+   * GroupNote create
+   */
+  export type GroupNoteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GroupNote.
+     */
+    data: XOR<GroupNoteCreateInput, GroupNoteUncheckedCreateInput>
+  }
+
+  /**
+   * GroupNote createMany
+   */
+  export type GroupNoteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GroupNotes.
+     */
+    data: GroupNoteCreateManyInput | GroupNoteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GroupNote createManyAndReturn
+   */
+  export type GroupNoteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * The data used to create many GroupNotes.
+     */
+    data: GroupNoteCreateManyInput | GroupNoteCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GroupNote update
+   */
+  export type GroupNoteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GroupNote.
+     */
+    data: XOR<GroupNoteUpdateInput, GroupNoteUncheckedUpdateInput>
+    /**
+     * Choose, which GroupNote to update.
+     */
+    where: GroupNoteWhereUniqueInput
+  }
+
+  /**
+   * GroupNote updateMany
+   */
+  export type GroupNoteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GroupNotes.
+     */
+    data: XOR<GroupNoteUpdateManyMutationInput, GroupNoteUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupNotes to update
+     */
+    where?: GroupNoteWhereInput
+    /**
+     * Limit how many GroupNotes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupNote updateManyAndReturn
+   */
+  export type GroupNoteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * The data used to update GroupNotes.
+     */
+    data: XOR<GroupNoteUpdateManyMutationInput, GroupNoteUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupNotes to update
+     */
+    where?: GroupNoteWhereInput
+    /**
+     * Limit how many GroupNotes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GroupNote upsert
+   */
+  export type GroupNoteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GroupNote to update in case it exists.
+     */
+    where: GroupNoteWhereUniqueInput
+    /**
+     * In case the GroupNote found by the `where` argument doesn't exist, create a new GroupNote with this data.
+     */
+    create: XOR<GroupNoteCreateInput, GroupNoteUncheckedCreateInput>
+    /**
+     * In case the GroupNote was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GroupNoteUpdateInput, GroupNoteUncheckedUpdateInput>
+  }
+
+  /**
+   * GroupNote delete
+   */
+  export type GroupNoteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
+    /**
+     * Filter which GroupNote to delete.
+     */
+    where: GroupNoteWhereUniqueInput
+  }
+
+  /**
+   * GroupNote deleteMany
+   */
+  export type GroupNoteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupNotes to delete
+     */
+    where?: GroupNoteWhereInput
+    /**
+     * Limit how many GroupNotes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupNote without action
+   */
+  export type GroupNoteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNote
+     */
+    select?: GroupNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNote
+     */
+    omit?: GroupNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteInclude<ExtArgs> | null
   }
 
 
@@ -58936,6 +61476,32 @@ export namespace Prisma {
   export type GroupScalarFieldEnum = (typeof GroupScalarFieldEnum)[keyof typeof GroupScalarFieldEnum]
 
 
+  export const GroupDocumentScalarFieldEnum: {
+    id: 'id',
+    groupId: 'groupId',
+    title: 'title',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GroupDocumentScalarFieldEnum = (typeof GroupDocumentScalarFieldEnum)[keyof typeof GroupDocumentScalarFieldEnum]
+
+
+  export const GroupNoteScalarFieldEnum: {
+    id: 'id',
+    documentId: 'documentId',
+    title: 'title',
+    content: 'content',
+    textSize: 'textSize',
+    order: 'order',
+    createdBy: 'createdBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GroupNoteScalarFieldEnum = (typeof GroupNoteScalarFieldEnum)[keyof typeof GroupNoteScalarFieldEnum]
+
+
   export const GroupMemberScalarFieldEnum: {
     id: 'id',
     groupId: 'groupId',
@@ -59564,6 +62130,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'NoteTextSize'
+   */
+  export type EnumNoteTextSizeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoteTextSize'>
+    
+
+
+  /**
+   * Reference to a field of type 'NoteTextSize[]'
+   */
+  export type ListEnumNoteTextSizeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoteTextSize[]'>
+    
+
+
+  /**
    * Reference to a field of type 'RequestStatus'
    */
   export type EnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestStatus'>
@@ -59778,6 +62358,7 @@ export namespace Prisma {
     followers?: FollowListRelationFilter
     following?: FollowListRelationFilter
     uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
+    groupNotes?: GroupNoteListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -59835,6 +62416,7 @@ export namespace Prisma {
     followers?: FollowOrderByRelationAggregateInput
     following?: FollowOrderByRelationAggregateInput
     uploadedDepartmentDocuments?: DepartmentDocumentOrderByRelationAggregateInput
+    groupNotes?: GroupNoteOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -59895,6 +62477,7 @@ export namespace Prisma {
     followers?: FollowListRelationFilter
     following?: FollowListRelationFilter
     uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
+    groupNotes?: GroupNoteListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -60994,6 +63577,7 @@ export namespace Prisma {
     department?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
     members?: GroupMemberListRelationFilter
     messages?: MessageListRelationFilter
+    documents?: GroupDocumentListRelationFilter
   }
 
   export type GroupOrderByWithRelationInput = {
@@ -61006,6 +63590,7 @@ export namespace Prisma {
     department?: DepartmentOrderByWithRelationInput
     members?: GroupMemberOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
+    documents?: GroupDocumentOrderByRelationAggregateInput
   }
 
   export type GroupWhereUniqueInput = Prisma.AtLeast<{
@@ -61021,6 +63606,7 @@ export namespace Prisma {
     department?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
     members?: GroupMemberListRelationFilter
     messages?: MessageListRelationFilter
+    documents?: GroupDocumentListRelationFilter
   }, "id">
 
   export type GroupOrderByWithAggregationInput = {
@@ -61045,6 +63631,144 @@ export namespace Prisma {
     deptId?: StringNullableWithAggregatesFilter<"Group"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Group"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Group"> | Date | string
+  }
+
+  export type GroupDocumentWhereInput = {
+    AND?: GroupDocumentWhereInput | GroupDocumentWhereInput[]
+    OR?: GroupDocumentWhereInput[]
+    NOT?: GroupDocumentWhereInput | GroupDocumentWhereInput[]
+    id?: StringFilter<"GroupDocument"> | string
+    groupId?: StringFilter<"GroupDocument"> | string
+    title?: StringFilter<"GroupDocument"> | string
+    createdAt?: DateTimeFilter<"GroupDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"GroupDocument"> | Date | string
+    group?: XOR<GroupScalarRelationFilter, GroupWhereInput>
+    notes?: GroupNoteListRelationFilter
+  }
+
+  export type GroupDocumentOrderByWithRelationInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    group?: GroupOrderByWithRelationInput
+    notes?: GroupNoteOrderByRelationAggregateInput
+  }
+
+  export type GroupDocumentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GroupDocumentWhereInput | GroupDocumentWhereInput[]
+    OR?: GroupDocumentWhereInput[]
+    NOT?: GroupDocumentWhereInput | GroupDocumentWhereInput[]
+    groupId?: StringFilter<"GroupDocument"> | string
+    title?: StringFilter<"GroupDocument"> | string
+    createdAt?: DateTimeFilter<"GroupDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"GroupDocument"> | Date | string
+    group?: XOR<GroupScalarRelationFilter, GroupWhereInput>
+    notes?: GroupNoteListRelationFilter
+  }, "id">
+
+  export type GroupDocumentOrderByWithAggregationInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GroupDocumentCountOrderByAggregateInput
+    _max?: GroupDocumentMaxOrderByAggregateInput
+    _min?: GroupDocumentMinOrderByAggregateInput
+  }
+
+  export type GroupDocumentScalarWhereWithAggregatesInput = {
+    AND?: GroupDocumentScalarWhereWithAggregatesInput | GroupDocumentScalarWhereWithAggregatesInput[]
+    OR?: GroupDocumentScalarWhereWithAggregatesInput[]
+    NOT?: GroupDocumentScalarWhereWithAggregatesInput | GroupDocumentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GroupDocument"> | string
+    groupId?: StringWithAggregatesFilter<"GroupDocument"> | string
+    title?: StringWithAggregatesFilter<"GroupDocument"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GroupDocument"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GroupDocument"> | Date | string
+  }
+
+  export type GroupNoteWhereInput = {
+    AND?: GroupNoteWhereInput | GroupNoteWhereInput[]
+    OR?: GroupNoteWhereInput[]
+    NOT?: GroupNoteWhereInput | GroupNoteWhereInput[]
+    id?: StringFilter<"GroupNote"> | string
+    documentId?: StringFilter<"GroupNote"> | string
+    title?: StringFilter<"GroupNote"> | string
+    content?: StringFilter<"GroupNote"> | string
+    textSize?: EnumNoteTextSizeFilter<"GroupNote"> | $Enums.NoteTextSize
+    order?: IntFilter<"GroupNote"> | number
+    createdBy?: StringFilter<"GroupNote"> | string
+    createdAt?: DateTimeFilter<"GroupNote"> | Date | string
+    updatedAt?: DateTimeFilter<"GroupNote"> | Date | string
+    document?: XOR<GroupDocumentScalarRelationFilter, GroupDocumentWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type GroupNoteOrderByWithRelationInput = {
+    id?: SortOrder
+    documentId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    textSize?: SortOrder
+    order?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    document?: GroupDocumentOrderByWithRelationInput
+    creator?: UserOrderByWithRelationInput
+  }
+
+  export type GroupNoteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GroupNoteWhereInput | GroupNoteWhereInput[]
+    OR?: GroupNoteWhereInput[]
+    NOT?: GroupNoteWhereInput | GroupNoteWhereInput[]
+    documentId?: StringFilter<"GroupNote"> | string
+    title?: StringFilter<"GroupNote"> | string
+    content?: StringFilter<"GroupNote"> | string
+    textSize?: EnumNoteTextSizeFilter<"GroupNote"> | $Enums.NoteTextSize
+    order?: IntFilter<"GroupNote"> | number
+    createdBy?: StringFilter<"GroupNote"> | string
+    createdAt?: DateTimeFilter<"GroupNote"> | Date | string
+    updatedAt?: DateTimeFilter<"GroupNote"> | Date | string
+    document?: XOR<GroupDocumentScalarRelationFilter, GroupDocumentWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type GroupNoteOrderByWithAggregationInput = {
+    id?: SortOrder
+    documentId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    textSize?: SortOrder
+    order?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GroupNoteCountOrderByAggregateInput
+    _avg?: GroupNoteAvgOrderByAggregateInput
+    _max?: GroupNoteMaxOrderByAggregateInput
+    _min?: GroupNoteMinOrderByAggregateInput
+    _sum?: GroupNoteSumOrderByAggregateInput
+  }
+
+  export type GroupNoteScalarWhereWithAggregatesInput = {
+    AND?: GroupNoteScalarWhereWithAggregatesInput | GroupNoteScalarWhereWithAggregatesInput[]
+    OR?: GroupNoteScalarWhereWithAggregatesInput[]
+    NOT?: GroupNoteScalarWhereWithAggregatesInput | GroupNoteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GroupNote"> | string
+    documentId?: StringWithAggregatesFilter<"GroupNote"> | string
+    title?: StringWithAggregatesFilter<"GroupNote"> | string
+    content?: StringWithAggregatesFilter<"GroupNote"> | string
+    textSize?: EnumNoteTextSizeWithAggregatesFilter<"GroupNote"> | $Enums.NoteTextSize
+    order?: IntWithAggregatesFilter<"GroupNote"> | number
+    createdBy?: StringWithAggregatesFilter<"GroupNote"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GroupNote"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GroupNote"> | Date | string
   }
 
   export type GroupMemberWhereInput = {
@@ -63255,6 +65979,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -63312,6 +66037,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUpdateInput = {
@@ -63369,6 +66095,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -63426,6 +66153,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -64578,6 +67306,7 @@ export namespace Prisma {
     department?: DepartmentCreateNestedOneWithoutConversationsInput
     members?: GroupMemberCreateNestedManyWithoutGroupInput
     messages?: MessageCreateNestedManyWithoutGroupInput
+    documents?: GroupDocumentCreateNestedManyWithoutGroupInput
   }
 
   export type GroupUncheckedCreateInput = {
@@ -64589,6 +67318,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
     messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
+    documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
   }
 
   export type GroupUpdateInput = {
@@ -64600,6 +67330,7 @@ export namespace Prisma {
     department?: DepartmentUpdateOneWithoutConversationsNestedInput
     members?: GroupMemberUpdateManyWithoutGroupNestedInput
     messages?: MessageUpdateManyWithoutGroupNestedInput
+    documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateInput = {
@@ -64611,6 +67342,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
     messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
+    documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
   }
 
   export type GroupCreateManyInput = {
@@ -64635,6 +67367,147 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     isDirect?: BoolFieldUpdateOperationsInput | boolean
     deptId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupDocumentCreateInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    group: GroupCreateNestedOneWithoutDocumentsInput
+    notes?: GroupNoteCreateNestedManyWithoutDocumentInput
+  }
+
+  export type GroupDocumentUncheckedCreateInput = {
+    id?: string
+    groupId: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    notes?: GroupNoteUncheckedCreateNestedManyWithoutDocumentInput
+  }
+
+  export type GroupDocumentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    group?: GroupUpdateOneRequiredWithoutDocumentsNestedInput
+    notes?: GroupNoteUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type GroupDocumentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: GroupNoteUncheckedUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type GroupDocumentCreateManyInput = {
+    id?: string
+    groupId: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupDocumentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupDocumentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteCreateInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: GroupDocumentCreateNestedOneWithoutNotesInput
+    creator: UserCreateNestedOneWithoutGroupNotesInput
+  }
+
+  export type GroupNoteUncheckedCreateInput = {
+    id?: string
+    documentId: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupNoteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: GroupDocumentUpdateOneRequiredWithoutNotesNestedInput
+    creator?: UserUpdateOneRequiredWithoutGroupNotesNestedInput
+  }
+
+  export type GroupNoteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteCreateManyInput = {
+    id?: string
+    documentId: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupNoteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -67167,6 +70040,12 @@ export namespace Prisma {
     none?: DepartmentDocumentWhereInput
   }
 
+  export type GroupNoteListRelationFilter = {
+    every?: GroupNoteWhereInput
+    some?: GroupNoteWhereInput
+    none?: GroupNoteWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -67273,6 +70152,10 @@ export namespace Prisma {
   }
 
   export type DepartmentDocumentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GroupNoteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -68280,6 +71163,16 @@ export namespace Prisma {
     isNot?: DepartmentWhereInput | null
   }
 
+  export type GroupDocumentListRelationFilter = {
+    every?: GroupDocumentWhereInput
+    some?: GroupDocumentWhereInput
+    none?: GroupDocumentWhereInput
+  }
+
+  export type GroupDocumentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type GroupCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -68310,6 +71203,96 @@ export namespace Prisma {
   export type GroupScalarRelationFilter = {
     is?: GroupWhereInput
     isNot?: GroupWhereInput
+  }
+
+  export type GroupDocumentCountOrderByAggregateInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GroupDocumentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GroupDocumentMinOrderByAggregateInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumNoteTextSizeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteTextSizeFilter<$PrismaModel> | $Enums.NoteTextSize
+  }
+
+  export type GroupDocumentScalarRelationFilter = {
+    is?: GroupDocumentWhereInput
+    isNot?: GroupDocumentWhereInput
+  }
+
+  export type GroupNoteCountOrderByAggregateInput = {
+    id?: SortOrder
+    documentId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    textSize?: SortOrder
+    order?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GroupNoteAvgOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type GroupNoteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    documentId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    textSize?: SortOrder
+    order?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GroupNoteMinOrderByAggregateInput = {
+    id?: SortOrder
+    documentId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    textSize?: SortOrder
+    order?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GroupNoteSumOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type EnumNoteTextSizeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteTextSizeWithAggregatesFilter<$PrismaModel> | $Enums.NoteTextSize
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNoteTextSizeFilter<$PrismaModel>
+    _max?: NestedEnumNoteTextSizeFilter<$PrismaModel>
   }
 
   export type GroupMemberGroupIdUserIdCompoundUniqueInput = {
@@ -69914,6 +72897,13 @@ export namespace Prisma {
     connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
   }
 
+  export type GroupNoteCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<GroupNoteCreateWithoutCreatorInput, GroupNoteUncheckedCreateWithoutCreatorInput> | GroupNoteCreateWithoutCreatorInput[] | GroupNoteUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: GroupNoteCreateOrConnectWithoutCreatorInput | GroupNoteCreateOrConnectWithoutCreatorInput[]
+    createMany?: GroupNoteCreateManyCreatorInputEnvelope
+    connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+  }
+
   export type AnnouncementUncheckedCreateNestedManyWithoutPublisherInput = {
     create?: XOR<AnnouncementCreateWithoutPublisherInput, AnnouncementUncheckedCreateWithoutPublisherInput> | AnnouncementCreateWithoutPublisherInput[] | AnnouncementUncheckedCreateWithoutPublisherInput[]
     connectOrCreate?: AnnouncementCreateOrConnectWithoutPublisherInput | AnnouncementCreateOrConnectWithoutPublisherInput[]
@@ -70120,6 +73110,13 @@ export namespace Prisma {
     connectOrCreate?: DepartmentDocumentCreateOrConnectWithoutUploaderInput | DepartmentDocumentCreateOrConnectWithoutUploaderInput[]
     createMany?: DepartmentDocumentCreateManyUploaderInputEnvelope
     connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+  }
+
+  export type GroupNoteUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<GroupNoteCreateWithoutCreatorInput, GroupNoteUncheckedCreateWithoutCreatorInput> | GroupNoteCreateWithoutCreatorInput[] | GroupNoteUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: GroupNoteCreateOrConnectWithoutCreatorInput | GroupNoteCreateOrConnectWithoutCreatorInput[]
+    createMany?: GroupNoteCreateManyCreatorInputEnvelope
+    connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -70558,6 +73555,20 @@ export namespace Prisma {
     deleteMany?: DepartmentDocumentScalarWhereInput | DepartmentDocumentScalarWhereInput[]
   }
 
+  export type GroupNoteUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<GroupNoteCreateWithoutCreatorInput, GroupNoteUncheckedCreateWithoutCreatorInput> | GroupNoteCreateWithoutCreatorInput[] | GroupNoteUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: GroupNoteCreateOrConnectWithoutCreatorInput | GroupNoteCreateOrConnectWithoutCreatorInput[]
+    upsert?: GroupNoteUpsertWithWhereUniqueWithoutCreatorInput | GroupNoteUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: GroupNoteCreateManyCreatorInputEnvelope
+    set?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    disconnect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    delete?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    update?: GroupNoteUpdateWithWhereUniqueWithoutCreatorInput | GroupNoteUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: GroupNoteUpdateManyWithWhereWithoutCreatorInput | GroupNoteUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: GroupNoteScalarWhereInput | GroupNoteScalarWhereInput[]
+  }
+
   export type AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput = {
     create?: XOR<AnnouncementCreateWithoutPublisherInput, AnnouncementUncheckedCreateWithoutPublisherInput> | AnnouncementCreateWithoutPublisherInput[] | AnnouncementUncheckedCreateWithoutPublisherInput[]
     connectOrCreate?: AnnouncementCreateOrConnectWithoutPublisherInput | AnnouncementCreateOrConnectWithoutPublisherInput[]
@@ -70968,6 +73979,20 @@ export namespace Prisma {
     update?: DepartmentDocumentUpdateWithWhereUniqueWithoutUploaderInput | DepartmentDocumentUpdateWithWhereUniqueWithoutUploaderInput[]
     updateMany?: DepartmentDocumentUpdateManyWithWhereWithoutUploaderInput | DepartmentDocumentUpdateManyWithWhereWithoutUploaderInput[]
     deleteMany?: DepartmentDocumentScalarWhereInput | DepartmentDocumentScalarWhereInput[]
+  }
+
+  export type GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<GroupNoteCreateWithoutCreatorInput, GroupNoteUncheckedCreateWithoutCreatorInput> | GroupNoteCreateWithoutCreatorInput[] | GroupNoteUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: GroupNoteCreateOrConnectWithoutCreatorInput | GroupNoteCreateOrConnectWithoutCreatorInput[]
+    upsert?: GroupNoteUpsertWithWhereUniqueWithoutCreatorInput | GroupNoteUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: GroupNoteCreateManyCreatorInputEnvelope
+    set?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    disconnect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    delete?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    update?: GroupNoteUpdateWithWhereUniqueWithoutCreatorInput | GroupNoteUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: GroupNoteUpdateManyWithWhereWithoutCreatorInput | GroupNoteUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: GroupNoteScalarWhereInput | GroupNoteScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutInvitationsInput = {
@@ -72070,6 +75095,13 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
+  export type GroupDocumentCreateNestedManyWithoutGroupInput = {
+    create?: XOR<GroupDocumentCreateWithoutGroupInput, GroupDocumentUncheckedCreateWithoutGroupInput> | GroupDocumentCreateWithoutGroupInput[] | GroupDocumentUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: GroupDocumentCreateOrConnectWithoutGroupInput | GroupDocumentCreateOrConnectWithoutGroupInput[]
+    createMany?: GroupDocumentCreateManyGroupInputEnvelope
+    connect?: GroupDocumentWhereUniqueInput | GroupDocumentWhereUniqueInput[]
+  }
+
   export type GroupMemberUncheckedCreateNestedManyWithoutGroupInput = {
     create?: XOR<GroupMemberCreateWithoutGroupInput, GroupMemberUncheckedCreateWithoutGroupInput> | GroupMemberCreateWithoutGroupInput[] | GroupMemberUncheckedCreateWithoutGroupInput[]
     connectOrCreate?: GroupMemberCreateOrConnectWithoutGroupInput | GroupMemberCreateOrConnectWithoutGroupInput[]
@@ -72082,6 +75114,13 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutGroupInput | MessageCreateOrConnectWithoutGroupInput[]
     createMany?: MessageCreateManyGroupInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type GroupDocumentUncheckedCreateNestedManyWithoutGroupInput = {
+    create?: XOR<GroupDocumentCreateWithoutGroupInput, GroupDocumentUncheckedCreateWithoutGroupInput> | GroupDocumentCreateWithoutGroupInput[] | GroupDocumentUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: GroupDocumentCreateOrConnectWithoutGroupInput | GroupDocumentCreateOrConnectWithoutGroupInput[]
+    createMany?: GroupDocumentCreateManyGroupInputEnvelope
+    connect?: GroupDocumentWhereUniqueInput | GroupDocumentWhereUniqueInput[]
   }
 
   export type DepartmentUpdateOneWithoutConversationsNestedInput = {
@@ -72122,6 +75161,20 @@ export namespace Prisma {
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
+  export type GroupDocumentUpdateManyWithoutGroupNestedInput = {
+    create?: XOR<GroupDocumentCreateWithoutGroupInput, GroupDocumentUncheckedCreateWithoutGroupInput> | GroupDocumentCreateWithoutGroupInput[] | GroupDocumentUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: GroupDocumentCreateOrConnectWithoutGroupInput | GroupDocumentCreateOrConnectWithoutGroupInput[]
+    upsert?: GroupDocumentUpsertWithWhereUniqueWithoutGroupInput | GroupDocumentUpsertWithWhereUniqueWithoutGroupInput[]
+    createMany?: GroupDocumentCreateManyGroupInputEnvelope
+    set?: GroupDocumentWhereUniqueInput | GroupDocumentWhereUniqueInput[]
+    disconnect?: GroupDocumentWhereUniqueInput | GroupDocumentWhereUniqueInput[]
+    delete?: GroupDocumentWhereUniqueInput | GroupDocumentWhereUniqueInput[]
+    connect?: GroupDocumentWhereUniqueInput | GroupDocumentWhereUniqueInput[]
+    update?: GroupDocumentUpdateWithWhereUniqueWithoutGroupInput | GroupDocumentUpdateWithWhereUniqueWithoutGroupInput[]
+    updateMany?: GroupDocumentUpdateManyWithWhereWithoutGroupInput | GroupDocumentUpdateManyWithWhereWithoutGroupInput[]
+    deleteMany?: GroupDocumentScalarWhereInput | GroupDocumentScalarWhereInput[]
+  }
+
   export type GroupMemberUncheckedUpdateManyWithoutGroupNestedInput = {
     create?: XOR<GroupMemberCreateWithoutGroupInput, GroupMemberUncheckedCreateWithoutGroupInput> | GroupMemberCreateWithoutGroupInput[] | GroupMemberUncheckedCreateWithoutGroupInput[]
     connectOrCreate?: GroupMemberCreateOrConnectWithoutGroupInput | GroupMemberCreateOrConnectWithoutGroupInput[]
@@ -72148,6 +75201,108 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutGroupInput | MessageUpdateWithWhereUniqueWithoutGroupInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutGroupInput | MessageUpdateManyWithWhereWithoutGroupInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput = {
+    create?: XOR<GroupDocumentCreateWithoutGroupInput, GroupDocumentUncheckedCreateWithoutGroupInput> | GroupDocumentCreateWithoutGroupInput[] | GroupDocumentUncheckedCreateWithoutGroupInput[]
+    connectOrCreate?: GroupDocumentCreateOrConnectWithoutGroupInput | GroupDocumentCreateOrConnectWithoutGroupInput[]
+    upsert?: GroupDocumentUpsertWithWhereUniqueWithoutGroupInput | GroupDocumentUpsertWithWhereUniqueWithoutGroupInput[]
+    createMany?: GroupDocumentCreateManyGroupInputEnvelope
+    set?: GroupDocumentWhereUniqueInput | GroupDocumentWhereUniqueInput[]
+    disconnect?: GroupDocumentWhereUniqueInput | GroupDocumentWhereUniqueInput[]
+    delete?: GroupDocumentWhereUniqueInput | GroupDocumentWhereUniqueInput[]
+    connect?: GroupDocumentWhereUniqueInput | GroupDocumentWhereUniqueInput[]
+    update?: GroupDocumentUpdateWithWhereUniqueWithoutGroupInput | GroupDocumentUpdateWithWhereUniqueWithoutGroupInput[]
+    updateMany?: GroupDocumentUpdateManyWithWhereWithoutGroupInput | GroupDocumentUpdateManyWithWhereWithoutGroupInput[]
+    deleteMany?: GroupDocumentScalarWhereInput | GroupDocumentScalarWhereInput[]
+  }
+
+  export type GroupCreateNestedOneWithoutDocumentsInput = {
+    create?: XOR<GroupCreateWithoutDocumentsInput, GroupUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: GroupCreateOrConnectWithoutDocumentsInput
+    connect?: GroupWhereUniqueInput
+  }
+
+  export type GroupNoteCreateNestedManyWithoutDocumentInput = {
+    create?: XOR<GroupNoteCreateWithoutDocumentInput, GroupNoteUncheckedCreateWithoutDocumentInput> | GroupNoteCreateWithoutDocumentInput[] | GroupNoteUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: GroupNoteCreateOrConnectWithoutDocumentInput | GroupNoteCreateOrConnectWithoutDocumentInput[]
+    createMany?: GroupNoteCreateManyDocumentInputEnvelope
+    connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+  }
+
+  export type GroupNoteUncheckedCreateNestedManyWithoutDocumentInput = {
+    create?: XOR<GroupNoteCreateWithoutDocumentInput, GroupNoteUncheckedCreateWithoutDocumentInput> | GroupNoteCreateWithoutDocumentInput[] | GroupNoteUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: GroupNoteCreateOrConnectWithoutDocumentInput | GroupNoteCreateOrConnectWithoutDocumentInput[]
+    createMany?: GroupNoteCreateManyDocumentInputEnvelope
+    connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+  }
+
+  export type GroupUpdateOneRequiredWithoutDocumentsNestedInput = {
+    create?: XOR<GroupCreateWithoutDocumentsInput, GroupUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: GroupCreateOrConnectWithoutDocumentsInput
+    upsert?: GroupUpsertWithoutDocumentsInput
+    connect?: GroupWhereUniqueInput
+    update?: XOR<XOR<GroupUpdateToOneWithWhereWithoutDocumentsInput, GroupUpdateWithoutDocumentsInput>, GroupUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type GroupNoteUpdateManyWithoutDocumentNestedInput = {
+    create?: XOR<GroupNoteCreateWithoutDocumentInput, GroupNoteUncheckedCreateWithoutDocumentInput> | GroupNoteCreateWithoutDocumentInput[] | GroupNoteUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: GroupNoteCreateOrConnectWithoutDocumentInput | GroupNoteCreateOrConnectWithoutDocumentInput[]
+    upsert?: GroupNoteUpsertWithWhereUniqueWithoutDocumentInput | GroupNoteUpsertWithWhereUniqueWithoutDocumentInput[]
+    createMany?: GroupNoteCreateManyDocumentInputEnvelope
+    set?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    disconnect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    delete?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    update?: GroupNoteUpdateWithWhereUniqueWithoutDocumentInput | GroupNoteUpdateWithWhereUniqueWithoutDocumentInput[]
+    updateMany?: GroupNoteUpdateManyWithWhereWithoutDocumentInput | GroupNoteUpdateManyWithWhereWithoutDocumentInput[]
+    deleteMany?: GroupNoteScalarWhereInput | GroupNoteScalarWhereInput[]
+  }
+
+  export type GroupNoteUncheckedUpdateManyWithoutDocumentNestedInput = {
+    create?: XOR<GroupNoteCreateWithoutDocumentInput, GroupNoteUncheckedCreateWithoutDocumentInput> | GroupNoteCreateWithoutDocumentInput[] | GroupNoteUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: GroupNoteCreateOrConnectWithoutDocumentInput | GroupNoteCreateOrConnectWithoutDocumentInput[]
+    upsert?: GroupNoteUpsertWithWhereUniqueWithoutDocumentInput | GroupNoteUpsertWithWhereUniqueWithoutDocumentInput[]
+    createMany?: GroupNoteCreateManyDocumentInputEnvelope
+    set?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    disconnect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    delete?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+    update?: GroupNoteUpdateWithWhereUniqueWithoutDocumentInput | GroupNoteUpdateWithWhereUniqueWithoutDocumentInput[]
+    updateMany?: GroupNoteUpdateManyWithWhereWithoutDocumentInput | GroupNoteUpdateManyWithWhereWithoutDocumentInput[]
+    deleteMany?: GroupNoteScalarWhereInput | GroupNoteScalarWhereInput[]
+  }
+
+  export type GroupDocumentCreateNestedOneWithoutNotesInput = {
+    create?: XOR<GroupDocumentCreateWithoutNotesInput, GroupDocumentUncheckedCreateWithoutNotesInput>
+    connectOrCreate?: GroupDocumentCreateOrConnectWithoutNotesInput
+    connect?: GroupDocumentWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutGroupNotesInput = {
+    create?: XOR<UserCreateWithoutGroupNotesInput, UserUncheckedCreateWithoutGroupNotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGroupNotesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumNoteTextSizeFieldUpdateOperationsInput = {
+    set?: $Enums.NoteTextSize
+  }
+
+  export type GroupDocumentUpdateOneRequiredWithoutNotesNestedInput = {
+    create?: XOR<GroupDocumentCreateWithoutNotesInput, GroupDocumentUncheckedCreateWithoutNotesInput>
+    connectOrCreate?: GroupDocumentCreateOrConnectWithoutNotesInput
+    upsert?: GroupDocumentUpsertWithoutNotesInput
+    connect?: GroupDocumentWhereUniqueInput
+    update?: XOR<XOR<GroupDocumentUpdateToOneWithWhereWithoutNotesInput, GroupDocumentUpdateWithoutNotesInput>, GroupDocumentUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutGroupNotesNestedInput = {
+    create?: XOR<UserCreateWithoutGroupNotesInput, UserUncheckedCreateWithoutGroupNotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGroupNotesInput
+    upsert?: UserUpsertWithoutGroupNotesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGroupNotesInput, UserUpdateWithoutGroupNotesInput>, UserUncheckedUpdateWithoutGroupNotesInput>
   }
 
   export type GroupCreateNestedOneWithoutMembersInput = {
@@ -73659,6 +76814,23 @@ export namespace Prisma {
     _max?: NestedEnumDecisionVoteTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumNoteTextSizeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteTextSizeFilter<$PrismaModel> | $Enums.NoteTextSize
+  }
+
+  export type NestedEnumNoteTextSizeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteTextSizeWithAggregatesFilter<$PrismaModel> | $Enums.NoteTextSize
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNoteTextSizeFilter<$PrismaModel>
+    _max?: NestedEnumNoteTextSizeFilter<$PrismaModel>
+  }
+
   export type NestedEnumRequestStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.RequestStatus | EnumRequestStatusFieldRefInput<$PrismaModel>
     in?: $Enums.RequestStatus[] | ListEnumRequestStatusFieldRefInput<$PrismaModel>
@@ -74748,6 +77920,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type GroupNoteCreateWithoutCreatorInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: GroupDocumentCreateNestedOneWithoutNotesInput
+  }
+
+  export type GroupNoteUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    documentId: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupNoteCreateOrConnectWithoutCreatorInput = {
+    where: GroupNoteWhereUniqueInput
+    create: XOR<GroupNoteCreateWithoutCreatorInput, GroupNoteUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type GroupNoteCreateManyCreatorInputEnvelope = {
+    data: GroupNoteCreateManyCreatorInput | GroupNoteCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AnnouncementUpsertWithWhereUniqueWithoutPublisherInput = {
     where: AnnouncementWhereUniqueInput
     update: XOR<AnnouncementUpdateWithoutPublisherInput, AnnouncementUncheckedUpdateWithoutPublisherInput>
@@ -75604,6 +78808,37 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DepartmentDocument"> | Date | string
   }
 
+  export type GroupNoteUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: GroupNoteWhereUniqueInput
+    update: XOR<GroupNoteUpdateWithoutCreatorInput, GroupNoteUncheckedUpdateWithoutCreatorInput>
+    create: XOR<GroupNoteCreateWithoutCreatorInput, GroupNoteUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type GroupNoteUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: GroupNoteWhereUniqueInput
+    data: XOR<GroupNoteUpdateWithoutCreatorInput, GroupNoteUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type GroupNoteUpdateManyWithWhereWithoutCreatorInput = {
+    where: GroupNoteScalarWhereInput
+    data: XOR<GroupNoteUpdateManyMutationInput, GroupNoteUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type GroupNoteScalarWhereInput = {
+    AND?: GroupNoteScalarWhereInput | GroupNoteScalarWhereInput[]
+    OR?: GroupNoteScalarWhereInput[]
+    NOT?: GroupNoteScalarWhereInput | GroupNoteScalarWhereInput[]
+    id?: StringFilter<"GroupNote"> | string
+    documentId?: StringFilter<"GroupNote"> | string
+    title?: StringFilter<"GroupNote"> | string
+    content?: StringFilter<"GroupNote"> | string
+    textSize?: EnumNoteTextSizeFilter<"GroupNote"> | $Enums.NoteTextSize
+    order?: IntFilter<"GroupNote"> | number
+    createdBy?: StringFilter<"GroupNote"> | string
+    createdAt?: DateTimeFilter<"GroupNote"> | Date | string
+    updatedAt?: DateTimeFilter<"GroupNote"> | Date | string
+  }
+
   export type UserCreateWithoutInvitationsInput = {
     id?: string
     email: string
@@ -75658,6 +78893,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -75714,6 +78950,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -75810,6 +79047,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -75866,6 +79104,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type InvitationGuestUpsertWithWhereUniqueWithoutInvitationInput = {
@@ -76029,6 +79268,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutFollowingInput = {
@@ -76085,6 +79325,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutFollowingInput = {
@@ -76146,6 +79387,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutFollowersInput = {
@@ -76202,6 +79444,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutFollowersInput = {
@@ -76274,6 +79517,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFollowingInput = {
@@ -76330,6 +79574,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUpsertWithoutFollowersInput = {
@@ -76397,6 +79642,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFollowersInput = {
@@ -76453,6 +79699,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DepartmentCreateWithoutOrganizationInput = {
@@ -76788,6 +80035,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutOrgMembershipsInput = {
@@ -76844,6 +80092,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutOrgMembershipsInput = {
@@ -76957,6 +80206,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrgMembershipsInput = {
@@ -77013,6 +80263,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type OrganizationCreateWithoutDepartmentsInput = {
@@ -77104,6 +80355,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutHeadedDepartmentsInput = {
@@ -77160,6 +80412,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutHeadedDepartmentsInput = {
@@ -77197,6 +80450,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: GroupMemberCreateNestedManyWithoutGroupInput
     messages?: MessageCreateNestedManyWithoutGroupInput
+    documents?: GroupDocumentCreateNestedManyWithoutGroupInput
   }
 
   export type GroupUncheckedCreateWithoutDepartmentInput = {
@@ -77207,6 +80461,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
     messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
+    documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
   }
 
   export type GroupCreateOrConnectWithoutDepartmentInput = {
@@ -77585,6 +80840,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutHeadedDepartmentsInput = {
@@ -77641,6 +80897,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DepartmentMemberUpsertWithWhereUniqueWithoutDepartmentInput = {
@@ -77938,6 +81195,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutUploadedDepartmentDocumentsInput = {
@@ -77994,6 +81252,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutUploadedDepartmentDocumentsInput = {
@@ -78115,6 +81374,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUploadedDepartmentDocumentsInput = {
@@ -78171,6 +81431,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DepartmentCreateWithoutGoalsInput = {
@@ -78362,6 +81623,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutCreatedMeetingsInput = {
@@ -78418,6 +81680,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutCreatedMeetingsInput = {
@@ -78539,6 +81802,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedMeetingsInput = {
@@ -78595,6 +81859,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DepartmentCreateWithoutPollsInput = {
@@ -78694,6 +81959,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutCreatedPollsInput = {
@@ -78750,6 +82016,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutCreatedPollsInput = {
@@ -78895,6 +82162,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedPollsInput = {
@@ -78951,6 +82219,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type PollVoteUpsertWithWhereUniqueWithoutPollInput = {
@@ -79050,6 +82319,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutPollVotesInput = {
@@ -79106,6 +82376,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutPollVotesInput = {
@@ -79211,6 +82482,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPollVotesInput = {
@@ -79267,6 +82539,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DepartmentCreateWithoutTeamDecisionsInput = {
@@ -79366,6 +82639,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutCreatedDecisionsInput = {
@@ -79422,6 +82696,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutCreatedDecisionsInput = {
@@ -79567,6 +82842,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedDecisionsInput = {
@@ -79623,6 +82899,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DecisionVoteUpsertWithWhereUniqueWithoutDecisionInput = {
@@ -79724,6 +83001,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutDecisionVotesInput = {
@@ -79780,6 +83058,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutDecisionVotesInput = {
@@ -79887,6 +83166,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDecisionVotesInput = {
@@ -79943,6 +83223,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DepartmentCreateWithoutMembersInput = {
@@ -80042,6 +83323,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutDeptMembershipsInput = {
@@ -80098,6 +83380,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutDeptMembershipsInput = {
@@ -80219,6 +83502,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDeptMembershipsInput = {
@@ -80275,6 +83559,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DepartmentCreateWithoutConversationsInput = {
@@ -80374,6 +83659,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type GroupDocumentCreateWithoutGroupInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    notes?: GroupNoteCreateNestedManyWithoutDocumentInput
+  }
+
+  export type GroupDocumentUncheckedCreateWithoutGroupInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    notes?: GroupNoteUncheckedCreateNestedManyWithoutDocumentInput
+  }
+
+  export type GroupDocumentCreateOrConnectWithoutGroupInput = {
+    where: GroupDocumentWhereUniqueInput
+    create: XOR<GroupDocumentCreateWithoutGroupInput, GroupDocumentUncheckedCreateWithoutGroupInput>
+  }
+
+  export type GroupDocumentCreateManyGroupInputEnvelope = {
+    data: GroupDocumentCreateManyGroupInput | GroupDocumentCreateManyGroupInput[]
+    skipDuplicates?: boolean
+  }
+
   export type DepartmentUpsertWithoutConversationsInput = {
     update: XOR<DepartmentUpdateWithoutConversationsInput, DepartmentUncheckedUpdateWithoutConversationsInput>
     create: XOR<DepartmentCreateWithoutConversationsInput, DepartmentUncheckedCreateWithoutConversationsInput>
@@ -80455,6 +83766,433 @@ export namespace Prisma {
     data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutGroupInput>
   }
 
+  export type GroupDocumentUpsertWithWhereUniqueWithoutGroupInput = {
+    where: GroupDocumentWhereUniqueInput
+    update: XOR<GroupDocumentUpdateWithoutGroupInput, GroupDocumentUncheckedUpdateWithoutGroupInput>
+    create: XOR<GroupDocumentCreateWithoutGroupInput, GroupDocumentUncheckedCreateWithoutGroupInput>
+  }
+
+  export type GroupDocumentUpdateWithWhereUniqueWithoutGroupInput = {
+    where: GroupDocumentWhereUniqueInput
+    data: XOR<GroupDocumentUpdateWithoutGroupInput, GroupDocumentUncheckedUpdateWithoutGroupInput>
+  }
+
+  export type GroupDocumentUpdateManyWithWhereWithoutGroupInput = {
+    where: GroupDocumentScalarWhereInput
+    data: XOR<GroupDocumentUpdateManyMutationInput, GroupDocumentUncheckedUpdateManyWithoutGroupInput>
+  }
+
+  export type GroupDocumentScalarWhereInput = {
+    AND?: GroupDocumentScalarWhereInput | GroupDocumentScalarWhereInput[]
+    OR?: GroupDocumentScalarWhereInput[]
+    NOT?: GroupDocumentScalarWhereInput | GroupDocumentScalarWhereInput[]
+    id?: StringFilter<"GroupDocument"> | string
+    groupId?: StringFilter<"GroupDocument"> | string
+    title?: StringFilter<"GroupDocument"> | string
+    createdAt?: DateTimeFilter<"GroupDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"GroupDocument"> | Date | string
+  }
+
+  export type GroupCreateWithoutDocumentsInput = {
+    id?: string
+    name?: string | null
+    isDirect?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department?: DepartmentCreateNestedOneWithoutConversationsInput
+    members?: GroupMemberCreateNestedManyWithoutGroupInput
+    messages?: MessageCreateNestedManyWithoutGroupInput
+  }
+
+  export type GroupUncheckedCreateWithoutDocumentsInput = {
+    id?: string
+    name?: string | null
+    isDirect?: boolean
+    deptId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
+    messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
+  }
+
+  export type GroupCreateOrConnectWithoutDocumentsInput = {
+    where: GroupWhereUniqueInput
+    create: XOR<GroupCreateWithoutDocumentsInput, GroupUncheckedCreateWithoutDocumentsInput>
+  }
+
+  export type GroupNoteCreateWithoutDocumentInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: UserCreateNestedOneWithoutGroupNotesInput
+  }
+
+  export type GroupNoteUncheckedCreateWithoutDocumentInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupNoteCreateOrConnectWithoutDocumentInput = {
+    where: GroupNoteWhereUniqueInput
+    create: XOR<GroupNoteCreateWithoutDocumentInput, GroupNoteUncheckedCreateWithoutDocumentInput>
+  }
+
+  export type GroupNoteCreateManyDocumentInputEnvelope = {
+    data: GroupNoteCreateManyDocumentInput | GroupNoteCreateManyDocumentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GroupUpsertWithoutDocumentsInput = {
+    update: XOR<GroupUpdateWithoutDocumentsInput, GroupUncheckedUpdateWithoutDocumentsInput>
+    create: XOR<GroupCreateWithoutDocumentsInput, GroupUncheckedCreateWithoutDocumentsInput>
+    where?: GroupWhereInput
+  }
+
+  export type GroupUpdateToOneWithWhereWithoutDocumentsInput = {
+    where?: GroupWhereInput
+    data: XOR<GroupUpdateWithoutDocumentsInput, GroupUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type GroupUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    isDirect?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneWithoutConversationsNestedInput
+    members?: GroupMemberUpdateManyWithoutGroupNestedInput
+    messages?: MessageUpdateManyWithoutGroupNestedInput
+  }
+
+  export type GroupUncheckedUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    isDirect?: BoolFieldUpdateOperationsInput | boolean
+    deptId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
+  }
+
+  export type GroupNoteUpsertWithWhereUniqueWithoutDocumentInput = {
+    where: GroupNoteWhereUniqueInput
+    update: XOR<GroupNoteUpdateWithoutDocumentInput, GroupNoteUncheckedUpdateWithoutDocumentInput>
+    create: XOR<GroupNoteCreateWithoutDocumentInput, GroupNoteUncheckedCreateWithoutDocumentInput>
+  }
+
+  export type GroupNoteUpdateWithWhereUniqueWithoutDocumentInput = {
+    where: GroupNoteWhereUniqueInput
+    data: XOR<GroupNoteUpdateWithoutDocumentInput, GroupNoteUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type GroupNoteUpdateManyWithWhereWithoutDocumentInput = {
+    where: GroupNoteScalarWhereInput
+    data: XOR<GroupNoteUpdateManyMutationInput, GroupNoteUncheckedUpdateManyWithoutDocumentInput>
+  }
+
+  export type GroupDocumentCreateWithoutNotesInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    group: GroupCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type GroupDocumentUncheckedCreateWithoutNotesInput = {
+    id?: string
+    groupId: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupDocumentCreateOrConnectWithoutNotesInput = {
+    where: GroupDocumentWhereUniqueInput
+    create: XOR<GroupDocumentCreateWithoutNotesInput, GroupDocumentUncheckedCreateWithoutNotesInput>
+  }
+
+  export type UserCreateWithoutGroupNotesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+  }
+
+  export type UserUncheckedCreateWithoutGroupNotesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+  }
+
+  export type UserCreateOrConnectWithoutGroupNotesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutGroupNotesInput, UserUncheckedCreateWithoutGroupNotesInput>
+  }
+
+  export type GroupDocumentUpsertWithoutNotesInput = {
+    update: XOR<GroupDocumentUpdateWithoutNotesInput, GroupDocumentUncheckedUpdateWithoutNotesInput>
+    create: XOR<GroupDocumentCreateWithoutNotesInput, GroupDocumentUncheckedCreateWithoutNotesInput>
+    where?: GroupDocumentWhereInput
+  }
+
+  export type GroupDocumentUpdateToOneWithWhereWithoutNotesInput = {
+    where?: GroupDocumentWhereInput
+    data: XOR<GroupDocumentUpdateWithoutNotesInput, GroupDocumentUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type GroupDocumentUpdateWithoutNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    group?: GroupUpdateOneRequiredWithoutDocumentsNestedInput
+  }
+
+  export type GroupDocumentUncheckedUpdateWithoutNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutGroupNotesInput = {
+    update: XOR<UserUpdateWithoutGroupNotesInput, UserUncheckedUpdateWithoutGroupNotesInput>
+    create: XOR<UserCreateWithoutGroupNotesInput, UserUncheckedCreateWithoutGroupNotesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutGroupNotesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutGroupNotesInput, UserUncheckedUpdateWithoutGroupNotesInput>
+  }
+
+  export type UserUpdateWithoutGroupNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutGroupNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+  }
+
   export type GroupCreateWithoutMembersInput = {
     id?: string
     name?: string | null
@@ -80463,6 +84201,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutConversationsInput
     messages?: MessageCreateNestedManyWithoutGroupInput
+    documents?: GroupDocumentCreateNestedManyWithoutGroupInput
   }
 
   export type GroupUncheckedCreateWithoutMembersInput = {
@@ -80473,6 +84212,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
+    documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
   }
 
   export type GroupCreateOrConnectWithoutMembersInput = {
@@ -80534,6 +84274,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutGroupMembershipsInput = {
@@ -80590,6 +84331,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutGroupMembershipsInput = {
@@ -80616,6 +84358,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutConversationsNestedInput
     messages?: MessageUpdateManyWithoutGroupNestedInput
+    documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateWithoutMembersInput = {
@@ -80626,6 +84369,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
+    documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
   }
 
   export type UserUpsertWithoutGroupMembershipsInput = {
@@ -80693,6 +84437,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
@@ -80749,6 +84494,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type AttachmentCreateWithoutMessageInput = {
@@ -80785,6 +84531,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutConversationsInput
     members?: GroupMemberCreateNestedManyWithoutGroupInput
+    documents?: GroupDocumentCreateNestedManyWithoutGroupInput
   }
 
   export type GroupUncheckedCreateWithoutMessagesInput = {
@@ -80795,6 +84542,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
+    documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
   }
 
   export type GroupCreateOrConnectWithoutMessagesInput = {
@@ -80856,6 +84604,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -80912,6 +84661,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -80966,6 +84716,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutConversationsNestedInput
     members?: GroupMemberUpdateManyWithoutGroupNestedInput
+    documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateWithoutMessagesInput = {
@@ -80976,6 +84727,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
+    documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
   }
 
   export type UserUpsertWithoutSentMessagesInput = {
@@ -81043,6 +84795,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -81099,6 +84852,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type MessageCreateWithoutAttachmentsInput = {
@@ -81211,6 +84965,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -81267,6 +85022,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -81339,6 +85095,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -81395,6 +85152,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserCreateWithoutPublishedAnnouncementsInput = {
@@ -81451,6 +85209,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutPublishedAnnouncementsInput = {
@@ -81507,6 +85266,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutPublishedAnnouncementsInput = {
@@ -81601,6 +85361,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPublishedAnnouncementsInput = {
@@ -81657,6 +85418,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type AnnouncementReadUpsertWithWhereUniqueWithoutAnnouncementInput = {
@@ -82288,6 +86050,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutUserPageInput = {
@@ -82344,6 +86107,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutUserPageInput = {
@@ -82454,6 +86218,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserPageInput = {
@@ -82510,6 +86275,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type PostUpsertWithWhereUniqueWithoutPageInput = {
@@ -82804,6 +86570,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutLikesInput = {
@@ -82860,6 +86627,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutLikesInput = {
@@ -82971,6 +86739,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLikesInput = {
@@ -83027,6 +86796,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type PostCreateWithoutCommentsInput = {
@@ -83116,6 +86886,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutCommentsInput = {
@@ -83172,6 +86943,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutCommentsInput = {
@@ -83338,6 +87110,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -83394,6 +87167,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type CommentUpsertWithoutRepliesInput = {
@@ -83497,6 +87271,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutPostReadsInput = {
@@ -83553,6 +87328,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutPostReadsInput = {
@@ -83658,6 +87434,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostReadsInput = {
@@ -83714,6 +87491,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type PostUpsertWithoutPostReadsInput = {
@@ -83852,6 +87630,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutCreatedTasksInput = {
@@ -83908,6 +87687,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutCreatedTasksInput = {
@@ -83969,6 +87749,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutAssignedTasksInput = {
@@ -84025,6 +87806,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutAssignedTasksInput = {
@@ -84206,6 +87988,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedTasksInput = {
@@ -84262,6 +88045,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUpsertWithoutAssignedTasksInput = {
@@ -84329,6 +88113,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignedTasksInput = {
@@ -84385,6 +88170,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type TaskMessageUpsertWithWhereUniqueWithoutTaskInput = {
@@ -84527,6 +88313,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutTaskMessagesInput = {
@@ -84583,6 +88370,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutTaskMessagesInput = {
@@ -84732,6 +88520,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskMessagesInput = {
@@ -84788,6 +88577,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type TaskAttachmentUpsertWithWhereUniqueWithoutMessageInput = {
@@ -85039,6 +88829,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutDepartmentMonthlyReportsInput = {
@@ -85095,6 +88886,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutDepartmentMonthlyReportsInput = {
@@ -85216,6 +89008,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDepartmentMonthlyReportsInput = {
@@ -85272,6 +89065,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserCreateWithoutPushSubscriptionsInput = {
@@ -85328,6 +89122,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -85384,6 +89179,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -85456,6 +89252,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -85512,6 +89309,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserCreateWithoutPersonalTasksInput = {
@@ -85568,6 +89366,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutPersonalTasksInput = {
@@ -85624,6 +89423,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutPersonalTasksInput = {
@@ -85696,6 +89496,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPersonalTasksInput = {
@@ -85752,6 +89553,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserCreateWithoutFinancialGoalsInput = {
@@ -85808,6 +89610,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutFinancialGoalsInput = {
@@ -85864,6 +89667,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutFinancialGoalsInput = {
@@ -85966,6 +89770,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFinancialGoalsInput = {
@@ -86022,6 +89827,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserMonthlyProgressUpsertWithWhereUniqueWithoutGoalInput = {
@@ -86108,6 +89914,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutFinancialProfileInput = {
@@ -86164,6 +89971,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutFinancialProfileInput = {
@@ -86236,6 +90044,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFinancialProfileInput = {
@@ -86292,6 +90101,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserCreateWithoutMonthlyStatementsInput = {
@@ -86348,6 +90158,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutMonthlyStatementsInput = {
@@ -86404,6 +90215,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutMonthlyStatementsInput = {
@@ -86476,6 +90288,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMonthlyStatementsInput = {
@@ -86532,6 +90345,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserCreateWithoutFinancialEntriesInput = {
@@ -86588,6 +90402,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutFinancialEntriesInput = {
@@ -86644,6 +90459,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutFinancialEntriesInput = {
@@ -86716,6 +90532,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFinancialEntriesInput = {
@@ -86772,6 +90589,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserFinancialGoalCreateWithoutProgressInput = {
@@ -87105,6 +90923,17 @@ export namespace Prisma {
     type: $Enums.FileType
     data: string
     createdAt?: Date | string
+  }
+
+  export type GroupNoteCreateManyCreatorInput = {
+    id?: string
+    documentId: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AnnouncementUpdateWithoutPublisherInput = {
@@ -87946,6 +91775,39 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type GroupNoteUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: GroupDocumentUpdateOneRequiredWithoutNotesNestedInput
+  }
+
+  export type GroupNoteUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type InvitationGuestCreateManyInvitationInput = {
     id?: string
     name: string
@@ -88244,6 +92106,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: GroupMemberUpdateManyWithoutGroupNestedInput
     messages?: MessageUpdateManyWithoutGroupNestedInput
+    documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateWithoutDepartmentInput = {
@@ -88254,6 +92117,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
     messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
+    documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateManyWithoutDepartmentInput = {
@@ -88602,6 +92466,13 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type GroupDocumentCreateManyGroupInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type GroupMemberUpdateWithoutGroupInput = {
     id?: StringFieldUpdateOperationsInput | string
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88648,6 +92519,73 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     senderId?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupDocumentUpdateWithoutGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: GroupNoteUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type GroupDocumentUncheckedUpdateWithoutGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: GroupNoteUncheckedUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type GroupDocumentUncheckedUpdateManyWithoutGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteCreateManyDocumentInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupNoteUpdateWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: UserUpdateOneRequiredWithoutGroupNotesNestedInput
+  }
+
+  export type GroupNoteUncheckedUpdateWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteUncheckedUpdateManyWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

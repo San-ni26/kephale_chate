@@ -63,6 +63,7 @@ model User {
   followers                   Follow[]             @relation("UserFollowers")
   following                   Follow[]             @relation("UserFollowing")
   uploadedDepartmentDocuments DepartmentDocument[] @relation("DocumentUploader")
+  groupNotes                  GroupNote[]          @relation("GroupNoteCreator")
 
   @@index([email])
   @@index([isOnline])
@@ -332,17 +333,53 @@ model DepartmentMember {
 }
 
 model Group {
-  id         String        @id @default(cuid())
+  id         String          @id @default(cuid())
   name       String?
-  isDirect   Boolean       @default(false)
+  isDirect   Boolean         @default(false)
   deptId     String?
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
-  department Department?   @relation(fields: [deptId], references: [id], map: "Group_deptId_fk")
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  department Department?     @relation(fields: [deptId], references: [id], map: "Group_deptId_fk")
   members    GroupMember[]
   messages   Message[]
+  documents  GroupDocument[]
 
   @@index([deptId], map: "Group_deptId_idx")
+}
+
+model GroupDocument {
+  id        String      @id @default(cuid())
+  groupId   String
+  title     String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  group     Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  notes     GroupNote[]
+
+  @@index([groupId])
+}
+
+enum NoteTextSize {
+  SMALL
+  NORMAL
+  LARGE
+}
+
+model GroupNote {
+  id         String        @id @default(cuid())
+  documentId String
+  title      String
+  content    String        @db.Text
+  textSize   NoteTextSize  @default(NORMAL)
+  order      Int           @default(0)
+  createdBy  String
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  document   GroupDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  creator    User          @relation("GroupNoteCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([createdBy])
 }
 
 model GroupMember {

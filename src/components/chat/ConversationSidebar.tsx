@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { User, Search, MessageSquarePlus, Building2, Users, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet, Trash2 } from 'lucide-react';
+import { User, Search, MessageSquarePlus, Building2, NotepadText, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet, Trash2 } from 'lucide-react';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
 import { fetchWithAuth } from '@/src/lib/auth-client';
@@ -278,8 +278,8 @@ export function ConversationSidebar() {
                     <Link href="/chat/organizations" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/organizations') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Organisations">
                         <Building2 className="w-5 h-5" />
                     </Link>
-                    <Link href="/chat/groups" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/groups') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Groupes">
-                        <Users className="w-5 h-5" />
+                    <Link href="/chat/groups" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/groups') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Notes">
+                        <NotepadText className="w-5 h-5" />
                     </Link>
                     <Link href="/chat" className={`relative p-2 rounded-lg transition-colors ${pathname === '/chat' || pathname?.startsWith('/chat/discussion') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Chats">
                         <MessageSquare className="w-5 h-5" />

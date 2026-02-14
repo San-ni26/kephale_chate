@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MessageSquare, Building2, Users, Bell, Settings, Wallet } from "lucide-react";
+import { MessageSquare, Building2, NotepadText, Bell, Settings, Wallet } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
@@ -26,7 +26,7 @@ export function BottomNav() {
 
     const navItems = [
         { label: "Organisations", icon: Building2, href: "/chat/organizations", badge: 0 },
-        { label: "Groupes", icon: Users, href: "/chat/groups", badge: 0 },
+        { label: "Notes", icon: NotepadText, href: "/chat/groups", badge: 0 },
         { label: "Chats", icon: MessageSquare, href: "/chat", badge: totalUnread },
         { label: "Finances", icon: Wallet, href: "/chat/finances", badge: 0 },
         { label: "Actu", icon: Bell, href: "/chat/notifications", badge: 0 },

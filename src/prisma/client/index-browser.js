@@ -301,6 +301,26 @@ exports.Prisma.GroupScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.GroupDocumentScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.GroupNoteScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  title: 'title',
+  content: 'content',
+  textSize: 'textSize',
+  order: 'order',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.GroupMemberScalarFieldEnum = {
   id: 'id',
   groupId: 'groupId',
@@ -693,6 +713,12 @@ exports.DecisionVoteType = exports.$Enums.DecisionVoteType = {
   ABSTAIN: 'ABSTAIN'
 };
 
+exports.NoteTextSize = exports.$Enums.NoteTextSize = {
+  SMALL: 'SMALL',
+  NORMAL: 'NORMAL',
+  LARGE: 'LARGE'
+};
+
 exports.RequestStatus = exports.$Enums.RequestStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
@@ -784,6 +810,8 @@ exports.Prisma.ModelName = {
   DecisionVote: 'DecisionVote',
   DepartmentMember: 'DepartmentMember',
   Group: 'Group',
+  GroupDocument: 'GroupDocument',
+  GroupNote: 'GroupNote',
   GroupMember: 'GroupMember',
   Message: 'Message',
   Attachment: 'Attachment',

@@ -156,20 +156,20 @@ export function clearAuthAndAllCacheRedirectToLogin(): void {
     try {
         localStorage.clear();
         sessionStorage.clear();
-    } catch {}
+    } catch { }
 
     // 3. Cache API (cache du SW, etc.)
     if ('caches' in window && typeof caches.keys === 'function') {
         caches.keys().then((names) => {
-            names.forEach((name) => caches.delete(name).catch(() => {}));
-        }).catch(() => {});
+            names.forEach((name) => caches.delete(name).catch(() => { }));
+        }).catch(() => { });
     }
 
     // 4. Désenregistrer tous les service workers
     if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
         navigator.serviceWorker.getRegistrations().then((registrations) => {
-            registrations.forEach((reg) => reg.unregister().catch(() => {}));
-        }).catch(() => {});
+            registrations.forEach((reg) => reg.unregister().catch(() => { }));
+        }).catch(() => { });
     }
 
     // 5. Redirection immédiate (full load pour repartir à zéro)
