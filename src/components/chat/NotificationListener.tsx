@@ -33,6 +33,7 @@ export function NotificationListener() {
             createdAt: string;
             orgId?: string;
             deptId?: string;
+            groupId?: string;
             type?: string;
         }) => {
             const currentPath = pathnameRef.current;
@@ -97,6 +98,22 @@ export function NotificationListener() {
                         });
                     } catch (e) {}
                 }
+                return;
+            }
+
+            // Notifications génériques (ex: partage de note)
+            if (data.content) {
+                const groupId = data.groupId;
+                toast(data.senderName ?? 'Notification', {
+                    description: data.content,
+                    ...(groupId && {
+                        action: {
+                            label: 'Voir',
+                            onClick: () => routerRef.current.push(`/chat/groups?groupId=${groupId}`),
+                        },
+                    }),
+                    duration: 5000,
+                });
             }
         };
 

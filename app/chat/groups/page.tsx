@@ -10,9 +10,10 @@ import {
     Clock,
     Search,
     NotepadText,
-    Share2,
     FileDown,
     X,
+    Copy,
+    UserPlus,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -34,7 +35,7 @@ import {
 import { NoteEditor } from "@/src/components/notes/NoteEditor";
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
-import { fetchWithAuth } from "@/src/lib/auth-client";
+import { fetchWithAuth, getUser } from "@/src/lib/auth-client";
 import { toast } from "sonner";
 
 /* ───── types ───── */
@@ -45,13 +46,22 @@ type Group = {
     _count?: { members: number };
 };
 
+type NoteShare = {
+    id?: string;
+    sharedWithId?: string;
+    canEdit?: boolean;
+    sharedWith: { id: string; name: string | null; email?: string };
+};
+
 type Note = {
     id: string;
     title: string;
     content: string;
     updatedAt: string;
     createdAt?: string;
+    createdBy?: string;
     creator?: { id: string; name: string | null; email?: string };
+    shares?: NoteShare[];
 };
 
 type Document = {
@@ -118,8 +128,16 @@ export default function GroupsPage() {
     /* vue PDF */
     const [viewNote, setViewNote] = useState<Note | null>(null);
 
+    /* partage */
+    const [shareNote, setShareNote] = useState<Note | null>(null);
+    const [shareEmail, setShareEmail] = useState("");
+    const [shareCanEdit, setShareCanEdit] = useState(true);
+    const [shareLoading, setShareLoading] = useState(false);
+
+    const currentUserId = getUser()?.id ?? null;
+
     /* ── fetch notes ── */
-    const loadNotes = useCallback(async (groupId: string) => {
+    const loadNotes = useCallback(async (groupId: string): Promise<Note[]> => {
         setNotesLoading(true);
         setNotes([]);
         setDefaultDocId(null);
@@ -133,10 +151,14 @@ export default function GroupsPage() {
                 const { document: fullDoc } = await fetchJson<{ document: Document }>(
                     `/api/groups/${groupId}/documents/${docId}`
                 );
-                setNotes(fullDoc.notes || []);
+                const noteList = fullDoc.notes || [];
+                setNotes(noteList);
+                return noteList;
             }
+            return [];
         } catch (e) {
             console.error(e);
+            return [];
         } finally {
             setNotesLoading(false);
         }
@@ -206,6 +228,94 @@ export default function GroupsPage() {
         }
     };
 
+    const shareNoteWithUser = async () => {
+        if (!selectedGroupId || !defaultDocId || !shareNote || !shareEmail.trim()) return;
+        setShareLoading(true);
+        try {
+            const res = await fetchWithAuth(
+                `/api/groups/${selectedGroupId}/documents/${defaultDocId}/notes/${shareNote.id}/share`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: shareEmail.trim().toLowerCase(), canEdit: shareCanEdit }),
+                }
+            );
+            const data = await res.json();
+            if (!res.ok) {
+                toast.error(data.error || "Erreur de partage");
+                return;
+            }
+            toast.success(`Note partagée avec ${data.sharedWith?.name || data.sharedWith?.email}`);
+            setShareEmail("");
+            const updated = await loadNotes(selectedGroupId);
+            if (viewNote && shareNote && updated) {
+                const refreshed = updated.find((n: Note) => n.id === shareNote.id);
+                if (refreshed) setViewNote(refreshed);
+                setShareNote(refreshed ?? null);
+            }
+        } catch (e) {
+            toast.error("Erreur de partage");
+        } finally {
+            setShareLoading(false);
+        }
+    };
+
+    const unshareNote = async (sharedWithId: string) => {
+        if (!selectedGroupId || !defaultDocId || !shareNote) return;
+        const share = shareNote.shares?.find((s) => s.sharedWith.id === sharedWithId);
+        if (!share) return;
+        setShareLoading(true);
+        try {
+            const res = await fetchWithAuth(
+                `/api/groups/${selectedGroupId}/documents/${defaultDocId}/notes/${shareNote.id}/share?sharedWithId=${encodeURIComponent(sharedWithId)}`,
+                { method: "DELETE" }
+            );
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.error || "Erreur");
+                return;
+            }
+            toast.success("Partage retiré");
+            const updated = await loadNotes(selectedGroupId);
+            const refreshed = updated.find((n: Note) => n.id === shareNote.id);
+            setShareNote(refreshed ?? null);
+            if (viewNote && shareNote && refreshed) setViewNote(refreshed);
+        } catch (e) {
+            toast.error("Erreur");
+        } finally {
+            setShareLoading(false);
+        }
+    };
+
+    const updateSharePermission = async (sharedWithId: string, canEdit: boolean) => {
+        if (!selectedGroupId || !defaultDocId || !shareNote) return;
+        setShareLoading(true);
+        try {
+            const res = await fetchWithAuth(
+                `/api/groups/${selectedGroupId}/documents/${defaultDocId}/notes/${shareNote.id}/share`,
+                {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sharedWithId, canEdit }),
+                }
+            );
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.error || "Erreur");
+                return;
+            }
+            toast.success(canEdit ? "Droit de modification accordé" : "Lecture seule");
+            const updated = await loadNotes(selectedGroupId);
+            const refreshed = updated.find((n: Note) => n.id === shareNote.id);
+            setShareNote(refreshed ?? null);
+            if (viewNote && shareNote && refreshed) setViewNote(refreshed);
+        } catch (e) {
+            toast.error("Erreur");
+        } finally {
+            setShareLoading(false);
+        }
+    };
+
     const confirmDelete = async () => {
         if (!selectedGroupId || !defaultDocId || !deleteTarget) return;
         setDeleting(true);
@@ -245,21 +355,7 @@ export default function GroupsPage() {
                             <NotepadText className="w-5 h-5 text-primary shrink-0" />
                             <h1 className="text-base sm:text-lg font-bold text-foreground">Notes</h1>
                         </div>
-                        <Select
-                            value={selectedGroupId ?? ""}
-                            onValueChange={(v) => setSelectedGroupId(v)}
-                        >
-                            <SelectTrigger className="h-8 text-xs bg-muted border-border w-[140px] sm:w-auto sm:min-w-[160px] shrink-0">
-                                <SelectValue placeholder="Groupe…" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-popover border-border">
-                                {groups.map((g) => (
-                                    <SelectItem key={g.id} value={g.id}>
-                                        {g.name || "Sans nom"}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+
                     </div>
                     <div className="flex items-center gap-2">
                         <Button
@@ -320,6 +416,11 @@ export default function GroupsPage() {
                             <NoteCard
                                 key={note.id}
                                 note={note}
+                                isCreator={note.creator?.id === currentUserId}
+                                isEditable={
+                                    note.creator?.id === currentUserId ||
+                                    (note.shares?.some((s) => s.sharedWith.id === currentUserId && (s.canEdit ?? true)) ?? false)
+                                }
                                 onView={() => setViewNote(note)}
                                 onEdit={() => openEditNote(note)}
                                 onDelete={() => setDeleteTarget(note)}
@@ -400,10 +501,92 @@ export default function GroupsPage() {
                 </DialogContent>
             </Dialog>
 
+            {/* ── Dialog: Partager avec un utilisateur ── */}
+            <Dialog open={!!shareNote} onOpenChange={(o) => !o && (setShareNote(null), setShareEmail(""), setShareCanEdit(true))}>
+                <DialogContent className="bg-card border-border text-foreground w-[95vw] sm:w-full max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Partager la note</DialogTitle>
+                        <DialogDescription>
+                            Entrez l&apos;email d&apos;un membre du groupe pour lui donner accès. Choisissez s&apos;il peut modifier ou seulement lire.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-2">
+                        <div className="flex gap-2">
+                            <Input
+                                type="email"
+                                placeholder="email@exemple.com"
+                                value={shareEmail}
+                                onChange={(e) => setShareEmail(e.target.value)}
+                                className="bg-muted border-border flex-1"
+                                autoFocus
+                            />
+                            <label className="flex items-center gap-1.5 text-sm whitespace-nowrap cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={shareCanEdit}
+                                    onChange={(e) => setShareCanEdit(e.target.checked)}
+                                    className="rounded border-border"
+                                />
+                                Peut modifier
+                            </label>
+                        </div>
+                        {shareNote?.shares && shareNote.shares.length > 0 && (
+                            <div className="space-y-2">
+                                <div className="text-xs font-medium text-muted-foreground">Déjà partagée avec :</div>
+                                {shareNote.shares.map((s) => (
+                                    <div
+                                        key={s.id || s.sharedWith.id}
+                                        className="flex items-center justify-between gap-2 py-1.5 px-2 rounded-md bg-muted/50 border border-border"
+                                    >
+                                        <span className="text-sm truncate">{s.sharedWith.name || s.sharedWith.email}</span>
+                                        <div className="flex items-center gap-1 shrink-0">
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                className="h-7 px-2 text-xs"
+                                                onClick={() => updateSharePermission(s.sharedWith.id, !(s.canEdit ?? true))}
+                                                disabled={shareLoading}
+                                            >
+                                                {(s.canEdit ?? true) ? "Modifier" : "Lecture seule"}
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                                                onClick={() => unshareNote(s.sharedWith.id)}
+                                                disabled={shareLoading}
+                                                title="Retirer le partage"
+                                            >
+                                                <X className="w-3.5 h-3.5" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => (setShareNote(null), setShareEmail(""), setShareCanEdit(true))}>
+                            Annuler
+                        </Button>
+                        <Button onClick={shareNoteWithUser} disabled={shareLoading || !shareEmail.trim()}>
+                            {shareLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                            Partager
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
             {/* ── Vue PDF (lecture document) ── */}
             <NotePdfView
                 note={viewNote}
+                isCreator={viewNote?.creator?.id === currentUserId}
+                isEditable={
+                    viewNote?.creator?.id === currentUserId ||
+                    (viewNote?.shares?.some((s) => s.sharedWith.id === currentUserId && (s.canEdit ?? true)) ?? false)
+                }
                 onClose={() => setViewNote(null)}
+                onShareClick={() => viewNote && setShareNote(viewNote)}
                 onEdit={(n) => {
                     setViewNote(null);
                     openEditNote(n);
@@ -481,17 +664,23 @@ export default function GroupsPage() {
 
 function NotePdfView({
     note,
+    isCreator,
+    isEditable,
     onClose,
     onEdit,
     onDelete,
     onShare,
+    onShareClick,
     onExportPdf,
 }: {
     note: Note | null;
+    isCreator?: boolean;
+    isEditable?: boolean;
     onClose: () => void;
     onEdit: (n: Note) => void;
     onDelete: (n: Note) => void;
     onShare: (n: Note) => void | Promise<void>;
+    onShareClick?: () => void;
     onExportPdf: () => void;
 }) {
     if (!note) return null;
@@ -508,25 +697,39 @@ function NotePdfView({
                         {note.title}
                     </DialogTitle>
                     <div className="flex items-center gap-1 shrink-0 flex-wrap">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 gap-1.5"
-                            onClick={() => onEdit(note)}
-                            title="Modifier"
-                        >
-                            <Pencil className="w-4 h-4" />
-                            <span className="hidden sm:inline">Modifier</span>
-                        </Button>
+                        {(isEditable ?? isCreator) && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 gap-1.5"
+                                onClick={() => onEdit(note)}
+                                title="Modifier"
+                            >
+                                <Pencil className="w-4 h-4" />
+                                <span className="hidden sm:inline">Modifier</span>
+                            </Button>
+                        )}
+                        {isCreator && onShareClick && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 gap-1.5"
+                                onClick={onShareClick}
+                                title="Partager avec un utilisateur"
+                            >
+                                <UserPlus className="w-4 h-4" />
+                                <span className="hidden sm:inline">Partager</span>
+                            </Button>
+                        )}
                         <Button
                             variant="ghost"
                             size="sm"
                             className="h-8 gap-1.5"
                             onClick={() => onShare(note)}
-                            title="Partager"
+                            title="Copier"
                         >
-                            <Share2 className="w-4 h-4" />
-                            <span className="hidden sm:inline">Partager</span>
+                            <Copy className="w-4 h-4" />
+                            <span className="hidden sm:inline">Copier</span>
                         </Button>
                         <Button
                             variant="ghost"
@@ -538,16 +741,18 @@ function NotePdfView({
                             <FileDown className="w-4 h-4" />
                             <span className="hidden sm:inline">Exporter PDF</span>
                         </Button>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 gap-1.5 text-destructive hover:text-destructive"
-                            onClick={() => onDelete(note)}
-                            title="Supprimer"
-                        >
-                            <Trash2 className="w-4 h-4" />
-                            <span className="hidden sm:inline">Supprimer</span>
-                        </Button>
+                        {isCreator && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 gap-1.5 text-destructive hover:text-destructive"
+                                onClick={() => onDelete(note)}
+                                title="Supprimer"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                <span className="hidden sm:inline">Supprimer</span>
+                            </Button>
+                        )}
                         <Button
                             variant="ghost"
                             size="icon"
@@ -561,13 +766,18 @@ function NotePdfView({
                 </div>
 
                 {/* Métadonnées */}
-                <div className="px-3 sm:px-4 py-2 border-b border-border flex items-center gap-3 text-xs text-muted-foreground shrink-0">
+                <div className="px-3 sm:px-4 py-2 border-b border-border flex flex-wrap items-center gap-2 text-xs text-muted-foreground shrink-0">
                     <span className="flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" />
                         {formatDate(note.updatedAt)}
                     </span>
                     {note.creator?.name && (
-                        <span>{note.creator.name}</span>
+                        <span>{isCreator ? "Par vous" : `Par ${note.creator.name}`}</span>
+                    )}
+                    {!isCreator && note.creator?.name && (
+                        <span className="bg-primary/10 text-primary px-1.5 py-0.5 rounded text-[10px]">
+                            Note partagée
+                        </span>
                     )}
                 </div>
 
@@ -618,26 +828,43 @@ function EmptyState({
 
 function NoteCard({
     note,
+    isCreator,
+    isEditable,
     onView,
     onEdit,
     onDelete,
 }: {
     note: Note;
+    isCreator: boolean;
+    isEditable: boolean;
     onView: () => void;
     onEdit: () => void;
     onDelete: () => void;
 }) {
     const preview = stripHtml(note.content);
+    const isShared = note.shares && note.shares.length > 0;
 
     return (
         <div
             className="group relative flex flex-col p-3 sm:p-4 rounded-xl border border-border bg-card hover:bg-muted/50 active:bg-muted/70 transition-colors cursor-pointer touch-manipulation"
             onClick={onView}
         >
-            {/* titre */}
-            <h3 className="font-semibold text-foreground text-sm line-clamp-1 pr-20 sm:pr-16">
-                {note.title}
-            </h3>
+            {/* titre + badge */}
+            <div className="flex items-center gap-1.5 pr-20 sm:pr-16">
+                <h3 className="font-semibold text-foreground text-sm line-clamp-1 flex-1 min-w-0">
+                    {note.title}
+                </h3>
+                {!isCreator && (
+                    <span className="shrink-0 bg-primary/10 text-primary px-1.5 py-0.5 rounded text-[10px]">
+                        Partagée
+                    </span>
+                )}
+                {isCreator && isShared && (
+                    <span className="shrink-0 bg-muted text-muted-foreground px-1.5 py-0.5 rounded text-[10px]">
+                        Partagée
+                    </span>
+                )}
+            </div>
 
             {/* aperçu du contenu */}
             {preview && (
@@ -653,37 +880,41 @@ function NoteCard({
                 {note.creator?.name && (
                     <>
                         <span className="mx-0.5 shrink-0">·</span>
-                        <span className="truncate">{note.creator.name}</span>
+                        <span className="truncate">{isCreator ? "Vous" : note.creator.name}</span>
                     </>
                 )}
             </div>
 
             {/* actions : visibles sur mobile, au survol sur desktop */}
             <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex items-center gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-7 w-7"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onEdit();
-                    }}
-                    title="Modifier"
-                >
-                    <Pencil className="w-3.5 h-3.5" />
-                </Button>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-7 w-7 text-destructive hover:text-destructive"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete();
-                    }}
-                    title="Supprimer"
-                >
-                    <Trash2 className="w-3.5 h-3.5" />
-                </Button>
+                {isEditable && (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onEdit();
+                        }}
+                        title="Modifier"
+                    >
+                        <Pencil className="w-3.5 h-3.5" />
+                    </Button>
+                )}
+                {isCreator && (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-destructive hover:text-destructive"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onDelete();
+                        }}
+                        title="Supprimer"
+                    >
+                        <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                )}
             </div>
         </div>
     );

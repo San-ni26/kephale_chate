@@ -36,6 +36,7 @@ export async function GET(
         const { groupId, docId } = await params;
         const result = await ensureGroupMember(request, groupId);
         if (result.error) return result.error;
+        const userId = result.userId!;
 
         const document = await prisma.groupDocument.findFirst({
             where: { id: docId, groupId },
@@ -44,13 +45,34 @@ export async function GET(
             return NextResponse.json({ error: 'Document non trouvé' }, { status: 404 });
         }
 
-        const notes = await prisma.groupNote.findMany({
-            where: { documentId: docId },
-            include: {
-                creator: { select: { id: true, name: true, email: true } },
-            },
-            orderBy: { updatedAt: 'desc' },
-        });
+        let notes;
+        try {
+            notes = await prisma.groupNote.findMany({
+                where: {
+                    documentId: docId,
+                    OR: [
+                        { createdBy: userId },
+                        { shares: { some: { sharedWithId: userId } } },
+                    ],
+                },
+                include: {
+                    creator: { select: { id: true, name: true, email: true } },
+                    shares: {
+                        include: { sharedWith: { select: { id: true, name: true, email: true } } },
+                    },
+                },
+                orderBy: { updatedAt: 'desc' },
+            });
+        } catch (shareError) {
+            console.error('[notes] Share filter failed, falling back to createdBy only:', shareError);
+            notes = await prisma.groupNote.findMany({
+                where: { documentId: docId, createdBy: userId },
+                include: {
+                    creator: { select: { id: true, name: true, email: true } },
+                },
+                orderBy: { updatedAt: 'desc' },
+            });
+        }
 
         return NextResponse.json({ notes });
     } catch (error) {

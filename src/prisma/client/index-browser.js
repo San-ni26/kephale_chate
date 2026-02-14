@@ -321,6 +321,14 @@ exports.Prisma.GroupNoteScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.GroupNoteShareScalarFieldEnum = {
+  id: 'id',
+  noteId: 'noteId',
+  sharedWithId: 'sharedWithId',
+  canEdit: 'canEdit',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.GroupMemberScalarFieldEnum = {
   id: 'id',
   groupId: 'groupId',
@@ -812,6 +820,7 @@ exports.Prisma.ModelName = {
   Group: 'Group',
   GroupDocument: 'GroupDocument',
   GroupNote: 'GroupNote',
+  GroupNoteShare: 'GroupNoteShare',
   GroupMember: 'GroupMember',
   Message: 'Message',
   Attachment: 'Attachment',

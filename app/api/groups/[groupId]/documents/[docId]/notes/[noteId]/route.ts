@@ -44,10 +44,21 @@ export async function GET(
             return NextResponse.json({ error: 'Document non trouvé' }, { status: 404 });
         }
 
+        const userId = (request as AuthenticatedRequest).user?.userId;
         const note = await prisma.groupNote.findFirst({
-            where: { id: noteId, documentId: docId },
+            where: {
+                id: noteId,
+                documentId: docId,
+                OR: [
+                    { createdBy: userId },
+                    { shares: { some: { sharedWithId: userId } } },
+                ],
+            },
             include: {
                 creator: { select: { id: true, name: true, email: true } },
+                shares: {
+                    include: { sharedWith: { select: { id: true, name: true, email: true } } },
+                },
             },
         });
         if (!note) {
@@ -76,11 +87,27 @@ export async function PATCH(
             return NextResponse.json({ error: 'Document non trouvé' }, { status: 404 });
         }
 
+        const userId = result.userId!;
         const existing = await prisma.groupNote.findFirst({
-            where: { id: noteId, documentId: docId },
+            where: {
+                id: noteId,
+                documentId: docId,
+                OR: [
+                    { createdBy: userId },
+                    { shares: { some: { sharedWithId: userId, canEdit: true } } },
+                ],
+            },
+            include: {
+                shares: { where: { sharedWithId: userId }, select: { canEdit: true } },
+            },
         });
         if (!existing) {
-            return NextResponse.json({ error: 'Note non trouvée' }, { status: 404 });
+            return NextResponse.json({ error: 'Note non trouvée ou vous n\'avez pas le droit de la modifier.' }, { status: 404 });
+        }
+        const isCreator = existing.createdBy === userId;
+        const sharedWithMe = existing.shares?.[0];
+        if (!isCreator && (!sharedWithMe || !sharedWithMe.canEdit)) {
+            return NextResponse.json({ error: 'Vous n\'avez pas le droit de modifier cette note (lecture seule).' }, { status: 403 });
         }
 
         const body = await request.json();
@@ -123,11 +150,12 @@ export async function DELETE(
             return NextResponse.json({ error: 'Document non trouvé' }, { status: 404 });
         }
 
+        const userId = result.userId!;
         const existing = await prisma.groupNote.findFirst({
-            where: { id: noteId, documentId: docId },
+            where: { id: noteId, documentId: docId, createdBy: userId },
         });
         if (!existing) {
-            return NextResponse.json({ error: 'Note non trouvée' }, { status: 404 });
+            return NextResponse.json({ error: 'Seul le créateur peut supprimer cette note.' }, { status: 403 });
         }
 
         await prisma.groupNote.delete({

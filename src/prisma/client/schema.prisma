@@ -64,6 +64,7 @@ model User {
   following                   Follow[]             @relation("UserFollowing")
   uploadedDepartmentDocuments DepartmentDocument[] @relation("DocumentUploader")
   groupNotes                  GroupNote[]          @relation("GroupNoteCreator")
+  noteSharesReceived          GroupNoteShare[]     @relation("NoteShareRecipient")
 
   @@index([email])
   @@index([isOnline])
@@ -366,20 +367,36 @@ enum NoteTextSize {
 }
 
 model GroupNote {
-  id         String        @id @default(cuid())
+  id         String           @id @default(cuid())
   documentId String
   title      String
-  content    String        @db.Text
-  textSize   NoteTextSize  @default(NORMAL)
-  order      Int           @default(0)
+  content    String           @db.Text
+  textSize   NoteTextSize     @default(NORMAL)
+  order      Int              @default(0)
   createdBy  String
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
-  document   GroupDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  creator    User          @relation("GroupNoteCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  document   GroupDocument    @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  creator    User             @relation("GroupNoteCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  shares     GroupNoteShare[]
 
   @@index([documentId])
   @@index([createdBy])
+}
+
+model GroupNoteShare {
+  id           String   @id @default(cuid())
+  noteId       String
+  sharedWithId String
+  canEdit      Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  note       GroupNote @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  sharedWith User      @relation("NoteShareRecipient", fields: [sharedWithId], references: [id], onDelete: Cascade)
+
+  @@unique([noteId, sharedWithId])
+  @@index([noteId])
+  @@index([sharedWithId])
 }
 
 model GroupMember {

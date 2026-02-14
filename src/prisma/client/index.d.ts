@@ -104,6 +104,11 @@ export type GroupDocument = $Result.DefaultSelection<Prisma.$GroupDocumentPayloa
  */
 export type GroupNote = $Result.DefaultSelection<Prisma.$GroupNotePayload>
 /**
+ * Model GroupNoteShare
+ * 
+ */
+export type GroupNoteShare = $Result.DefaultSelection<Prisma.$GroupNoteSharePayload>
+/**
  * Model GroupMember
  * 
  */
@@ -801,6 +806,16 @@ export class PrismaClient<
     * ```
     */
   get groupNote(): Prisma.GroupNoteDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.groupNoteShare`: Exposes CRUD operations for the **GroupNoteShare** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GroupNoteShares
+    * const groupNoteShares = await prisma.groupNoteShare.findMany()
+    * ```
+    */
+  get groupNoteShare(): Prisma.GroupNoteShareDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.groupMember`: Exposes CRUD operations for the **GroupMember** model.
@@ -1553,6 +1568,7 @@ export namespace Prisma {
     Group: 'Group',
     GroupDocument: 'GroupDocument',
     GroupNote: 'GroupNote',
+    GroupNoteShare: 'GroupNoteShare',
     GroupMember: 'GroupMember',
     Message: 'Message',
     Attachment: 'Attachment',
@@ -1598,7 +1614,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "group" | "groupDocument" | "groupNote" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
+      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "group" | "groupDocument" | "groupNote" | "groupNoteShare" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2931,6 +2947,80 @@ export namespace Prisma {
           count: {
             args: Prisma.GroupNoteCountArgs<ExtArgs>
             result: $Utils.Optional<GroupNoteCountAggregateOutputType> | number
+          }
+        }
+      }
+      GroupNoteShare: {
+        payload: Prisma.$GroupNoteSharePayload<ExtArgs>
+        fields: Prisma.GroupNoteShareFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GroupNoteShareFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GroupNoteShareFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload>
+          }
+          findFirst: {
+            args: Prisma.GroupNoteShareFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GroupNoteShareFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload>
+          }
+          findMany: {
+            args: Prisma.GroupNoteShareFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload>[]
+          }
+          create: {
+            args: Prisma.GroupNoteShareCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload>
+          }
+          createMany: {
+            args: Prisma.GroupNoteShareCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GroupNoteShareCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload>[]
+          }
+          delete: {
+            args: Prisma.GroupNoteShareDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload>
+          }
+          update: {
+            args: Prisma.GroupNoteShareUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload>
+          }
+          deleteMany: {
+            args: Prisma.GroupNoteShareDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GroupNoteShareUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GroupNoteShareUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload>[]
+          }
+          upsert: {
+            args: Prisma.GroupNoteShareUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupNoteSharePayload>
+          }
+          aggregate: {
+            args: Prisma.GroupNoteShareAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGroupNoteShare>
+          }
+          groupBy: {
+            args: Prisma.GroupNoteShareGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GroupNoteShareGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GroupNoteShareCountArgs<ExtArgs>
+            result: $Utils.Optional<GroupNoteShareCountAggregateOutputType> | number
           }
         }
       }
@@ -5280,6 +5370,7 @@ export namespace Prisma {
     group?: GroupOmit
     groupDocument?: GroupDocumentOmit
     groupNote?: GroupNoteOmit
+    groupNoteShare?: GroupNoteShareOmit
     groupMember?: GroupMemberOmit
     message?: MessageOmit
     attachment?: AttachmentOmit
@@ -5419,6 +5510,7 @@ export namespace Prisma {
     following: number
     uploadedDepartmentDocuments: number
     groupNotes: number
+    noteSharesReceived: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5451,6 +5543,7 @@ export namespace Prisma {
     following?: boolean | UserCountOutputTypeCountFollowingArgs
     uploadedDepartmentDocuments?: boolean | UserCountOutputTypeCountUploadedDepartmentDocumentsArgs
     groupNotes?: boolean | UserCountOutputTypeCountGroupNotesArgs
+    noteSharesReceived?: boolean | UserCountOutputTypeCountNoteSharesReceivedArgs
   }
 
   // Custom InputTypes
@@ -5665,6 +5758,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountGroupNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: GroupNoteWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountNoteSharesReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupNoteShareWhereInput
   }
 
 
@@ -5999,6 +6099,37 @@ export namespace Prisma {
    */
   export type GroupDocumentCountOutputTypeCountNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: GroupNoteWhereInput
+  }
+
+
+  /**
+   * Count Type GroupNoteCountOutputType
+   */
+
+  export type GroupNoteCountOutputType = {
+    shares: number
+  }
+
+  export type GroupNoteCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    shares?: boolean | GroupNoteCountOutputTypeCountSharesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * GroupNoteCountOutputType without action
+   */
+  export type GroupNoteCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteCountOutputType
+     */
+    select?: GroupNoteCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * GroupNoteCountOutputType without action
+   */
+  export type GroupNoteCountOutputTypeCountSharesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupNoteShareWhereInput
   }
 
 
@@ -6656,6 +6787,7 @@ export namespace Prisma {
     following?: boolean | User$followingArgs<ExtArgs>
     uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
     groupNotes?: boolean | User$groupNotesArgs<ExtArgs>
+    noteSharesReceived?: boolean | User$noteSharesReceivedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -6773,6 +6905,7 @@ export namespace Prisma {
     following?: boolean | User$followingArgs<ExtArgs>
     uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
     groupNotes?: boolean | User$groupNotesArgs<ExtArgs>
+    noteSharesReceived?: boolean | User$noteSharesReceivedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6812,6 +6945,7 @@ export namespace Prisma {
       following: Prisma.$FollowPayload<ExtArgs>[]
       uploadedDepartmentDocuments: Prisma.$DepartmentDocumentPayload<ExtArgs>[]
       groupNotes: Prisma.$GroupNotePayload<ExtArgs>[]
+      noteSharesReceived: Prisma.$GroupNoteSharePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7263,6 +7397,7 @@ export namespace Prisma {
     following<T extends User$followingArgs<ExtArgs> = {}>(args?: Subset<T, User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     uploadedDepartmentDocuments<T extends User$uploadedDepartmentDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$uploadedDepartmentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     groupNotes<T extends User$groupNotesArgs<ExtArgs> = {}>(args?: Subset<T, User$groupNotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    noteSharesReceived<T extends User$noteSharesReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$noteSharesReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8435,6 +8570,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: GroupNoteScalarFieldEnum | GroupNoteScalarFieldEnum[]
+  }
+
+  /**
+   * User.noteSharesReceived
+   */
+  export type User$noteSharesReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    where?: GroupNoteShareWhereInput
+    orderBy?: GroupNoteShareOrderByWithRelationInput | GroupNoteShareOrderByWithRelationInput[]
+    cursor?: GroupNoteShareWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GroupNoteShareScalarFieldEnum | GroupNoteShareScalarFieldEnum[]
   }
 
   /**
@@ -26857,6 +27016,8 @@ export namespace Prisma {
     updatedAt?: boolean
     document?: boolean | GroupDocumentDefaultArgs<ExtArgs>
     creator?: boolean | UserDefaultArgs<ExtArgs>
+    shares?: boolean | GroupNote$sharesArgs<ExtArgs>
+    _count?: boolean | GroupNoteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["groupNote"]>
 
   export type GroupNoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -26903,6 +27064,8 @@ export namespace Prisma {
   export type GroupNoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     document?: boolean | GroupDocumentDefaultArgs<ExtArgs>
     creator?: boolean | UserDefaultArgs<ExtArgs>
+    shares?: boolean | GroupNote$sharesArgs<ExtArgs>
+    _count?: boolean | GroupNoteCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type GroupNoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     document?: boolean | GroupDocumentDefaultArgs<ExtArgs>
@@ -26918,6 +27081,7 @@ export namespace Prisma {
     objects: {
       document: Prisma.$GroupDocumentPayload<ExtArgs>
       creator: Prisma.$UserPayload<ExtArgs>
+      shares: Prisma.$GroupNoteSharePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -27325,6 +27489,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     document<T extends GroupDocumentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GroupDocumentDefaultArgs<ExtArgs>>): Prisma__GroupDocumentClient<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    shares<T extends GroupNote$sharesArgs<ExtArgs> = {}>(args?: Subset<T, GroupNote$sharesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -27759,6 +27924,30 @@ export namespace Prisma {
   }
 
   /**
+   * GroupNote.shares
+   */
+  export type GroupNote$sharesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    where?: GroupNoteShareWhereInput
+    orderBy?: GroupNoteShareOrderByWithRelationInput | GroupNoteShareOrderByWithRelationInput[]
+    cursor?: GroupNoteShareWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GroupNoteShareScalarFieldEnum | GroupNoteShareScalarFieldEnum[]
+  }
+
+  /**
    * GroupNote without action
    */
   export type GroupNoteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -27774,6 +27963,1072 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: GroupNoteInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GroupNoteShare
+   */
+
+  export type AggregateGroupNoteShare = {
+    _count: GroupNoteShareCountAggregateOutputType | null
+    _min: GroupNoteShareMinAggregateOutputType | null
+    _max: GroupNoteShareMaxAggregateOutputType | null
+  }
+
+  export type GroupNoteShareMinAggregateOutputType = {
+    id: string | null
+    noteId: string | null
+    sharedWithId: string | null
+    canEdit: boolean | null
+    createdAt: Date | null
+  }
+
+  export type GroupNoteShareMaxAggregateOutputType = {
+    id: string | null
+    noteId: string | null
+    sharedWithId: string | null
+    canEdit: boolean | null
+    createdAt: Date | null
+  }
+
+  export type GroupNoteShareCountAggregateOutputType = {
+    id: number
+    noteId: number
+    sharedWithId: number
+    canEdit: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type GroupNoteShareMinAggregateInputType = {
+    id?: true
+    noteId?: true
+    sharedWithId?: true
+    canEdit?: true
+    createdAt?: true
+  }
+
+  export type GroupNoteShareMaxAggregateInputType = {
+    id?: true
+    noteId?: true
+    sharedWithId?: true
+    canEdit?: true
+    createdAt?: true
+  }
+
+  export type GroupNoteShareCountAggregateInputType = {
+    id?: true
+    noteId?: true
+    sharedWithId?: true
+    canEdit?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type GroupNoteShareAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupNoteShare to aggregate.
+     */
+    where?: GroupNoteShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupNoteShares to fetch.
+     */
+    orderBy?: GroupNoteShareOrderByWithRelationInput | GroupNoteShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GroupNoteShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupNoteShares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupNoteShares.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GroupNoteShares
+    **/
+    _count?: true | GroupNoteShareCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GroupNoteShareMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GroupNoteShareMaxAggregateInputType
+  }
+
+  export type GetGroupNoteShareAggregateType<T extends GroupNoteShareAggregateArgs> = {
+        [P in keyof T & keyof AggregateGroupNoteShare]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGroupNoteShare[P]>
+      : GetScalarType<T[P], AggregateGroupNoteShare[P]>
+  }
+
+
+
+
+  export type GroupNoteShareGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupNoteShareWhereInput
+    orderBy?: GroupNoteShareOrderByWithAggregationInput | GroupNoteShareOrderByWithAggregationInput[]
+    by: GroupNoteShareScalarFieldEnum[] | GroupNoteShareScalarFieldEnum
+    having?: GroupNoteShareScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GroupNoteShareCountAggregateInputType | true
+    _min?: GroupNoteShareMinAggregateInputType
+    _max?: GroupNoteShareMaxAggregateInputType
+  }
+
+  export type GroupNoteShareGroupByOutputType = {
+    id: string
+    noteId: string
+    sharedWithId: string
+    canEdit: boolean
+    createdAt: Date
+    _count: GroupNoteShareCountAggregateOutputType | null
+    _min: GroupNoteShareMinAggregateOutputType | null
+    _max: GroupNoteShareMaxAggregateOutputType | null
+  }
+
+  type GetGroupNoteShareGroupByPayload<T extends GroupNoteShareGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GroupNoteShareGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GroupNoteShareGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GroupNoteShareGroupByOutputType[P]>
+            : GetScalarType<T[P], GroupNoteShareGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GroupNoteShareSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    noteId?: boolean
+    sharedWithId?: boolean
+    canEdit?: boolean
+    createdAt?: boolean
+    note?: boolean | GroupNoteDefaultArgs<ExtArgs>
+    sharedWith?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupNoteShare"]>
+
+  export type GroupNoteShareSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    noteId?: boolean
+    sharedWithId?: boolean
+    canEdit?: boolean
+    createdAt?: boolean
+    note?: boolean | GroupNoteDefaultArgs<ExtArgs>
+    sharedWith?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupNoteShare"]>
+
+  export type GroupNoteShareSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    noteId?: boolean
+    sharedWithId?: boolean
+    canEdit?: boolean
+    createdAt?: boolean
+    note?: boolean | GroupNoteDefaultArgs<ExtArgs>
+    sharedWith?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["groupNoteShare"]>
+
+  export type GroupNoteShareSelectScalar = {
+    id?: boolean
+    noteId?: boolean
+    sharedWithId?: boolean
+    canEdit?: boolean
+    createdAt?: boolean
+  }
+
+  export type GroupNoteShareOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "noteId" | "sharedWithId" | "canEdit" | "createdAt", ExtArgs["result"]["groupNoteShare"]>
+  export type GroupNoteShareInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    note?: boolean | GroupNoteDefaultArgs<ExtArgs>
+    sharedWith?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GroupNoteShareIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    note?: boolean | GroupNoteDefaultArgs<ExtArgs>
+    sharedWith?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GroupNoteShareIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    note?: boolean | GroupNoteDefaultArgs<ExtArgs>
+    sharedWith?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $GroupNoteSharePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GroupNoteShare"
+    objects: {
+      note: Prisma.$GroupNotePayload<ExtArgs>
+      sharedWith: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      noteId: string
+      sharedWithId: string
+      canEdit: boolean
+      createdAt: Date
+    }, ExtArgs["result"]["groupNoteShare"]>
+    composites: {}
+  }
+
+  type GroupNoteShareGetPayload<S extends boolean | null | undefined | GroupNoteShareDefaultArgs> = $Result.GetResult<Prisma.$GroupNoteSharePayload, S>
+
+  type GroupNoteShareCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GroupNoteShareFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GroupNoteShareCountAggregateInputType | true
+    }
+
+  export interface GroupNoteShareDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GroupNoteShare'], meta: { name: 'GroupNoteShare' } }
+    /**
+     * Find zero or one GroupNoteShare that matches the filter.
+     * @param {GroupNoteShareFindUniqueArgs} args - Arguments to find a GroupNoteShare
+     * @example
+     * // Get one GroupNoteShare
+     * const groupNoteShare = await prisma.groupNoteShare.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GroupNoteShareFindUniqueArgs>(args: SelectSubset<T, GroupNoteShareFindUniqueArgs<ExtArgs>>): Prisma__GroupNoteShareClient<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GroupNoteShare that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GroupNoteShareFindUniqueOrThrowArgs} args - Arguments to find a GroupNoteShare
+     * @example
+     * // Get one GroupNoteShare
+     * const groupNoteShare = await prisma.groupNoteShare.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GroupNoteShareFindUniqueOrThrowArgs>(args: SelectSubset<T, GroupNoteShareFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GroupNoteShareClient<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupNoteShare that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteShareFindFirstArgs} args - Arguments to find a GroupNoteShare
+     * @example
+     * // Get one GroupNoteShare
+     * const groupNoteShare = await prisma.groupNoteShare.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GroupNoteShareFindFirstArgs>(args?: SelectSubset<T, GroupNoteShareFindFirstArgs<ExtArgs>>): Prisma__GroupNoteShareClient<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupNoteShare that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteShareFindFirstOrThrowArgs} args - Arguments to find a GroupNoteShare
+     * @example
+     * // Get one GroupNoteShare
+     * const groupNoteShare = await prisma.groupNoteShare.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GroupNoteShareFindFirstOrThrowArgs>(args?: SelectSubset<T, GroupNoteShareFindFirstOrThrowArgs<ExtArgs>>): Prisma__GroupNoteShareClient<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GroupNoteShares that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteShareFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GroupNoteShares
+     * const groupNoteShares = await prisma.groupNoteShare.findMany()
+     * 
+     * // Get first 10 GroupNoteShares
+     * const groupNoteShares = await prisma.groupNoteShare.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const groupNoteShareWithIdOnly = await prisma.groupNoteShare.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GroupNoteShareFindManyArgs>(args?: SelectSubset<T, GroupNoteShareFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GroupNoteShare.
+     * @param {GroupNoteShareCreateArgs} args - Arguments to create a GroupNoteShare.
+     * @example
+     * // Create one GroupNoteShare
+     * const GroupNoteShare = await prisma.groupNoteShare.create({
+     *   data: {
+     *     // ... data to create a GroupNoteShare
+     *   }
+     * })
+     * 
+     */
+    create<T extends GroupNoteShareCreateArgs>(args: SelectSubset<T, GroupNoteShareCreateArgs<ExtArgs>>): Prisma__GroupNoteShareClient<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GroupNoteShares.
+     * @param {GroupNoteShareCreateManyArgs} args - Arguments to create many GroupNoteShares.
+     * @example
+     * // Create many GroupNoteShares
+     * const groupNoteShare = await prisma.groupNoteShare.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GroupNoteShareCreateManyArgs>(args?: SelectSubset<T, GroupNoteShareCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GroupNoteShares and returns the data saved in the database.
+     * @param {GroupNoteShareCreateManyAndReturnArgs} args - Arguments to create many GroupNoteShares.
+     * @example
+     * // Create many GroupNoteShares
+     * const groupNoteShare = await prisma.groupNoteShare.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GroupNoteShares and only return the `id`
+     * const groupNoteShareWithIdOnly = await prisma.groupNoteShare.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GroupNoteShareCreateManyAndReturnArgs>(args?: SelectSubset<T, GroupNoteShareCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GroupNoteShare.
+     * @param {GroupNoteShareDeleteArgs} args - Arguments to delete one GroupNoteShare.
+     * @example
+     * // Delete one GroupNoteShare
+     * const GroupNoteShare = await prisma.groupNoteShare.delete({
+     *   where: {
+     *     // ... filter to delete one GroupNoteShare
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GroupNoteShareDeleteArgs>(args: SelectSubset<T, GroupNoteShareDeleteArgs<ExtArgs>>): Prisma__GroupNoteShareClient<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GroupNoteShare.
+     * @param {GroupNoteShareUpdateArgs} args - Arguments to update one GroupNoteShare.
+     * @example
+     * // Update one GroupNoteShare
+     * const groupNoteShare = await prisma.groupNoteShare.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GroupNoteShareUpdateArgs>(args: SelectSubset<T, GroupNoteShareUpdateArgs<ExtArgs>>): Prisma__GroupNoteShareClient<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GroupNoteShares.
+     * @param {GroupNoteShareDeleteManyArgs} args - Arguments to filter GroupNoteShares to delete.
+     * @example
+     * // Delete a few GroupNoteShares
+     * const { count } = await prisma.groupNoteShare.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GroupNoteShareDeleteManyArgs>(args?: SelectSubset<T, GroupNoteShareDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupNoteShares.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteShareUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GroupNoteShares
+     * const groupNoteShare = await prisma.groupNoteShare.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GroupNoteShareUpdateManyArgs>(args: SelectSubset<T, GroupNoteShareUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupNoteShares and returns the data updated in the database.
+     * @param {GroupNoteShareUpdateManyAndReturnArgs} args - Arguments to update many GroupNoteShares.
+     * @example
+     * // Update many GroupNoteShares
+     * const groupNoteShare = await prisma.groupNoteShare.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GroupNoteShares and only return the `id`
+     * const groupNoteShareWithIdOnly = await prisma.groupNoteShare.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GroupNoteShareUpdateManyAndReturnArgs>(args: SelectSubset<T, GroupNoteShareUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GroupNoteShare.
+     * @param {GroupNoteShareUpsertArgs} args - Arguments to update or create a GroupNoteShare.
+     * @example
+     * // Update or create a GroupNoteShare
+     * const groupNoteShare = await prisma.groupNoteShare.upsert({
+     *   create: {
+     *     // ... data to create a GroupNoteShare
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GroupNoteShare we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GroupNoteShareUpsertArgs>(args: SelectSubset<T, GroupNoteShareUpsertArgs<ExtArgs>>): Prisma__GroupNoteShareClient<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GroupNoteShares.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteShareCountArgs} args - Arguments to filter GroupNoteShares to count.
+     * @example
+     * // Count the number of GroupNoteShares
+     * const count = await prisma.groupNoteShare.count({
+     *   where: {
+     *     // ... the filter for the GroupNoteShares we want to count
+     *   }
+     * })
+    **/
+    count<T extends GroupNoteShareCountArgs>(
+      args?: Subset<T, GroupNoteShareCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GroupNoteShareCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GroupNoteShare.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteShareAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GroupNoteShareAggregateArgs>(args: Subset<T, GroupNoteShareAggregateArgs>): Prisma.PrismaPromise<GetGroupNoteShareAggregateType<T>>
+
+    /**
+     * Group by GroupNoteShare.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupNoteShareGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GroupNoteShareGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GroupNoteShareGroupByArgs['orderBy'] }
+        : { orderBy?: GroupNoteShareGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GroupNoteShareGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGroupNoteShareGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GroupNoteShare model
+   */
+  readonly fields: GroupNoteShareFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GroupNoteShare.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GroupNoteShareClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    note<T extends GroupNoteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GroupNoteDefaultArgs<ExtArgs>>): Prisma__GroupNoteClient<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    sharedWith<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GroupNoteShare model
+   */
+  interface GroupNoteShareFieldRefs {
+    readonly id: FieldRef<"GroupNoteShare", 'String'>
+    readonly noteId: FieldRef<"GroupNoteShare", 'String'>
+    readonly sharedWithId: FieldRef<"GroupNoteShare", 'String'>
+    readonly canEdit: FieldRef<"GroupNoteShare", 'Boolean'>
+    readonly createdAt: FieldRef<"GroupNoteShare", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GroupNoteShare findUnique
+   */
+  export type GroupNoteShareFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupNoteShare to fetch.
+     */
+    where: GroupNoteShareWhereUniqueInput
+  }
+
+  /**
+   * GroupNoteShare findUniqueOrThrow
+   */
+  export type GroupNoteShareFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupNoteShare to fetch.
+     */
+    where: GroupNoteShareWhereUniqueInput
+  }
+
+  /**
+   * GroupNoteShare findFirst
+   */
+  export type GroupNoteShareFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupNoteShare to fetch.
+     */
+    where?: GroupNoteShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupNoteShares to fetch.
+     */
+    orderBy?: GroupNoteShareOrderByWithRelationInput | GroupNoteShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupNoteShares.
+     */
+    cursor?: GroupNoteShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupNoteShares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupNoteShares.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupNoteShares.
+     */
+    distinct?: GroupNoteShareScalarFieldEnum | GroupNoteShareScalarFieldEnum[]
+  }
+
+  /**
+   * GroupNoteShare findFirstOrThrow
+   */
+  export type GroupNoteShareFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupNoteShare to fetch.
+     */
+    where?: GroupNoteShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupNoteShares to fetch.
+     */
+    orderBy?: GroupNoteShareOrderByWithRelationInput | GroupNoteShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupNoteShares.
+     */
+    cursor?: GroupNoteShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupNoteShares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupNoteShares.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupNoteShares.
+     */
+    distinct?: GroupNoteShareScalarFieldEnum | GroupNoteShareScalarFieldEnum[]
+  }
+
+  /**
+   * GroupNoteShare findMany
+   */
+  export type GroupNoteShareFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupNoteShares to fetch.
+     */
+    where?: GroupNoteShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupNoteShares to fetch.
+     */
+    orderBy?: GroupNoteShareOrderByWithRelationInput | GroupNoteShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GroupNoteShares.
+     */
+    cursor?: GroupNoteShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupNoteShares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupNoteShares.
+     */
+    skip?: number
+    distinct?: GroupNoteShareScalarFieldEnum | GroupNoteShareScalarFieldEnum[]
+  }
+
+  /**
+   * GroupNoteShare create
+   */
+  export type GroupNoteShareCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GroupNoteShare.
+     */
+    data: XOR<GroupNoteShareCreateInput, GroupNoteShareUncheckedCreateInput>
+  }
+
+  /**
+   * GroupNoteShare createMany
+   */
+  export type GroupNoteShareCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GroupNoteShares.
+     */
+    data: GroupNoteShareCreateManyInput | GroupNoteShareCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GroupNoteShare createManyAndReturn
+   */
+  export type GroupNoteShareCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * The data used to create many GroupNoteShares.
+     */
+    data: GroupNoteShareCreateManyInput | GroupNoteShareCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GroupNoteShare update
+   */
+  export type GroupNoteShareUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GroupNoteShare.
+     */
+    data: XOR<GroupNoteShareUpdateInput, GroupNoteShareUncheckedUpdateInput>
+    /**
+     * Choose, which GroupNoteShare to update.
+     */
+    where: GroupNoteShareWhereUniqueInput
+  }
+
+  /**
+   * GroupNoteShare updateMany
+   */
+  export type GroupNoteShareUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GroupNoteShares.
+     */
+    data: XOR<GroupNoteShareUpdateManyMutationInput, GroupNoteShareUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupNoteShares to update
+     */
+    where?: GroupNoteShareWhereInput
+    /**
+     * Limit how many GroupNoteShares to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupNoteShare updateManyAndReturn
+   */
+  export type GroupNoteShareUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * The data used to update GroupNoteShares.
+     */
+    data: XOR<GroupNoteShareUpdateManyMutationInput, GroupNoteShareUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupNoteShares to update
+     */
+    where?: GroupNoteShareWhereInput
+    /**
+     * Limit how many GroupNoteShares to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GroupNoteShare upsert
+   */
+  export type GroupNoteShareUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GroupNoteShare to update in case it exists.
+     */
+    where: GroupNoteShareWhereUniqueInput
+    /**
+     * In case the GroupNoteShare found by the `where` argument doesn't exist, create a new GroupNoteShare with this data.
+     */
+    create: XOR<GroupNoteShareCreateInput, GroupNoteShareUncheckedCreateInput>
+    /**
+     * In case the GroupNoteShare was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GroupNoteShareUpdateInput, GroupNoteShareUncheckedUpdateInput>
+  }
+
+  /**
+   * GroupNoteShare delete
+   */
+  export type GroupNoteShareDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
+    /**
+     * Filter which GroupNoteShare to delete.
+     */
+    where: GroupNoteShareWhereUniqueInput
+  }
+
+  /**
+   * GroupNoteShare deleteMany
+   */
+  export type GroupNoteShareDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupNoteShares to delete
+     */
+    where?: GroupNoteShareWhereInput
+    /**
+     * Limit how many GroupNoteShares to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupNoteShare without action
+   */
+  export type GroupNoteShareDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupNoteShare
+     */
+    select?: GroupNoteShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupNoteShare
+     */
+    omit?: GroupNoteShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupNoteShareInclude<ExtArgs> | null
   }
 
 
@@ -61502,6 +62757,17 @@ export namespace Prisma {
   export type GroupNoteScalarFieldEnum = (typeof GroupNoteScalarFieldEnum)[keyof typeof GroupNoteScalarFieldEnum]
 
 
+  export const GroupNoteShareScalarFieldEnum: {
+    id: 'id',
+    noteId: 'noteId',
+    sharedWithId: 'sharedWithId',
+    canEdit: 'canEdit',
+    createdAt: 'createdAt'
+  };
+
+  export type GroupNoteShareScalarFieldEnum = (typeof GroupNoteShareScalarFieldEnum)[keyof typeof GroupNoteShareScalarFieldEnum]
+
+
   export const GroupMemberScalarFieldEnum: {
     id: 'id',
     groupId: 'groupId',
@@ -62359,6 +63625,7 @@ export namespace Prisma {
     following?: FollowListRelationFilter
     uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
     groupNotes?: GroupNoteListRelationFilter
+    noteSharesReceived?: GroupNoteShareListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -62417,6 +63684,7 @@ export namespace Prisma {
     following?: FollowOrderByRelationAggregateInput
     uploadedDepartmentDocuments?: DepartmentDocumentOrderByRelationAggregateInput
     groupNotes?: GroupNoteOrderByRelationAggregateInput
+    noteSharesReceived?: GroupNoteShareOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -62478,6 +63746,7 @@ export namespace Prisma {
     following?: FollowListRelationFilter
     uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
     groupNotes?: GroupNoteListRelationFilter
+    noteSharesReceived?: GroupNoteShareListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -63706,6 +64975,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"GroupNote"> | Date | string
     document?: XOR<GroupDocumentScalarRelationFilter, GroupDocumentWhereInput>
     creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+    shares?: GroupNoteShareListRelationFilter
   }
 
   export type GroupNoteOrderByWithRelationInput = {
@@ -63720,6 +64990,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     document?: GroupDocumentOrderByWithRelationInput
     creator?: UserOrderByWithRelationInput
+    shares?: GroupNoteShareOrderByRelationAggregateInput
   }
 
   export type GroupNoteWhereUniqueInput = Prisma.AtLeast<{
@@ -63737,6 +65008,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"GroupNote"> | Date | string
     document?: XOR<GroupDocumentScalarRelationFilter, GroupDocumentWhereInput>
     creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+    shares?: GroupNoteShareListRelationFilter
   }, "id">
 
   export type GroupNoteOrderByWithAggregationInput = {
@@ -63769,6 +65041,65 @@ export namespace Prisma {
     createdBy?: StringWithAggregatesFilter<"GroupNote"> | string
     createdAt?: DateTimeWithAggregatesFilter<"GroupNote"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GroupNote"> | Date | string
+  }
+
+  export type GroupNoteShareWhereInput = {
+    AND?: GroupNoteShareWhereInput | GroupNoteShareWhereInput[]
+    OR?: GroupNoteShareWhereInput[]
+    NOT?: GroupNoteShareWhereInput | GroupNoteShareWhereInput[]
+    id?: StringFilter<"GroupNoteShare"> | string
+    noteId?: StringFilter<"GroupNoteShare"> | string
+    sharedWithId?: StringFilter<"GroupNoteShare"> | string
+    canEdit?: BoolFilter<"GroupNoteShare"> | boolean
+    createdAt?: DateTimeFilter<"GroupNoteShare"> | Date | string
+    note?: XOR<GroupNoteScalarRelationFilter, GroupNoteWhereInput>
+    sharedWith?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type GroupNoteShareOrderByWithRelationInput = {
+    id?: SortOrder
+    noteId?: SortOrder
+    sharedWithId?: SortOrder
+    canEdit?: SortOrder
+    createdAt?: SortOrder
+    note?: GroupNoteOrderByWithRelationInput
+    sharedWith?: UserOrderByWithRelationInput
+  }
+
+  export type GroupNoteShareWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    noteId_sharedWithId?: GroupNoteShareNoteIdSharedWithIdCompoundUniqueInput
+    AND?: GroupNoteShareWhereInput | GroupNoteShareWhereInput[]
+    OR?: GroupNoteShareWhereInput[]
+    NOT?: GroupNoteShareWhereInput | GroupNoteShareWhereInput[]
+    noteId?: StringFilter<"GroupNoteShare"> | string
+    sharedWithId?: StringFilter<"GroupNoteShare"> | string
+    canEdit?: BoolFilter<"GroupNoteShare"> | boolean
+    createdAt?: DateTimeFilter<"GroupNoteShare"> | Date | string
+    note?: XOR<GroupNoteScalarRelationFilter, GroupNoteWhereInput>
+    sharedWith?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "noteId_sharedWithId">
+
+  export type GroupNoteShareOrderByWithAggregationInput = {
+    id?: SortOrder
+    noteId?: SortOrder
+    sharedWithId?: SortOrder
+    canEdit?: SortOrder
+    createdAt?: SortOrder
+    _count?: GroupNoteShareCountOrderByAggregateInput
+    _max?: GroupNoteShareMaxOrderByAggregateInput
+    _min?: GroupNoteShareMinOrderByAggregateInput
+  }
+
+  export type GroupNoteShareScalarWhereWithAggregatesInput = {
+    AND?: GroupNoteShareScalarWhereWithAggregatesInput | GroupNoteShareScalarWhereWithAggregatesInput[]
+    OR?: GroupNoteShareScalarWhereWithAggregatesInput[]
+    NOT?: GroupNoteShareScalarWhereWithAggregatesInput | GroupNoteShareScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GroupNoteShare"> | string
+    noteId?: StringWithAggregatesFilter<"GroupNoteShare"> | string
+    sharedWithId?: StringWithAggregatesFilter<"GroupNoteShare"> | string
+    canEdit?: BoolWithAggregatesFilter<"GroupNoteShare"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"GroupNoteShare"> | Date | string
   }
 
   export type GroupMemberWhereInput = {
@@ -65980,6 +67311,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -66038,6 +67370,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUpdateInput = {
@@ -66096,6 +67429,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -66154,6 +67488,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -67440,6 +68775,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     document: GroupDocumentCreateNestedOneWithoutNotesInput
     creator: UserCreateNestedOneWithoutGroupNotesInput
+    shares?: GroupNoteShareCreateNestedManyWithoutNoteInput
   }
 
   export type GroupNoteUncheckedCreateInput = {
@@ -67452,6 +68788,7 @@ export namespace Prisma {
     createdBy: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    shares?: GroupNoteShareUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type GroupNoteUpdateInput = {
@@ -67464,6 +68801,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     document?: GroupDocumentUpdateOneRequiredWithoutNotesNestedInput
     creator?: UserUpdateOneRequiredWithoutGroupNotesNestedInput
+    shares?: GroupNoteShareUpdateManyWithoutNoteNestedInput
   }
 
   export type GroupNoteUncheckedUpdateInput = {
@@ -67476,6 +68814,7 @@ export namespace Prisma {
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shares?: GroupNoteShareUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type GroupNoteCreateManyInput = {
@@ -67510,6 +68849,60 @@ export namespace Prisma {
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteShareCreateInput = {
+    id?: string
+    canEdit?: boolean
+    createdAt?: Date | string
+    note: GroupNoteCreateNestedOneWithoutSharesInput
+    sharedWith: UserCreateNestedOneWithoutNoteSharesReceivedInput
+  }
+
+  export type GroupNoteShareUncheckedCreateInput = {
+    id?: string
+    noteId: string
+    sharedWithId: string
+    canEdit?: boolean
+    createdAt?: Date | string
+  }
+
+  export type GroupNoteShareUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    canEdit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: GroupNoteUpdateOneRequiredWithoutSharesNestedInput
+    sharedWith?: UserUpdateOneRequiredWithoutNoteSharesReceivedNestedInput
+  }
+
+  export type GroupNoteShareUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    noteId?: StringFieldUpdateOperationsInput | string
+    sharedWithId?: StringFieldUpdateOperationsInput | string
+    canEdit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteShareCreateManyInput = {
+    id?: string
+    noteId: string
+    sharedWithId: string
+    canEdit?: boolean
+    createdAt?: Date | string
+  }
+
+  export type GroupNoteShareUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    canEdit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteShareUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    noteId?: StringFieldUpdateOperationsInput | string
+    sharedWithId?: StringFieldUpdateOperationsInput | string
+    canEdit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GroupMemberCreateInput = {
@@ -70046,6 +71439,12 @@ export namespace Prisma {
     none?: GroupNoteWhereInput
   }
 
+  export type GroupNoteShareListRelationFilter = {
+    every?: GroupNoteShareWhereInput
+    some?: GroupNoteShareWhereInput
+    none?: GroupNoteShareWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -70156,6 +71555,10 @@ export namespace Prisma {
   }
 
   export type GroupNoteOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GroupNoteShareOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -71293,6 +72696,40 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumNoteTextSizeFilter<$PrismaModel>
     _max?: NestedEnumNoteTextSizeFilter<$PrismaModel>
+  }
+
+  export type GroupNoteScalarRelationFilter = {
+    is?: GroupNoteWhereInput
+    isNot?: GroupNoteWhereInput
+  }
+
+  export type GroupNoteShareNoteIdSharedWithIdCompoundUniqueInput = {
+    noteId: string
+    sharedWithId: string
+  }
+
+  export type GroupNoteShareCountOrderByAggregateInput = {
+    id?: SortOrder
+    noteId?: SortOrder
+    sharedWithId?: SortOrder
+    canEdit?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type GroupNoteShareMaxOrderByAggregateInput = {
+    id?: SortOrder
+    noteId?: SortOrder
+    sharedWithId?: SortOrder
+    canEdit?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type GroupNoteShareMinOrderByAggregateInput = {
+    id?: SortOrder
+    noteId?: SortOrder
+    sharedWithId?: SortOrder
+    canEdit?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type GroupMemberGroupIdUserIdCompoundUniqueInput = {
@@ -72904,6 +74341,13 @@ export namespace Prisma {
     connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
   }
 
+  export type GroupNoteShareCreateNestedManyWithoutSharedWithInput = {
+    create?: XOR<GroupNoteShareCreateWithoutSharedWithInput, GroupNoteShareUncheckedCreateWithoutSharedWithInput> | GroupNoteShareCreateWithoutSharedWithInput[] | GroupNoteShareUncheckedCreateWithoutSharedWithInput[]
+    connectOrCreate?: GroupNoteShareCreateOrConnectWithoutSharedWithInput | GroupNoteShareCreateOrConnectWithoutSharedWithInput[]
+    createMany?: GroupNoteShareCreateManySharedWithInputEnvelope
+    connect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+  }
+
   export type AnnouncementUncheckedCreateNestedManyWithoutPublisherInput = {
     create?: XOR<AnnouncementCreateWithoutPublisherInput, AnnouncementUncheckedCreateWithoutPublisherInput> | AnnouncementCreateWithoutPublisherInput[] | AnnouncementUncheckedCreateWithoutPublisherInput[]
     connectOrCreate?: AnnouncementCreateOrConnectWithoutPublisherInput | AnnouncementCreateOrConnectWithoutPublisherInput[]
@@ -73117,6 +74561,13 @@ export namespace Prisma {
     connectOrCreate?: GroupNoteCreateOrConnectWithoutCreatorInput | GroupNoteCreateOrConnectWithoutCreatorInput[]
     createMany?: GroupNoteCreateManyCreatorInputEnvelope
     connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+  }
+
+  export type GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput = {
+    create?: XOR<GroupNoteShareCreateWithoutSharedWithInput, GroupNoteShareUncheckedCreateWithoutSharedWithInput> | GroupNoteShareCreateWithoutSharedWithInput[] | GroupNoteShareUncheckedCreateWithoutSharedWithInput[]
+    connectOrCreate?: GroupNoteShareCreateOrConnectWithoutSharedWithInput | GroupNoteShareCreateOrConnectWithoutSharedWithInput[]
+    createMany?: GroupNoteShareCreateManySharedWithInputEnvelope
+    connect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -73569,6 +75020,20 @@ export namespace Prisma {
     deleteMany?: GroupNoteScalarWhereInput | GroupNoteScalarWhereInput[]
   }
 
+  export type GroupNoteShareUpdateManyWithoutSharedWithNestedInput = {
+    create?: XOR<GroupNoteShareCreateWithoutSharedWithInput, GroupNoteShareUncheckedCreateWithoutSharedWithInput> | GroupNoteShareCreateWithoutSharedWithInput[] | GroupNoteShareUncheckedCreateWithoutSharedWithInput[]
+    connectOrCreate?: GroupNoteShareCreateOrConnectWithoutSharedWithInput | GroupNoteShareCreateOrConnectWithoutSharedWithInput[]
+    upsert?: GroupNoteShareUpsertWithWhereUniqueWithoutSharedWithInput | GroupNoteShareUpsertWithWhereUniqueWithoutSharedWithInput[]
+    createMany?: GroupNoteShareCreateManySharedWithInputEnvelope
+    set?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    disconnect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    delete?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    connect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    update?: GroupNoteShareUpdateWithWhereUniqueWithoutSharedWithInput | GroupNoteShareUpdateWithWhereUniqueWithoutSharedWithInput[]
+    updateMany?: GroupNoteShareUpdateManyWithWhereWithoutSharedWithInput | GroupNoteShareUpdateManyWithWhereWithoutSharedWithInput[]
+    deleteMany?: GroupNoteShareScalarWhereInput | GroupNoteShareScalarWhereInput[]
+  }
+
   export type AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput = {
     create?: XOR<AnnouncementCreateWithoutPublisherInput, AnnouncementUncheckedCreateWithoutPublisherInput> | AnnouncementCreateWithoutPublisherInput[] | AnnouncementUncheckedCreateWithoutPublisherInput[]
     connectOrCreate?: AnnouncementCreateOrConnectWithoutPublisherInput | AnnouncementCreateOrConnectWithoutPublisherInput[]
@@ -73993,6 +75458,20 @@ export namespace Prisma {
     update?: GroupNoteUpdateWithWhereUniqueWithoutCreatorInput | GroupNoteUpdateWithWhereUniqueWithoutCreatorInput[]
     updateMany?: GroupNoteUpdateManyWithWhereWithoutCreatorInput | GroupNoteUpdateManyWithWhereWithoutCreatorInput[]
     deleteMany?: GroupNoteScalarWhereInput | GroupNoteScalarWhereInput[]
+  }
+
+  export type GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput = {
+    create?: XOR<GroupNoteShareCreateWithoutSharedWithInput, GroupNoteShareUncheckedCreateWithoutSharedWithInput> | GroupNoteShareCreateWithoutSharedWithInput[] | GroupNoteShareUncheckedCreateWithoutSharedWithInput[]
+    connectOrCreate?: GroupNoteShareCreateOrConnectWithoutSharedWithInput | GroupNoteShareCreateOrConnectWithoutSharedWithInput[]
+    upsert?: GroupNoteShareUpsertWithWhereUniqueWithoutSharedWithInput | GroupNoteShareUpsertWithWhereUniqueWithoutSharedWithInput[]
+    createMany?: GroupNoteShareCreateManySharedWithInputEnvelope
+    set?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    disconnect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    delete?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    connect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    update?: GroupNoteShareUpdateWithWhereUniqueWithoutSharedWithInput | GroupNoteShareUpdateWithWhereUniqueWithoutSharedWithInput[]
+    updateMany?: GroupNoteShareUpdateManyWithWhereWithoutSharedWithInput | GroupNoteShareUpdateManyWithWhereWithoutSharedWithInput[]
+    deleteMany?: GroupNoteShareScalarWhereInput | GroupNoteShareScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutInvitationsInput = {
@@ -75285,6 +76764,20 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type GroupNoteShareCreateNestedManyWithoutNoteInput = {
+    create?: XOR<GroupNoteShareCreateWithoutNoteInput, GroupNoteShareUncheckedCreateWithoutNoteInput> | GroupNoteShareCreateWithoutNoteInput[] | GroupNoteShareUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: GroupNoteShareCreateOrConnectWithoutNoteInput | GroupNoteShareCreateOrConnectWithoutNoteInput[]
+    createMany?: GroupNoteShareCreateManyNoteInputEnvelope
+    connect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+  }
+
+  export type GroupNoteShareUncheckedCreateNestedManyWithoutNoteInput = {
+    create?: XOR<GroupNoteShareCreateWithoutNoteInput, GroupNoteShareUncheckedCreateWithoutNoteInput> | GroupNoteShareCreateWithoutNoteInput[] | GroupNoteShareUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: GroupNoteShareCreateOrConnectWithoutNoteInput | GroupNoteShareCreateOrConnectWithoutNoteInput[]
+    createMany?: GroupNoteShareCreateManyNoteInputEnvelope
+    connect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+  }
+
   export type EnumNoteTextSizeFieldUpdateOperationsInput = {
     set?: $Enums.NoteTextSize
   }
@@ -75303,6 +76796,62 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutGroupNotesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGroupNotesInput, UserUpdateWithoutGroupNotesInput>, UserUncheckedUpdateWithoutGroupNotesInput>
+  }
+
+  export type GroupNoteShareUpdateManyWithoutNoteNestedInput = {
+    create?: XOR<GroupNoteShareCreateWithoutNoteInput, GroupNoteShareUncheckedCreateWithoutNoteInput> | GroupNoteShareCreateWithoutNoteInput[] | GroupNoteShareUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: GroupNoteShareCreateOrConnectWithoutNoteInput | GroupNoteShareCreateOrConnectWithoutNoteInput[]
+    upsert?: GroupNoteShareUpsertWithWhereUniqueWithoutNoteInput | GroupNoteShareUpsertWithWhereUniqueWithoutNoteInput[]
+    createMany?: GroupNoteShareCreateManyNoteInputEnvelope
+    set?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    disconnect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    delete?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    connect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    update?: GroupNoteShareUpdateWithWhereUniqueWithoutNoteInput | GroupNoteShareUpdateWithWhereUniqueWithoutNoteInput[]
+    updateMany?: GroupNoteShareUpdateManyWithWhereWithoutNoteInput | GroupNoteShareUpdateManyWithWhereWithoutNoteInput[]
+    deleteMany?: GroupNoteShareScalarWhereInput | GroupNoteShareScalarWhereInput[]
+  }
+
+  export type GroupNoteShareUncheckedUpdateManyWithoutNoteNestedInput = {
+    create?: XOR<GroupNoteShareCreateWithoutNoteInput, GroupNoteShareUncheckedCreateWithoutNoteInput> | GroupNoteShareCreateWithoutNoteInput[] | GroupNoteShareUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: GroupNoteShareCreateOrConnectWithoutNoteInput | GroupNoteShareCreateOrConnectWithoutNoteInput[]
+    upsert?: GroupNoteShareUpsertWithWhereUniqueWithoutNoteInput | GroupNoteShareUpsertWithWhereUniqueWithoutNoteInput[]
+    createMany?: GroupNoteShareCreateManyNoteInputEnvelope
+    set?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    disconnect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    delete?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    connect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
+    update?: GroupNoteShareUpdateWithWhereUniqueWithoutNoteInput | GroupNoteShareUpdateWithWhereUniqueWithoutNoteInput[]
+    updateMany?: GroupNoteShareUpdateManyWithWhereWithoutNoteInput | GroupNoteShareUpdateManyWithWhereWithoutNoteInput[]
+    deleteMany?: GroupNoteShareScalarWhereInput | GroupNoteShareScalarWhereInput[]
+  }
+
+  export type GroupNoteCreateNestedOneWithoutSharesInput = {
+    create?: XOR<GroupNoteCreateWithoutSharesInput, GroupNoteUncheckedCreateWithoutSharesInput>
+    connectOrCreate?: GroupNoteCreateOrConnectWithoutSharesInput
+    connect?: GroupNoteWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutNoteSharesReceivedInput = {
+    create?: XOR<UserCreateWithoutNoteSharesReceivedInput, UserUncheckedCreateWithoutNoteSharesReceivedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNoteSharesReceivedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type GroupNoteUpdateOneRequiredWithoutSharesNestedInput = {
+    create?: XOR<GroupNoteCreateWithoutSharesInput, GroupNoteUncheckedCreateWithoutSharesInput>
+    connectOrCreate?: GroupNoteCreateOrConnectWithoutSharesInput
+    upsert?: GroupNoteUpsertWithoutSharesInput
+    connect?: GroupNoteWhereUniqueInput
+    update?: XOR<XOR<GroupNoteUpdateToOneWithWhereWithoutSharesInput, GroupNoteUpdateWithoutSharesInput>, GroupNoteUncheckedUpdateWithoutSharesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutNoteSharesReceivedNestedInput = {
+    create?: XOR<UserCreateWithoutNoteSharesReceivedInput, UserUncheckedCreateWithoutNoteSharesReceivedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNoteSharesReceivedInput
+    upsert?: UserUpsertWithoutNoteSharesReceivedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNoteSharesReceivedInput, UserUpdateWithoutNoteSharesReceivedInput>, UserUncheckedUpdateWithoutNoteSharesReceivedInput>
   }
 
   export type GroupCreateNestedOneWithoutMembersInput = {
@@ -77929,6 +79478,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     document: GroupDocumentCreateNestedOneWithoutNotesInput
+    shares?: GroupNoteShareCreateNestedManyWithoutNoteInput
   }
 
   export type GroupNoteUncheckedCreateWithoutCreatorInput = {
@@ -77940,6 +79490,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    shares?: GroupNoteShareUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type GroupNoteCreateOrConnectWithoutCreatorInput = {
@@ -77949,6 +79500,30 @@ export namespace Prisma {
 
   export type GroupNoteCreateManyCreatorInputEnvelope = {
     data: GroupNoteCreateManyCreatorInput | GroupNoteCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GroupNoteShareCreateWithoutSharedWithInput = {
+    id?: string
+    canEdit?: boolean
+    createdAt?: Date | string
+    note: GroupNoteCreateNestedOneWithoutSharesInput
+  }
+
+  export type GroupNoteShareUncheckedCreateWithoutSharedWithInput = {
+    id?: string
+    noteId: string
+    canEdit?: boolean
+    createdAt?: Date | string
+  }
+
+  export type GroupNoteShareCreateOrConnectWithoutSharedWithInput = {
+    where: GroupNoteShareWhereUniqueInput
+    create: XOR<GroupNoteShareCreateWithoutSharedWithInput, GroupNoteShareUncheckedCreateWithoutSharedWithInput>
+  }
+
+  export type GroupNoteShareCreateManySharedWithInputEnvelope = {
+    data: GroupNoteShareCreateManySharedWithInput | GroupNoteShareCreateManySharedWithInput[]
     skipDuplicates?: boolean
   }
 
@@ -78839,6 +80414,33 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"GroupNote"> | Date | string
   }
 
+  export type GroupNoteShareUpsertWithWhereUniqueWithoutSharedWithInput = {
+    where: GroupNoteShareWhereUniqueInput
+    update: XOR<GroupNoteShareUpdateWithoutSharedWithInput, GroupNoteShareUncheckedUpdateWithoutSharedWithInput>
+    create: XOR<GroupNoteShareCreateWithoutSharedWithInput, GroupNoteShareUncheckedCreateWithoutSharedWithInput>
+  }
+
+  export type GroupNoteShareUpdateWithWhereUniqueWithoutSharedWithInput = {
+    where: GroupNoteShareWhereUniqueInput
+    data: XOR<GroupNoteShareUpdateWithoutSharedWithInput, GroupNoteShareUncheckedUpdateWithoutSharedWithInput>
+  }
+
+  export type GroupNoteShareUpdateManyWithWhereWithoutSharedWithInput = {
+    where: GroupNoteShareScalarWhereInput
+    data: XOR<GroupNoteShareUpdateManyMutationInput, GroupNoteShareUncheckedUpdateManyWithoutSharedWithInput>
+  }
+
+  export type GroupNoteShareScalarWhereInput = {
+    AND?: GroupNoteShareScalarWhereInput | GroupNoteShareScalarWhereInput[]
+    OR?: GroupNoteShareScalarWhereInput[]
+    NOT?: GroupNoteShareScalarWhereInput | GroupNoteShareScalarWhereInput[]
+    id?: StringFilter<"GroupNoteShare"> | string
+    noteId?: StringFilter<"GroupNoteShare"> | string
+    sharedWithId?: StringFilter<"GroupNoteShare"> | string
+    canEdit?: BoolFilter<"GroupNoteShare"> | boolean
+    createdAt?: DateTimeFilter<"GroupNoteShare"> | Date | string
+  }
+
   export type UserCreateWithoutInvitationsInput = {
     id?: string
     email: string
@@ -78894,6 +80496,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -78951,6 +80554,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -79048,6 +80652,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -79105,6 +80710,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type InvitationGuestUpsertWithWhereUniqueWithoutInvitationInput = {
@@ -79269,6 +80875,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutFollowingInput = {
@@ -79326,6 +80933,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutFollowingInput = {
@@ -79388,6 +80996,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutFollowersInput = {
@@ -79445,6 +81054,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutFollowersInput = {
@@ -79518,6 +81128,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFollowingInput = {
@@ -79575,6 +81186,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUpsertWithoutFollowersInput = {
@@ -79643,6 +81255,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFollowersInput = {
@@ -79700,6 +81313,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type DepartmentCreateWithoutOrganizationInput = {
@@ -80036,6 +81650,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutOrgMembershipsInput = {
@@ -80093,6 +81708,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutOrgMembershipsInput = {
@@ -80207,6 +81823,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrgMembershipsInput = {
@@ -80264,6 +81881,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type OrganizationCreateWithoutDepartmentsInput = {
@@ -80356,6 +81974,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutHeadedDepartmentsInput = {
@@ -80413,6 +82032,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutHeadedDepartmentsInput = {
@@ -80841,6 +82461,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutHeadedDepartmentsInput = {
@@ -80898,6 +82519,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type DepartmentMemberUpsertWithWhereUniqueWithoutDepartmentInput = {
@@ -81196,6 +82818,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutUploadedDepartmentDocumentsInput = {
@@ -81253,6 +82876,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutUploadedDepartmentDocumentsInput = {
@@ -81375,6 +82999,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUploadedDepartmentDocumentsInput = {
@@ -81432,6 +83057,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type DepartmentCreateWithoutGoalsInput = {
@@ -81624,6 +83250,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutCreatedMeetingsInput = {
@@ -81681,6 +83308,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutCreatedMeetingsInput = {
@@ -81803,6 +83431,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedMeetingsInput = {
@@ -81860,6 +83489,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type DepartmentCreateWithoutPollsInput = {
@@ -81960,6 +83590,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutCreatedPollsInput = {
@@ -82017,6 +83648,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutCreatedPollsInput = {
@@ -82163,6 +83795,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedPollsInput = {
@@ -82220,6 +83853,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type PollVoteUpsertWithWhereUniqueWithoutPollInput = {
@@ -82320,6 +83954,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutPollVotesInput = {
@@ -82377,6 +84012,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutPollVotesInput = {
@@ -82483,6 +84119,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPollVotesInput = {
@@ -82540,6 +84177,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type DepartmentCreateWithoutTeamDecisionsInput = {
@@ -82640,6 +84278,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutCreatedDecisionsInput = {
@@ -82697,6 +84336,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutCreatedDecisionsInput = {
@@ -82843,6 +84483,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedDecisionsInput = {
@@ -82900,6 +84541,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type DecisionVoteUpsertWithWhereUniqueWithoutDecisionInput = {
@@ -83002,6 +84644,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutDecisionVotesInput = {
@@ -83059,6 +84702,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutDecisionVotesInput = {
@@ -83167,6 +84811,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDecisionVotesInput = {
@@ -83224,6 +84869,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type DepartmentCreateWithoutMembersInput = {
@@ -83324,6 +84970,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutDeptMembershipsInput = {
@@ -83381,6 +85028,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutDeptMembershipsInput = {
@@ -83503,6 +85151,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDeptMembershipsInput = {
@@ -83560,6 +85209,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type DepartmentCreateWithoutConversationsInput = {
@@ -83829,6 +85479,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: UserCreateNestedOneWithoutGroupNotesInput
+    shares?: GroupNoteShareCreateNestedManyWithoutNoteInput
   }
 
   export type GroupNoteUncheckedCreateWithoutDocumentInput = {
@@ -83840,6 +85491,7 @@ export namespace Prisma {
     createdBy: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    shares?: GroupNoteShareUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type GroupNoteCreateOrConnectWithoutDocumentInput = {
@@ -83977,6 +85629,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutGroupNotesInput = {
@@ -84034,11 +85687,36 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutGroupNotesInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutGroupNotesInput, UserUncheckedCreateWithoutGroupNotesInput>
+  }
+
+  export type GroupNoteShareCreateWithoutNoteInput = {
+    id?: string
+    canEdit?: boolean
+    createdAt?: Date | string
+    sharedWith: UserCreateNestedOneWithoutNoteSharesReceivedInput
+  }
+
+  export type GroupNoteShareUncheckedCreateWithoutNoteInput = {
+    id?: string
+    sharedWithId: string
+    canEdit?: boolean
+    createdAt?: Date | string
+  }
+
+  export type GroupNoteShareCreateOrConnectWithoutNoteInput = {
+    where: GroupNoteShareWhereUniqueInput
+    create: XOR<GroupNoteShareCreateWithoutNoteInput, GroupNoteShareUncheckedCreateWithoutNoteInput>
+  }
+
+  export type GroupNoteShareCreateManyNoteInputEnvelope = {
+    data: GroupNoteShareCreateManyNoteInput | GroupNoteShareCreateManyNoteInput[]
+    skipDuplicates?: boolean
   }
 
   export type GroupDocumentUpsertWithoutNotesInput = {
@@ -84134,6 +85812,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGroupNotesInput = {
@@ -84191,6 +85870,335 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  }
+
+  export type GroupNoteShareUpsertWithWhereUniqueWithoutNoteInput = {
+    where: GroupNoteShareWhereUniqueInput
+    update: XOR<GroupNoteShareUpdateWithoutNoteInput, GroupNoteShareUncheckedUpdateWithoutNoteInput>
+    create: XOR<GroupNoteShareCreateWithoutNoteInput, GroupNoteShareUncheckedCreateWithoutNoteInput>
+  }
+
+  export type GroupNoteShareUpdateWithWhereUniqueWithoutNoteInput = {
+    where: GroupNoteShareWhereUniqueInput
+    data: XOR<GroupNoteShareUpdateWithoutNoteInput, GroupNoteShareUncheckedUpdateWithoutNoteInput>
+  }
+
+  export type GroupNoteShareUpdateManyWithWhereWithoutNoteInput = {
+    where: GroupNoteShareScalarWhereInput
+    data: XOR<GroupNoteShareUpdateManyMutationInput, GroupNoteShareUncheckedUpdateManyWithoutNoteInput>
+  }
+
+  export type GroupNoteCreateWithoutSharesInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: GroupDocumentCreateNestedOneWithoutNotesInput
+    creator: UserCreateNestedOneWithoutGroupNotesInput
+  }
+
+  export type GroupNoteUncheckedCreateWithoutSharesInput = {
+    id?: string
+    documentId: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupNoteCreateOrConnectWithoutSharesInput = {
+    where: GroupNoteWhereUniqueInput
+    create: XOR<GroupNoteCreateWithoutSharesInput, GroupNoteUncheckedCreateWithoutSharesInput>
+  }
+
+  export type UserCreateWithoutNoteSharesReceivedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+  }
+
+  export type UserUncheckedCreateWithoutNoteSharesReceivedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type UserCreateOrConnectWithoutNoteSharesReceivedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutNoteSharesReceivedInput, UserUncheckedCreateWithoutNoteSharesReceivedInput>
+  }
+
+  export type GroupNoteUpsertWithoutSharesInput = {
+    update: XOR<GroupNoteUpdateWithoutSharesInput, GroupNoteUncheckedUpdateWithoutSharesInput>
+    create: XOR<GroupNoteCreateWithoutSharesInput, GroupNoteUncheckedCreateWithoutSharesInput>
+    where?: GroupNoteWhereInput
+  }
+
+  export type GroupNoteUpdateToOneWithWhereWithoutSharesInput = {
+    where?: GroupNoteWhereInput
+    data: XOR<GroupNoteUpdateWithoutSharesInput, GroupNoteUncheckedUpdateWithoutSharesInput>
+  }
+
+  export type GroupNoteUpdateWithoutSharesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: GroupDocumentUpdateOneRequiredWithoutNotesNestedInput
+    creator?: UserUpdateOneRequiredWithoutGroupNotesNestedInput
+  }
+
+  export type GroupNoteUncheckedUpdateWithoutSharesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutNoteSharesReceivedInput = {
+    update: XOR<UserUpdateWithoutNoteSharesReceivedInput, UserUncheckedUpdateWithoutNoteSharesReceivedInput>
+    create: XOR<UserCreateWithoutNoteSharesReceivedInput, UserUncheckedCreateWithoutNoteSharesReceivedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutNoteSharesReceivedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutNoteSharesReceivedInput, UserUncheckedUpdateWithoutNoteSharesReceivedInput>
+  }
+
+  export type UserUpdateWithoutNoteSharesReceivedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutNoteSharesReceivedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type GroupCreateWithoutMembersInput = {
@@ -84275,6 +86283,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutGroupMembershipsInput = {
@@ -84332,6 +86341,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutGroupMembershipsInput = {
@@ -84438,6 +86448,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
@@ -84495,6 +86506,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type AttachmentCreateWithoutMessageInput = {
@@ -84605,6 +86617,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -84662,6 +86675,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -84796,6 +86810,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -84853,6 +86868,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type MessageCreateWithoutAttachmentsInput = {
@@ -84966,6 +86982,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -85023,6 +87040,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -85096,6 +87114,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -85153,6 +87172,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserCreateWithoutPublishedAnnouncementsInput = {
@@ -85210,6 +87230,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutPublishedAnnouncementsInput = {
@@ -85267,6 +87288,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutPublishedAnnouncementsInput = {
@@ -85362,6 +87384,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPublishedAnnouncementsInput = {
@@ -85419,6 +87442,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type AnnouncementReadUpsertWithWhereUniqueWithoutAnnouncementInput = {
@@ -86051,6 +88075,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutUserPageInput = {
@@ -86108,6 +88133,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutUserPageInput = {
@@ -86219,6 +88245,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserPageInput = {
@@ -86276,6 +88303,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type PostUpsertWithWhereUniqueWithoutPageInput = {
@@ -86571,6 +88599,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutLikesInput = {
@@ -86628,6 +88657,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutLikesInput = {
@@ -86740,6 +88770,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLikesInput = {
@@ -86797,6 +88828,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type PostCreateWithoutCommentsInput = {
@@ -86887,6 +88919,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutCommentsInput = {
@@ -86944,6 +88977,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutCommentsInput = {
@@ -87111,6 +89145,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -87168,6 +89203,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type CommentUpsertWithoutRepliesInput = {
@@ -87272,6 +89308,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutPostReadsInput = {
@@ -87329,6 +89366,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutPostReadsInput = {
@@ -87435,6 +89473,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostReadsInput = {
@@ -87492,6 +89531,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type PostUpsertWithoutPostReadsInput = {
@@ -87631,6 +89671,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutCreatedTasksInput = {
@@ -87688,6 +89729,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutCreatedTasksInput = {
@@ -87750,6 +89792,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutAssignedTasksInput = {
@@ -87807,6 +89850,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutAssignedTasksInput = {
@@ -87989,6 +90033,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedTasksInput = {
@@ -88046,6 +90091,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUpsertWithoutAssignedTasksInput = {
@@ -88114,6 +90160,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignedTasksInput = {
@@ -88171,6 +90218,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type TaskMessageUpsertWithWhereUniqueWithoutTaskInput = {
@@ -88314,6 +90362,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutTaskMessagesInput = {
@@ -88371,6 +90420,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutTaskMessagesInput = {
@@ -88521,6 +90571,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskMessagesInput = {
@@ -88578,6 +90629,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type TaskAttachmentUpsertWithWhereUniqueWithoutMessageInput = {
@@ -88830,6 +90882,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutDepartmentMonthlyReportsInput = {
@@ -88887,6 +90940,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutDepartmentMonthlyReportsInput = {
@@ -89009,6 +91063,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDepartmentMonthlyReportsInput = {
@@ -89066,6 +91121,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserCreateWithoutPushSubscriptionsInput = {
@@ -89123,6 +91179,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -89180,6 +91237,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -89253,6 +91311,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -89310,6 +91369,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserCreateWithoutPersonalTasksInput = {
@@ -89367,6 +91427,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutPersonalTasksInput = {
@@ -89424,6 +91485,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutPersonalTasksInput = {
@@ -89497,6 +91559,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPersonalTasksInput = {
@@ -89554,6 +91617,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserCreateWithoutFinancialGoalsInput = {
@@ -89611,6 +91675,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutFinancialGoalsInput = {
@@ -89668,6 +91733,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutFinancialGoalsInput = {
@@ -89771,6 +91837,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFinancialGoalsInput = {
@@ -89828,6 +91895,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserMonthlyProgressUpsertWithWhereUniqueWithoutGoalInput = {
@@ -89915,6 +91983,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutFinancialProfileInput = {
@@ -89972,6 +92041,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutFinancialProfileInput = {
@@ -90045,6 +92115,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFinancialProfileInput = {
@@ -90102,6 +92173,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserCreateWithoutMonthlyStatementsInput = {
@@ -90159,6 +92231,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutMonthlyStatementsInput = {
@@ -90216,6 +92289,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutMonthlyStatementsInput = {
@@ -90289,6 +92363,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMonthlyStatementsInput = {
@@ -90346,6 +92421,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserCreateWithoutFinancialEntriesInput = {
@@ -90403,6 +92479,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserUncheckedCreateWithoutFinancialEntriesInput = {
@@ -90460,6 +92537,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
   export type UserCreateOrConnectWithoutFinancialEntriesInput = {
@@ -90533,6 +92611,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFinancialEntriesInput = {
@@ -90590,6 +92669,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
   export type UserFinancialGoalCreateWithoutProgressInput = {
@@ -90934,6 +93014,13 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type GroupNoteShareCreateManySharedWithInput = {
+    id?: string
+    noteId: string
+    canEdit?: boolean
+    createdAt?: Date | string
   }
 
   export type AnnouncementUpdateWithoutPublisherInput = {
@@ -91784,6 +93871,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     document?: GroupDocumentUpdateOneRequiredWithoutNotesNestedInput
+    shares?: GroupNoteShareUpdateManyWithoutNoteNestedInput
   }
 
   export type GroupNoteUncheckedUpdateWithoutCreatorInput = {
@@ -91795,6 +93883,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shares?: GroupNoteShareUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type GroupNoteUncheckedUpdateManyWithoutCreatorInput = {
@@ -91806,6 +93895,27 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteShareUpdateWithoutSharedWithInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    canEdit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: GroupNoteUpdateOneRequiredWithoutSharesNestedInput
+  }
+
+  export type GroupNoteShareUncheckedUpdateWithoutSharedWithInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    noteId?: StringFieldUpdateOperationsInput | string
+    canEdit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteShareUncheckedUpdateManyWithoutSharedWithInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    noteId?: StringFieldUpdateOperationsInput | string
+    canEdit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InvitationGuestCreateManyInvitationInput = {
@@ -92566,6 +94676,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: UserUpdateOneRequiredWithoutGroupNotesNestedInput
+    shares?: GroupNoteShareUpdateManyWithoutNoteNestedInput
   }
 
   export type GroupNoteUncheckedUpdateWithoutDocumentInput = {
@@ -92577,6 +94688,7 @@ export namespace Prisma {
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shares?: GroupNoteShareUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type GroupNoteUncheckedUpdateManyWithoutDocumentInput = {
@@ -92588,6 +94700,34 @@ export namespace Prisma {
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteShareCreateManyNoteInput = {
+    id?: string
+    sharedWithId: string
+    canEdit?: boolean
+    createdAt?: Date | string
+  }
+
+  export type GroupNoteShareUpdateWithoutNoteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    canEdit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sharedWith?: UserUpdateOneRequiredWithoutNoteSharesReceivedNestedInput
+  }
+
+  export type GroupNoteShareUncheckedUpdateWithoutNoteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sharedWithId?: StringFieldUpdateOperationsInput | string
+    canEdit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupNoteShareUncheckedUpdateManyWithoutNoteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sharedWithId?: StringFieldUpdateOperationsInput | string
+    canEdit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AttachmentCreateManyMessageInput = {

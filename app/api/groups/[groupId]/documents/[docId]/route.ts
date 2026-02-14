@@ -34,18 +34,45 @@ export async function GET(
         const { groupId, docId } = await params;
         const result = await ensureGroupMember(request, groupId);
         if (result.error) return result.error;
+        const userId = result.userId!;
 
-        const document = await prisma.groupDocument.findFirst({
-            where: { id: docId, groupId },
-            include: {
-                notes: {
-                    orderBy: { updatedAt: 'desc' },
-                    include: {
-                        creator: { select: { id: true, name: true, email: true } },
+        let document;
+        try {
+            document = await prisma.groupDocument.findFirst({
+                where: { id: docId, groupId },
+                include: {
+                    notes: {
+                        where: {
+                            OR: [
+                                { createdBy: userId },
+                                { shares: { some: { sharedWithId: userId } } },
+                            ],
+                        },
+                        orderBy: { updatedAt: 'desc' },
+                        include: {
+                            creator: { select: { id: true, name: true, email: true } },
+                            shares: {
+                                include: { sharedWith: { select: { id: true, name: true, email: true } } },
+                            },
+                        },
                     },
                 },
-            },
-        });
+            });
+        } catch (shareError) {
+            console.error('[documents] Share filter failed, falling back to createdBy only:', shareError);
+            document = await prisma.groupDocument.findFirst({
+                where: { id: docId, groupId },
+                include: {
+                    notes: {
+                        where: { createdBy: userId },
+                        orderBy: { updatedAt: 'desc' },
+                        include: {
+                            creator: { select: { id: true, name: true, email: true } },
+                        },
+                    },
+                },
+            });
+        }
 
         if (!document) {
             return NextResponse.json({ error: 'Document non trouvé' }, { status: 404 });
