@@ -18,14 +18,17 @@ export async function DELETE(
         }
 
         const userId = payload.userId;
-        const { deptId, docId } = await params;
+        const { id: orgId, deptId, docId } = await params;
 
-        const deptMember = await prisma.departmentMember.findFirst({
-            where: { userId, deptId },
-        });
+        const [deptMember, department, orgMember] = await Promise.all([
+            prisma.departmentMember.findFirst({ where: { userId, deptId } }),
+            prisma.department.findFirst({ where: { id: deptId }, select: { orgId: true } }),
+            prisma.organizationMember.findFirst({ where: { userId, orgId } }),
+        ]);
 
-        if (!deptMember) {
-            return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
+        const canAccess = deptMember || (department && orgMember && department.orgId === orgId);
+        if (!canAccess) {
+            return NextResponse.json({ error: 'Accès refusé. Vous devez être membre du département ou de l\'organisation.' }, { status: 403 });
         }
 
         const doc = await prisma.departmentDocument.findFirst({

@@ -13,6 +13,7 @@ import {
     Loader2,
     Image as ImageIcon,
     FileText,
+    StickyNote,
     MoreVertical,
     Edit2,
     Trash2,
@@ -104,6 +105,8 @@ export default function DepartmentChatPage() {
     const [password, setPassword] = useState('');
     const [showPasswordDialog, setShowPasswordDialog] = useState(false);
     const [documentsPanelOpen, setDocumentsPanelOpen] = useState(false);
+    const [documentsPanelTab, setDocumentsPanelTab] = useState<'documents' | 'notes'>('documents');
+    const [documentsPanelCreateNote, setDocumentsPanelCreateNote] = useState(false);
     const [conversationId, setConversationId] = useState<string | null>(null);
     const [hasMore, setHasMore] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -553,12 +556,30 @@ export default function DepartmentChatPage() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => setDocumentsPanelOpen(true)}
+                    onClick={() => {
+                        setDocumentsPanelTab('documents');
+                        setDocumentsPanelCreateNote(false);
+                        setDocumentsPanelOpen(true);
+                    }}
                     className="text-muted-foreground hover:text-foreground shrink-0"
                     title="Fiches & documents du département"
                     aria-label="Fiches & documents"
                 >
                     <FileText className="w-5 h-5" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                        setDocumentsPanelTab('notes');
+                        setDocumentsPanelCreateNote(true);
+                        setDocumentsPanelOpen(true);
+                    }}
+                    className="text-muted-foreground hover:text-foreground shrink-0"
+                    title="Nouvelle note"
+                    aria-label="Nouvelle note"
+                >
+                    <StickyNote className="w-5 h-5" />
                 </Button>
 
                 <Button
@@ -577,6 +598,8 @@ export default function DepartmentChatPage() {
                 onOpenChange={setDocumentsPanelOpen}
                 orgId={orgId}
                 deptId={deptId}
+                initialTab={documentsPanelTab}
+                openCreateNoteOnMount={documentsPanelCreateNote}
             />
 
             {/* Messages */}

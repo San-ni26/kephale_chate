@@ -26,18 +26,21 @@ export async function GET(
         }
 
         const userId = payload.userId;
-        const { deptId } = await params;
+        const { id: orgId, deptId } = await params;
         const { searchParams } = new URL(request.url);
         const q = searchParams.get('q')?.trim() || '';
         const limit = Math.min(parseInt(searchParams.get('limit') || '50', 10), 100);
         const offset = Math.max(0, parseInt(searchParams.get('offset') || '0', 10));
 
-        const deptMember = await prisma.departmentMember.findFirst({
-            where: { userId, deptId },
-        });
+        const [deptMember, department, orgMember] = await Promise.all([
+            prisma.departmentMember.findFirst({ where: { userId, deptId } }),
+            prisma.department.findFirst({ where: { id: deptId }, select: { orgId: true } }),
+            prisma.organizationMember.findFirst({ where: { userId, orgId } }),
+        ]);
 
-        if (!deptMember) {
-            return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
+        const canAccess = deptMember || (department && orgMember && department.orgId === orgId);
+        if (!canAccess) {
+            return NextResponse.json({ error: 'Accès refusé. Vous devez être membre du département ou de l\'organisation.' }, { status: 403 });
         }
 
         const documents = await prisma.departmentDocument.findMany({
@@ -77,7 +80,7 @@ export async function POST(
         }
 
         const userId = payload.userId;
-        const { deptId } = await params;
+        const { id: orgId, deptId } = await params;
         const body = await request.json();
         const validated = addDocumentSchema.safeParse(body);
 
@@ -90,12 +93,15 @@ export async function POST(
 
         const { filename, type, data } = validated.data;
 
-        const deptMember = await prisma.departmentMember.findFirst({
-            where: { userId, deptId },
-        });
+        const [deptMember, department, orgMember] = await Promise.all([
+            prisma.departmentMember.findFirst({ where: { userId, deptId } }),
+            prisma.department.findFirst({ where: { id: deptId }, select: { orgId: true } }),
+            prisma.organizationMember.findFirst({ where: { userId, orgId } }),
+        ]);
 
-        if (!deptMember) {
-            return apiError('Accès refusé', 403);
+        const canAccess = deptMember || (department && orgMember && department.orgId === orgId);
+        if (!canAccess) {
+            return apiError('Accès refusé. Vous devez être membre du département ou de l\'organisation.', 403);
         }
 
         const doc = await prisma.departmentDocument.create({

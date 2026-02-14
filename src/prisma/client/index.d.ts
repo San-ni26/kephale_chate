@@ -49,6 +49,11 @@ export type OrganizationMember = $Result.DefaultSelection<Prisma.$OrganizationMe
  */
 export type Department = $Result.DefaultSelection<Prisma.$DepartmentPayload>
 /**
+ * Model DepartmentNote
+ * 
+ */
+export type DepartmentNote = $Result.DefaultSelection<Prisma.$DepartmentNotePayload>
+/**
  * Model DepartmentDocument
  * 
  */
@@ -696,6 +701,16 @@ export class PrismaClient<
     * ```
     */
   get department(): Prisma.DepartmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.departmentNote`: Exposes CRUD operations for the **DepartmentNote** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DepartmentNotes
+    * const departmentNotes = await prisma.departmentNote.findMany()
+    * ```
+    */
+  get departmentNote(): Prisma.DepartmentNoteDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.departmentDocument`: Exposes CRUD operations for the **DepartmentDocument** model.
@@ -1557,6 +1572,7 @@ export namespace Prisma {
     Organization: 'Organization',
     OrganizationMember: 'OrganizationMember',
     Department: 'Department',
+    DepartmentNote: 'DepartmentNote',
     DepartmentDocument: 'DepartmentDocument',
     DepartmentGoal: 'DepartmentGoal',
     DepartmentMeeting: 'DepartmentMeeting',
@@ -1614,7 +1630,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "group" | "groupDocument" | "groupNote" | "groupNoteShare" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
+      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentNote" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "group" | "groupDocument" | "groupNote" | "groupNoteShare" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2133,6 +2149,80 @@ export namespace Prisma {
           count: {
             args: Prisma.DepartmentCountArgs<ExtArgs>
             result: $Utils.Optional<DepartmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      DepartmentNote: {
+        payload: Prisma.$DepartmentNotePayload<ExtArgs>
+        fields: Prisma.DepartmentNoteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepartmentNoteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepartmentNoteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload>
+          }
+          findFirst: {
+            args: Prisma.DepartmentNoteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepartmentNoteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload>
+          }
+          findMany: {
+            args: Prisma.DepartmentNoteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload>[]
+          }
+          create: {
+            args: Prisma.DepartmentNoteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload>
+          }
+          createMany: {
+            args: Prisma.DepartmentNoteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DepartmentNoteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload>[]
+          }
+          delete: {
+            args: Prisma.DepartmentNoteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload>
+          }
+          update: {
+            args: Prisma.DepartmentNoteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload>
+          }
+          deleteMany: {
+            args: Prisma.DepartmentNoteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepartmentNoteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DepartmentNoteUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload>[]
+          }
+          upsert: {
+            args: Prisma.DepartmentNoteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentNotePayload>
+          }
+          aggregate: {
+            args: Prisma.DepartmentNoteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepartmentNote>
+          }
+          groupBy: {
+            args: Prisma.DepartmentNoteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentNoteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepartmentNoteCountArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentNoteCountAggregateOutputType> | number
           }
         }
       }
@@ -5359,6 +5449,7 @@ export namespace Prisma {
     organization?: OrganizationOmit
     organizationMember?: OrganizationMemberOmit
     department?: DepartmentOmit
+    departmentNote?: DepartmentNoteOmit
     departmentDocument?: DepartmentDocumentOmit
     departmentGoal?: DepartmentGoalOmit
     departmentMeeting?: DepartmentMeetingOmit
@@ -5510,6 +5601,7 @@ export namespace Prisma {
     following: number
     uploadedDepartmentDocuments: number
     groupNotes: number
+    departmentNotes: number
     noteSharesReceived: number
   }
 
@@ -5543,6 +5635,7 @@ export namespace Prisma {
     following?: boolean | UserCountOutputTypeCountFollowingArgs
     uploadedDepartmentDocuments?: boolean | UserCountOutputTypeCountUploadedDepartmentDocumentsArgs
     groupNotes?: boolean | UserCountOutputTypeCountGroupNotesArgs
+    departmentNotes?: boolean | UserCountOutputTypeCountDepartmentNotesArgs
     noteSharesReceived?: boolean | UserCountOutputTypeCountNoteSharesReceivedArgs
   }
 
@@ -5763,6 +5856,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountDepartmentNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentNoteWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountNoteSharesReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: GroupNoteShareWhereInput
   }
@@ -5863,6 +5963,7 @@ export namespace Prisma {
     polls: number
     teamDecisions: number
     documents: number
+    notes: number
   }
 
   export type DepartmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5876,6 +5977,7 @@ export namespace Prisma {
     polls?: boolean | DepartmentCountOutputTypeCountPollsArgs
     teamDecisions?: boolean | DepartmentCountOutputTypeCountTeamDecisionsArgs
     documents?: boolean | DepartmentCountOutputTypeCountDocumentsArgs
+    notes?: boolean | DepartmentCountOutputTypeCountNotesArgs
   }
 
   // Custom InputTypes
@@ -5957,6 +6059,13 @@ export namespace Prisma {
    */
   export type DepartmentCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DepartmentDocumentWhereInput
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentNoteWhereInput
   }
 
 
@@ -6787,6 +6896,7 @@ export namespace Prisma {
     following?: boolean | User$followingArgs<ExtArgs>
     uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
     groupNotes?: boolean | User$groupNotesArgs<ExtArgs>
+    departmentNotes?: boolean | User$departmentNotesArgs<ExtArgs>
     noteSharesReceived?: boolean | User$noteSharesReceivedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -6905,6 +7015,7 @@ export namespace Prisma {
     following?: boolean | User$followingArgs<ExtArgs>
     uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
     groupNotes?: boolean | User$groupNotesArgs<ExtArgs>
+    departmentNotes?: boolean | User$departmentNotesArgs<ExtArgs>
     noteSharesReceived?: boolean | User$noteSharesReceivedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -6945,6 +7056,7 @@ export namespace Prisma {
       following: Prisma.$FollowPayload<ExtArgs>[]
       uploadedDepartmentDocuments: Prisma.$DepartmentDocumentPayload<ExtArgs>[]
       groupNotes: Prisma.$GroupNotePayload<ExtArgs>[]
+      departmentNotes: Prisma.$DepartmentNotePayload<ExtArgs>[]
       noteSharesReceived: Prisma.$GroupNoteSharePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -7397,6 +7509,7 @@ export namespace Prisma {
     following<T extends User$followingArgs<ExtArgs> = {}>(args?: Subset<T, User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     uploadedDepartmentDocuments<T extends User$uploadedDepartmentDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$uploadedDepartmentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     groupNotes<T extends User$groupNotesArgs<ExtArgs> = {}>(args?: Subset<T, User$groupNotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    departmentNotes<T extends User$departmentNotesArgs<ExtArgs> = {}>(args?: Subset<T, User$departmentNotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     noteSharesReceived<T extends User$noteSharesReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$noteSharesReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupNoteSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -8570,6 +8683,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: GroupNoteScalarFieldEnum | GroupNoteScalarFieldEnum[]
+  }
+
+  /**
+   * User.departmentNotes
+   */
+  export type User$departmentNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    where?: DepartmentNoteWhereInput
+    orderBy?: DepartmentNoteOrderByWithRelationInput | DepartmentNoteOrderByWithRelationInput[]
+    cursor?: DepartmentNoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentNoteScalarFieldEnum | DepartmentNoteScalarFieldEnum[]
   }
 
   /**
@@ -14411,6 +14548,7 @@ export namespace Prisma {
     polls?: boolean | Department$pollsArgs<ExtArgs>
     teamDecisions?: boolean | Department$teamDecisionsArgs<ExtArgs>
     documents?: boolean | Department$documentsArgs<ExtArgs>
+    notes?: boolean | Department$notesArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["department"]>
 
@@ -14462,6 +14600,7 @@ export namespace Prisma {
     polls?: boolean | Department$pollsArgs<ExtArgs>
     teamDecisions?: boolean | Department$teamDecisionsArgs<ExtArgs>
     documents?: boolean | Department$documentsArgs<ExtArgs>
+    notes?: boolean | Department$notesArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14488,6 +14627,7 @@ export namespace Prisma {
       polls: Prisma.$DepartmentPollPayload<ExtArgs>[]
       teamDecisions: Prisma.$TeamDecisionPayload<ExtArgs>[]
       documents: Prisma.$DepartmentDocumentPayload<ExtArgs>[]
+      notes: Prisma.$DepartmentNotePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14903,6 +15043,7 @@ export namespace Prisma {
     polls<T extends Department$pollsArgs<ExtArgs> = {}>(args?: Subset<T, Department$pollsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teamDecisions<T extends Department$teamDecisionsArgs<ExtArgs> = {}>(args?: Subset<T, Department$teamDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     documents<T extends Department$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Department$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notes<T extends Department$notesArgs<ExtArgs> = {}>(args?: Subset<T, Department$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15594,6 +15735,30 @@ export namespace Prisma {
   }
 
   /**
+   * Department.notes
+   */
+  export type Department$notesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    where?: DepartmentNoteWhereInput
+    orderBy?: DepartmentNoteOrderByWithRelationInput | DepartmentNoteOrderByWithRelationInput[]
+    cursor?: DepartmentNoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentNoteScalarFieldEnum | DepartmentNoteScalarFieldEnum[]
+  }
+
+  /**
    * Department without action
    */
   export type DepartmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15609,6 +15774,1158 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: DepartmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DepartmentNote
+   */
+
+  export type AggregateDepartmentNote = {
+    _count: DepartmentNoteCountAggregateOutputType | null
+    _avg: DepartmentNoteAvgAggregateOutputType | null
+    _sum: DepartmentNoteSumAggregateOutputType | null
+    _min: DepartmentNoteMinAggregateOutputType | null
+    _max: DepartmentNoteMaxAggregateOutputType | null
+  }
+
+  export type DepartmentNoteAvgAggregateOutputType = {
+    order: number | null
+  }
+
+  export type DepartmentNoteSumAggregateOutputType = {
+    order: number | null
+  }
+
+  export type DepartmentNoteMinAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    title: string | null
+    content: string | null
+    textSize: $Enums.NoteTextSize | null
+    order: number | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentNoteMaxAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    title: string | null
+    content: string | null
+    textSize: $Enums.NoteTextSize | null
+    order: number | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentNoteCountAggregateOutputType = {
+    id: number
+    deptId: number
+    title: number
+    content: number
+    textSize: number
+    order: number
+    createdBy: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DepartmentNoteAvgAggregateInputType = {
+    order?: true
+  }
+
+  export type DepartmentNoteSumAggregateInputType = {
+    order?: true
+  }
+
+  export type DepartmentNoteMinAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    content?: true
+    textSize?: true
+    order?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentNoteMaxAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    content?: true
+    textSize?: true
+    order?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentNoteCountAggregateInputType = {
+    id?: true
+    deptId?: true
+    title?: true
+    content?: true
+    textSize?: true
+    order?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DepartmentNoteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentNote to aggregate.
+     */
+    where?: DepartmentNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentNotes to fetch.
+     */
+    orderBy?: DepartmentNoteOrderByWithRelationInput | DepartmentNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepartmentNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DepartmentNotes
+    **/
+    _count?: true | DepartmentNoteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DepartmentNoteAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DepartmentNoteSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepartmentNoteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepartmentNoteMaxAggregateInputType
+  }
+
+  export type GetDepartmentNoteAggregateType<T extends DepartmentNoteAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepartmentNote]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepartmentNote[P]>
+      : GetScalarType<T[P], AggregateDepartmentNote[P]>
+  }
+
+
+
+
+  export type DepartmentNoteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentNoteWhereInput
+    orderBy?: DepartmentNoteOrderByWithAggregationInput | DepartmentNoteOrderByWithAggregationInput[]
+    by: DepartmentNoteScalarFieldEnum[] | DepartmentNoteScalarFieldEnum
+    having?: DepartmentNoteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepartmentNoteCountAggregateInputType | true
+    _avg?: DepartmentNoteAvgAggregateInputType
+    _sum?: DepartmentNoteSumAggregateInputType
+    _min?: DepartmentNoteMinAggregateInputType
+    _max?: DepartmentNoteMaxAggregateInputType
+  }
+
+  export type DepartmentNoteGroupByOutputType = {
+    id: string
+    deptId: string
+    title: string
+    content: string
+    textSize: $Enums.NoteTextSize
+    order: number
+    createdBy: string
+    createdAt: Date
+    updatedAt: Date
+    _count: DepartmentNoteCountAggregateOutputType | null
+    _avg: DepartmentNoteAvgAggregateOutputType | null
+    _sum: DepartmentNoteSumAggregateOutputType | null
+    _min: DepartmentNoteMinAggregateOutputType | null
+    _max: DepartmentNoteMaxAggregateOutputType | null
+  }
+
+  type GetDepartmentNoteGroupByPayload<T extends DepartmentNoteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepartmentNoteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepartmentNoteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepartmentNoteGroupByOutputType[P]>
+            : GetScalarType<T[P], DepartmentNoteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepartmentNoteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    content?: boolean
+    textSize?: boolean
+    order?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentNote"]>
+
+  export type DepartmentNoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    content?: boolean
+    textSize?: boolean
+    order?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentNote"]>
+
+  export type DepartmentNoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    content?: boolean
+    textSize?: boolean
+    order?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentNote"]>
+
+  export type DepartmentNoteSelectScalar = {
+    id?: boolean
+    deptId?: boolean
+    title?: boolean
+    content?: boolean
+    textSize?: boolean
+    order?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DepartmentNoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deptId" | "title" | "content" | "textSize" | "order" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["departmentNote"]>
+  export type DepartmentNoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DepartmentNoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DepartmentNoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $DepartmentNotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DepartmentNote"
+    objects: {
+      department: Prisma.$DepartmentPayload<ExtArgs>
+      creator: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      deptId: string
+      title: string
+      content: string
+      textSize: $Enums.NoteTextSize
+      order: number
+      createdBy: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["departmentNote"]>
+    composites: {}
+  }
+
+  type DepartmentNoteGetPayload<S extends boolean | null | undefined | DepartmentNoteDefaultArgs> = $Result.GetResult<Prisma.$DepartmentNotePayload, S>
+
+  type DepartmentNoteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepartmentNoteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepartmentNoteCountAggregateInputType | true
+    }
+
+  export interface DepartmentNoteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepartmentNote'], meta: { name: 'DepartmentNote' } }
+    /**
+     * Find zero or one DepartmentNote that matches the filter.
+     * @param {DepartmentNoteFindUniqueArgs} args - Arguments to find a DepartmentNote
+     * @example
+     * // Get one DepartmentNote
+     * const departmentNote = await prisma.departmentNote.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepartmentNoteFindUniqueArgs>(args: SelectSubset<T, DepartmentNoteFindUniqueArgs<ExtArgs>>): Prisma__DepartmentNoteClient<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DepartmentNote that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepartmentNoteFindUniqueOrThrowArgs} args - Arguments to find a DepartmentNote
+     * @example
+     * // Get one DepartmentNote
+     * const departmentNote = await prisma.departmentNote.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepartmentNoteFindUniqueOrThrowArgs>(args: SelectSubset<T, DepartmentNoteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepartmentNoteClient<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentNote that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentNoteFindFirstArgs} args - Arguments to find a DepartmentNote
+     * @example
+     * // Get one DepartmentNote
+     * const departmentNote = await prisma.departmentNote.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepartmentNoteFindFirstArgs>(args?: SelectSubset<T, DepartmentNoteFindFirstArgs<ExtArgs>>): Prisma__DepartmentNoteClient<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentNote that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentNoteFindFirstOrThrowArgs} args - Arguments to find a DepartmentNote
+     * @example
+     * // Get one DepartmentNote
+     * const departmentNote = await prisma.departmentNote.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepartmentNoteFindFirstOrThrowArgs>(args?: SelectSubset<T, DepartmentNoteFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepartmentNoteClient<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DepartmentNotes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentNoteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DepartmentNotes
+     * const departmentNotes = await prisma.departmentNote.findMany()
+     * 
+     * // Get first 10 DepartmentNotes
+     * const departmentNotes = await prisma.departmentNote.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const departmentNoteWithIdOnly = await prisma.departmentNote.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepartmentNoteFindManyArgs>(args?: SelectSubset<T, DepartmentNoteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DepartmentNote.
+     * @param {DepartmentNoteCreateArgs} args - Arguments to create a DepartmentNote.
+     * @example
+     * // Create one DepartmentNote
+     * const DepartmentNote = await prisma.departmentNote.create({
+     *   data: {
+     *     // ... data to create a DepartmentNote
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepartmentNoteCreateArgs>(args: SelectSubset<T, DepartmentNoteCreateArgs<ExtArgs>>): Prisma__DepartmentNoteClient<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DepartmentNotes.
+     * @param {DepartmentNoteCreateManyArgs} args - Arguments to create many DepartmentNotes.
+     * @example
+     * // Create many DepartmentNotes
+     * const departmentNote = await prisma.departmentNote.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepartmentNoteCreateManyArgs>(args?: SelectSubset<T, DepartmentNoteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DepartmentNotes and returns the data saved in the database.
+     * @param {DepartmentNoteCreateManyAndReturnArgs} args - Arguments to create many DepartmentNotes.
+     * @example
+     * // Create many DepartmentNotes
+     * const departmentNote = await prisma.departmentNote.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DepartmentNotes and only return the `id`
+     * const departmentNoteWithIdOnly = await prisma.departmentNote.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DepartmentNoteCreateManyAndReturnArgs>(args?: SelectSubset<T, DepartmentNoteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DepartmentNote.
+     * @param {DepartmentNoteDeleteArgs} args - Arguments to delete one DepartmentNote.
+     * @example
+     * // Delete one DepartmentNote
+     * const DepartmentNote = await prisma.departmentNote.delete({
+     *   where: {
+     *     // ... filter to delete one DepartmentNote
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepartmentNoteDeleteArgs>(args: SelectSubset<T, DepartmentNoteDeleteArgs<ExtArgs>>): Prisma__DepartmentNoteClient<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DepartmentNote.
+     * @param {DepartmentNoteUpdateArgs} args - Arguments to update one DepartmentNote.
+     * @example
+     * // Update one DepartmentNote
+     * const departmentNote = await prisma.departmentNote.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepartmentNoteUpdateArgs>(args: SelectSubset<T, DepartmentNoteUpdateArgs<ExtArgs>>): Prisma__DepartmentNoteClient<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DepartmentNotes.
+     * @param {DepartmentNoteDeleteManyArgs} args - Arguments to filter DepartmentNotes to delete.
+     * @example
+     * // Delete a few DepartmentNotes
+     * const { count } = await prisma.departmentNote.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepartmentNoteDeleteManyArgs>(args?: SelectSubset<T, DepartmentNoteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentNotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentNoteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DepartmentNotes
+     * const departmentNote = await prisma.departmentNote.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepartmentNoteUpdateManyArgs>(args: SelectSubset<T, DepartmentNoteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentNotes and returns the data updated in the database.
+     * @param {DepartmentNoteUpdateManyAndReturnArgs} args - Arguments to update many DepartmentNotes.
+     * @example
+     * // Update many DepartmentNotes
+     * const departmentNote = await prisma.departmentNote.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DepartmentNotes and only return the `id`
+     * const departmentNoteWithIdOnly = await prisma.departmentNote.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DepartmentNoteUpdateManyAndReturnArgs>(args: SelectSubset<T, DepartmentNoteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DepartmentNote.
+     * @param {DepartmentNoteUpsertArgs} args - Arguments to update or create a DepartmentNote.
+     * @example
+     * // Update or create a DepartmentNote
+     * const departmentNote = await prisma.departmentNote.upsert({
+     *   create: {
+     *     // ... data to create a DepartmentNote
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DepartmentNote we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepartmentNoteUpsertArgs>(args: SelectSubset<T, DepartmentNoteUpsertArgs<ExtArgs>>): Prisma__DepartmentNoteClient<$Result.GetResult<Prisma.$DepartmentNotePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DepartmentNotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentNoteCountArgs} args - Arguments to filter DepartmentNotes to count.
+     * @example
+     * // Count the number of DepartmentNotes
+     * const count = await prisma.departmentNote.count({
+     *   where: {
+     *     // ... the filter for the DepartmentNotes we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepartmentNoteCountArgs>(
+      args?: Subset<T, DepartmentNoteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepartmentNoteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DepartmentNote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentNoteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepartmentNoteAggregateArgs>(args: Subset<T, DepartmentNoteAggregateArgs>): Prisma.PrismaPromise<GetDepartmentNoteAggregateType<T>>
+
+    /**
+     * Group by DepartmentNote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentNoteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepartmentNoteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepartmentNoteGroupByArgs['orderBy'] }
+        : { orderBy?: DepartmentNoteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepartmentNoteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepartmentNoteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DepartmentNote model
+   */
+  readonly fields: DepartmentNoteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DepartmentNote.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepartmentNoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DepartmentNote model
+   */
+  interface DepartmentNoteFieldRefs {
+    readonly id: FieldRef<"DepartmentNote", 'String'>
+    readonly deptId: FieldRef<"DepartmentNote", 'String'>
+    readonly title: FieldRef<"DepartmentNote", 'String'>
+    readonly content: FieldRef<"DepartmentNote", 'String'>
+    readonly textSize: FieldRef<"DepartmentNote", 'NoteTextSize'>
+    readonly order: FieldRef<"DepartmentNote", 'Int'>
+    readonly createdBy: FieldRef<"DepartmentNote", 'String'>
+    readonly createdAt: FieldRef<"DepartmentNote", 'DateTime'>
+    readonly updatedAt: FieldRef<"DepartmentNote", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DepartmentNote findUnique
+   */
+  export type DepartmentNoteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentNote to fetch.
+     */
+    where: DepartmentNoteWhereUniqueInput
+  }
+
+  /**
+   * DepartmentNote findUniqueOrThrow
+   */
+  export type DepartmentNoteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentNote to fetch.
+     */
+    where: DepartmentNoteWhereUniqueInput
+  }
+
+  /**
+   * DepartmentNote findFirst
+   */
+  export type DepartmentNoteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentNote to fetch.
+     */
+    where?: DepartmentNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentNotes to fetch.
+     */
+    orderBy?: DepartmentNoteOrderByWithRelationInput | DepartmentNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentNotes.
+     */
+    cursor?: DepartmentNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentNotes.
+     */
+    distinct?: DepartmentNoteScalarFieldEnum | DepartmentNoteScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentNote findFirstOrThrow
+   */
+  export type DepartmentNoteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentNote to fetch.
+     */
+    where?: DepartmentNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentNotes to fetch.
+     */
+    orderBy?: DepartmentNoteOrderByWithRelationInput | DepartmentNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentNotes.
+     */
+    cursor?: DepartmentNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentNotes.
+     */
+    distinct?: DepartmentNoteScalarFieldEnum | DepartmentNoteScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentNote findMany
+   */
+  export type DepartmentNoteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentNotes to fetch.
+     */
+    where?: DepartmentNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentNotes to fetch.
+     */
+    orderBy?: DepartmentNoteOrderByWithRelationInput | DepartmentNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DepartmentNotes.
+     */
+    cursor?: DepartmentNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentNotes.
+     */
+    skip?: number
+    distinct?: DepartmentNoteScalarFieldEnum | DepartmentNoteScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentNote create
+   */
+  export type DepartmentNoteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DepartmentNote.
+     */
+    data: XOR<DepartmentNoteCreateInput, DepartmentNoteUncheckedCreateInput>
+  }
+
+  /**
+   * DepartmentNote createMany
+   */
+  export type DepartmentNoteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DepartmentNotes.
+     */
+    data: DepartmentNoteCreateManyInput | DepartmentNoteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DepartmentNote createManyAndReturn
+   */
+  export type DepartmentNoteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * The data used to create many DepartmentNotes.
+     */
+    data: DepartmentNoteCreateManyInput | DepartmentNoteCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentNote update
+   */
+  export type DepartmentNoteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DepartmentNote.
+     */
+    data: XOR<DepartmentNoteUpdateInput, DepartmentNoteUncheckedUpdateInput>
+    /**
+     * Choose, which DepartmentNote to update.
+     */
+    where: DepartmentNoteWhereUniqueInput
+  }
+
+  /**
+   * DepartmentNote updateMany
+   */
+  export type DepartmentNoteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DepartmentNotes.
+     */
+    data: XOR<DepartmentNoteUpdateManyMutationInput, DepartmentNoteUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentNotes to update
+     */
+    where?: DepartmentNoteWhereInput
+    /**
+     * Limit how many DepartmentNotes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentNote updateManyAndReturn
+   */
+  export type DepartmentNoteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * The data used to update DepartmentNotes.
+     */
+    data: XOR<DepartmentNoteUpdateManyMutationInput, DepartmentNoteUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentNotes to update
+     */
+    where?: DepartmentNoteWhereInput
+    /**
+     * Limit how many DepartmentNotes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentNote upsert
+   */
+  export type DepartmentNoteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DepartmentNote to update in case it exists.
+     */
+    where: DepartmentNoteWhereUniqueInput
+    /**
+     * In case the DepartmentNote found by the `where` argument doesn't exist, create a new DepartmentNote with this data.
+     */
+    create: XOR<DepartmentNoteCreateInput, DepartmentNoteUncheckedCreateInput>
+    /**
+     * In case the DepartmentNote was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepartmentNoteUpdateInput, DepartmentNoteUncheckedUpdateInput>
+  }
+
+  /**
+   * DepartmentNote delete
+   */
+  export type DepartmentNoteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
+    /**
+     * Filter which DepartmentNote to delete.
+     */
+    where: DepartmentNoteWhereUniqueInput
+  }
+
+  /**
+   * DepartmentNote deleteMany
+   */
+  export type DepartmentNoteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentNotes to delete
+     */
+    where?: DepartmentNoteWhereInput
+    /**
+     * Limit how many DepartmentNotes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentNote without action
+   */
+  export type DepartmentNoteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentNote
+     */
+    select?: DepartmentNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentNote
+     */
+    omit?: DepartmentNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentNoteInclude<ExtArgs> | null
   }
 
 
@@ -62611,6 +63928,21 @@ export namespace Prisma {
   export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
 
 
+  export const DepartmentNoteScalarFieldEnum: {
+    id: 'id',
+    deptId: 'deptId',
+    title: 'title',
+    content: 'content',
+    textSize: 'textSize',
+    order: 'order',
+    createdBy: 'createdBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DepartmentNoteScalarFieldEnum = (typeof DepartmentNoteScalarFieldEnum)[keyof typeof DepartmentNoteScalarFieldEnum]
+
+
   export const DepartmentDocumentScalarFieldEnum: {
     id: 'id',
     deptId: 'deptId',
@@ -63354,6 +64686,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'NoteTextSize'
+   */
+  export type EnumNoteTextSizeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoteTextSize'>
+    
+
+
+  /**
+   * Reference to a field of type 'NoteTextSize[]'
+   */
+  export type ListEnumNoteTextSizeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoteTextSize[]'>
+    
+
+
+  /**
    * Reference to a field of type 'FileType'
    */
   export type EnumFileTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FileType'>
@@ -63392,20 +64738,6 @@ export namespace Prisma {
    * Reference to a field of type 'DecisionVoteType[]'
    */
   export type ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DecisionVoteType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'NoteTextSize'
-   */
-  export type EnumNoteTextSizeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoteTextSize'>
-    
-
-
-  /**
-   * Reference to a field of type 'NoteTextSize[]'
-   */
-  export type ListEnumNoteTextSizeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoteTextSize[]'>
     
 
 
@@ -63625,6 +64957,7 @@ export namespace Prisma {
     following?: FollowListRelationFilter
     uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
     groupNotes?: GroupNoteListRelationFilter
+    departmentNotes?: DepartmentNoteListRelationFilter
     noteSharesReceived?: GroupNoteShareListRelationFilter
   }
 
@@ -63684,6 +65017,7 @@ export namespace Prisma {
     following?: FollowOrderByRelationAggregateInput
     uploadedDepartmentDocuments?: DepartmentDocumentOrderByRelationAggregateInput
     groupNotes?: GroupNoteOrderByRelationAggregateInput
+    departmentNotes?: DepartmentNoteOrderByRelationAggregateInput
     noteSharesReceived?: GroupNoteShareOrderByRelationAggregateInput
   }
 
@@ -63746,6 +65080,7 @@ export namespace Prisma {
     following?: FollowListRelationFilter
     uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
     groupNotes?: GroupNoteListRelationFilter
+    departmentNotes?: DepartmentNoteListRelationFilter
     noteSharesReceived?: GroupNoteShareListRelationFilter
   }, "id" | "email">
 
@@ -64184,6 +65519,7 @@ export namespace Prisma {
     polls?: DepartmentPollListRelationFilter
     teamDecisions?: TeamDecisionListRelationFilter
     documents?: DepartmentDocumentListRelationFilter
+    notes?: DepartmentNoteListRelationFilter
   }
 
   export type DepartmentOrderByWithRelationInput = {
@@ -64206,6 +65542,7 @@ export namespace Prisma {
     polls?: DepartmentPollOrderByRelationAggregateInput
     teamDecisions?: TeamDecisionOrderByRelationAggregateInput
     documents?: DepartmentDocumentOrderByRelationAggregateInput
+    notes?: DepartmentNoteOrderByRelationAggregateInput
   }
 
   export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
@@ -64231,6 +65568,7 @@ export namespace Prisma {
     polls?: DepartmentPollListRelationFilter
     teamDecisions?: TeamDecisionListRelationFilter
     documents?: DepartmentDocumentListRelationFilter
+    notes?: DepartmentNoteListRelationFilter
   }, "id">
 
   export type DepartmentOrderByWithAggregationInput = {
@@ -64257,6 +65595,86 @@ export namespace Prisma {
     headId?: StringNullableWithAggregatesFilter<"Department"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+  }
+
+  export type DepartmentNoteWhereInput = {
+    AND?: DepartmentNoteWhereInput | DepartmentNoteWhereInput[]
+    OR?: DepartmentNoteWhereInput[]
+    NOT?: DepartmentNoteWhereInput | DepartmentNoteWhereInput[]
+    id?: StringFilter<"DepartmentNote"> | string
+    deptId?: StringFilter<"DepartmentNote"> | string
+    title?: StringFilter<"DepartmentNote"> | string
+    content?: StringFilter<"DepartmentNote"> | string
+    textSize?: EnumNoteTextSizeFilter<"DepartmentNote"> | $Enums.NoteTextSize
+    order?: IntFilter<"DepartmentNote"> | number
+    createdBy?: StringFilter<"DepartmentNote"> | string
+    createdAt?: DateTimeFilter<"DepartmentNote"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentNote"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type DepartmentNoteOrderByWithRelationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    textSize?: SortOrder
+    order?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    department?: DepartmentOrderByWithRelationInput
+    creator?: UserOrderByWithRelationInput
+  }
+
+  export type DepartmentNoteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DepartmentNoteWhereInput | DepartmentNoteWhereInput[]
+    OR?: DepartmentNoteWhereInput[]
+    NOT?: DepartmentNoteWhereInput | DepartmentNoteWhereInput[]
+    deptId?: StringFilter<"DepartmentNote"> | string
+    title?: StringFilter<"DepartmentNote"> | string
+    content?: StringFilter<"DepartmentNote"> | string
+    textSize?: EnumNoteTextSizeFilter<"DepartmentNote"> | $Enums.NoteTextSize
+    order?: IntFilter<"DepartmentNote"> | number
+    createdBy?: StringFilter<"DepartmentNote"> | string
+    createdAt?: DateTimeFilter<"DepartmentNote"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentNote"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type DepartmentNoteOrderByWithAggregationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    textSize?: SortOrder
+    order?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DepartmentNoteCountOrderByAggregateInput
+    _avg?: DepartmentNoteAvgOrderByAggregateInput
+    _max?: DepartmentNoteMaxOrderByAggregateInput
+    _min?: DepartmentNoteMinOrderByAggregateInput
+    _sum?: DepartmentNoteSumOrderByAggregateInput
+  }
+
+  export type DepartmentNoteScalarWhereWithAggregatesInput = {
+    AND?: DepartmentNoteScalarWhereWithAggregatesInput | DepartmentNoteScalarWhereWithAggregatesInput[]
+    OR?: DepartmentNoteScalarWhereWithAggregatesInput[]
+    NOT?: DepartmentNoteScalarWhereWithAggregatesInput | DepartmentNoteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DepartmentNote"> | string
+    deptId?: StringWithAggregatesFilter<"DepartmentNote"> | string
+    title?: StringWithAggregatesFilter<"DepartmentNote"> | string
+    content?: StringWithAggregatesFilter<"DepartmentNote"> | string
+    textSize?: EnumNoteTextSizeWithAggregatesFilter<"DepartmentNote"> | $Enums.NoteTextSize
+    order?: IntWithAggregatesFilter<"DepartmentNote"> | number
+    createdBy?: StringWithAggregatesFilter<"DepartmentNote"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"DepartmentNote"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DepartmentNote"> | Date | string
   }
 
   export type DepartmentDocumentWhereInput = {
@@ -67311,6 +68729,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -67370,6 +68789,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -67429,6 +68849,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -67488,6 +68909,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -67961,6 +69383,7 @@ export namespace Prisma {
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateInput = {
@@ -67981,6 +69404,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUpdateInput = {
@@ -68001,6 +69425,7 @@ export namespace Prisma {
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateInput = {
@@ -68021,6 +69446,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentCreateManyInput = {
@@ -68047,6 +69473,88 @@ export namespace Prisma {
     orgId?: StringFieldUpdateOperationsInput | string
     publicKey?: StringFieldUpdateOperationsInput | string
     headId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentNoteCreateInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutNotesInput
+    creator: UserCreateNestedOneWithoutDepartmentNotesInput
+  }
+
+  export type DepartmentNoteUncheckedCreateInput = {
+    id?: string
+    deptId: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentNoteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutNotesNestedInput
+    creator?: UserUpdateOneRequiredWithoutDepartmentNotesNestedInput
+  }
+
+  export type DepartmentNoteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentNoteCreateManyInput = {
+    id?: string
+    deptId: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentNoteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentNoteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -71439,6 +72947,12 @@ export namespace Prisma {
     none?: GroupNoteWhereInput
   }
 
+  export type DepartmentNoteListRelationFilter = {
+    every?: DepartmentNoteWhereInput
+    some?: DepartmentNoteWhereInput
+    none?: DepartmentNoteWhereInput
+  }
+
   export type GroupNoteShareListRelationFilter = {
     every?: GroupNoteShareWhereInput
     some?: GroupNoteShareWhereInput
@@ -71555,6 +73069,10 @@ export namespace Prisma {
   }
 
   export type GroupNoteOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DepartmentNoteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -72099,16 +73617,104 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type EnumFileTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumFileTypeFilter<$PrismaModel> | $Enums.FileType
+  export type EnumNoteTextSizeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteTextSizeFilter<$PrismaModel> | $Enums.NoteTextSize
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type DepartmentScalarRelationFilter = {
     is?: DepartmentWhereInput
     isNot?: DepartmentWhereInput
+  }
+
+  export type DepartmentNoteCountOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    textSize?: SortOrder
+    order?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentNoteAvgOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type DepartmentNoteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    textSize?: SortOrder
+    order?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentNoteMinOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    textSize?: SortOrder
+    order?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentNoteSumOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type EnumNoteTextSizeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteTextSizeWithAggregatesFilter<$PrismaModel> | $Enums.NoteTextSize
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNoteTextSizeFilter<$PrismaModel>
+    _max?: NestedEnumNoteTextSizeFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type EnumFileTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFileTypeFilter<$PrismaModel> | $Enums.FileType
   }
 
   export type DepartmentDocumentCountOrderByAggregateInput = {
@@ -72379,17 +73985,6 @@ export namespace Prisma {
     _max?: NestedJsonFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type DepartmentPollScalarRelationFilter = {
     is?: DepartmentPollWhereInput
     isNot?: DepartmentPollWhereInput
@@ -72430,22 +74025,6 @@ export namespace Prisma {
 
   export type PollVoteSumOrderByAggregateInput = {
     optionIndex?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type TeamDecisionCountOrderByAggregateInput = {
@@ -72632,13 +74211,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type EnumNoteTextSizeFilter<$PrismaModel = never> = {
-    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
-    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
-    not?: NestedEnumNoteTextSizeFilter<$PrismaModel> | $Enums.NoteTextSize
-  }
-
   export type GroupDocumentScalarRelationFilter = {
     is?: GroupDocumentWhereInput
     isNot?: GroupDocumentWhereInput
@@ -72686,16 +74258,6 @@ export namespace Prisma {
 
   export type GroupNoteSumOrderByAggregateInput = {
     order?: SortOrder
-  }
-
-  export type EnumNoteTextSizeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
-    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
-    not?: NestedEnumNoteTextSizeWithAggregatesFilter<$PrismaModel> | $Enums.NoteTextSize
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumNoteTextSizeFilter<$PrismaModel>
-    _max?: NestedEnumNoteTextSizeFilter<$PrismaModel>
   }
 
   export type GroupNoteScalarRelationFilter = {
@@ -74341,6 +75903,13 @@ export namespace Prisma {
     connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
   }
 
+  export type DepartmentNoteCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<DepartmentNoteCreateWithoutCreatorInput, DepartmentNoteUncheckedCreateWithoutCreatorInput> | DepartmentNoteCreateWithoutCreatorInput[] | DepartmentNoteUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentNoteCreateOrConnectWithoutCreatorInput | DepartmentNoteCreateOrConnectWithoutCreatorInput[]
+    createMany?: DepartmentNoteCreateManyCreatorInputEnvelope
+    connect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+  }
+
   export type GroupNoteShareCreateNestedManyWithoutSharedWithInput = {
     create?: XOR<GroupNoteShareCreateWithoutSharedWithInput, GroupNoteShareUncheckedCreateWithoutSharedWithInput> | GroupNoteShareCreateWithoutSharedWithInput[] | GroupNoteShareUncheckedCreateWithoutSharedWithInput[]
     connectOrCreate?: GroupNoteShareCreateOrConnectWithoutSharedWithInput | GroupNoteShareCreateOrConnectWithoutSharedWithInput[]
@@ -74561,6 +76130,13 @@ export namespace Prisma {
     connectOrCreate?: GroupNoteCreateOrConnectWithoutCreatorInput | GroupNoteCreateOrConnectWithoutCreatorInput[]
     createMany?: GroupNoteCreateManyCreatorInputEnvelope
     connect?: GroupNoteWhereUniqueInput | GroupNoteWhereUniqueInput[]
+  }
+
+  export type DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<DepartmentNoteCreateWithoutCreatorInput, DepartmentNoteUncheckedCreateWithoutCreatorInput> | DepartmentNoteCreateWithoutCreatorInput[] | DepartmentNoteUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentNoteCreateOrConnectWithoutCreatorInput | DepartmentNoteCreateOrConnectWithoutCreatorInput[]
+    createMany?: DepartmentNoteCreateManyCreatorInputEnvelope
+    connect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
   }
 
   export type GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput = {
@@ -75020,6 +76596,20 @@ export namespace Prisma {
     deleteMany?: GroupNoteScalarWhereInput | GroupNoteScalarWhereInput[]
   }
 
+  export type DepartmentNoteUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<DepartmentNoteCreateWithoutCreatorInput, DepartmentNoteUncheckedCreateWithoutCreatorInput> | DepartmentNoteCreateWithoutCreatorInput[] | DepartmentNoteUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentNoteCreateOrConnectWithoutCreatorInput | DepartmentNoteCreateOrConnectWithoutCreatorInput[]
+    upsert?: DepartmentNoteUpsertWithWhereUniqueWithoutCreatorInput | DepartmentNoteUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: DepartmentNoteCreateManyCreatorInputEnvelope
+    set?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    disconnect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    delete?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    connect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    update?: DepartmentNoteUpdateWithWhereUniqueWithoutCreatorInput | DepartmentNoteUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: DepartmentNoteUpdateManyWithWhereWithoutCreatorInput | DepartmentNoteUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: DepartmentNoteScalarWhereInput | DepartmentNoteScalarWhereInput[]
+  }
+
   export type GroupNoteShareUpdateManyWithoutSharedWithNestedInput = {
     create?: XOR<GroupNoteShareCreateWithoutSharedWithInput, GroupNoteShareUncheckedCreateWithoutSharedWithInput> | GroupNoteShareCreateWithoutSharedWithInput[] | GroupNoteShareUncheckedCreateWithoutSharedWithInput[]
     connectOrCreate?: GroupNoteShareCreateOrConnectWithoutSharedWithInput | GroupNoteShareCreateOrConnectWithoutSharedWithInput[]
@@ -75460,6 +77050,20 @@ export namespace Prisma {
     deleteMany?: GroupNoteScalarWhereInput | GroupNoteScalarWhereInput[]
   }
 
+  export type DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<DepartmentNoteCreateWithoutCreatorInput, DepartmentNoteUncheckedCreateWithoutCreatorInput> | DepartmentNoteCreateWithoutCreatorInput[] | DepartmentNoteUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DepartmentNoteCreateOrConnectWithoutCreatorInput | DepartmentNoteCreateOrConnectWithoutCreatorInput[]
+    upsert?: DepartmentNoteUpsertWithWhereUniqueWithoutCreatorInput | DepartmentNoteUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: DepartmentNoteCreateManyCreatorInputEnvelope
+    set?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    disconnect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    delete?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    connect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    update?: DepartmentNoteUpdateWithWhereUniqueWithoutCreatorInput | DepartmentNoteUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: DepartmentNoteUpdateManyWithWhereWithoutCreatorInput | DepartmentNoteUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: DepartmentNoteScalarWhereInput | DepartmentNoteScalarWhereInput[]
+  }
+
   export type GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput = {
     create?: XOR<GroupNoteShareCreateWithoutSharedWithInput, GroupNoteShareUncheckedCreateWithoutSharedWithInput> | GroupNoteShareCreateWithoutSharedWithInput[] | GroupNoteShareUncheckedCreateWithoutSharedWithInput[]
     connectOrCreate?: GroupNoteShareCreateOrConnectWithoutSharedWithInput | GroupNoteShareCreateOrConnectWithoutSharedWithInput[]
@@ -75860,6 +77464,13 @@ export namespace Prisma {
     connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
   }
 
+  export type DepartmentNoteCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentNoteCreateWithoutDepartmentInput, DepartmentNoteUncheckedCreateWithoutDepartmentInput> | DepartmentNoteCreateWithoutDepartmentInput[] | DepartmentNoteUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentNoteCreateOrConnectWithoutDepartmentInput | DepartmentNoteCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentNoteCreateManyDepartmentInputEnvelope
+    connect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+  }
+
   export type DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput = {
     create?: XOR<DepartmentMemberCreateWithoutDepartmentInput, DepartmentMemberUncheckedCreateWithoutDepartmentInput> | DepartmentMemberCreateWithoutDepartmentInput[] | DepartmentMemberUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: DepartmentMemberCreateOrConnectWithoutDepartmentInput | DepartmentMemberCreateOrConnectWithoutDepartmentInput[]
@@ -75928,6 +77539,13 @@ export namespace Prisma {
     connectOrCreate?: DepartmentDocumentCreateOrConnectWithoutDepartmentInput | DepartmentDocumentCreateOrConnectWithoutDepartmentInput[]
     createMany?: DepartmentDocumentCreateManyDepartmentInputEnvelope
     connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+  }
+
+  export type DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentNoteCreateWithoutDepartmentInput, DepartmentNoteUncheckedCreateWithoutDepartmentInput> | DepartmentNoteCreateWithoutDepartmentInput[] | DepartmentNoteUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentNoteCreateOrConnectWithoutDepartmentInput | DepartmentNoteCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentNoteCreateManyDepartmentInputEnvelope
+    connect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
   }
 
   export type OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput = {
@@ -76088,6 +77706,20 @@ export namespace Prisma {
     deleteMany?: DepartmentDocumentScalarWhereInput | DepartmentDocumentScalarWhereInput[]
   }
 
+  export type DepartmentNoteUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentNoteCreateWithoutDepartmentInput, DepartmentNoteUncheckedCreateWithoutDepartmentInput> | DepartmentNoteCreateWithoutDepartmentInput[] | DepartmentNoteUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentNoteCreateOrConnectWithoutDepartmentInput | DepartmentNoteCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentNoteUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentNoteUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentNoteCreateManyDepartmentInputEnvelope
+    set?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    disconnect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    delete?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    connect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    update?: DepartmentNoteUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentNoteUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentNoteUpdateManyWithWhereWithoutDepartmentInput | DepartmentNoteUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentNoteScalarWhereInput | DepartmentNoteScalarWhereInput[]
+  }
+
   export type DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput = {
     create?: XOR<DepartmentMemberCreateWithoutDepartmentInput, DepartmentMemberUncheckedCreateWithoutDepartmentInput> | DepartmentMemberCreateWithoutDepartmentInput[] | DepartmentMemberUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: DepartmentMemberCreateOrConnectWithoutDepartmentInput | DepartmentMemberCreateOrConnectWithoutDepartmentInput[]
@@ -76226,6 +77858,60 @@ export namespace Prisma {
     update?: DepartmentDocumentUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentDocumentUpdateWithWhereUniqueWithoutDepartmentInput[]
     updateMany?: DepartmentDocumentUpdateManyWithWhereWithoutDepartmentInput | DepartmentDocumentUpdateManyWithWhereWithoutDepartmentInput[]
     deleteMany?: DepartmentDocumentScalarWhereInput | DepartmentDocumentScalarWhereInput[]
+  }
+
+  export type DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentNoteCreateWithoutDepartmentInput, DepartmentNoteUncheckedCreateWithoutDepartmentInput> | DepartmentNoteCreateWithoutDepartmentInput[] | DepartmentNoteUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentNoteCreateOrConnectWithoutDepartmentInput | DepartmentNoteCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentNoteUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentNoteUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentNoteCreateManyDepartmentInputEnvelope
+    set?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    disconnect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    delete?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    connect?: DepartmentNoteWhereUniqueInput | DepartmentNoteWhereUniqueInput[]
+    update?: DepartmentNoteUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentNoteUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentNoteUpdateManyWithWhereWithoutDepartmentInput | DepartmentNoteUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentNoteScalarWhereInput | DepartmentNoteScalarWhereInput[]
+  }
+
+  export type DepartmentCreateNestedOneWithoutNotesInput = {
+    create?: XOR<DepartmentCreateWithoutNotesInput, DepartmentUncheckedCreateWithoutNotesInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutNotesInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutDepartmentNotesInput = {
+    create?: XOR<UserCreateWithoutDepartmentNotesInput, UserUncheckedCreateWithoutDepartmentNotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDepartmentNotesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumNoteTextSizeFieldUpdateOperationsInput = {
+    set?: $Enums.NoteTextSize
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type DepartmentUpdateOneRequiredWithoutNotesNestedInput = {
+    create?: XOR<DepartmentCreateWithoutNotesInput, DepartmentUncheckedCreateWithoutNotesInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutNotesInput
+    upsert?: DepartmentUpsertWithoutNotesInput
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutNotesInput, DepartmentUpdateWithoutNotesInput>, DepartmentUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutDepartmentNotesNestedInput = {
+    create?: XOR<UserCreateWithoutDepartmentNotesInput, UserUncheckedCreateWithoutDepartmentNotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDepartmentNotesInput
+    upsert?: UserUpsertWithoutDepartmentNotesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDepartmentNotesInput, UserUpdateWithoutDepartmentNotesInput>, UserUncheckedUpdateWithoutDepartmentNotesInput>
   }
 
   export type DepartmentCreateNestedOneWithoutDocumentsInput = {
@@ -76398,14 +78084,6 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutPollVotesInput, UserUncheckedCreateWithoutPollVotesInput>
     connectOrCreate?: UserCreateOrConnectWithoutPollVotesInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type DepartmentPollUpdateOneRequiredWithoutVotesNestedInput = {
@@ -76776,10 +78454,6 @@ export namespace Prisma {
     connectOrCreate?: GroupNoteShareCreateOrConnectWithoutNoteInput | GroupNoteShareCreateOrConnectWithoutNoteInput[]
     createMany?: GroupNoteShareCreateManyNoteInputEnvelope
     connect?: GroupNoteShareWhereUniqueInput | GroupNoteShareWhereUniqueInput[]
-  }
-
-  export type EnumNoteTextSizeFieldUpdateOperationsInput = {
-    set?: $Enums.NoteTextSize
   }
 
   export type GroupDocumentUpdateOneRequiredWithoutNotesNestedInput = {
@@ -78247,6 +79921,50 @@ export namespace Prisma {
     _max?: NestedEnumOrgRoleFilter<$PrismaModel>
   }
 
+  export type NestedEnumNoteTextSizeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteTextSizeFilter<$PrismaModel> | $Enums.NoteTextSize
+  }
+
+  export type NestedEnumNoteTextSizeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteTextSizeWithAggregatesFilter<$PrismaModel> | $Enums.NoteTextSize
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNoteTextSizeFilter<$PrismaModel>
+    _max?: NestedEnumNoteTextSizeFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedEnumFileTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
     in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
@@ -78262,17 +79980,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFileTypeFilter<$PrismaModel>
     _max?: NestedEnumFileTypeFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -78330,22 +80037,6 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
   export type NestedEnumDecisionVoteTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.DecisionVoteType | EnumDecisionVoteTypeFieldRefInput<$PrismaModel>
     in?: $Enums.DecisionVoteType[] | ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel>
@@ -78361,23 +80052,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDecisionVoteTypeFilter<$PrismaModel>
     _max?: NestedEnumDecisionVoteTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumNoteTextSizeFilter<$PrismaModel = never> = {
-    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
-    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
-    not?: NestedEnumNoteTextSizeFilter<$PrismaModel> | $Enums.NoteTextSize
-  }
-
-  export type NestedEnumNoteTextSizeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.NoteTextSize | EnumNoteTextSizeFieldRefInput<$PrismaModel>
-    in?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.NoteTextSize[] | ListEnumNoteTextSizeFieldRefInput<$PrismaModel>
-    not?: NestedEnumNoteTextSizeWithAggregatesFilter<$PrismaModel> | $Enums.NoteTextSize
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumNoteTextSizeFilter<$PrismaModel>
-    _max?: NestedEnumNoteTextSizeFilter<$PrismaModel>
   }
 
   export type NestedEnumRequestStatusFilter<$PrismaModel = never> = {
@@ -78925,6 +80599,7 @@ export namespace Prisma {
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutHeadInput = {
@@ -78944,6 +80619,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutHeadInput = {
@@ -79500,6 +81176,38 @@ export namespace Prisma {
 
   export type GroupNoteCreateManyCreatorInputEnvelope = {
     data: GroupNoteCreateManyCreatorInput | GroupNoteCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentNoteCreateWithoutCreatorInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutNotesInput
+  }
+
+  export type DepartmentNoteUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    deptId: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentNoteCreateOrConnectWithoutCreatorInput = {
+    where: DepartmentNoteWhereUniqueInput
+    create: XOR<DepartmentNoteCreateWithoutCreatorInput, DepartmentNoteUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type DepartmentNoteCreateManyCreatorInputEnvelope = {
+    data: DepartmentNoteCreateManyCreatorInput | DepartmentNoteCreateManyCreatorInput[]
     skipDuplicates?: boolean
   }
 
@@ -80414,6 +82122,37 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"GroupNote"> | Date | string
   }
 
+  export type DepartmentNoteUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: DepartmentNoteWhereUniqueInput
+    update: XOR<DepartmentNoteUpdateWithoutCreatorInput, DepartmentNoteUncheckedUpdateWithoutCreatorInput>
+    create: XOR<DepartmentNoteCreateWithoutCreatorInput, DepartmentNoteUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type DepartmentNoteUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: DepartmentNoteWhereUniqueInput
+    data: XOR<DepartmentNoteUpdateWithoutCreatorInput, DepartmentNoteUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type DepartmentNoteUpdateManyWithWhereWithoutCreatorInput = {
+    where: DepartmentNoteScalarWhereInput
+    data: XOR<DepartmentNoteUpdateManyMutationInput, DepartmentNoteUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type DepartmentNoteScalarWhereInput = {
+    AND?: DepartmentNoteScalarWhereInput | DepartmentNoteScalarWhereInput[]
+    OR?: DepartmentNoteScalarWhereInput[]
+    NOT?: DepartmentNoteScalarWhereInput | DepartmentNoteScalarWhereInput[]
+    id?: StringFilter<"DepartmentNote"> | string
+    deptId?: StringFilter<"DepartmentNote"> | string
+    title?: StringFilter<"DepartmentNote"> | string
+    content?: StringFilter<"DepartmentNote"> | string
+    textSize?: EnumNoteTextSizeFilter<"DepartmentNote"> | $Enums.NoteTextSize
+    order?: IntFilter<"DepartmentNote"> | number
+    createdBy?: StringFilter<"DepartmentNote"> | string
+    createdAt?: DateTimeFilter<"DepartmentNote"> | Date | string
+    updatedAt?: DateTimeFilter<"DepartmentNote"> | Date | string
+  }
+
   export type GroupNoteShareUpsertWithWhereUniqueWithoutSharedWithInput = {
     where: GroupNoteShareWhereUniqueInput
     update: XOR<GroupNoteShareUpdateWithoutSharedWithInput, GroupNoteShareUncheckedUpdateWithoutSharedWithInput>
@@ -80496,6 +82235,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -80554,6 +82294,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -80652,6 +82393,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -80710,6 +82452,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -80875,6 +82618,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -80933,6 +82677,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -80996,6 +82741,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -81054,6 +82800,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -81128,6 +82875,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -81186,6 +82934,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -81255,6 +83004,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -81313,6 +83063,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -81333,6 +83084,7 @@ export namespace Prisma {
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutOrganizationInput = {
@@ -81352,6 +83104,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutOrganizationInput = {
@@ -81650,6 +83403,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -81708,6 +83462,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -81823,6 +83578,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -81881,6 +83637,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -81974,6 +83731,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -82032,6 +83790,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -82354,6 +84113,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DepartmentNoteCreateWithoutDepartmentInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: UserCreateNestedOneWithoutDepartmentNotesInput
+  }
+
+  export type DepartmentNoteUncheckedCreateWithoutDepartmentInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentNoteCreateOrConnectWithoutDepartmentInput = {
+    where: DepartmentNoteWhereUniqueInput
+    create: XOR<DepartmentNoteCreateWithoutDepartmentInput, DepartmentNoteUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentNoteCreateManyDepartmentInputEnvelope = {
+    data: DepartmentNoteCreateManyDepartmentInput | DepartmentNoteCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutDepartmentsInput = {
     update: XOR<OrganizationUpdateWithoutDepartmentsInput, OrganizationUncheckedUpdateWithoutDepartmentsInput>
     create: XOR<OrganizationCreateWithoutDepartmentsInput, OrganizationUncheckedCreateWithoutDepartmentsInput>
@@ -82461,6 +84252,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -82519,6 +84311,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -82720,6 +84513,370 @@ export namespace Prisma {
     data: XOR<DepartmentDocumentUpdateManyMutationInput, DepartmentDocumentUncheckedUpdateManyWithoutDepartmentInput>
   }
 
+  export type DepartmentNoteUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentNoteWhereUniqueInput
+    update: XOR<DepartmentNoteUpdateWithoutDepartmentInput, DepartmentNoteUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<DepartmentNoteCreateWithoutDepartmentInput, DepartmentNoteUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentNoteUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentNoteWhereUniqueInput
+    data: XOR<DepartmentNoteUpdateWithoutDepartmentInput, DepartmentNoteUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type DepartmentNoteUpdateManyWithWhereWithoutDepartmentInput = {
+    where: DepartmentNoteScalarWhereInput
+    data: XOR<DepartmentNoteUpdateManyMutationInput, DepartmentNoteUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
+  export type DepartmentCreateWithoutNotesInput = {
+    id?: string
+    name: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
+    members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutNotesInput = {
+    id?: string
+    name: string
+    orgId: string
+    publicKey: string
+    headId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutNotesInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutNotesInput, DepartmentUncheckedCreateWithoutNotesInput>
+  }
+
+  export type UserCreateWithoutDepartmentNotesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
+  }
+
+  export type UserUncheckedCreateWithoutDepartmentNotesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
+  }
+
+  export type UserCreateOrConnectWithoutDepartmentNotesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDepartmentNotesInput, UserUncheckedCreateWithoutDepartmentNotesInput>
+  }
+
+  export type DepartmentUpsertWithoutNotesInput = {
+    update: XOR<DepartmentUpdateWithoutNotesInput, DepartmentUncheckedUpdateWithoutNotesInput>
+    create: XOR<DepartmentCreateWithoutNotesInput, DepartmentUncheckedCreateWithoutNotesInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutNotesInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutNotesInput, DepartmentUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type DepartmentUpdateWithoutNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
+    members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type UserUpsertWithoutDepartmentNotesInput = {
+    update: XOR<UserUpdateWithoutDepartmentNotesInput, UserUncheckedUpdateWithoutDepartmentNotesInput>
+    create: XOR<UserCreateWithoutDepartmentNotesInput, UserUncheckedCreateWithoutDepartmentNotesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDepartmentNotesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDepartmentNotesInput, UserUncheckedUpdateWithoutDepartmentNotesInput>
+  }
+
+  export type UserUpdateWithoutDepartmentNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDepartmentNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  }
+
   export type DepartmentCreateWithoutDocumentsInput = {
     id?: string
     name: string
@@ -82737,6 +84894,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutDocumentsInput = {
@@ -82756,6 +84914,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutDocumentsInput = {
@@ -82818,6 +84977,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -82876,6 +85036,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -82912,6 +85073,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutDocumentsInput = {
@@ -82931,6 +85093,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutUploadedDepartmentDocumentsInput = {
@@ -82999,6 +85162,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -83057,6 +85221,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -83077,6 +85242,7 @@ export namespace Prisma {
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutGoalsInput = {
@@ -83096,6 +85262,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutGoalsInput = {
@@ -83131,6 +85298,7 @@ export namespace Prisma {
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutGoalsInput = {
@@ -83150,6 +85318,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentCreateWithoutMeetingsInput = {
@@ -83169,6 +85338,7 @@ export namespace Prisma {
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutMeetingsInput = {
@@ -83188,6 +85358,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutMeetingsInput = {
@@ -83250,6 +85421,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -83308,6 +85480,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -83344,6 +85517,7 @@ export namespace Prisma {
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutMeetingsInput = {
@@ -83363,6 +85537,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedMeetingsInput = {
@@ -83431,6 +85606,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -83489,6 +85665,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -83509,6 +85686,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutPollsInput = {
@@ -83528,6 +85706,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutPollsInput = {
@@ -83590,6 +85769,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -83648,6 +85828,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -83708,6 +85889,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutPollsInput = {
@@ -83727,6 +85909,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedPollsInput = {
@@ -83795,6 +85978,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -83853,6 +86037,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -83954,6 +86139,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -84012,6 +86198,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -84119,6 +86306,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -84177,6 +86365,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -84197,6 +86386,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutTeamDecisionsInput = {
@@ -84216,6 +86406,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutTeamDecisionsInput = {
@@ -84278,6 +86469,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -84336,6 +86528,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -84396,6 +86589,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutTeamDecisionsInput = {
@@ -84415,6 +86609,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedDecisionsInput = {
@@ -84483,6 +86678,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -84541,6 +86737,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -84644,6 +86841,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -84702,6 +86900,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -84811,6 +87010,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -84869,6 +87069,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -84889,6 +87090,7 @@ export namespace Prisma {
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutMembersInput = {
@@ -84908,6 +87110,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutMembersInput = {
@@ -84970,6 +87173,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -85028,6 +87232,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -85064,6 +87269,7 @@ export namespace Prisma {
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutMembersInput = {
@@ -85083,6 +87289,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutDeptMembershipsInput = {
@@ -85151,6 +87358,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -85209,6 +87417,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -85229,6 +87438,7 @@ export namespace Prisma {
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutConversationsInput = {
@@ -85248,6 +87458,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutConversationsInput = {
@@ -85363,6 +87574,7 @@ export namespace Prisma {
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutConversationsInput = {
@@ -85382,6 +87594,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type GroupMemberUpsertWithWhereUniqueWithoutGroupInput = {
@@ -85629,6 +87842,7 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -85687,6 +87901,7 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -85812,6 +88027,7 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -85870,6 +88086,7 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -85974,6 +88191,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutNoteSharesReceivedInput = {
@@ -86032,6 +88250,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutNoteSharesReceivedInput = {
@@ -86141,6 +88360,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNoteSharesReceivedInput = {
@@ -86199,6 +88419,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type GroupCreateWithoutMembersInput = {
@@ -86283,6 +88504,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -86341,6 +88563,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -86448,6 +88671,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -86506,6 +88730,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -86617,6 +88842,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -86675,6 +88901,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -86810,6 +89037,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -86868,6 +89096,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -86982,6 +89211,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -87040,6 +89270,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -87114,6 +89345,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -87172,6 +89404,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -87230,6 +89463,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -87288,6 +89522,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -87384,6 +89619,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -87442,6 +89678,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -87822,6 +90059,7 @@ export namespace Prisma {
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutEventBroadcastsInput = {
@@ -87841,6 +90079,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutEventBroadcastsInput = {
@@ -87919,6 +90158,7 @@ export namespace Prisma {
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutEventBroadcastsInput = {
@@ -87938,6 +90178,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type EventInvitationCreateWithoutRsvpsInput = {
@@ -88075,6 +90316,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -88133,6 +90375,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -88245,6 +90488,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -88303,6 +90547,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -88599,6 +90844,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -88657,6 +90903,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -88770,6 +91017,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -88828,6 +91076,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -88919,6 +91168,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -88977,6 +91227,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -89145,6 +91396,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -89203,6 +91455,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -89308,6 +91561,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -89366,6 +91620,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -89473,6 +91728,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -89531,6 +91787,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -89590,6 +91847,7 @@ export namespace Prisma {
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutTasksInput = {
@@ -89609,6 +91867,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutTasksInput = {
@@ -89671,6 +91930,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -89729,6 +91989,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -89792,6 +92053,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -89850,6 +92112,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -89946,6 +92209,7 @@ export namespace Prisma {
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutTasksInput = {
@@ -89965,6 +92229,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedTasksInput = {
@@ -90033,6 +92298,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -90091,6 +92357,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -90160,6 +92427,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -90218,6 +92486,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -90362,6 +92631,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -90420,6 +92690,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -90571,6 +92842,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -90629,6 +92901,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -90801,6 +93074,7 @@ export namespace Prisma {
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutMonthlyReportsInput = {
@@ -90820,6 +93094,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
     documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
+    notes?: DepartmentNoteUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutMonthlyReportsInput = {
@@ -90882,6 +93157,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -90940,6 +93216,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -90976,6 +93253,7 @@ export namespace Prisma {
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutMonthlyReportsInput = {
@@ -90995,6 +93273,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutDepartmentMonthlyReportsInput = {
@@ -91063,6 +93342,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -91121,6 +93401,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -91179,6 +93460,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -91237,6 +93519,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -91311,6 +93594,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -91369,6 +93653,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -91427,6 +93712,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -91485,6 +93771,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -91559,6 +93846,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -91617,6 +93905,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -91675,6 +93964,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -91733,6 +94023,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -91837,6 +94128,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -91895,6 +94187,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -91983,6 +94276,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -92041,6 +94335,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -92115,6 +94410,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -92173,6 +94469,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -92231,6 +94528,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -92289,6 +94587,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -92363,6 +94662,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -92421,6 +94721,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -92479,6 +94780,7 @@ export namespace Prisma {
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
   }
 
@@ -92537,6 +94839,7 @@ export namespace Prisma {
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
     noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
   }
 
@@ -92611,6 +94914,7 @@ export namespace Prisma {
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -92669,6 +94973,7 @@ export namespace Prisma {
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
     noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
   }
 
@@ -93016,6 +95321,17 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type DepartmentNoteCreateManyCreatorInput = {
+    id?: string
+    deptId: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type GroupNoteShareCreateManySharedWithInput = {
     id?: string
     noteId: string
@@ -93345,6 +95661,7 @@ export namespace Prisma {
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutHeadInput = {
@@ -93364,6 +95681,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutHeadInput = {
@@ -93897,6 +96215,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DepartmentNoteUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutNotesNestedInput
+  }
+
+  export type DepartmentNoteUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentNoteUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type GroupNoteShareUpdateWithoutSharedWithInput = {
     id?: StringFieldUpdateOperationsInput | string
     canEdit?: BoolFieldUpdateOperationsInput | boolean
@@ -93993,6 +96344,7 @@ export namespace Prisma {
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutOrganizationInput = {
@@ -94012,6 +96364,7 @@ export namespace Prisma {
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
     documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
+    notes?: DepartmentNoteUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutOrganizationInput = {
@@ -94188,6 +96541,17 @@ export namespace Prisma {
     data: string
     uploadedBy: string
     createdAt?: Date | string
+  }
+
+  export type DepartmentNoteCreateManyDepartmentInput = {
+    id?: string
+    title: string
+    content: string
+    textSize?: $Enums.NoteTextSize
+    order?: number
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DepartmentMemberUpdateWithoutDepartmentInput = {
@@ -94502,6 +96866,39 @@ export namespace Prisma {
     data?: StringFieldUpdateOperationsInput | string
     uploadedBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentNoteUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: UserUpdateOneRequiredWithoutDepartmentNotesNestedInput
+  }
+
+  export type DepartmentNoteUncheckedUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentNoteUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    textSize?: EnumNoteTextSizeFieldUpdateOperationsInput | $Enums.NoteTextSize
+    order?: IntFieldUpdateOperationsInput | number
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PollVoteCreateManyPollInput = {

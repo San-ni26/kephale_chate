@@ -64,6 +64,7 @@ model User {
   following                   Follow[]             @relation("UserFollowing")
   uploadedDepartmentDocuments DepartmentDocument[] @relation("DocumentUploader")
   groupNotes                  GroupNote[]          @relation("GroupNoteCreator")
+  departmentNotes             DepartmentNote[]     @relation("DepartmentNoteCreator")
   noteSharesReceived          GroupNoteShare[]     @relation("NoteShareRecipient")
 
   @@index([email])
@@ -185,9 +186,28 @@ model Department {
   polls           DepartmentPoll[]
   teamDecisions   TeamDecision[]
   documents       DepartmentDocument[]
+  notes           DepartmentNote[]
 
   @@index([orgId], map: "Department_orgId_idx")
   @@index([headId])
+}
+
+// Notes du département (visibles par tous les membres, modifiables uniquement par le créateur)
+model DepartmentNote {
+  id         String       @id @default(cuid())
+  deptId     String
+  title      String
+  content    String       @db.Text
+  textSize   NoteTextSize @default(NORMAL)
+  order      Int          @default(0)
+  createdBy  String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  department Department   @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  creator    User         @relation("DepartmentNoteCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([deptId])
+  @@index([createdBy])
 }
 
 // Fiches / documents du département (bibliothèque partagée)

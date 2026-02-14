@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import {
@@ -8,6 +8,8 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
+    DialogFooter,
+    DialogDescription,
 } from '@/src/components/ui/dialog';
 import {
     FileText,
@@ -20,11 +22,16 @@ import {
     X,
     ExternalLink,
     Share2,
+    StickyNote,
+    Pencil,
+    Clock,
 } from 'lucide-react';
-import { fetchWithAuth } from '@/src/lib/auth-client';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs';
+import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import { toast } from 'sonner';
 import { cn } from '@/src/lib/utils';
 import { dataUrlToBlob, canShareFile, shareFileFromDataUrl } from '@/src/lib/download-file';
+import { NoteEditor } from '@/src/components/notes/NoteEditor';
 
 interface Doc {
     id: string;
@@ -36,11 +43,41 @@ interface Doc {
     uploader?: { id: string; name: string | null; email: string };
 }
 
+interface DeptNote {
+    id: string;
+    title: string;
+    content: string;
+    updatedAt: string;
+    createdAt?: string;
+    createdBy?: string;
+    creator?: { id: string; name: string | null; email?: string };
+}
+
+function stripHtml(html: string): string {
+    if (!html) return '';
+    return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+}
+
+function formatDate(dateStr: string): string {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+}
+
 interface DepartmentDocumentsPanelProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     orgId: string;
     deptId: string;
+    /** Ouvrir directement l'onglet Notes */
+    initialTab?: 'documents' | 'notes';
+    /** Ouvrir directement le formulaire de création de note */
+    openCreateNoteOnMount?: boolean;
 }
 
 function getDocDataUrl(doc: Doc): string {
@@ -54,6 +91,8 @@ export function DepartmentDocumentsPanel({
     onOpenChange,
     orgId,
     deptId,
+    initialTab = 'documents',
+    openCreateNoteOnMount = false,
 }: DepartmentDocumentsPanelProps) {
     const [documents, setDocuments] = useState<Doc[]>([]);
     const [search, setSearch] = useState('');
@@ -64,6 +103,28 @@ export function DepartmentDocumentsPanel({
     const [pdfPreviewBlobUrl, setPdfPreviewBlobUrl] = useState<string | null>(null);
     const pdfPreviewBlobUrlRef = useRef<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    /* Notes */
+    const [notes, setNotes] = useState<DeptNote[]>([]);
+    const [notesLoading, setNotesLoading] = useState(false);
+    const [noteSearch, setNoteSearch] = useState('');
+    const [viewNote, setViewNote] = useState<DeptNote | null>(null);
+    const [formOpen, setFormOpen] = useState(false);
+    const [editingNote, setEditingNote] = useState<DeptNote | null>(null);
+    const [formTitle, setFormTitle] = useState('');
+    const [formContent, setFormContent] = useState('');
+    const [formSaving, setFormSaving] = useState(false);
+    const [deleteNoteTarget, setDeleteNoteTarget] = useState<DeptNote | null>(null);
+    const [deletingNote, setDeletingNote] = useState(false);
+    const [activeTab, setActiveTab] = useState<'documents' | 'notes'>('documents');
+
+    const currentUserId = getUser()?.id ?? null;
+
+    useEffect(() => {
+        if (open) {
+            setActiveTab(initialTab);
+        }
+    }, [open, initialTab]);
 
     // Blob URL pour l’aperçu PDF (évite data URL dans iframe, incompatible Safari/iOS)
     useEffect(() => {
@@ -109,11 +170,36 @@ export function DepartmentDocumentsPanel({
         }
     };
 
+    const fetchNotes = useCallback(async () => {
+        if (!orgId || !deptId) return;
+        setNotesLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/notes`);
+            if (res.ok) {
+                const data = await res.json();
+                setNotes(data.notes || []);
+            } else {
+                toast.error('Erreur chargement des notes');
+            }
+        } catch (e) {
+            toast.error('Erreur chargement des notes');
+        } finally {
+            setNotesLoading(false);
+        }
+    }, [orgId, deptId]);
+
     useEffect(() => {
         if (open) {
             fetchDocuments(search);
+            fetchNotes();
+            if (openCreateNoteOnMount) {
+                setFormTitle('');
+                setFormContent('');
+                setFormOpen(true);
+                setEditingNote(null);
+            }
         }
-    }, [open, orgId, deptId, search]);
+    }, [open, orgId, deptId, search, fetchNotes, openCreateNoteOnMount]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value.trim());
@@ -193,7 +279,98 @@ export function DepartmentDocumentsPanel({
         }
     };
 
+    /* Note handlers */
+    const openCreateNote = () => {
+        setEditingNote(null);
+        setFormTitle('');
+        setFormContent('');
+        setFormOpen(true);
+    };
+    const openEditNote = (n: DeptNote) => {
+        setEditingNote(n);
+        setFormTitle(n.title);
+        setFormContent(n.content || '');
+        setFormOpen(true);
+    };
+    const saveNote = async () => {
+        if (!orgId || !deptId || !formTitle.trim()) return;
+        setFormSaving(true);
+        try {
+            if (editingNote) {
+                const res = await fetchWithAuth(
+                    `/api/organizations/${orgId}/departments/${deptId}/notes/${editingNote.id}`,
+                    {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title: formTitle.trim(), content: formContent }),
+                    }
+                );
+                if (!res.ok) {
+                    const err = await res.json();
+                    toast.error(err.error || 'Erreur');
+                    return;
+                }
+                toast.success('Note mise à jour');
+                setFormOpen(false);
+                fetchNotes();
+                if (viewNote?.id === editingNote.id) {
+                    const data = await res.json();
+                    setViewNote(data.note);
+                }
+            } else {
+                const res = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/notes`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: formTitle.trim(), content: formContent }),
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    toast.error(err.error || 'Erreur');
+                    return;
+                }
+                const data = await res.json();
+                toast.success('Note créée');
+                setFormOpen(false);
+                setNotes(prev => [data.note, ...prev]);
+            }
+        } catch (e) {
+            toast.error('Erreur');
+        } finally {
+            setFormSaving(false);
+        }
+    };
+    const confirmDeleteNote = async () => {
+        if (!orgId || !deptId || !deleteNoteTarget) return;
+        setDeletingNote(true);
+        try {
+            const res = await fetchWithAuth(
+                `/api/organizations/${orgId}/departments/${deptId}/notes/${deleteNoteTarget.id}`,
+                { method: 'DELETE' }
+            );
+            if (res.ok) {
+                setNotes(prev => prev.filter(n => n.id !== deleteNoteTarget.id));
+                if (viewNote?.id === deleteNoteTarget.id) setViewNote(null);
+                setDeleteNoteTarget(null);
+                toast.success('Note supprimée');
+            } else {
+                const err = await res.json();
+                toast.error(err.error || 'Erreur');
+            }
+        } catch (e) {
+            toast.error('Erreur');
+        } finally {
+            setDeletingNote(false);
+        }
+    };
+
     const filtered = documents;
+    const filteredNotes = noteSearch.trim()
+        ? notes.filter(
+              n =>
+                  n.title.toLowerCase().includes(noteSearch.toLowerCase()) ||
+                  stripHtml(n.content).toLowerCase().includes(noteSearch.toLowerCase())
+          )
+        : notes;
 
     return (
         <>
@@ -207,9 +384,18 @@ export function DepartmentDocumentsPanel({
                             <FileText className="w-5 h-5" />
                             Fiches & documents du département
                         </DialogTitle>
+                        <DialogDescription>
+                            Documents partagés et notes du département. Les notes sont visibles par tous les membres, modifiables uniquement par leur créateur.
+                        </DialogDescription>
                     </DialogHeader>
 
-                    <div className="flex flex-col gap-3 flex-1 min-h-0">
+                    <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'documents' | 'notes')} className="flex flex-col flex-1 min-h-0">
+                        <TabsList className="shrink-0">
+                            <TabsTrigger value="documents">Documents</TabsTrigger>
+                            <TabsTrigger value="notes">Notes</TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent value="documents" className="flex flex-col gap-3 flex-1 min-h-0 mt-3">
                         <div className="flex gap-2">
                             <div className="relative flex-1">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -433,7 +619,165 @@ export function DepartmentDocumentsPanel({
                                 </div>
                             </div>
                         )}
-                    </div>
+                        </TabsContent>
+
+                        <TabsContent value="notes" className="flex flex-col gap-3 flex-1 min-h-0 mt-3">
+                            <div className="flex gap-2">
+                                <div className="relative flex-1">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                    <Input
+                                        placeholder="Rechercher une note..."
+                                        value={noteSearch}
+                                        onChange={(e) => setNoteSearch(e.target.value)}
+                                        className="pl-9 bg-muted border-border"
+                                    />
+                                </div>
+                                <Button variant="outline" size="sm" onClick={openCreateNote} className="shrink-0">
+                                    <Plus className="w-4 h-4 mr-1" />
+                                    Nouvelle note
+                                </Button>
+                            </div>
+
+                            {viewNote ? (
+                                <div className="flex flex-col gap-2 flex-1 min-h-0 border border-border rounded-lg bg-muted/30 overflow-hidden">
+                                    <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-muted/50 shrink-0">
+                                        <h3 className="font-semibold truncate">{viewNote.title}</h3>
+                                        <div className="flex items-center gap-1 shrink-0">
+                                            {viewNote.creator?.id === currentUserId && (
+                                                <>
+                                                    <Button variant="ghost" size="sm" onClick={() => openEditNote(viewNote)}>
+                                                        <Pencil className="w-4 h-4" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-destructive"
+                                                        onClick={() => setDeleteNoteTarget(viewNote)}
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </Button>
+                                                </>
+                                            )}
+                                            <Button variant="ghost" size="sm" onClick={() => setViewNote(null)}>
+                                                <X className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 overflow-y-auto p-3">
+                                        <div
+                                            className="prose prose-sm dark:prose-invert max-w-none [&_ul]:list-disc [&_ol]:list-decimal"
+                                            dangerouslySetInnerHTML={{ __html: viewNote.content || '' }}
+                                        />
+                                    </div>
+                                    <div className="px-3 py-1.5 text-xs text-muted-foreground border-t border-border">
+                                        Par {viewNote.creator?.name || viewNote.creator?.email || 'Inconnu'} · {formatDate(viewNote.updatedAt)}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className={cn('overflow-y-auto border border-border rounded-lg bg-muted/30 min-h-[200px] flex-1')}>
+                                    {notesLoading ? (
+                                        <div className="flex justify-center py-12">
+                                            <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                                        </div>
+                                    ) : filteredNotes.length === 0 ? (
+                                        <div className="flex flex-col items-center justify-center py-12 text-muted-foreground text-sm">
+                                            <StickyNote className="w-12 h-12 mb-2 opacity-50" />
+                                            <p>Aucune note. Créez une note pour le département.</p>
+                                            <Button variant="outline" size="sm" className="mt-2" onClick={openCreateNote}>
+                                                <Plus className="w-4 h-4 mr-1" />
+                                                Nouvelle note
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <ul className="divide-y divide-border p-2">
+                                            {filteredNotes.map((note) => (
+                                                <li
+                                                    key={note.id}
+                                                    className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-muted/50 transition cursor-pointer"
+                                                    onClick={() => setViewNote(note)}
+                                                >
+                                                    <StickyNote className="w-8 h-8 text-muted-foreground shrink-0" />
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-sm font-medium truncate text-foreground">{note.title}</p>
+                                                        <p className="text-xs text-muted-foreground flex items-center gap-1">
+                                                            <Clock className="w-3 h-3" />
+                                                            {formatDate(note.updatedAt)}
+                                                            {note.creator?.name && (
+                                                                <> · {note.creator.name}</>
+                                                            )}
+                                                        </p>
+                                                    </div>
+                                                    {note.creator?.id === currentUserId && (
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-8 w-8 shrink-0"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                openEditNote(note);
+                                                            }}
+                                                            title="Modifier"
+                                                        >
+                                                            <Pencil className="w-4 h-4" />
+                                                        </Button>
+                                                    )}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            )}
+                        </TabsContent>
+                    </Tabs>
+
+                    {/* Dialog: créer/éditer note */}
+                    <Dialog open={formOpen} onOpenChange={setFormOpen}>
+                        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col bg-card border-border">
+                            <DialogHeader>
+                                <DialogTitle>{editingNote ? 'Modifier la note' : 'Nouvelle note'}</DialogTitle>
+                                <DialogDescription>
+                                    {editingNote ? 'Modifiez le titre et le contenu.' : 'Les membres du département pourront consulter cette note (lecture seule).'}
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="flex flex-col gap-3 flex-1 min-h-0">
+                                <Input
+                                    placeholder="Titre"
+                                    value={formTitle}
+                                    onChange={(e) => setFormTitle(e.target.value)}
+                                    className="bg-muted border-border"
+                                />
+                                <div className="flex-1 min-h-[200px] border border-border rounded-lg overflow-hidden">
+                                    <NoteEditor content={formContent} onChange={setFormContent} editable={true} />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button variant="outline" onClick={() => setFormOpen(false)}>Annuler</Button>
+                                <Button onClick={saveNote} disabled={formSaving || !formTitle.trim()}>
+                                    {formSaving && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                                    {editingNote ? 'Enregistrer' : 'Créer'}
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    {/* Dialog: confirmer suppression note */}
+                    <Dialog open={!!deleteNoteTarget} onOpenChange={(o) => !o && setDeleteNoteTarget(null)}>
+                        <DialogContent className="bg-card border-border">
+                            <DialogHeader>
+                                <DialogTitle>Supprimer la note</DialogTitle>
+                                <DialogDescription>
+                                    Cette action est irréversible. La note sera définitivement supprimée.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                                <Button variant="outline" onClick={() => setDeleteNoteTarget(null)}>Annuler</Button>
+                                <Button variant="destructive" onClick={confirmDeleteNote} disabled={deletingNote}>
+                                    {deletingNote && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                                    Supprimer
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </DialogContent>
             </Dialog>
         </>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2, ClipboardList, CheckCircle2, AlertCircle, Clock, MoreVertical, Loader2, ImagePlus, FileText } from "lucide-react";
+import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2, ClipboardList, CheckCircle2, AlertCircle, Clock, MoreVertical, Loader2, ImagePlus, FileText, StickyNote, FolderOpen } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
@@ -29,6 +29,7 @@ import {
 } from "@/src/components/ui/dropdown-menu";
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
+import { DepartmentDocumentsPanel } from "@/src/components/chat/DepartmentDocumentsPanel";
 
 
 interface Organization {
@@ -118,6 +119,12 @@ export default function OrganizationDashboard() {
     const isAdmin = org
         ? (org.ownerId === currentUser?.id || orgData?.userRole === 'ADMIN' || orgData?.userRole === 'OWNER')
         : false;
+
+    // Fiches & documents (par département)
+    const [documentsPanelOpen, setDocumentsPanelOpen] = useState(false);
+    const [documentsPanelDeptId, setDocumentsPanelDeptId] = useState<string | null>(null);
+    const [documentsPanelTab, setDocumentsPanelTab] = useState<'documents' | 'notes'>('documents');
+    const [documentsPanelCreateNote, setDocumentsPanelCreateNote] = useState(false);
 
     // Paramètres (owner only)
     const [showSettingsDialog, setShowSettingsDialog] = useState(false);
@@ -722,6 +729,36 @@ export default function OrganizationDashboard() {
                                                     <FileText className="w-4 h-4 mr-2" />
                                                     Rapport du mois
                                                 </Button>
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="flex-1"
+                                                        onClick={() => {
+                                                            setDocumentsPanelDeptId(userDept.department.id);
+                                                            setDocumentsPanelTab('documents');
+                                                            setDocumentsPanelCreateNote(false);
+                                                            setDocumentsPanelOpen(true);
+                                                        }}
+                                                    >
+                                                        <FolderOpen className="w-4 h-4 mr-1" />
+                                                        Fiches & docs
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="shrink-0"
+                                                        onClick={() => {
+                                                            setDocumentsPanelDeptId(userDept.department.id);
+                                                            setDocumentsPanelTab('notes');
+                                                            setDocumentsPanelCreateNote(true);
+                                                            setDocumentsPanelOpen(true);
+                                                        }}
+                                                        title="Nouvelle note"
+                                                    >
+                                                        <StickyNote className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
                                             </div>
                                         </CardContent>
                                     </Card>
@@ -901,30 +938,64 @@ export default function OrganizationDashboard() {
                                         <span className="text-muted-foreground">Conversations</span>
                                         <span className="text-foreground">{dept._count.conversations}</span>
                                     </div>
-                                    <div className="flex gap-2 mt-2">
-                                        <Button
-                                            className="flex-1"
-                                            variant="secondary"
-                                            size="sm"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                router.push(`/chat/organizations/${orgId}/departments/${dept.id}`);
-                                            }}
-                                        >
-                                            Gérer les membres
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                router.push(`/chat/organizations/${orgId}/departments/${dept.id}/reports`);
-                                            }}
-                                            className="shrink-0"
-                                            title="Rapports du département par mois"
-                                        >
-                                            <FileText className="w-4 h-4" />
-                                        </Button>
+                                    <div className="flex flex-col gap-2 mt-2">
+                                        <div className="flex gap-2">
+                                            <Button
+                                                className="flex-1"
+                                                variant="secondary"
+                                                size="sm"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    router.push(`/chat/organizations/${orgId}/departments/${dept.id}`);
+                                                }}
+                                            >
+                                                Gérer les membres
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    router.push(`/chat/organizations/${orgId}/departments/${dept.id}/reports`);
+                                                }}
+                                                className="shrink-0"
+                                                title="Rapports du département par mois"
+                                            >
+                                                <FileText className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="flex-1"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setDocumentsPanelDeptId(dept.id);
+                                                    setDocumentsPanelTab('documents');
+                                                    setDocumentsPanelCreateNote(false);
+                                                    setDocumentsPanelOpen(true);
+                                                }}
+                                                title="Fiches & documents du département"
+                                            >
+                                                <FolderOpen className="w-4 h-4 mr-1" />
+                                                Fiches & docs
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setDocumentsPanelDeptId(dept.id);
+                                                    setDocumentsPanelTab('notes');
+                                                    setDocumentsPanelCreateNote(true);
+                                                    setDocumentsPanelOpen(true);
+                                                }}
+                                                title="Nouvelle note"
+                                            >
+                                                <StickyNote className="w-4 h-4" />
+                                            </Button>
+                                        </div>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -1206,6 +1277,20 @@ export default function OrganizationDashboard() {
                         </div>
                     </DialogContent>
                 </Dialog>
+
+                {documentsPanelDeptId && (
+                    <DepartmentDocumentsPanel
+                        open={documentsPanelOpen}
+                        onOpenChange={(open) => {
+                            setDocumentsPanelOpen(open);
+                            if (!open) setDocumentsPanelDeptId(null);
+                        }}
+                        orgId={orgId}
+                        deptId={documentsPanelDeptId}
+                        initialTab={documentsPanelTab}
+                        openCreateNoteOnMount={documentsPanelCreateNote}
+                    />
+                )}
             </div>
         </div>
     );

@@ -16,6 +16,7 @@ import {
     Paperclip,
     Image as ImageIcon,
     FileText,
+    StickyNote,
     MoreVertical,
     Pencil,
     Trash2
@@ -96,6 +97,7 @@ import DepartmentGoalsTab from '@/src/components/organizations/DepartmentGoalsTa
 import DepartmentMeetingsTab from '@/src/components/organizations/DepartmentMeetingsTab';
 import DepartmentPollsTab from '@/src/components/organizations/DepartmentPollsTab';
 import DepartmentDecisionsTab from '@/src/components/organizations/DepartmentDecisionsTab';
+import { DepartmentDocumentsPanel } from '@/src/components/chat/DepartmentDocumentsPanel';
 
 function DepartmentReportsTab({
     orgId,
@@ -237,6 +239,9 @@ export default function DepartmentDetailPage() {
     const searchParams = useSearchParams();
     const tabParam = searchParams?.get('tab');
     const [activeTab, setActiveTab] = useState('members');
+    const [documentsPanelOpen, setDocumentsPanelOpen] = useState(false);
+    const [documentsPanelTab, setDocumentsPanelTab] = useState<'documents' | 'notes'>('documents');
+    const [documentsPanelCreateNote, setDocumentsPanelCreateNote] = useState(false);
     useEffect(() => {
         if (tabParam === 'reports' || tabParam === 'tasks' || tabParam === 'goals' || tabParam === 'meetings' || tabParam === 'polls' || tabParam === 'decisions') setActiveTab(tabParam);
     }, [tabParam]);
@@ -591,6 +596,43 @@ export default function DepartmentDetailPage() {
                 </DialogContent>
             </Dialog>
 
+            {/* Barre d'actions mobile : visible uniquement sur mobile */}
+            <div className="flex md:hidden flex-wrap gap-2">
+                <Button
+                    size="sm"
+                    onClick={() => router.push(`/chat/organizations/${orgId}/departments/${deptId}/chat`)}
+                    className="flex-1 min-w-0 bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                    <MessageSquare className="w-4 h-4 mr-1" />
+                    Chat
+                </Button>
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                        setDocumentsPanelTab('documents');
+                        setDocumentsPanelCreateNote(false);
+                        setDocumentsPanelOpen(true);
+                    }}
+                    className="flex-1 min-w-0"
+                >
+                    <FileText className="w-4 h-4 mr-1" />
+                    Fiches & docs
+                </Button>
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                        setDocumentsPanelTab('notes');
+                        setDocumentsPanelCreateNote(true);
+                        setDocumentsPanelOpen(true);
+                    }}
+                    className="shrink-0"
+                >
+                    <StickyNote className="w-4 h-4" />
+                </Button>
+            </div>
+
             {/* Header : masqué sur mobile (même barre que TopNav avec icône chat), visible sur web */}
             <div className="hidden md:flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center gap-3 md:gap-4 min-w-0">
@@ -633,14 +675,49 @@ export default function DepartmentDetailPage() {
                     </div>
                 </div>
 
-                <Button
-                    onClick={() => router.push(`/chat/organizations/${orgId}/departments/${deptId}/chat`)}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto shrink-0"
-                >
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Ouvrir le chat
-                </Button>
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                    <Button
+                        onClick={() => router.push(`/chat/organizations/${orgId}/departments/${deptId}/chat`)}
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
+                    >
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Ouvrir le chat
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={() => {
+                            setDocumentsPanelTab('documents');
+                            setDocumentsPanelCreateNote(false);
+                            setDocumentsPanelOpen(true);
+                        }}
+                        className="shrink-0"
+                    >
+                        <FileText className="w-4 h-4 mr-2" />
+                        Fiches & documents
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={() => {
+                            setDocumentsPanelTab('notes');
+                            setDocumentsPanelCreateNote(true);
+                            setDocumentsPanelOpen(true);
+                        }}
+                        className="shrink-0"
+                    >
+                        <StickyNote className="w-4 h-4 mr-2" />
+                        Nouvelle note
+                    </Button>
+                </div>
             </div>
+
+            <DepartmentDocumentsPanel
+                open={documentsPanelOpen}
+                onOpenChange={setDocumentsPanelOpen}
+                orgId={orgId}
+                deptId={deptId}
+                initialTab={documentsPanelTab}
+                openCreateNoteOnMount={documentsPanelCreateNote}
+            />
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 pb-4 ">
                 <TabsList style={{ height: 'auto', paddingBottom: '10px', }} className="flex-wrap sm:flex-wrap overflow-visible mb-4">

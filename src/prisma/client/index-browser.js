@@ -208,6 +208,18 @@ exports.Prisma.DepartmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DepartmentNoteScalarFieldEnum = {
+  id: 'id',
+  deptId: 'deptId',
+  title: 'title',
+  content: 'content',
+  textSize: 'textSize',
+  order: 'order',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.DepartmentDocumentScalarFieldEnum = {
   id: 'id',
   deptId: 'deptId',
@@ -707,6 +719,12 @@ exports.OrgRole = exports.$Enums.OrgRole = {
   MEMBER: 'MEMBER'
 };
 
+exports.NoteTextSize = exports.$Enums.NoteTextSize = {
+  SMALL: 'SMALL',
+  NORMAL: 'NORMAL',
+  LARGE: 'LARGE'
+};
+
 exports.FileType = exports.$Enums.FileType = {
   IMAGE: 'IMAGE',
   PDF: 'PDF',
@@ -719,12 +737,6 @@ exports.DecisionVoteType = exports.$Enums.DecisionVoteType = {
   FOR: 'FOR',
   AGAINST: 'AGAINST',
   ABSTAIN: 'ABSTAIN'
-};
-
-exports.NoteTextSize = exports.$Enums.NoteTextSize = {
-  SMALL: 'SMALL',
-  NORMAL: 'NORMAL',
-  LARGE: 'LARGE'
 };
 
 exports.RequestStatus = exports.$Enums.RequestStatus = {
@@ -809,6 +821,7 @@ exports.Prisma.ModelName = {
   Organization: 'Organization',
   OrganizationMember: 'OrganizationMember',
   Department: 'Department',
+  DepartmentNote: 'DepartmentNote',
   DepartmentDocument: 'DepartmentDocument',
   DepartmentGoal: 'DepartmentGoal',
   DepartmentMeeting: 'DepartmentMeeting',
