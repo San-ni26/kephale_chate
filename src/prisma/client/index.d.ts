@@ -63157,7 +63157,6 @@ export namespace Prisma {
 
   export type UserMonthlyProgressWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    goalId_year_month?: UserMonthlyProgressGoalIdYearMonthCompoundUniqueInput
     AND?: UserMonthlyProgressWhereInput | UserMonthlyProgressWhereInput[]
     OR?: UserMonthlyProgressWhereInput[]
     NOT?: UserMonthlyProgressWhereInput | UserMonthlyProgressWhereInput[]
@@ -63169,7 +63168,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"UserMonthlyProgress"> | Date | string
     updatedAt?: DateTimeFilter<"UserMonthlyProgress"> | Date | string
     goal?: XOR<UserFinancialGoalScalarRelationFilter, UserFinancialGoalWhereInput>
-  }, "id" | "goalId_year_month">
+  }, "id">
 
   export type UserMonthlyProgressOrderByWithAggregationInput = {
     id?: SortOrder
@@ -69660,12 +69659,6 @@ export namespace Prisma {
   export type UserFinancialGoalScalarRelationFilter = {
     is?: UserFinancialGoalWhereInput
     isNot?: UserFinancialGoalWhereInput
-  }
-
-  export type UserMonthlyProgressGoalIdYearMonthCompoundUniqueInput = {
-    goalId: string
-    year: number
-    month: number
   }
 
   export type UserMonthlyProgressCountOrderByAggregateInput = {

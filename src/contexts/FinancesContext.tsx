@@ -12,6 +12,8 @@ interface FinancesContextType {
     setShowGraph: (v: boolean) => void;
     showEntries: boolean;
     setShowEntries: (v: boolean) => void;
+    showPurchases: boolean;
+    setShowPurchases: (v: boolean) => void;
     isLocked: boolean;
     setIsLocked: (v: boolean) => void;
     totalPortfolio: number;
@@ -27,6 +29,7 @@ export function FinancesProvider({ children }: { children: React.ReactNode }) {
     const [showRecs, setShowRecs] = useState(false);
     const [showGraph, setShowGraph] = useState(false);
     const [showEntries, setShowEntries] = useState(false);
+    const [showPurchases, setShowPurchases] = useState(false);
     const [totalPortfolio, setTotalPortfolio] = useState(0);
     const [isLocked, setIsLockedState] = useState(false);
     const [hasPin, setHasPin] = useState(false);
@@ -69,6 +72,8 @@ export function FinancesProvider({ children }: { children: React.ReactNode }) {
                 setShowGraph,
                 showEntries,
                 setShowEntries,
+                showPurchases,
+                setShowPurchases,
                 isLocked,
                 setIsLocked,
                 totalPortfolio,

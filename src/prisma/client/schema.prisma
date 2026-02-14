@@ -917,14 +917,14 @@ model UserMonthlyProgress {
   goalId    String
   year      Int
   month     Int // 1-12
-  amount    Float    @default(0) // Montant atteint ce mois (FCFA)
+  amount    Float    @default(0) // Montant épargné pour cette entrée (FCFA)
   notes     String?  @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   goal UserFinancialGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
 
-  @@unique([goalId, year, month])
   @@index([goalId])
+  @@index([goalId, year, month])
   @@index([year, month])
 }

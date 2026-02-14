@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Search, Wallet, Lightbulb, BarChart3, TrendingUp, Lock, Unlock, FileText } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, FileText } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
@@ -196,9 +196,9 @@ export function TopNav() {
                             size="icon"
                             className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showGraph ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground'}`}
                             onClick={() => finances.setShowGraph(!finances.showGraph)}
-                            title="Graphique"
+                            title="Épargne (objectifs d'épargne)"
                         >
-                            <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                            <PiggyBank className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </Button>
                         <Button
                             variant="ghost"
@@ -212,20 +212,20 @@ export function TopNav() {
                         <Button
                             variant="ghost"
                             size="icon"
+                            className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.showPurchases ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground'}`}
+                            onClick={() => finances.setShowPurchases(!finances.showPurchases)}
+                            title="Achat (biens à acheter)"
+                        >
+                            <Car className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
                             className={`h-8 w-8 sm:h-9 sm:w-9 ${finances.isLocked ? 'text-destructive' : 'text-muted-foreground hover:text-foreground'}`}
                             onClick={() => window.dispatchEvent(new CustomEvent('finances-toggle-lock'))}
                             title={finances.isLocked ? 'Déverrouiller' : 'Verrouiller'}
                         >
                             {finances.isLocked ? <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Unlock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 sm:h-9 sm:w-9 text-muted-foreground hover:text-primary"
-                            onClick={() => router.push('/chat/settings')}
-                            title="Paramètres"
-                        >
-                            <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </Button>
                     </div>
                 </div>
