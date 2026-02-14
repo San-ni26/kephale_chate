@@ -3,6 +3,20 @@ const path = require('path');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['geoip-lite'],
+  async headers() {
+    return [
+      {
+        source: '/sw.js',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, max-age=0',
+          },
+          { key: 'Service-Worker-Allowed', value: '/' },
+        ],
+      },
+    ];
+  },
   turbopack: {
     root: __dirname,
   },

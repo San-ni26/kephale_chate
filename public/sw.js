@@ -6,13 +6,15 @@
  */
 
 // ============ PUSH NOTIFICATION HANDLER ============
+// S'affiche même quand l'app est fermée (navigateur ou onglet) : le SW reste actif pour les push.
 self.addEventListener('push', function (event) {
     console.log('[SW] Push event received');
 
     var data = {};
     if (event.data) {
         try {
-            data = event.data.json();
+            var parsed = event.data.json();
+            data = parsed && typeof parsed === 'object' ? parsed : { title: 'Kephale', body: 'Nouveau message' };
         } catch (e) {
             console.error('[SW] Failed to parse push data:', e);
             data = {
@@ -27,15 +29,17 @@ self.addEventListener('push', function (event) {
     console.log('[SW] Push data parsed:', data.title, data.type);
 
     var isCall = data.type === 'call';
+    var convId = data.data && data.data.conversationId;
+    var tag = isCall
+        ? 'incoming-call-' + Date.now()
+        : 'message-' + (convId || Date.now());
 
     var options = {
         body: data.body || 'Nouveau message',
         icon: data.icon || '/icons/icon-192x192.png',
         badge: '/icons/icon-192x192.png',
         vibrate: isCall ? [300, 100, 300, 100, 300, 100, 300] : [200, 100, 200],
-        tag: isCall
-            ? 'incoming-call-' + Date.now()
-            : 'message-' + (data.data && data.data.conversationId || Date.now()),
+        tag: tag,
         renotify: true,
         requireInteraction: isCall,
         silent: false,
@@ -43,7 +47,7 @@ self.addEventListener('push', function (event) {
             dateOfArrival: Date.now(),
             url: data.url || '/chat',
             type: data.type || 'message',
-            conversationId: data.data && data.data.conversationId,
+            conversationId: convId,
             messageId: data.data && data.data.messageId,
             callerId: data.data && data.data.callerId,
         },
@@ -57,11 +61,11 @@ self.addEventListener('push', function (event) {
             ]
     };
 
-    // For calls: ALWAYS show notification
-    // For messages: skip if user is already viewing that conversation in a focused window
+    // Appels : toujours afficher. Messages : ne pas afficher si l'utilisateur a déjà la conversation ouverte et focalisée.
+    // Quand l'app est fermée (clientList vide), on affiche toujours.
     event.waitUntil(
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
-            if (!isCall && data.url) {
+            if (!isCall && data.url && clientList.length > 0) {
                 for (var i = 0; i < clientList.length; i++) {
                     if (clientList[i].focused && clientList[i].url && clientList[i].url.indexOf(data.url) !== -1) {
                         console.log('[SW] User is viewing conversation, skip notification');
@@ -109,17 +113,21 @@ self.addEventListener('notificationclick', function (event) {
     // URL absolue requise pour openWindow quand le navigateur est ferme
     var fullUrl = url.startsWith('/') ? self.location.origin + url : url;
 
-    // Navigate to the conversation
+    // Ouvrir la conversation : réutiliser une fenêtre existante ou ouvrir une nouvelle (app fermée).
     event.waitUntil(
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
-            for (var i = 0; i < clientList.length; i++) {
-                var client = clientList[i];
-                if ('focus' in client) {
+            if (clientList.length > 0) {
+                var client = clientList[0];
+                if (client.focus && client.navigate) {
                     return client.focus().then(function (c) {
-                        if ('navigate' in c) return c.navigate(url);
+                        return c.navigate ? c.navigate(url) : Promise.resolve();
                     });
                 }
+                if (client.focus) {
+                    return client.focus();
+                }
             }
+            // Aucune fenêtre ouverte (app fermée) : ouvrir l'URL en nouvelle fenêtre/onglet
             return self.clients.openWindow(fullUrl);
         })
     );

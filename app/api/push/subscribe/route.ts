@@ -15,8 +15,12 @@ export async function POST(request: NextRequest) {
 
         const { subscription } = await request.json();
 
-        if (!subscription || !subscription.endpoint || !subscription.keys) {
-            return NextResponse.json({ error: 'Subscription non valide' }, { status: 400 });
+        if (!subscription || !subscription.endpoint || typeof subscription.endpoint !== 'string') {
+            return NextResponse.json({ error: 'Subscription non valide (endpoint manquant)' }, { status: 400 });
+        }
+        const keys = subscription.keys;
+        if (!keys || typeof keys.p256dh !== 'string' || typeof keys.auth !== 'string') {
+            return NextResponse.json({ error: 'Subscription non valide (clés p256dh/auth manquantes)' }, { status: 400 });
         }
 
         // Save subscription
@@ -24,14 +28,14 @@ export async function POST(request: NextRequest) {
             where: { endpoint: subscription.endpoint },
             update: {
                 userId: user.userId,
-                p256dh: subscription.keys.p256dh,
-                auth: subscription.keys.auth,
+                p256dh: keys.p256dh,
+                auth: keys.auth,
             },
             create: {
                 userId: user.userId,
                 endpoint: subscription.endpoint,
-                p256dh: subscription.keys.p256dh,
-                auth: subscription.keys.auth,
+                p256dh: keys.p256dh,
+                auth: keys.auth,
             }
         });
 

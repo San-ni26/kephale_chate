@@ -50,8 +50,8 @@
             "url": "/chat",
             "icons": [
                 {
-                    "src": "/icons/icon-96x96.png",
-                    "sizes": "96x96"
+                    "src": "/icons/icon-192x192.png",
+                    "sizes": "192x192"
                 }
             ]
         },
@@ -62,8 +62,8 @@
             "url": "/chat/organizations",
             "icons": [
                 {
-                    "src": "/icons/icon-96x96.png",
-                    "sizes": "96x96"
+                    "src": "/icons/icon-192x192.png",
+                    "sizes": "192x192"
                 }
             ]
         }

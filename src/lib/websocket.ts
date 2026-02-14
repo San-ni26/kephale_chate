@@ -105,7 +105,9 @@ export async function notifyNewMessage(message: any, conversationId: string) {
                 where: { userId: member.userId }
             });
 
-            if (process.env.NODE_ENV === 'development') {
+            if (subscriptions.length === 0) {
+                console.warn(`[Notify] User ${member.userId} n'a aucune subscription push : les notifications ne s'afficheront pas si l'app est fermée. Demandez-lui de cliquer sur "Activer les notifications".`);
+            } else if (process.env.NODE_ENV === 'development') {
                 console.log(`[Notify] User ${member.userId} has ${subscriptions.length} push subscription(s)`);
             }
 

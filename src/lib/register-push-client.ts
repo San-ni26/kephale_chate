@@ -100,6 +100,7 @@ export async function registerPushSubscription(): Promise<RegisterPushResult> {
         const subJson = subscription.toJSON();
         const res = await fetchWithAuth('/api/push/subscribe', {
             method: 'POST',
+            credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 subscription: {
@@ -132,4 +133,15 @@ export function canAskPushPermission(): boolean {
 export function getNotificationPermission(): NotificationPermission | null {
     if (typeof window === 'undefined' || !('Notification' in window)) return null;
     return Notification.permission;
+}
+
+/**
+ * Re-synchronise l'abonnement push avec le serveur sans redemander la permission.
+ * À appeler au retour sur l'app (ex: visibilitychange) pour garder les notifications actives quand l'app est fermée.
+ */
+export async function syncPushSubscriptionIfGranted(): Promise<boolean> {
+    if (typeof window === 'undefined' || !canAskPushPermission()) return false;
+    if (Notification.permission !== 'granted') return false;
+    const result = await registerPushSubscription();
+    return result.ok;
 }

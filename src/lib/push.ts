@@ -9,9 +9,9 @@ if (VAPID_SET) {
         process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
         process.env.VAPID_PRIVATE_KEY!
     );
-} else if (process.env.NODE_ENV === 'production') {
-    console.error(
-        '[Push] VAPID keys missing. Set VAPID_PRIVATE_KEY and NEXT_PUBLIC_VAPID_PUBLIC_KEY for notifications when app is closed.'
+} else {
+    console.warn(
+        '[Push] Clés VAPID manquantes. Ajoutez VAPID_PRIVATE_KEY et NEXT_PUBLIC_VAPID_PUBLIC_KEY dans .env (générer avec: npx web-push generate-vapid-keys). Les notifications quand l\'app est fermée ne fonctionneront pas.'
     );
 }
 

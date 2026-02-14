@@ -5,7 +5,7 @@ import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { toast } from 'sonner';
 import { usePathname, useRouter } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/auth-client';
-import { registerPushSubscription } from '@/src/lib/register-push-client';
+import { registerPushSubscription, syncPushSubscriptionIfGranted } from '@/src/lib/register-push-client';
 
 const PENDING_CALL_KEY = 'pendingIncomingCall';
 
@@ -161,7 +161,7 @@ export function NotificationListener() {
         };
     }, [userChannel, isConnected]);
 
-    // Enregistrement Web Push automatique (dès que possible après chargement)
+    // Enregistrement Web Push initial (dès que possible après chargement)
     useEffect(() => {
         if (typeof window === 'undefined') return;
         if (pushRegistered.current) return;
@@ -172,6 +172,21 @@ export function NotificationListener() {
         };
         const timeout = setTimeout(run, 1500);
         return () => clearTimeout(timeout);
+    }, []);
+
+    // Re-synchroniser l'abonnement push au retour sur l'app (notifications même app fermée)
+    useEffect(() => {
+        if (typeof document === 'undefined') return;
+
+        const onVisibilityChange = () => {
+            if (document.visibilityState !== 'visible') return;
+            syncPushSubscriptionIfGranted().then((ok) => {
+                if (ok) pushRegistered.current = true;
+            });
+        };
+
+        document.addEventListener('visibilitychange', onVisibilityChange);
+        return () => document.removeEventListener('visibilitychange', onVisibilityChange);
     }, []);
 
     return null;
