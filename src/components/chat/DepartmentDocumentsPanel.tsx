@@ -19,10 +19,12 @@ import {
     Loader2,
     X,
     ExternalLink,
+    Share2,
 } from 'lucide-react';
 import { fetchWithAuth } from '@/src/lib/auth-client';
 import { toast } from 'sonner';
 import { cn } from '@/src/lib/utils';
+import { dataUrlToBlob, canShareFile, shareFileFromDataUrl } from '@/src/lib/download-file';
 
 interface Doc {
     id: string;
@@ -41,6 +43,12 @@ interface DepartmentDocumentsPanelProps {
     deptId: string;
 }
 
+function getDocDataUrl(doc: Doc): string {
+    if (doc.data.startsWith('data:')) return doc.data;
+    const mime = doc.type === 'PDF' ? 'application/pdf' : doc.type === 'IMAGE' ? 'image/jpeg' : 'application/octet-stream';
+    return `data:${mime};base64,${doc.data}`;
+}
+
 export function DepartmentDocumentsPanel({
     open,
     onOpenChange,
@@ -53,7 +61,34 @@ export function DepartmentDocumentsPanel({
     const [uploading, setUploading] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [previewDoc, setPreviewDoc] = useState<Doc | null>(null);
+    const [pdfPreviewBlobUrl, setPdfPreviewBlobUrl] = useState<string | null>(null);
+    const pdfPreviewBlobUrlRef = useRef<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Blob URL pour l’aperçu PDF (évite data URL dans iframe, incompatible Safari/iOS)
+    useEffect(() => {
+        if (!previewDoc || previewDoc.type !== 'PDF') {
+            if (pdfPreviewBlobUrlRef.current) {
+                URL.revokeObjectURL(pdfPreviewBlobUrlRef.current);
+                pdfPreviewBlobUrlRef.current = null;
+            }
+            setPdfPreviewBlobUrl(null);
+            return;
+        }
+        const dataUrl = previewDoc.data.startsWith('data:') ? previewDoc.data : `data:application/pdf;base64,${previewDoc.data}`;
+        const blob = dataUrlToBlob(dataUrl);
+        if (blob) {
+            const url = URL.createObjectURL(blob);
+            pdfPreviewBlobUrlRef.current = url;
+            setPdfPreviewBlobUrl(url);
+            return () => {
+                URL.revokeObjectURL(url);
+                pdfPreviewBlobUrlRef.current = null;
+                setPdfPreviewBlobUrl(null);
+            };
+        }
+        setPdfPreviewBlobUrl(null);
+    }, [previewDoc?.id, previewDoc?.type]);
 
     const fetchDocuments = async (q?: string) => {
         if (!orgId || !deptId) return;
@@ -251,6 +286,22 @@ export function DepartmentDocumentsPanel({
                                                 >
                                                     <ExternalLink className="w-4 h-4" />
                                                 </Button>
+                                                {canShareFile() && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-8 w-8 text-muted-foreground"
+                                                        onClick={async () => {
+                                                            const dataUrl = doc.data.startsWith('data:') ? doc.data : getDocDataUrl(doc);
+                                                            const ok = await shareFileFromDataUrl(dataUrl, doc.filename);
+                                                            if (ok) toast.success('Partage ouvert');
+                                                            else toast.error('Partage non disponible');
+                                                        }}
+                                                        title="Partager"
+                                                    >
+                                                        <Share2 className="w-4 h-4" />
+                                                    </Button>
+                                                )}
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
@@ -298,6 +349,21 @@ export function DepartmentDocumentsPanel({
                                 <div className="flex items-center justify-between">
                                     <p className="text-sm font-medium truncate text-foreground">{previewDoc.filename}</p>
                                     <div className="flex gap-1 shrink-0">
+                                        {canShareFile() && (
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={async () => {
+                                                    const dataUrl = previewDoc.data.startsWith('data:') ? previewDoc.data : getDocDataUrl(previewDoc);
+                                                    const ok = await shareFileFromDataUrl(dataUrl, previewDoc.filename);
+                                                    if (ok) toast.success('Partage ouvert');
+                                                    else toast.error('Partage non disponible');
+                                                }}
+                                            >
+                                                <Share2 className="w-4 h-4 mr-1" />
+                                                Partager
+                                            </Button>
+                                        )}
                                         <Button
                                             variant="outline"
                                             size="sm"
@@ -327,11 +393,28 @@ export function DepartmentDocumentsPanel({
                                             className="max-w-full h-auto object-contain"
                                         />
                                     ) : previewDoc.type === 'PDF' ? (
-                                        <iframe
-                                            src={previewDoc.data.startsWith('data:') ? previewDoc.data : `data:application/pdf;base64,${previewDoc.data}`}
-                                            title={previewDoc.filename}
-                                            className="w-full h-full min-h-[400px] border-0"
-                                        />
+                                        pdfPreviewBlobUrl ? (
+                                            <iframe
+                                                key={pdfPreviewBlobUrl}
+                                                src={pdfPreviewBlobUrl}
+                                                title={previewDoc.filename}
+                                                className="w-full h-full min-h-[400px] border-0"
+                                            />
+                                        ) : (
+                                            <div className="p-4 flex flex-col items-center justify-center text-muted-foreground text-sm min-h-[240px]">
+                                                <Loader2 className="w-8 h-8 animate-spin mb-2" />
+                                                <p>Chargement de l&apos;aperçu…</p>
+                                                <Button variant="outline" size="sm" className="mt-2" asChild>
+                                                    <a
+                                                        href={previewDoc.data.startsWith('data:') ? previewDoc.data : `data:application/pdf;base64,${previewDoc.data}`}
+                                                        download={previewDoc.filename}
+                                                    >
+                                                        <Download className="w-4 h-4 mr-1" />
+                                                        Télécharger le PDF
+                                                    </a>
+                                                </Button>
+                                            </div>
+                                        )
                                     ) : (
                                         <div className="p-4 flex flex-col items-center justify-center text-muted-foreground text-sm">
                                             <FileText className="w-12 h-12 mb-2 opacity-50" />

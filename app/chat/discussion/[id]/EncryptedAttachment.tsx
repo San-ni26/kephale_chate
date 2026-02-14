@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { Button } from '@/src/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from '@/src/components/ui/dialog';
-import { Download, Image as ImageIcon, FileText, Eye, X } from 'lucide-react';
+import { Download, Image as ImageIcon, FileText } from 'lucide-react';
 import { AudioBubbleWhatsApp } from '@/src/components/AudioBubbleWhatsApp';
+import { DocumentBubbleWhatsApp } from '@/src/components/DocumentBubbleWhatsApp';
+import { DocumentViewerFullScreen } from '@/src/components/DocumentViewerFullScreen';
+import { downloadFromDataUrl, shareFileFromDataUrl, canShareFile } from '@/src/lib/download-file';
 import { toast } from 'sonner';
 
 interface FileAttachmentProps {
@@ -61,17 +58,18 @@ export function EncryptedAttachment({ attachment, isOwnMessage }: FileAttachment
     const fileUrl = getDataUrl();
 
     const handleDownload = () => {
+        const ok = downloadFromDataUrl(fileUrl, attachment.filename);
+        if (ok) toast.success('Téléchargement démarré');
+        else toast.error('Erreur de téléchargement');
+    };
+
+    const handleShare = async () => {
         try {
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.download = attachment.filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            toast.success('Téléchargement démarré');
-        } catch (error) {
-            console.error('Download error:', error);
-            toast.error('Erreur de téléchargement');
+            const ok = await shareFileFromDataUrl(fileUrl, attachment.filename);
+            if (ok) toast.success('Partage ouvert');
+            else toast.error('Partage non disponible');
+        } catch {
+            toast.error('Erreur de partage');
         }
     };
 
@@ -92,7 +90,7 @@ export function EncryptedAttachment({ attachment, isOwnMessage }: FileAttachment
                     size="sm"
                     variant="secondary"
                     className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={handleDownload}
+                    onClick={(e) => { e.stopPropagation(); handleDownload(); }}
                 >
                     <Download className="w-4 h-4 mr-1" />
                     Télécharger
@@ -106,83 +104,30 @@ export function EncryptedAttachment({ attachment, isOwnMessage }: FileAttachment
         return <AudioBubbleWhatsApp src={fileUrl} isOwn={isOwnMessage ?? false} />;
     }
 
-    // Display document: visualisation dans la même page (modal) + téléchargement
+    // Display document: bulle style WhatsApp + vue en grand plein écran
+    const docType = isPDF ? 'PDF' : 'WORD';
+    const showShare = canShareFile();
     return (
         <>
-            <div className="flex flex-col gap-2 bg-muted/50 hover:bg-muted transition-colors rounded-lg p-3 max-w-[280px] border border-border">
-                <div className="flex items-center gap-3">
-                    <div className="flex-shrink-0">
-                        {isPDF ? (
-                            <FileText className="w-8 h-8 text-red-500" />
-                        ) : (
-                            <FileText className="w-8 h-8 text-blue-500" />
-                        )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate text-foreground">{attachment.filename}</p>
-                        <p className="text-xs text-muted-foreground">{attachment.type}</p>
-                    </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                    {(isPDF || isWord) && (
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            className="flex-1 min-w-0"
-                            onClick={() => setInlineViewOpen(true)}
-                        >
-                            <Eye className="w-4 h-4 mr-1" />
-                            Voir
-                        </Button>
-                    )}
-                    <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={handleDownload}
-                        title="Télécharger ou enregistrer sur l'appareil"
-                    >
-                        <Download className="w-4 h-4 mr-1" />
-                        Télécharger
-                    </Button>
-                </div>
-            </div>
-
-            {/* Visualisation dans la même page (modal) */}
-            <Dialog open={inlineViewOpen} onOpenChange={setInlineViewOpen}>
-                <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col bg-card p-0 gap-0" showCloseButton={true}>
-                    <DialogHeader className="px-6 pt-6 pb-2">
-                        <DialogTitle className="truncate pr-8">{attachment.filename}</DialogTitle>
-                    </DialogHeader>
-                    <div className="flex-1 min-h-[60vh] overflow-auto px-6 pb-6">
-                        {isPDF ? (
-                            <iframe
-                                src={fileUrl}
-                                title={attachment.filename}
-                                className="w-full h-[70vh] min-h-[400px] rounded-lg border border-border"
-                            />
-                        ) : isWord ? (
-                            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground text-sm">
-                                <FileText className="w-12 h-12 mb-2 opacity-50" />
-                                <p>Document Word : ouvrez-le après téléchargement.</p>
-                                <Button variant="outline" size="sm" className="mt-2" onClick={handleDownload}>
-                                    <Download className="w-4 h-4 mr-1" />
-                                    Télécharger
-                                </Button>
-                            </div>
-                        ) : null}
-                    </div>
-                    <div className="flex justify-end gap-2 px-6 pb-6">
-                        <Button variant="outline" size="sm" onClick={handleDownload}>
-                            <Download className="w-4 h-4 mr-1" />
-                            Télécharger
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={() => setInlineViewOpen(false)}>
-                            <X className="w-4 h-4 mr-1" />
-                            Fermer
-                        </Button>
-                    </div>
-                </DialogContent>
-            </Dialog>
+            <DocumentBubbleWhatsApp
+                filename={attachment.filename}
+                fileUrl={fileUrl}
+                type={docType}
+                data={attachment.data}
+                isOwn={isOwnMessage ?? false}
+                onView={() => setInlineViewOpen(true)}
+                onDownload={handleDownload}
+                onShare={showShare ? handleShare : undefined}
+            />
+            <DocumentViewerFullScreen
+                open={inlineViewOpen}
+                onClose={() => setInlineViewOpen(false)}
+                filename={attachment.filename}
+                fileUrl={fileUrl}
+                type={docType}
+                onDownload={handleDownload}
+                onShare={showShare ? handleShare : undefined}
+            />
         </>
     );
 }

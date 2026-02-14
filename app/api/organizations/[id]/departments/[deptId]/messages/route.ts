@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
 import { notifyDepartmentNewMessage } from '@/src/lib/notify-department';
+import { emitToConversation } from '@/src/lib/pusher-server';
 
 export async function GET(
     request: NextRequest,
@@ -66,38 +67,84 @@ export async function GET(
             });
         }
 
-        // Pagination: limit 100 messages by default (évite chargement massif)
+        // Pagination: même logique que /api/conversations/[id]/messages (limit, after, cursor)
         const { searchParams } = new URL(request.url);
-        const limit = Math.min(parseInt(searchParams.get('limit') || '100', 10), 200);
+        const limit = Math.min(parseInt(searchParams.get('limit') || '30', 10), 100);
+        const after = searchParams.get('after'); // ISO date – nouveaux messages après
+        const cursor = searchParams.get('cursor'); // ID message – messages plus anciens avant
 
-        const messagesRaw = await prisma.message.findMany({
-            where: {
-                groupId: conversation.id,
-            },
-            take: limit,
-            orderBy: { createdAt: 'desc' }, // Récupérer les plus récents
-            include: {
-                sender: {
-                    select: {
-                        id: true,
-                        name: true,
-                        email: true,
-                        publicKey: true,
-                    },
-                },
-                attachments: {
-                    select: {
-                        id: true,
-                        filename: true,
-                        type: true,
-                        data: true,
-                    },
+        const include = {
+            sender: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    publicKey: true,
                 },
             },
-        });
+            attachments: {
+                select: {
+                    id: true,
+                    filename: true,
+                    type: true,
+                    data: true,
+                },
+            },
+        };
 
-        // Inverser pour affichage chronologique (plus ancien en premier)
-        const messages = messagesRaw.reverse();
+        let messagesRaw: Awaited<ReturnType<typeof prisma.message.findMany>>;
+        let hasMore = false;
+
+        if (after) {
+            messagesRaw = await prisma.message.findMany({
+                where: {
+                    groupId: conversation.id,
+                    createdAt: { gt: new Date(after) },
+                },
+                include,
+                orderBy: { createdAt: 'asc' },
+                take: limit,
+            });
+        } else if (cursor) {
+            const cursorMsg = await prisma.message.findUnique({
+                where: { id: cursor, groupId: conversation.id },
+                select: { createdAt: true },
+            });
+            if (!cursorMsg) {
+                return NextResponse.json({ messages: [], hasMore: false, conversationId: conversation.id, pinnedEvents: [] });
+            }
+            messagesRaw = await prisma.message.findMany({
+                where: {
+                    groupId: conversation.id,
+                    createdAt: { lt: cursorMsg.createdAt },
+                },
+                include,
+                orderBy: { createdAt: 'desc' },
+                take: limit,
+            });
+            const olderCount = await prisma.message.count({
+                where: {
+                    groupId: conversation.id,
+                    createdAt: { lt: cursorMsg.createdAt },
+                },
+            });
+            hasMore = olderCount > limit;
+            messagesRaw = messagesRaw.reverse();
+        } else {
+            messagesRaw = await prisma.message.findMany({
+                where: { groupId: conversation.id },
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+                include,
+            });
+            const total = await prisma.message.count({
+                where: { groupId: conversation.id },
+            });
+            hasMore = total > limit;
+            messagesRaw = messagesRaw.reverse();
+        }
+
+        const messages = messagesRaw;
 
         // Événements épinglés (optionnel : ne pas faire échouer le GET si la table ou la requête échoue)
         let events: Array<Record<string, unknown>> = [];
@@ -131,7 +178,12 @@ export async function GET(
             console.warn('Pinned events fetch failed (table may be missing):', pinnedErr);
         }
 
-        return NextResponse.json({ messages, pinnedEvents: events });
+        return NextResponse.json({
+            messages,
+            hasMore,
+            conversationId: conversation.id,
+            pinnedEvents: events,
+        });
     } catch (error) {
         console.error('Get department messages error:', error);
         return NextResponse.json(
@@ -256,6 +308,16 @@ export async function POST(
             });
         } catch (notifErr) {
             console.error('[Dept messages] Notify error:', notifErr);
+        }
+
+        // Temps réel : même canal que les conversations (presence-conversation-{groupId})
+        try {
+            await emitToConversation(conversation.id, 'message:new', {
+                conversationId: conversation.id,
+                message,
+            });
+        } catch (pusherErr) {
+            console.error('[Dept messages] Pusher broadcast error:', pusherErr);
         }
 
         return NextResponse.json({ message }, { status: 201 });

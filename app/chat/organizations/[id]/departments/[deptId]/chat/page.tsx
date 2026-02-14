@@ -41,6 +41,7 @@ import { EncryptedAttachment } from '@/app/chat/discussion/[id]/EncryptedAttachm
 import { AudioRecorderComponent } from '@/src/components/AudioRecorder';
 import { DepartmentDocumentsPanel } from '@/src/components/chat/DepartmentDocumentsPanel';
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
+import { useWebSocket } from '@/src/hooks/useWebSocket';
 
 interface Message {
     id: string;
@@ -103,6 +104,9 @@ export default function DepartmentChatPage() {
     const [password, setPassword] = useState('');
     const [showPasswordDialog, setShowPasswordDialog] = useState(false);
     const [documentsPanelOpen, setDocumentsPanelOpen] = useState(false);
+    const [conversationId, setConversationId] = useState<string | null>(null);
+    const [hasMore, setHasMore] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -126,18 +130,63 @@ export default function DepartmentChatPage() {
         });
     };
 
+    const messagesUrl = orgId && deptId
+        ? `/api/organizations/${orgId}/departments/${deptId}/messages?limit=30`
+        : null;
     const { data: messagesData, mutate: mutateMessages, isLoading: messagesLoading } = useSWR(
-        orgId && deptId ? `/api/organizations/${orgId}/departments/${deptId}/messages` : null,
+        messagesUrl,
         messagesFetcher,
-        { refreshInterval: 3000, revalidateOnFocus: true }
+        { refreshInterval: 5000, revalidateOnFocus: true }
+    );
+
+    const handleNewMessage = useCallback((data: { conversationId: string; message: Message }) => {
+        setMessages((prev) => {
+            if (prev.some((m) => m.id === data.message.id)) return prev;
+            return dedupeMessagesById([...prev, data.message]);
+        });
+    }, []);
+    const handleMessageEdited = useCallback((data: { conversationId: string; message: Message }) => {
+        setMessages((prev) => prev.map((m) => (m.id === data.message.id ? data.message : m)));
+    }, []);
+    const handleMessageDeleted = useCallback((data: { conversationId: string; messageId: string }) => {
+        setMessages((prev) => prev.filter((m) => m.id !== data.messageId));
+    }, []);
+
+    const { joinConversation, leaveConversation, isConnected } = useWebSocket(
+        handleNewMessage,
+        handleMessageEdited,
+        handleMessageDeleted
     );
 
     useEffect(() => {
         if (messagesData?.messages != null) {
             setMessages(dedupeMessagesById(messagesData.messages));
             if (messagesData.pinnedEvents) setPinnedEvents(messagesData.pinnedEvents);
+            if (messagesData.conversationId) setConversationId(messagesData.conversationId);
+            setHasMore(messagesData.hasMore !== false);
         }
     }, [messagesData]);
+
+    useEffect(() => {
+        if (!conversationId || !isConnected) return;
+        joinConversation(conversationId);
+        return () => leaveConversation(conversationId);
+    }, [conversationId, isConnected, joinConversation, leaveConversation]);
+
+    useEffect(() => {
+        if (!conversationId || messagesLoading) return;
+        fetchWithAuth(`/api/conversations/${conversationId}/read`, { method: 'POST' }).catch(() => {});
+    }, [conversationId, messagesLoading]);
+
+    const lastMessageCountRef = useRef(0);
+    useEffect(() => {
+        if (messagesLoading) return;
+        if (messages.length > lastMessageCountRef.current) {
+            const lastMsg = messages[messages.length - 1];
+            if (lastMsg && lastMsg.senderId !== currentUser?.id) scrollToBottom();
+        }
+        lastMessageCountRef.current = messages.length;
+    }, [messages.length, messagesLoading, currentUser?.id]);
 
     useEffect(() => {
         if (deptId) loadDepartment();
@@ -400,6 +449,45 @@ export default function DepartmentChatPage() {
         }
     }, [departmentPrivateKey]);
 
+    const loadMoreHistory = useCallback(async () => {
+        if (!orgId || !deptId || loadingMore || !hasMore || messages.length === 0) return;
+        const firstMessage = messages.find((m) => !m.id.startsWith('temp-'));
+        if (!firstMessage) return;
+
+        setLoadingMore(true);
+        const scrollContainer = scrollRef.current;
+        const oldScrollHeight = scrollContainer?.scrollHeight ?? 0;
+
+        try {
+            const res = await fetchWithAuth(
+                `/api/organizations/${orgId}/departments/${deptId}/messages?cursor=${firstMessage.id}&limit=20`
+            );
+            if (res.ok) {
+                const data = await res.json();
+                if (data.messages?.length > 0) {
+                    setMessages((prev) => {
+                        const existingIds = new Set(prev.map((m) => m.id));
+                        const unique = data.messages.filter((m: Message) => !existingIds.has(m.id));
+                        return dedupeMessagesById([...unique, ...prev]);
+                    });
+                    setHasMore(data.hasMore !== false);
+                    requestAnimationFrame(() => {
+                        if (scrollContainer) {
+                            const newScrollHeight = scrollContainer.scrollHeight;
+                            scrollContainer.scrollTop = newScrollHeight - oldScrollHeight;
+                        }
+                    });
+                } else {
+                    setHasMore(false);
+                }
+            }
+        } catch {
+            toast.error("Impossible de charger l'historique");
+        } finally {
+            setLoadingMore(false);
+        }
+    }, [orgId, deptId, loadingMore, hasMore, messages.length]);
+
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen bg-background">
@@ -526,6 +614,24 @@ export default function DepartmentChatPage() {
                                     <ExternalLink className="w-3.5 h-3.5 shrink-0 text-muted-foreground" />
                                 </a>
                             ))}
+                    </div>
+                )}
+
+                {hasMore && messages.length > 0 && (
+                    <div className="flex justify-center py-2">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={loadMoreHistory}
+                            disabled={loadingMore}
+                            className="text-muted-foreground"
+                        >
+                            {loadingMore ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                'Charger les messages précédents'
+                            )}
+                        </Button>
                     </div>
                 )}
 
