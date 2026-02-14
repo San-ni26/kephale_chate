@@ -64,12 +64,22 @@ export function NotificationListener() {
             }
 
             // Discussion département : ne pas notifier si l'utilisateur est déjà dans le chat du département
-            if (data.orgId && data.deptId) {
-                const deptChatPath = `/chat/organizations/${data.orgId}/departments/${data.deptId}/chat`;
-                if (currentPath === deptChatPath || currentPath?.startsWith(deptChatPath + '?')) return;
+            if (data.type === 'department_message' || (data.orgId && data.deptId)) {
+                const notifOrgId = data.orgId;
+                const notifDeptId = data.deptId;
+                // Si on est sur une page chat département, extraire org/dept de l'URL pour comparer
+                const deptChatMatch = currentPath?.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)\/chat/);
+                if (deptChatMatch) {
+                    const [, currentOrgId, currentDeptId] = deptChatMatch;
+                    if (notifOrgId && notifDeptId && currentOrgId === notifOrgId && currentDeptId === notifDeptId) return;
+                    // type department_message sans orgId/deptId dans le payload : ne pas afficher si on est sur un chat dept
+                    if (data.type === 'department_message' && !notifOrgId && !notifDeptId) return;
+                }
+                if (!notifOrgId || !notifDeptId) return; // pas de lien "Voir" possible
                 if (process.env.NODE_ENV === 'development') {
                     console.log('[Notification] Received (département):', data.content);
                 }
+                const deptChatPath = `/chat/organizations/${notifOrgId}/departments/${notifDeptId}/chat`;
                 toast('Discussion département', {
                     description: data.content,
                     action: {

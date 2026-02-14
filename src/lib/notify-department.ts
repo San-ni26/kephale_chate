@@ -37,6 +37,7 @@ async function sendToUser(
             await emitToUser(userId, 'notification:new', {
                 id: notification.id,
                 content,
+                type: payload.type,
                 ...payload.data,
                 createdAt: notification.createdAt,
             });
