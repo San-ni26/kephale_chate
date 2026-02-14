@@ -49,6 +49,11 @@ export type OrganizationMember = $Result.DefaultSelection<Prisma.$OrganizationMe
  */
 export type Department = $Result.DefaultSelection<Prisma.$DepartmentPayload>
 /**
+ * Model DepartmentDocument
+ * 
+ */
+export type DepartmentDocument = $Result.DefaultSelection<Prisma.$DepartmentDocumentPayload>
+/**
  * Model DepartmentGoal
  * 
  */
@@ -663,6 +668,16 @@ export class PrismaClient<
     * ```
     */
   get department(): Prisma.DepartmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.departmentDocument`: Exposes CRUD operations for the **DepartmentDocument** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DepartmentDocuments
+    * const departmentDocuments = await prisma.departmentDocument.findMany()
+    * ```
+    */
+  get departmentDocument(): Prisma.DepartmentDocumentDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.departmentGoal`: Exposes CRUD operations for the **DepartmentGoal** model.
@@ -1484,6 +1499,7 @@ export namespace Prisma {
     Organization: 'Organization',
     OrganizationMember: 'OrganizationMember',
     Department: 'Department',
+    DepartmentDocument: 'DepartmentDocument',
     DepartmentGoal: 'DepartmentGoal',
     DepartmentMeeting: 'DepartmentMeeting',
     DepartmentPoll: 'DepartmentPoll',
@@ -1537,7 +1553,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
+      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationMember" | "department" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "group" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2056,6 +2072,80 @@ export namespace Prisma {
           count: {
             args: Prisma.DepartmentCountArgs<ExtArgs>
             result: $Utils.Optional<DepartmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      DepartmentDocument: {
+        payload: Prisma.$DepartmentDocumentPayload<ExtArgs>
+        fields: Prisma.DepartmentDocumentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepartmentDocumentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepartmentDocumentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload>
+          }
+          findFirst: {
+            args: Prisma.DepartmentDocumentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepartmentDocumentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload>
+          }
+          findMany: {
+            args: Prisma.DepartmentDocumentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload>[]
+          }
+          create: {
+            args: Prisma.DepartmentDocumentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload>
+          }
+          createMany: {
+            args: Prisma.DepartmentDocumentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DepartmentDocumentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload>[]
+          }
+          delete: {
+            args: Prisma.DepartmentDocumentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload>
+          }
+          update: {
+            args: Prisma.DepartmentDocumentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload>
+          }
+          deleteMany: {
+            args: Prisma.DepartmentDocumentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepartmentDocumentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DepartmentDocumentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload>[]
+          }
+          upsert: {
+            args: Prisma.DepartmentDocumentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentDocumentPayload>
+          }
+          aggregate: {
+            args: Prisma.DepartmentDocumentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepartmentDocument>
+          }
+          groupBy: {
+            args: Prisma.DepartmentDocumentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentDocumentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepartmentDocumentCountArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentDocumentCountAggregateOutputType> | number
           }
         }
       }
@@ -4986,6 +5076,7 @@ export namespace Prisma {
     organization?: OrganizationOmit
     organizationMember?: OrganizationMemberOmit
     department?: DepartmentOmit
+    departmentDocument?: DepartmentDocumentOmit
     departmentGoal?: DepartmentGoalOmit
     departmentMeeting?: DepartmentMeetingOmit
     departmentPoll?: DepartmentPollOmit
@@ -5131,6 +5222,7 @@ export namespace Prisma {
     financialEntries: number
     followers: number
     following: number
+    uploadedDepartmentDocuments: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5161,6 +5253,7 @@ export namespace Prisma {
     financialEntries?: boolean | UserCountOutputTypeCountFinancialEntriesArgs
     followers?: boolean | UserCountOutputTypeCountFollowersArgs
     following?: boolean | UserCountOutputTypeCountFollowingArgs
+    uploadedDepartmentDocuments?: boolean | UserCountOutputTypeCountUploadedDepartmentDocumentsArgs
   }
 
   // Custom InputTypes
@@ -5363,6 +5456,13 @@ export namespace Prisma {
     where?: FollowWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountUploadedDepartmentDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentDocumentWhereInput
+  }
+
 
   /**
    * Count Type UserInvitationCountOutputType
@@ -5458,6 +5558,7 @@ export namespace Prisma {
     meetings: number
     polls: number
     teamDecisions: number
+    documents: number
   }
 
   export type DepartmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5470,6 +5571,7 @@ export namespace Prisma {
     meetings?: boolean | DepartmentCountOutputTypeCountMeetingsArgs
     polls?: boolean | DepartmentCountOutputTypeCountPollsArgs
     teamDecisions?: boolean | DepartmentCountOutputTypeCountTeamDecisionsArgs
+    documents?: boolean | DepartmentCountOutputTypeCountDocumentsArgs
   }
 
   // Custom InputTypes
@@ -5544,6 +5646,13 @@ export namespace Prisma {
    */
   export type DepartmentCountOutputTypeCountTeamDecisionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TeamDecisionWhereInput
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentDocumentWhereInput
   }
 
 
@@ -6301,6 +6410,7 @@ export namespace Prisma {
     financialEntries?: boolean | User$financialEntriesArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
+    uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -6416,6 +6526,7 @@ export namespace Prisma {
     financialEntries?: boolean | User$financialEntriesArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
+    uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6453,6 +6564,7 @@ export namespace Prisma {
       financialEntries: Prisma.$UserFinancialEntryPayload<ExtArgs>[]
       followers: Prisma.$FollowPayload<ExtArgs>[]
       following: Prisma.$FollowPayload<ExtArgs>[]
+      uploadedDepartmentDocuments: Prisma.$DepartmentDocumentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6902,6 +7014,7 @@ export namespace Prisma {
     financialEntries<T extends User$financialEntriesArgs<ExtArgs> = {}>(args?: Subset<T, User$financialEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     followers<T extends User$followersArgs<ExtArgs> = {}>(args?: Subset<T, User$followersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     following<T extends User$followingArgs<ExtArgs> = {}>(args?: Subset<T, User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    uploadedDepartmentDocuments<T extends User$uploadedDepartmentDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$uploadedDepartmentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8026,6 +8139,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FollowScalarFieldEnum | FollowScalarFieldEnum[]
+  }
+
+  /**
+   * User.uploadedDepartmentDocuments
+   */
+  export type User$uploadedDepartmentDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    where?: DepartmentDocumentWhereInput
+    orderBy?: DepartmentDocumentOrderByWithRelationInput | DepartmentDocumentOrderByWithRelationInput[]
+    cursor?: DepartmentDocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentDocumentScalarFieldEnum | DepartmentDocumentScalarFieldEnum[]
   }
 
   /**
@@ -13842,6 +13979,7 @@ export namespace Prisma {
     meetings?: boolean | Department$meetingsArgs<ExtArgs>
     polls?: boolean | Department$pollsArgs<ExtArgs>
     teamDecisions?: boolean | Department$teamDecisionsArgs<ExtArgs>
+    documents?: boolean | Department$documentsArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["department"]>
 
@@ -13892,6 +14030,7 @@ export namespace Prisma {
     meetings?: boolean | Department$meetingsArgs<ExtArgs>
     polls?: boolean | Department$pollsArgs<ExtArgs>
     teamDecisions?: boolean | Department$teamDecisionsArgs<ExtArgs>
+    documents?: boolean | Department$documentsArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13917,6 +14056,7 @@ export namespace Prisma {
       meetings: Prisma.$DepartmentMeetingPayload<ExtArgs>[]
       polls: Prisma.$DepartmentPollPayload<ExtArgs>[]
       teamDecisions: Prisma.$TeamDecisionPayload<ExtArgs>[]
+      documents: Prisma.$DepartmentDocumentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14331,6 +14471,7 @@ export namespace Prisma {
     meetings<T extends Department$meetingsArgs<ExtArgs> = {}>(args?: Subset<T, Department$meetingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentMeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     polls<T extends Department$pollsArgs<ExtArgs> = {}>(args?: Subset<T, Department$pollsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teamDecisions<T extends Department$teamDecisionsArgs<ExtArgs> = {}>(args?: Subset<T, Department$teamDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    documents<T extends Department$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Department$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14998,6 +15139,30 @@ export namespace Prisma {
   }
 
   /**
+   * Department.documents
+   */
+  export type Department$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    where?: DepartmentDocumentWhereInput
+    orderBy?: DepartmentDocumentOrderByWithRelationInput | DepartmentDocumentOrderByWithRelationInput[]
+    cursor?: DepartmentDocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentDocumentScalarFieldEnum | DepartmentDocumentScalarFieldEnum[]
+  }
+
+  /**
    * Department without action
    */
   export type DepartmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15013,6 +15178,1098 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: DepartmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DepartmentDocument
+   */
+
+  export type AggregateDepartmentDocument = {
+    _count: DepartmentDocumentCountAggregateOutputType | null
+    _min: DepartmentDocumentMinAggregateOutputType | null
+    _max: DepartmentDocumentMaxAggregateOutputType | null
+  }
+
+  export type DepartmentDocumentMinAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    filename: string | null
+    type: $Enums.FileType | null
+    data: string | null
+    uploadedBy: string | null
+    createdAt: Date | null
+  }
+
+  export type DepartmentDocumentMaxAggregateOutputType = {
+    id: string | null
+    deptId: string | null
+    filename: string | null
+    type: $Enums.FileType | null
+    data: string | null
+    uploadedBy: string | null
+    createdAt: Date | null
+  }
+
+  export type DepartmentDocumentCountAggregateOutputType = {
+    id: number
+    deptId: number
+    filename: number
+    type: number
+    data: number
+    uploadedBy: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type DepartmentDocumentMinAggregateInputType = {
+    id?: true
+    deptId?: true
+    filename?: true
+    type?: true
+    data?: true
+    uploadedBy?: true
+    createdAt?: true
+  }
+
+  export type DepartmentDocumentMaxAggregateInputType = {
+    id?: true
+    deptId?: true
+    filename?: true
+    type?: true
+    data?: true
+    uploadedBy?: true
+    createdAt?: true
+  }
+
+  export type DepartmentDocumentCountAggregateInputType = {
+    id?: true
+    deptId?: true
+    filename?: true
+    type?: true
+    data?: true
+    uploadedBy?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type DepartmentDocumentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentDocument to aggregate.
+     */
+    where?: DepartmentDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentDocuments to fetch.
+     */
+    orderBy?: DepartmentDocumentOrderByWithRelationInput | DepartmentDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepartmentDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DepartmentDocuments
+    **/
+    _count?: true | DepartmentDocumentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepartmentDocumentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepartmentDocumentMaxAggregateInputType
+  }
+
+  export type GetDepartmentDocumentAggregateType<T extends DepartmentDocumentAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepartmentDocument]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepartmentDocument[P]>
+      : GetScalarType<T[P], AggregateDepartmentDocument[P]>
+  }
+
+
+
+
+  export type DepartmentDocumentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentDocumentWhereInput
+    orderBy?: DepartmentDocumentOrderByWithAggregationInput | DepartmentDocumentOrderByWithAggregationInput[]
+    by: DepartmentDocumentScalarFieldEnum[] | DepartmentDocumentScalarFieldEnum
+    having?: DepartmentDocumentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepartmentDocumentCountAggregateInputType | true
+    _min?: DepartmentDocumentMinAggregateInputType
+    _max?: DepartmentDocumentMaxAggregateInputType
+  }
+
+  export type DepartmentDocumentGroupByOutputType = {
+    id: string
+    deptId: string
+    filename: string
+    type: $Enums.FileType
+    data: string
+    uploadedBy: string
+    createdAt: Date
+    _count: DepartmentDocumentCountAggregateOutputType | null
+    _min: DepartmentDocumentMinAggregateOutputType | null
+    _max: DepartmentDocumentMaxAggregateOutputType | null
+  }
+
+  type GetDepartmentDocumentGroupByPayload<T extends DepartmentDocumentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepartmentDocumentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepartmentDocumentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepartmentDocumentGroupByOutputType[P]>
+            : GetScalarType<T[P], DepartmentDocumentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepartmentDocumentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    filename?: boolean
+    type?: boolean
+    data?: boolean
+    uploadedBy?: boolean
+    createdAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentDocument"]>
+
+  export type DepartmentDocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    filename?: boolean
+    type?: boolean
+    data?: boolean
+    uploadedBy?: boolean
+    createdAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentDocument"]>
+
+  export type DepartmentDocumentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deptId?: boolean
+    filename?: boolean
+    type?: boolean
+    data?: boolean
+    uploadedBy?: boolean
+    createdAt?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["departmentDocument"]>
+
+  export type DepartmentDocumentSelectScalar = {
+    id?: boolean
+    deptId?: boolean
+    filename?: boolean
+    type?: boolean
+    data?: boolean
+    uploadedBy?: boolean
+    createdAt?: boolean
+  }
+
+  export type DepartmentDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deptId" | "filename" | "type" | "data" | "uploadedBy" | "createdAt", ExtArgs["result"]["departmentDocument"]>
+  export type DepartmentDocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DepartmentDocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DepartmentDocumentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $DepartmentDocumentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DepartmentDocument"
+    objects: {
+      department: Prisma.$DepartmentPayload<ExtArgs>
+      uploader: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      deptId: string
+      filename: string
+      type: $Enums.FileType
+      data: string
+      uploadedBy: string
+      createdAt: Date
+    }, ExtArgs["result"]["departmentDocument"]>
+    composites: {}
+  }
+
+  type DepartmentDocumentGetPayload<S extends boolean | null | undefined | DepartmentDocumentDefaultArgs> = $Result.GetResult<Prisma.$DepartmentDocumentPayload, S>
+
+  type DepartmentDocumentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepartmentDocumentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepartmentDocumentCountAggregateInputType | true
+    }
+
+  export interface DepartmentDocumentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepartmentDocument'], meta: { name: 'DepartmentDocument' } }
+    /**
+     * Find zero or one DepartmentDocument that matches the filter.
+     * @param {DepartmentDocumentFindUniqueArgs} args - Arguments to find a DepartmentDocument
+     * @example
+     * // Get one DepartmentDocument
+     * const departmentDocument = await prisma.departmentDocument.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepartmentDocumentFindUniqueArgs>(args: SelectSubset<T, DepartmentDocumentFindUniqueArgs<ExtArgs>>): Prisma__DepartmentDocumentClient<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DepartmentDocument that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepartmentDocumentFindUniqueOrThrowArgs} args - Arguments to find a DepartmentDocument
+     * @example
+     * // Get one DepartmentDocument
+     * const departmentDocument = await prisma.departmentDocument.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepartmentDocumentFindUniqueOrThrowArgs>(args: SelectSubset<T, DepartmentDocumentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepartmentDocumentClient<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentDocument that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentDocumentFindFirstArgs} args - Arguments to find a DepartmentDocument
+     * @example
+     * // Get one DepartmentDocument
+     * const departmentDocument = await prisma.departmentDocument.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepartmentDocumentFindFirstArgs>(args?: SelectSubset<T, DepartmentDocumentFindFirstArgs<ExtArgs>>): Prisma__DepartmentDocumentClient<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepartmentDocument that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentDocumentFindFirstOrThrowArgs} args - Arguments to find a DepartmentDocument
+     * @example
+     * // Get one DepartmentDocument
+     * const departmentDocument = await prisma.departmentDocument.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepartmentDocumentFindFirstOrThrowArgs>(args?: SelectSubset<T, DepartmentDocumentFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepartmentDocumentClient<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DepartmentDocuments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentDocumentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DepartmentDocuments
+     * const departmentDocuments = await prisma.departmentDocument.findMany()
+     * 
+     * // Get first 10 DepartmentDocuments
+     * const departmentDocuments = await prisma.departmentDocument.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const departmentDocumentWithIdOnly = await prisma.departmentDocument.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepartmentDocumentFindManyArgs>(args?: SelectSubset<T, DepartmentDocumentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DepartmentDocument.
+     * @param {DepartmentDocumentCreateArgs} args - Arguments to create a DepartmentDocument.
+     * @example
+     * // Create one DepartmentDocument
+     * const DepartmentDocument = await prisma.departmentDocument.create({
+     *   data: {
+     *     // ... data to create a DepartmentDocument
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepartmentDocumentCreateArgs>(args: SelectSubset<T, DepartmentDocumentCreateArgs<ExtArgs>>): Prisma__DepartmentDocumentClient<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DepartmentDocuments.
+     * @param {DepartmentDocumentCreateManyArgs} args - Arguments to create many DepartmentDocuments.
+     * @example
+     * // Create many DepartmentDocuments
+     * const departmentDocument = await prisma.departmentDocument.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepartmentDocumentCreateManyArgs>(args?: SelectSubset<T, DepartmentDocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DepartmentDocuments and returns the data saved in the database.
+     * @param {DepartmentDocumentCreateManyAndReturnArgs} args - Arguments to create many DepartmentDocuments.
+     * @example
+     * // Create many DepartmentDocuments
+     * const departmentDocument = await prisma.departmentDocument.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DepartmentDocuments and only return the `id`
+     * const departmentDocumentWithIdOnly = await prisma.departmentDocument.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DepartmentDocumentCreateManyAndReturnArgs>(args?: SelectSubset<T, DepartmentDocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DepartmentDocument.
+     * @param {DepartmentDocumentDeleteArgs} args - Arguments to delete one DepartmentDocument.
+     * @example
+     * // Delete one DepartmentDocument
+     * const DepartmentDocument = await prisma.departmentDocument.delete({
+     *   where: {
+     *     // ... filter to delete one DepartmentDocument
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepartmentDocumentDeleteArgs>(args: SelectSubset<T, DepartmentDocumentDeleteArgs<ExtArgs>>): Prisma__DepartmentDocumentClient<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DepartmentDocument.
+     * @param {DepartmentDocumentUpdateArgs} args - Arguments to update one DepartmentDocument.
+     * @example
+     * // Update one DepartmentDocument
+     * const departmentDocument = await prisma.departmentDocument.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepartmentDocumentUpdateArgs>(args: SelectSubset<T, DepartmentDocumentUpdateArgs<ExtArgs>>): Prisma__DepartmentDocumentClient<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DepartmentDocuments.
+     * @param {DepartmentDocumentDeleteManyArgs} args - Arguments to filter DepartmentDocuments to delete.
+     * @example
+     * // Delete a few DepartmentDocuments
+     * const { count } = await prisma.departmentDocument.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepartmentDocumentDeleteManyArgs>(args?: SelectSubset<T, DepartmentDocumentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentDocuments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentDocumentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DepartmentDocuments
+     * const departmentDocument = await prisma.departmentDocument.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepartmentDocumentUpdateManyArgs>(args: SelectSubset<T, DepartmentDocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepartmentDocuments and returns the data updated in the database.
+     * @param {DepartmentDocumentUpdateManyAndReturnArgs} args - Arguments to update many DepartmentDocuments.
+     * @example
+     * // Update many DepartmentDocuments
+     * const departmentDocument = await prisma.departmentDocument.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DepartmentDocuments and only return the `id`
+     * const departmentDocumentWithIdOnly = await prisma.departmentDocument.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DepartmentDocumentUpdateManyAndReturnArgs>(args: SelectSubset<T, DepartmentDocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DepartmentDocument.
+     * @param {DepartmentDocumentUpsertArgs} args - Arguments to update or create a DepartmentDocument.
+     * @example
+     * // Update or create a DepartmentDocument
+     * const departmentDocument = await prisma.departmentDocument.upsert({
+     *   create: {
+     *     // ... data to create a DepartmentDocument
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DepartmentDocument we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepartmentDocumentUpsertArgs>(args: SelectSubset<T, DepartmentDocumentUpsertArgs<ExtArgs>>): Prisma__DepartmentDocumentClient<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DepartmentDocuments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentDocumentCountArgs} args - Arguments to filter DepartmentDocuments to count.
+     * @example
+     * // Count the number of DepartmentDocuments
+     * const count = await prisma.departmentDocument.count({
+     *   where: {
+     *     // ... the filter for the DepartmentDocuments we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepartmentDocumentCountArgs>(
+      args?: Subset<T, DepartmentDocumentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepartmentDocumentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DepartmentDocument.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentDocumentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepartmentDocumentAggregateArgs>(args: Subset<T, DepartmentDocumentAggregateArgs>): Prisma.PrismaPromise<GetDepartmentDocumentAggregateType<T>>
+
+    /**
+     * Group by DepartmentDocument.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentDocumentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepartmentDocumentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepartmentDocumentGroupByArgs['orderBy'] }
+        : { orderBy?: DepartmentDocumentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepartmentDocumentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepartmentDocumentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DepartmentDocument model
+   */
+  readonly fields: DepartmentDocumentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DepartmentDocument.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepartmentDocumentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    uploader<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DepartmentDocument model
+   */
+  interface DepartmentDocumentFieldRefs {
+    readonly id: FieldRef<"DepartmentDocument", 'String'>
+    readonly deptId: FieldRef<"DepartmentDocument", 'String'>
+    readonly filename: FieldRef<"DepartmentDocument", 'String'>
+    readonly type: FieldRef<"DepartmentDocument", 'FileType'>
+    readonly data: FieldRef<"DepartmentDocument", 'String'>
+    readonly uploadedBy: FieldRef<"DepartmentDocument", 'String'>
+    readonly createdAt: FieldRef<"DepartmentDocument", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DepartmentDocument findUnique
+   */
+  export type DepartmentDocumentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentDocument to fetch.
+     */
+    where: DepartmentDocumentWhereUniqueInput
+  }
+
+  /**
+   * DepartmentDocument findUniqueOrThrow
+   */
+  export type DepartmentDocumentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentDocument to fetch.
+     */
+    where: DepartmentDocumentWhereUniqueInput
+  }
+
+  /**
+   * DepartmentDocument findFirst
+   */
+  export type DepartmentDocumentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentDocument to fetch.
+     */
+    where?: DepartmentDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentDocuments to fetch.
+     */
+    orderBy?: DepartmentDocumentOrderByWithRelationInput | DepartmentDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentDocuments.
+     */
+    cursor?: DepartmentDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentDocuments.
+     */
+    distinct?: DepartmentDocumentScalarFieldEnum | DepartmentDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentDocument findFirstOrThrow
+   */
+  export type DepartmentDocumentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentDocument to fetch.
+     */
+    where?: DepartmentDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentDocuments to fetch.
+     */
+    orderBy?: DepartmentDocumentOrderByWithRelationInput | DepartmentDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepartmentDocuments.
+     */
+    cursor?: DepartmentDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepartmentDocuments.
+     */
+    distinct?: DepartmentDocumentScalarFieldEnum | DepartmentDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentDocument findMany
+   */
+  export type DepartmentDocumentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which DepartmentDocuments to fetch.
+     */
+    where?: DepartmentDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepartmentDocuments to fetch.
+     */
+    orderBy?: DepartmentDocumentOrderByWithRelationInput | DepartmentDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DepartmentDocuments.
+     */
+    cursor?: DepartmentDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepartmentDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepartmentDocuments.
+     */
+    skip?: number
+    distinct?: DepartmentDocumentScalarFieldEnum | DepartmentDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * DepartmentDocument create
+   */
+  export type DepartmentDocumentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DepartmentDocument.
+     */
+    data: XOR<DepartmentDocumentCreateInput, DepartmentDocumentUncheckedCreateInput>
+  }
+
+  /**
+   * DepartmentDocument createMany
+   */
+  export type DepartmentDocumentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DepartmentDocuments.
+     */
+    data: DepartmentDocumentCreateManyInput | DepartmentDocumentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DepartmentDocument createManyAndReturn
+   */
+  export type DepartmentDocumentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * The data used to create many DepartmentDocuments.
+     */
+    data: DepartmentDocumentCreateManyInput | DepartmentDocumentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentDocument update
+   */
+  export type DepartmentDocumentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DepartmentDocument.
+     */
+    data: XOR<DepartmentDocumentUpdateInput, DepartmentDocumentUncheckedUpdateInput>
+    /**
+     * Choose, which DepartmentDocument to update.
+     */
+    where: DepartmentDocumentWhereUniqueInput
+  }
+
+  /**
+   * DepartmentDocument updateMany
+   */
+  export type DepartmentDocumentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DepartmentDocuments.
+     */
+    data: XOR<DepartmentDocumentUpdateManyMutationInput, DepartmentDocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentDocuments to update
+     */
+    where?: DepartmentDocumentWhereInput
+    /**
+     * Limit how many DepartmentDocuments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentDocument updateManyAndReturn
+   */
+  export type DepartmentDocumentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * The data used to update DepartmentDocuments.
+     */
+    data: XOR<DepartmentDocumentUpdateManyMutationInput, DepartmentDocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which DepartmentDocuments to update
+     */
+    where?: DepartmentDocumentWhereInput
+    /**
+     * Limit how many DepartmentDocuments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentDocument upsert
+   */
+  export type DepartmentDocumentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DepartmentDocument to update in case it exists.
+     */
+    where: DepartmentDocumentWhereUniqueInput
+    /**
+     * In case the DepartmentDocument found by the `where` argument doesn't exist, create a new DepartmentDocument with this data.
+     */
+    create: XOR<DepartmentDocumentCreateInput, DepartmentDocumentUncheckedCreateInput>
+    /**
+     * In case the DepartmentDocument was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepartmentDocumentUpdateInput, DepartmentDocumentUncheckedUpdateInput>
+  }
+
+  /**
+   * DepartmentDocument delete
+   */
+  export type DepartmentDocumentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
+    /**
+     * Filter which DepartmentDocument to delete.
+     */
+    where: DepartmentDocumentWhereUniqueInput
+  }
+
+  /**
+   * DepartmentDocument deleteMany
+   */
+  export type DepartmentDocumentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepartmentDocuments to delete
+     */
+    where?: DepartmentDocumentWhereInput
+    /**
+     * Limit how many DepartmentDocuments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepartmentDocument without action
+   */
+  export type DepartmentDocumentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentDocument
+     */
+    select?: DepartmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepartmentDocument
+     */
+    omit?: DepartmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentDocumentInclude<ExtArgs> | null
   }
 
 
@@ -57559,6 +58816,19 @@ export namespace Prisma {
   export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
 
 
+  export const DepartmentDocumentScalarFieldEnum: {
+    id: 'id',
+    deptId: 'deptId',
+    filename: 'filename',
+    type: 'type',
+    data: 'data',
+    uploadedBy: 'uploadedBy',
+    createdAt: 'createdAt'
+  };
+
+  export type DepartmentDocumentScalarFieldEnum = (typeof DepartmentDocumentScalarFieldEnum)[keyof typeof DepartmentDocumentScalarFieldEnum]
+
+
   export const DepartmentGoalScalarFieldEnum: {
     id: 'id',
     deptId: 'deptId',
@@ -58252,6 +59522,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'FileType'
+   */
+  export type EnumFileTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FileType'>
+    
+
+
+  /**
+   * Reference to a field of type 'FileType[]'
+   */
+  export type ListEnumFileTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FileType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -58276,20 +59560,6 @@ export namespace Prisma {
    * Reference to a field of type 'DecisionVoteType[]'
    */
   export type ListEnumDecisionVoteTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DecisionVoteType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'FileType'
-   */
-  export type EnumFileTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FileType'>
-    
-
-
-  /**
-   * Reference to a field of type 'FileType[]'
-   */
-  export type ListEnumFileTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FileType[]'>
     
 
 
@@ -58507,6 +59777,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryListRelationFilter
     followers?: FollowListRelationFilter
     following?: FollowListRelationFilter
+    uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -58563,6 +59834,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryOrderByRelationAggregateInput
     followers?: FollowOrderByRelationAggregateInput
     following?: FollowOrderByRelationAggregateInput
+    uploadedDepartmentDocuments?: DepartmentDocumentOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -58622,6 +59894,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryListRelationFilter
     followers?: FollowListRelationFilter
     following?: FollowListRelationFilter
+    uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -59058,6 +60331,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingListRelationFilter
     polls?: DepartmentPollListRelationFilter
     teamDecisions?: TeamDecisionListRelationFilter
+    documents?: DepartmentDocumentListRelationFilter
   }
 
   export type DepartmentOrderByWithRelationInput = {
@@ -59079,6 +60353,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingOrderByRelationAggregateInput
     polls?: DepartmentPollOrderByRelationAggregateInput
     teamDecisions?: TeamDecisionOrderByRelationAggregateInput
+    documents?: DepartmentDocumentOrderByRelationAggregateInput
   }
 
   export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
@@ -59103,6 +60378,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingListRelationFilter
     polls?: DepartmentPollListRelationFilter
     teamDecisions?: TeamDecisionListRelationFilter
+    documents?: DepartmentDocumentListRelationFilter
   }, "id">
 
   export type DepartmentOrderByWithAggregationInput = {
@@ -59129,6 +60405,74 @@ export namespace Prisma {
     headId?: StringNullableWithAggregatesFilter<"Department"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+  }
+
+  export type DepartmentDocumentWhereInput = {
+    AND?: DepartmentDocumentWhereInput | DepartmentDocumentWhereInput[]
+    OR?: DepartmentDocumentWhereInput[]
+    NOT?: DepartmentDocumentWhereInput | DepartmentDocumentWhereInput[]
+    id?: StringFilter<"DepartmentDocument"> | string
+    deptId?: StringFilter<"DepartmentDocument"> | string
+    filename?: StringFilter<"DepartmentDocument"> | string
+    type?: EnumFileTypeFilter<"DepartmentDocument"> | $Enums.FileType
+    data?: StringFilter<"DepartmentDocument"> | string
+    uploadedBy?: StringFilter<"DepartmentDocument"> | string
+    createdAt?: DateTimeFilter<"DepartmentDocument"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    uploader?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type DepartmentDocumentOrderByWithRelationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    filename?: SortOrder
+    type?: SortOrder
+    data?: SortOrder
+    uploadedBy?: SortOrder
+    createdAt?: SortOrder
+    department?: DepartmentOrderByWithRelationInput
+    uploader?: UserOrderByWithRelationInput
+  }
+
+  export type DepartmentDocumentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DepartmentDocumentWhereInput | DepartmentDocumentWhereInput[]
+    OR?: DepartmentDocumentWhereInput[]
+    NOT?: DepartmentDocumentWhereInput | DepartmentDocumentWhereInput[]
+    deptId?: StringFilter<"DepartmentDocument"> | string
+    filename?: StringFilter<"DepartmentDocument"> | string
+    type?: EnumFileTypeFilter<"DepartmentDocument"> | $Enums.FileType
+    data?: StringFilter<"DepartmentDocument"> | string
+    uploadedBy?: StringFilter<"DepartmentDocument"> | string
+    createdAt?: DateTimeFilter<"DepartmentDocument"> | Date | string
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
+    uploader?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type DepartmentDocumentOrderByWithAggregationInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    filename?: SortOrder
+    type?: SortOrder
+    data?: SortOrder
+    uploadedBy?: SortOrder
+    createdAt?: SortOrder
+    _count?: DepartmentDocumentCountOrderByAggregateInput
+    _max?: DepartmentDocumentMaxOrderByAggregateInput
+    _min?: DepartmentDocumentMinOrderByAggregateInput
+  }
+
+  export type DepartmentDocumentScalarWhereWithAggregatesInput = {
+    AND?: DepartmentDocumentScalarWhereWithAggregatesInput | DepartmentDocumentScalarWhereWithAggregatesInput[]
+    OR?: DepartmentDocumentScalarWhereWithAggregatesInput[]
+    NOT?: DepartmentDocumentScalarWhereWithAggregatesInput | DepartmentDocumentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DepartmentDocument"> | string
+    deptId?: StringWithAggregatesFilter<"DepartmentDocument"> | string
+    filename?: StringWithAggregatesFilter<"DepartmentDocument"> | string
+    type?: EnumFileTypeWithAggregatesFilter<"DepartmentDocument"> | $Enums.FileType
+    data?: StringWithAggregatesFilter<"DepartmentDocument"> | string
+    uploadedBy?: StringWithAggregatesFilter<"DepartmentDocument"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"DepartmentDocument"> | Date | string
   }
 
   export type DepartmentGoalWhereInput = {
@@ -61911,6 +63255,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -61967,6 +63312,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUpdateInput = {
@@ -62023,6 +63369,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -62079,6 +63426,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -62550,6 +63898,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateInput = {
@@ -62569,6 +63918,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUpdateInput = {
@@ -62588,6 +63938,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateInput = {
@@ -62607,6 +63958,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentCreateManyInput = {
@@ -62635,6 +63987,74 @@ export namespace Prisma {
     headId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentDocumentCreateInput = {
+    id?: string
+    filename: string
+    type: $Enums.FileType
+    data: string
+    createdAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutDocumentsInput
+    uploader: UserCreateNestedOneWithoutUploadedDepartmentDocumentsInput
+  }
+
+  export type DepartmentDocumentUncheckedCreateInput = {
+    id?: string
+    deptId: string
+    filename: string
+    type: $Enums.FileType
+    data: string
+    uploadedBy: string
+    createdAt?: Date | string
+  }
+
+  export type DepartmentDocumentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+    data?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutDocumentsNestedInput
+    uploader?: UserUpdateOneRequiredWithoutUploadedDepartmentDocumentsNestedInput
+  }
+
+  export type DepartmentDocumentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+    data?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentDocumentCreateManyInput = {
+    id?: string
+    deptId: string
+    filename: string
+    type: $Enums.FileType
+    data: string
+    uploadedBy: string
+    createdAt?: Date | string
+  }
+
+  export type DepartmentDocumentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+    data?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentDocumentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+    data?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DepartmentGoalCreateInput = {
@@ -65742,6 +67162,12 @@ export namespace Prisma {
     none?: FollowWhereInput
   }
 
+  export type DepartmentDocumentListRelationFilter = {
+    every?: DepartmentDocumentWhereInput
+    some?: DepartmentDocumentWhereInput
+    none?: DepartmentDocumentWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -65844,6 +67270,10 @@ export namespace Prisma {
   }
 
   export type FollowOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DepartmentDocumentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -66384,6 +67814,58 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type EnumFileTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFileTypeFilter<$PrismaModel> | $Enums.FileType
+  }
+
+  export type DepartmentScalarRelationFilter = {
+    is?: DepartmentWhereInput
+    isNot?: DepartmentWhereInput
+  }
+
+  export type DepartmentDocumentCountOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    filename?: SortOrder
+    type?: SortOrder
+    data?: SortOrder
+    uploadedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DepartmentDocumentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    filename?: SortOrder
+    type?: SortOrder
+    data?: SortOrder
+    uploadedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DepartmentDocumentMinOrderByAggregateInput = {
+    id?: SortOrder
+    deptId?: SortOrder
+    filename?: SortOrder
+    type?: SortOrder
+    data?: SortOrder
+    uploadedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumFileTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFileTypeWithAggregatesFilter<$PrismaModel> | $Enums.FileType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFileTypeFilter<$PrismaModel>
+    _max?: NestedEnumFileTypeFilter<$PrismaModel>
+  }
+
   export type FloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -66404,11 +67886,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type DepartmentScalarRelationFilter = {
-    is?: DepartmentWhereInput
-    isNot?: DepartmentWhereInput
   }
 
   export type DepartmentGoalCountOrderByAggregateInput = {
@@ -66905,13 +68382,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type EnumFileTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumFileTypeFilter<$PrismaModel> | $Enums.FileType
-  }
-
   export type MessageScalarRelationFilter = {
     is?: MessageWhereInput
     isNot?: MessageWhereInput
@@ -66942,16 +68412,6 @@ export namespace Prisma {
     filename?: SortOrder
     data?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type EnumFileTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumFileTypeWithAggregatesFilter<$PrismaModel> | $Enums.FileType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumFileTypeFilter<$PrismaModel>
-    _max?: NestedEnumFileTypeFilter<$PrismaModel>
   }
 
   export type NotificationCountOrderByAggregateInput = {
@@ -68454,6 +69914,13 @@ export namespace Prisma {
     connect?: FollowWhereUniqueInput | FollowWhereUniqueInput[]
   }
 
+  export type DepartmentDocumentCreateNestedManyWithoutUploaderInput = {
+    create?: XOR<DepartmentDocumentCreateWithoutUploaderInput, DepartmentDocumentUncheckedCreateWithoutUploaderInput> | DepartmentDocumentCreateWithoutUploaderInput[] | DepartmentDocumentUncheckedCreateWithoutUploaderInput[]
+    connectOrCreate?: DepartmentDocumentCreateOrConnectWithoutUploaderInput | DepartmentDocumentCreateOrConnectWithoutUploaderInput[]
+    createMany?: DepartmentDocumentCreateManyUploaderInputEnvelope
+    connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+  }
+
   export type AnnouncementUncheckedCreateNestedManyWithoutPublisherInput = {
     create?: XOR<AnnouncementCreateWithoutPublisherInput, AnnouncementUncheckedCreateWithoutPublisherInput> | AnnouncementCreateWithoutPublisherInput[] | AnnouncementUncheckedCreateWithoutPublisherInput[]
     connectOrCreate?: AnnouncementCreateOrConnectWithoutPublisherInput | AnnouncementCreateOrConnectWithoutPublisherInput[]
@@ -68653,6 +70120,13 @@ export namespace Prisma {
     connectOrCreate?: FollowCreateOrConnectWithoutFollowerInput | FollowCreateOrConnectWithoutFollowerInput[]
     createMany?: FollowCreateManyFollowerInputEnvelope
     connect?: FollowWhereUniqueInput | FollowWhereUniqueInput[]
+  }
+
+  export type DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput = {
+    create?: XOR<DepartmentDocumentCreateWithoutUploaderInput, DepartmentDocumentUncheckedCreateWithoutUploaderInput> | DepartmentDocumentCreateWithoutUploaderInput[] | DepartmentDocumentUncheckedCreateWithoutUploaderInput[]
+    connectOrCreate?: DepartmentDocumentCreateOrConnectWithoutUploaderInput | DepartmentDocumentCreateOrConnectWithoutUploaderInput[]
+    createMany?: DepartmentDocumentCreateManyUploaderInputEnvelope
+    connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -69077,6 +70551,20 @@ export namespace Prisma {
     deleteMany?: FollowScalarWhereInput | FollowScalarWhereInput[]
   }
 
+  export type DepartmentDocumentUpdateManyWithoutUploaderNestedInput = {
+    create?: XOR<DepartmentDocumentCreateWithoutUploaderInput, DepartmentDocumentUncheckedCreateWithoutUploaderInput> | DepartmentDocumentCreateWithoutUploaderInput[] | DepartmentDocumentUncheckedCreateWithoutUploaderInput[]
+    connectOrCreate?: DepartmentDocumentCreateOrConnectWithoutUploaderInput | DepartmentDocumentCreateOrConnectWithoutUploaderInput[]
+    upsert?: DepartmentDocumentUpsertWithWhereUniqueWithoutUploaderInput | DepartmentDocumentUpsertWithWhereUniqueWithoutUploaderInput[]
+    createMany?: DepartmentDocumentCreateManyUploaderInputEnvelope
+    set?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    disconnect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    delete?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    update?: DepartmentDocumentUpdateWithWhereUniqueWithoutUploaderInput | DepartmentDocumentUpdateWithWhereUniqueWithoutUploaderInput[]
+    updateMany?: DepartmentDocumentUpdateManyWithWhereWithoutUploaderInput | DepartmentDocumentUpdateManyWithWhereWithoutUploaderInput[]
+    deleteMany?: DepartmentDocumentScalarWhereInput | DepartmentDocumentScalarWhereInput[]
+  }
+
   export type AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput = {
     create?: XOR<AnnouncementCreateWithoutPublisherInput, AnnouncementUncheckedCreateWithoutPublisherInput> | AnnouncementCreateWithoutPublisherInput[] | AnnouncementUncheckedCreateWithoutPublisherInput[]
     connectOrCreate?: AnnouncementCreateOrConnectWithoutPublisherInput | AnnouncementCreateOrConnectWithoutPublisherInput[]
@@ -69475,6 +70963,20 @@ export namespace Prisma {
     deleteMany?: FollowScalarWhereInput | FollowScalarWhereInput[]
   }
 
+  export type DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput = {
+    create?: XOR<DepartmentDocumentCreateWithoutUploaderInput, DepartmentDocumentUncheckedCreateWithoutUploaderInput> | DepartmentDocumentCreateWithoutUploaderInput[] | DepartmentDocumentUncheckedCreateWithoutUploaderInput[]
+    connectOrCreate?: DepartmentDocumentCreateOrConnectWithoutUploaderInput | DepartmentDocumentCreateOrConnectWithoutUploaderInput[]
+    upsert?: DepartmentDocumentUpsertWithWhereUniqueWithoutUploaderInput | DepartmentDocumentUpsertWithWhereUniqueWithoutUploaderInput[]
+    createMany?: DepartmentDocumentCreateManyUploaderInputEnvelope
+    set?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    disconnect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    delete?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    update?: DepartmentDocumentUpdateWithWhereUniqueWithoutUploaderInput | DepartmentDocumentUpdateWithWhereUniqueWithoutUploaderInput[]
+    updateMany?: DepartmentDocumentUpdateManyWithWhereWithoutUploaderInput | DepartmentDocumentUpdateManyWithWhereWithoutUploaderInput[]
+    deleteMany?: DepartmentDocumentScalarWhereInput | DepartmentDocumentScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutInvitationsInput = {
     create?: XOR<UserCreateWithoutInvitationsInput, UserUncheckedCreateWithoutInvitationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutInvitationsInput
@@ -69854,6 +71356,13 @@ export namespace Prisma {
     connect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
   }
 
+  export type DepartmentDocumentCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentDocumentCreateWithoutDepartmentInput, DepartmentDocumentUncheckedCreateWithoutDepartmentInput> | DepartmentDocumentCreateWithoutDepartmentInput[] | DepartmentDocumentUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentDocumentCreateOrConnectWithoutDepartmentInput | DepartmentDocumentCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentDocumentCreateManyDepartmentInputEnvelope
+    connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+  }
+
   export type DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput = {
     create?: XOR<DepartmentMemberCreateWithoutDepartmentInput, DepartmentMemberUncheckedCreateWithoutDepartmentInput> | DepartmentMemberCreateWithoutDepartmentInput[] | DepartmentMemberUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: DepartmentMemberCreateOrConnectWithoutDepartmentInput | DepartmentMemberCreateOrConnectWithoutDepartmentInput[]
@@ -69915,6 +71424,13 @@ export namespace Prisma {
     connectOrCreate?: TeamDecisionCreateOrConnectWithoutDepartmentInput | TeamDecisionCreateOrConnectWithoutDepartmentInput[]
     createMany?: TeamDecisionCreateManyDepartmentInputEnvelope
     connect?: TeamDecisionWhereUniqueInput | TeamDecisionWhereUniqueInput[]
+  }
+
+  export type DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DepartmentDocumentCreateWithoutDepartmentInput, DepartmentDocumentUncheckedCreateWithoutDepartmentInput> | DepartmentDocumentCreateWithoutDepartmentInput[] | DepartmentDocumentUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentDocumentCreateOrConnectWithoutDepartmentInput | DepartmentDocumentCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DepartmentDocumentCreateManyDepartmentInputEnvelope
+    connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
   }
 
   export type OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput = {
@@ -70061,6 +71577,20 @@ export namespace Prisma {
     deleteMany?: TeamDecisionScalarWhereInput | TeamDecisionScalarWhereInput[]
   }
 
+  export type DepartmentDocumentUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentDocumentCreateWithoutDepartmentInput, DepartmentDocumentUncheckedCreateWithoutDepartmentInput> | DepartmentDocumentCreateWithoutDepartmentInput[] | DepartmentDocumentUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentDocumentCreateOrConnectWithoutDepartmentInput | DepartmentDocumentCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentDocumentUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentDocumentUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentDocumentCreateManyDepartmentInputEnvelope
+    set?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    disconnect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    delete?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    update?: DepartmentDocumentUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentDocumentUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentDocumentUpdateManyWithWhereWithoutDepartmentInput | DepartmentDocumentUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentDocumentScalarWhereInput | DepartmentDocumentScalarWhereInput[]
+  }
+
   export type DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput = {
     create?: XOR<DepartmentMemberCreateWithoutDepartmentInput, DepartmentMemberUncheckedCreateWithoutDepartmentInput> | DepartmentMemberCreateWithoutDepartmentInput[] | DepartmentMemberUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: DepartmentMemberCreateOrConnectWithoutDepartmentInput | DepartmentMemberCreateOrConnectWithoutDepartmentInput[]
@@ -70185,6 +71715,52 @@ export namespace Prisma {
     update?: TeamDecisionUpdateWithWhereUniqueWithoutDepartmentInput | TeamDecisionUpdateWithWhereUniqueWithoutDepartmentInput[]
     updateMany?: TeamDecisionUpdateManyWithWhereWithoutDepartmentInput | TeamDecisionUpdateManyWithWhereWithoutDepartmentInput[]
     deleteMany?: TeamDecisionScalarWhereInput | TeamDecisionScalarWhereInput[]
+  }
+
+  export type DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DepartmentDocumentCreateWithoutDepartmentInput, DepartmentDocumentUncheckedCreateWithoutDepartmentInput> | DepartmentDocumentCreateWithoutDepartmentInput[] | DepartmentDocumentUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DepartmentDocumentCreateOrConnectWithoutDepartmentInput | DepartmentDocumentCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DepartmentDocumentUpsertWithWhereUniqueWithoutDepartmentInput | DepartmentDocumentUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DepartmentDocumentCreateManyDepartmentInputEnvelope
+    set?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    disconnect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    delete?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    connect?: DepartmentDocumentWhereUniqueInput | DepartmentDocumentWhereUniqueInput[]
+    update?: DepartmentDocumentUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentDocumentUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DepartmentDocumentUpdateManyWithWhereWithoutDepartmentInput | DepartmentDocumentUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DepartmentDocumentScalarWhereInput | DepartmentDocumentScalarWhereInput[]
+  }
+
+  export type DepartmentCreateNestedOneWithoutDocumentsInput = {
+    create?: XOR<DepartmentCreateWithoutDocumentsInput, DepartmentUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutDocumentsInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutUploadedDepartmentDocumentsInput = {
+    create?: XOR<UserCreateWithoutUploadedDepartmentDocumentsInput, UserUncheckedCreateWithoutUploadedDepartmentDocumentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUploadedDepartmentDocumentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumFileTypeFieldUpdateOperationsInput = {
+    set?: $Enums.FileType
+  }
+
+  export type DepartmentUpdateOneRequiredWithoutDocumentsNestedInput = {
+    create?: XOR<DepartmentCreateWithoutDocumentsInput, DepartmentUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutDocumentsInput
+    upsert?: DepartmentUpsertWithoutDocumentsInput
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutDocumentsInput, DepartmentUpdateWithoutDocumentsInput>, DepartmentUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutUploadedDepartmentDocumentsNestedInput = {
+    create?: XOR<UserCreateWithoutUploadedDepartmentDocumentsInput, UserUncheckedCreateWithoutUploadedDepartmentDocumentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUploadedDepartmentDocumentsInput
+    upsert?: UserUpsertWithoutUploadedDepartmentDocumentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUploadedDepartmentDocumentsInput, UserUpdateWithoutUploadedDepartmentDocumentsInput>, UserUncheckedUpdateWithoutUploadedDepartmentDocumentsInput>
   }
 
   export type DepartmentCreateNestedOneWithoutGoalsInput = {
@@ -70683,10 +72259,6 @@ export namespace Prisma {
     create?: XOR<MessageCreateWithoutAttachmentsInput, MessageUncheckedCreateWithoutAttachmentsInput>
     connectOrCreate?: MessageCreateOrConnectWithoutAttachmentsInput
     connect?: MessageWhereUniqueInput
-  }
-
-  export type EnumFileTypeFieldUpdateOperationsInput = {
-    set?: $Enums.FileType
   }
 
   export type MessageUpdateOneRequiredWithoutAttachmentsNestedInput = {
@@ -71978,6 +73550,23 @@ export namespace Prisma {
     _max?: NestedEnumOrgRoleFilter<$PrismaModel>
   }
 
+  export type NestedEnumFileTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFileTypeFilter<$PrismaModel> | $Enums.FileType
+  }
+
+  export type NestedEnumFileTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumFileTypeWithAggregatesFilter<$PrismaModel> | $Enums.FileType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFileTypeFilter<$PrismaModel>
+    _max?: NestedEnumFileTypeFilter<$PrismaModel>
+  }
+
   export type NestedFloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -72075,23 +73664,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDecisionVoteTypeFilter<$PrismaModel>
     _max?: NestedEnumDecisionVoteTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumFileTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumFileTypeFilter<$PrismaModel> | $Enums.FileType
-  }
-
-  export type NestedEnumFileTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.FileType | EnumFileTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.FileType[] | ListEnumFileTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumFileTypeWithAggregatesFilter<$PrismaModel> | $Enums.FileType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumFileTypeFilter<$PrismaModel>
-    _max?: NestedEnumFileTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumRequestStatusFilter<$PrismaModel = never> = {
@@ -72638,6 +74210,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutHeadInput = {
@@ -72656,6 +74229,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutHeadInput = {
@@ -73150,6 +74724,34 @@ export namespace Prisma {
 
   export type FollowCreateManyFollowerInputEnvelope = {
     data: FollowCreateManyFollowerInput | FollowCreateManyFollowerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentDocumentCreateWithoutUploaderInput = {
+    id?: string
+    filename: string
+    type: $Enums.FileType
+    data: string
+    createdAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type DepartmentDocumentUncheckedCreateWithoutUploaderInput = {
+    id?: string
+    deptId: string
+    filename: string
+    type: $Enums.FileType
+    data: string
+    createdAt?: Date | string
+  }
+
+  export type DepartmentDocumentCreateOrConnectWithoutUploaderInput = {
+    where: DepartmentDocumentWhereUniqueInput
+    create: XOR<DepartmentDocumentCreateWithoutUploaderInput, DepartmentDocumentUncheckedCreateWithoutUploaderInput>
+  }
+
+  export type DepartmentDocumentCreateManyUploaderInputEnvelope = {
+    data: DepartmentDocumentCreateManyUploaderInput | DepartmentDocumentCreateManyUploaderInput[]
     skipDuplicates?: boolean
   }
 
@@ -73980,6 +75582,35 @@ export namespace Prisma {
     data: XOR<FollowUpdateManyMutationInput, FollowUncheckedUpdateManyWithoutFollowerInput>
   }
 
+  export type DepartmentDocumentUpsertWithWhereUniqueWithoutUploaderInput = {
+    where: DepartmentDocumentWhereUniqueInput
+    update: XOR<DepartmentDocumentUpdateWithoutUploaderInput, DepartmentDocumentUncheckedUpdateWithoutUploaderInput>
+    create: XOR<DepartmentDocumentCreateWithoutUploaderInput, DepartmentDocumentUncheckedCreateWithoutUploaderInput>
+  }
+
+  export type DepartmentDocumentUpdateWithWhereUniqueWithoutUploaderInput = {
+    where: DepartmentDocumentWhereUniqueInput
+    data: XOR<DepartmentDocumentUpdateWithoutUploaderInput, DepartmentDocumentUncheckedUpdateWithoutUploaderInput>
+  }
+
+  export type DepartmentDocumentUpdateManyWithWhereWithoutUploaderInput = {
+    where: DepartmentDocumentScalarWhereInput
+    data: XOR<DepartmentDocumentUpdateManyMutationInput, DepartmentDocumentUncheckedUpdateManyWithoutUploaderInput>
+  }
+
+  export type DepartmentDocumentScalarWhereInput = {
+    AND?: DepartmentDocumentScalarWhereInput | DepartmentDocumentScalarWhereInput[]
+    OR?: DepartmentDocumentScalarWhereInput[]
+    NOT?: DepartmentDocumentScalarWhereInput | DepartmentDocumentScalarWhereInput[]
+    id?: StringFilter<"DepartmentDocument"> | string
+    deptId?: StringFilter<"DepartmentDocument"> | string
+    filename?: StringFilter<"DepartmentDocument"> | string
+    type?: EnumFileTypeFilter<"DepartmentDocument"> | $Enums.FileType
+    data?: StringFilter<"DepartmentDocument"> | string
+    uploadedBy?: StringFilter<"DepartmentDocument"> | string
+    createdAt?: DateTimeFilter<"DepartmentDocument"> | Date | string
+  }
+
   export type UserCreateWithoutInvitationsInput = {
     id?: string
     email: string
@@ -74033,6 +75664,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -74088,6 +75720,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -74183,6 +75816,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -74238,6 +75872,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type InvitationGuestUpsertWithWhereUniqueWithoutInvitationInput = {
@@ -74400,6 +76035,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutFollowingInput = {
@@ -74455,6 +76091,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutFollowingInput = {
@@ -74515,6 +76152,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutFollowersInput = {
@@ -74570,6 +76208,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutFollowersInput = {
@@ -74641,6 +76280,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFollowingInput = {
@@ -74696,6 +76336,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUpsertWithoutFollowersInput = {
@@ -74762,6 +76403,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFollowersInput = {
@@ -74817,6 +76459,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type DepartmentCreateWithoutOrganizationInput = {
@@ -74835,6 +76478,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutOrganizationInput = {
@@ -74853,6 +76497,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutOrganizationInput = {
@@ -75149,6 +76794,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutOrgMembershipsInput = {
@@ -75204,6 +76850,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutOrgMembershipsInput = {
@@ -75316,6 +76963,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrgMembershipsInput = {
@@ -75371,6 +77019,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type OrganizationCreateWithoutDepartmentsInput = {
@@ -75461,6 +77110,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutHeadedDepartmentsInput = {
@@ -75516,6 +77166,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutHeadedDepartmentsInput = {
@@ -75807,6 +77458,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DepartmentDocumentCreateWithoutDepartmentInput = {
+    id?: string
+    filename: string
+    type: $Enums.FileType
+    data: string
+    createdAt?: Date | string
+    uploader: UserCreateNestedOneWithoutUploadedDepartmentDocumentsInput
+  }
+
+  export type DepartmentDocumentUncheckedCreateWithoutDepartmentInput = {
+    id?: string
+    filename: string
+    type: $Enums.FileType
+    data: string
+    uploadedBy: string
+    createdAt?: Date | string
+  }
+
+  export type DepartmentDocumentCreateOrConnectWithoutDepartmentInput = {
+    where: DepartmentDocumentWhereUniqueInput
+    create: XOR<DepartmentDocumentCreateWithoutDepartmentInput, DepartmentDocumentUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentDocumentCreateManyDepartmentInputEnvelope = {
+    data: DepartmentDocumentCreateManyDepartmentInput | DepartmentDocumentCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutDepartmentsInput = {
     update: XOR<OrganizationUpdateWithoutDepartmentsInput, OrganizationUncheckedUpdateWithoutDepartmentsInput>
     create: XOR<OrganizationCreateWithoutDepartmentsInput, OrganizationUncheckedCreateWithoutDepartmentsInput>
@@ -75912,6 +77591,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutHeadedDepartmentsInput = {
@@ -75967,6 +77647,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type DepartmentMemberUpsertWithWhereUniqueWithoutDepartmentInput = {
@@ -76151,6 +77832,354 @@ export namespace Prisma {
     data: XOR<TeamDecisionUpdateManyMutationInput, TeamDecisionUncheckedUpdateManyWithoutDepartmentInput>
   }
 
+  export type DepartmentDocumentUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentDocumentWhereUniqueInput
+    update: XOR<DepartmentDocumentUpdateWithoutDepartmentInput, DepartmentDocumentUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<DepartmentDocumentCreateWithoutDepartmentInput, DepartmentDocumentUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DepartmentDocumentUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: DepartmentDocumentWhereUniqueInput
+    data: XOR<DepartmentDocumentUpdateWithoutDepartmentInput, DepartmentDocumentUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type DepartmentDocumentUpdateManyWithWhereWithoutDepartmentInput = {
+    where: DepartmentDocumentScalarWhereInput
+    data: XOR<DepartmentDocumentUpdateManyMutationInput, DepartmentDocumentUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
+  export type DepartmentCreateWithoutDocumentsInput = {
+    id?: string
+    name: string
+    publicKey: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDepartmentsInput
+    head?: UserCreateNestedOneWithoutHeadedDepartmentsInput
+    members?: DepartmentMemberCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutDocumentsInput = {
+    id?: string
+    name: string
+    orgId: string
+    publicKey: string
+    headId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DepartmentMemberUncheckedCreateNestedManyWithoutDepartmentInput
+    conversations?: GroupUncheckedCreateNestedManyWithoutDepartmentInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDepartmentInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedCreateNestedManyWithoutDepartmentInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutDepartmentInput
+    goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
+    meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
+    polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutDocumentsInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutDocumentsInput, DepartmentUncheckedCreateWithoutDocumentsInput>
+  }
+
+  export type UserCreateWithoutUploadedDepartmentDocumentsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserUncheckedCreateWithoutUploadedDepartmentDocumentsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+  }
+
+  export type UserCreateOrConnectWithoutUploadedDepartmentDocumentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUploadedDepartmentDocumentsInput, UserUncheckedCreateWithoutUploadedDepartmentDocumentsInput>
+  }
+
+  export type DepartmentUpsertWithoutDocumentsInput = {
+    update: XOR<DepartmentUpdateWithoutDocumentsInput, DepartmentUncheckedUpdateWithoutDocumentsInput>
+    create: XOR<DepartmentCreateWithoutDocumentsInput, DepartmentUncheckedCreateWithoutDocumentsInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutDocumentsInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutDocumentsInput, DepartmentUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type DepartmentUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDepartmentsNestedInput
+    head?: UserUpdateOneWithoutHeadedDepartmentsNestedInput
+    members?: DepartmentMemberUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    headId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DepartmentMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+    conversations?: GroupUncheckedUpdateManyWithoutDepartmentNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDepartmentNestedInput
+    eventBroadcasts?: EventDepartmentBroadcastUncheckedUpdateManyWithoutDepartmentNestedInput
+    monthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutDepartmentNestedInput
+    goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
+    meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
+    polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type UserUpsertWithoutUploadedDepartmentDocumentsInput = {
+    update: XOR<UserUpdateWithoutUploadedDepartmentDocumentsInput, UserUncheckedUpdateWithoutUploadedDepartmentDocumentsInput>
+    create: XOR<UserCreateWithoutUploadedDepartmentDocumentsInput, UserUncheckedCreateWithoutUploadedDepartmentDocumentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUploadedDepartmentDocumentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUploadedDepartmentDocumentsInput, UserUncheckedUpdateWithoutUploadedDepartmentDocumentsInput>
+  }
+
+  export type UserUpdateWithoutUploadedDepartmentDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUploadedDepartmentDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  }
+
   export type DepartmentCreateWithoutGoalsInput = {
     id?: string
     name: string
@@ -76167,6 +78196,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutGoalsInput = {
@@ -76185,6 +78215,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutGoalsInput = {
@@ -76219,6 +78250,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutGoalsInput = {
@@ -76237,6 +78269,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentCreateWithoutMeetingsInput = {
@@ -76255,6 +78288,7 @@ export namespace Prisma {
     goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutMeetingsInput = {
@@ -76273,6 +78307,7 @@ export namespace Prisma {
     goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutMeetingsInput = {
@@ -76333,6 +78368,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutCreatedMeetingsInput = {
@@ -76388,6 +78424,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutCreatedMeetingsInput = {
@@ -76422,6 +78459,7 @@ export namespace Prisma {
     goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutMeetingsInput = {
@@ -76440,6 +78478,7 @@ export namespace Prisma {
     goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedMeetingsInput = {
@@ -76506,6 +78545,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedMeetingsInput = {
@@ -76561,6 +78601,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type DepartmentCreateWithoutPollsInput = {
@@ -76579,6 +78620,7 @@ export namespace Prisma {
     goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutPollsInput = {
@@ -76597,6 +78639,7 @@ export namespace Prisma {
     goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutPollsInput = {
@@ -76657,6 +78700,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutCreatedPollsInput = {
@@ -76712,6 +78756,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutCreatedPollsInput = {
@@ -76770,6 +78815,7 @@ export namespace Prisma {
     goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutPollsInput = {
@@ -76788,6 +78834,7 @@ export namespace Prisma {
     goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedPollsInput = {
@@ -76854,6 +78901,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedPollsInput = {
@@ -76909,6 +78957,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type PollVoteUpsertWithWhereUniqueWithoutPollInput = {
@@ -77007,6 +79056,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutPollVotesInput = {
@@ -77062,6 +79112,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutPollVotesInput = {
@@ -77166,6 +79217,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPollVotesInput = {
@@ -77221,6 +79273,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type DepartmentCreateWithoutTeamDecisionsInput = {
@@ -77239,6 +79292,7 @@ export namespace Prisma {
     goals?: DepartmentGoalCreateNestedManyWithoutDepartmentInput
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutTeamDecisionsInput = {
@@ -77257,6 +79311,7 @@ export namespace Prisma {
     goals?: DepartmentGoalUncheckedCreateNestedManyWithoutDepartmentInput
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutTeamDecisionsInput = {
@@ -77317,6 +79372,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutCreatedDecisionsInput = {
@@ -77372,6 +79428,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutCreatedDecisionsInput = {
@@ -77430,6 +79487,7 @@ export namespace Prisma {
     goals?: DepartmentGoalUpdateManyWithoutDepartmentNestedInput
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutTeamDecisionsInput = {
@@ -77448,6 +79506,7 @@ export namespace Prisma {
     goals?: DepartmentGoalUncheckedUpdateManyWithoutDepartmentNestedInput
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedDecisionsInput = {
@@ -77514,6 +79573,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedDecisionsInput = {
@@ -77569,6 +79629,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type DecisionVoteUpsertWithWhereUniqueWithoutDecisionInput = {
@@ -77669,6 +79730,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutDecisionVotesInput = {
@@ -77724,6 +79786,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutDecisionVotesInput = {
@@ -77830,6 +79893,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDecisionVotesInput = {
@@ -77885,6 +79949,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type DepartmentCreateWithoutMembersInput = {
@@ -77903,6 +79968,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutMembersInput = {
@@ -77921,6 +79987,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutMembersInput = {
@@ -77981,6 +80048,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutDeptMembershipsInput = {
@@ -78036,6 +80104,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutDeptMembershipsInput = {
@@ -78070,6 +80139,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutMembersInput = {
@@ -78088,6 +80158,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutDeptMembershipsInput = {
@@ -78154,6 +80225,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDeptMembershipsInput = {
@@ -78209,6 +80281,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type DepartmentCreateWithoutConversationsInput = {
@@ -78227,6 +80300,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutConversationsInput = {
@@ -78245,6 +80319,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutConversationsInput = {
@@ -78333,6 +80408,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutConversationsInput = {
@@ -78351,6 +80427,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type GroupMemberUpsertWithWhereUniqueWithoutGroupInput = {
@@ -78463,6 +80540,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutGroupMembershipsInput = {
@@ -78518,6 +80596,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutGroupMembershipsInput = {
@@ -78620,6 +80699,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
@@ -78675,6 +80755,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type AttachmentCreateWithoutMessageInput = {
@@ -78781,6 +80862,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -78836,6 +80918,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -78966,6 +81049,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -79021,6 +81105,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type MessageCreateWithoutAttachmentsInput = {
@@ -79132,6 +81217,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -79187,6 +81273,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -79258,6 +81345,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -79313,6 +81401,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserCreateWithoutPublishedAnnouncementsInput = {
@@ -79368,6 +81457,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutPublishedAnnouncementsInput = {
@@ -79423,6 +81513,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutPublishedAnnouncementsInput = {
@@ -79516,6 +81607,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPublishedAnnouncementsInput = {
@@ -79571,6 +81663,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type AnnouncementReadUpsertWithWhereUniqueWithoutAnnouncementInput = {
@@ -79949,6 +82042,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutEventBroadcastsInput = {
@@ -79967,6 +82061,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutEventBroadcastsInput = {
@@ -80044,6 +82139,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutEventBroadcastsInput = {
@@ -80062,6 +82158,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type EventInvitationCreateWithoutRsvpsInput = {
@@ -80197,6 +82294,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutUserPageInput = {
@@ -80252,6 +82350,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutUserPageInput = {
@@ -80361,6 +82460,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserPageInput = {
@@ -80416,6 +82516,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type PostUpsertWithWhereUniqueWithoutPageInput = {
@@ -80709,6 +82810,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutLikesInput = {
@@ -80764,6 +82866,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutLikesInput = {
@@ -80874,6 +82977,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLikesInput = {
@@ -80929,6 +83033,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type PostCreateWithoutCommentsInput = {
@@ -81017,6 +83122,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutCommentsInput = {
@@ -81072,6 +83178,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutCommentsInput = {
@@ -81237,6 +83344,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -81292,6 +83400,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type CommentUpsertWithoutRepliesInput = {
@@ -81394,6 +83503,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutPostReadsInput = {
@@ -81449,6 +83559,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutPostReadsInput = {
@@ -81553,6 +83664,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostReadsInput = {
@@ -81608,6 +83720,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type PostUpsertWithoutPostReadsInput = {
@@ -81665,6 +83778,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutTasksInput = {
@@ -81683,6 +83797,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutTasksInput = {
@@ -81743,6 +83858,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutCreatedTasksInput = {
@@ -81798,6 +83914,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutCreatedTasksInput = {
@@ -81858,6 +83975,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutAssignedTasksInput = {
@@ -81913,6 +84031,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutAssignedTasksInput = {
@@ -82007,6 +84126,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutTasksInput = {
@@ -82025,6 +84145,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutCreatedTasksInput = {
@@ -82091,6 +84212,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedTasksInput = {
@@ -82146,6 +84268,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUpsertWithoutAssignedTasksInput = {
@@ -82212,6 +84335,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignedTasksInput = {
@@ -82267,6 +84391,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type TaskMessageUpsertWithWhereUniqueWithoutTaskInput = {
@@ -82408,6 +84533,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutTaskMessagesInput = {
@@ -82463,6 +84589,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutTaskMessagesInput = {
@@ -82611,6 +84738,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskMessagesInput = {
@@ -82666,6 +84794,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type TaskAttachmentUpsertWithWhereUniqueWithoutMessageInput = {
@@ -82836,6 +84965,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutMonthlyReportsInput = {
@@ -82854,6 +84984,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutDepartmentInput
     polls?: DepartmentPollUncheckedCreateNestedManyWithoutDepartmentInput
     teamDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutDepartmentInput
+    documents?: DepartmentDocumentUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutMonthlyReportsInput = {
@@ -82914,6 +85045,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutDepartmentMonthlyReportsInput = {
@@ -82969,6 +85101,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutDepartmentMonthlyReportsInput = {
@@ -83003,6 +85136,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutMonthlyReportsInput = {
@@ -83021,6 +85155,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type UserUpsertWithoutDepartmentMonthlyReportsInput = {
@@ -83087,6 +85222,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDepartmentMonthlyReportsInput = {
@@ -83142,6 +85278,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserCreateWithoutPushSubscriptionsInput = {
@@ -83197,6 +85334,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -83252,6 +85390,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -83323,6 +85462,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -83378,6 +85518,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserCreateWithoutPersonalTasksInput = {
@@ -83433,6 +85574,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutPersonalTasksInput = {
@@ -83488,6 +85630,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutPersonalTasksInput = {
@@ -83559,6 +85702,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPersonalTasksInput = {
@@ -83614,6 +85758,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserCreateWithoutFinancialGoalsInput = {
@@ -83669,6 +85814,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutFinancialGoalsInput = {
@@ -83724,6 +85870,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutFinancialGoalsInput = {
@@ -83825,6 +85972,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFinancialGoalsInput = {
@@ -83880,6 +86028,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserMonthlyProgressUpsertWithWhereUniqueWithoutGoalInput = {
@@ -83965,6 +86114,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutFinancialProfileInput = {
@@ -84020,6 +86170,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutFinancialProfileInput = {
@@ -84091,6 +86242,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFinancialProfileInput = {
@@ -84146,6 +86298,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserCreateWithoutMonthlyStatementsInput = {
@@ -84201,6 +86354,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutMonthlyStatementsInput = {
@@ -84256,6 +86410,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutMonthlyStatementsInput = {
@@ -84327,6 +86482,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMonthlyStatementsInput = {
@@ -84382,6 +86538,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserCreateWithoutFinancialEntriesInput = {
@@ -84437,6 +86594,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
   }
 
   export type UserUncheckedCreateWithoutFinancialEntriesInput = {
@@ -84492,6 +86650,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
   }
 
   export type UserCreateOrConnectWithoutFinancialEntriesInput = {
@@ -84563,6 +86722,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFinancialEntriesInput = {
@@ -84618,6 +86778,7 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
   }
 
   export type UserFinancialGoalCreateWithoutProgressInput = {
@@ -84944,6 +87105,15 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type DepartmentDocumentCreateManyUploaderInput = {
+    id?: string
+    deptId: string
+    filename: string
+    type: $Enums.FileType
+    data: string
+    createdAt?: Date | string
+  }
+
   export type AnnouncementUpdateWithoutPublisherInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -85265,6 +87435,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutHeadInput = {
@@ -85283,6 +87454,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutHeadInput = {
@@ -85754,6 +87926,33 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DepartmentDocumentUpdateWithoutUploaderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+    data?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutDocumentsNestedInput
+  }
+
+  export type DepartmentDocumentUncheckedUpdateWithoutUploaderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+    data?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentDocumentUncheckedUpdateManyWithoutUploaderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deptId?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+    data?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type InvitationGuestCreateManyInvitationInput = {
     id?: string
     name: string
@@ -85828,6 +88027,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutOrganizationInput = {
@@ -85846,6 +88046,7 @@ export namespace Prisma {
     meetings?: DepartmentMeetingUncheckedUpdateManyWithoutDepartmentNestedInput
     polls?: DepartmentPollUncheckedUpdateManyWithoutDepartmentNestedInput
     teamDecisions?: TeamDecisionUncheckedUpdateManyWithoutDepartmentNestedInput
+    documents?: DepartmentDocumentUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutOrganizationInput = {
@@ -86013,6 +88214,15 @@ export namespace Prisma {
     createdBy: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type DepartmentDocumentCreateManyDepartmentInput = {
+    id?: string
+    filename: string
+    type: $Enums.FileType
+    data: string
+    uploadedBy: string
+    createdAt?: Date | string
   }
 
   export type DepartmentMemberUpdateWithoutDepartmentInput = {
@@ -86298,6 +88508,33 @@ export namespace Prisma {
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentDocumentUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+    data?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    uploader?: UserUpdateOneRequiredWithoutUploadedDepartmentDocumentsNestedInput
+  }
+
+  export type DepartmentDocumentUncheckedUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+    data?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentDocumentUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
+    data?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PollVoteCreateManyPollInput = {

@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { generateDeviceFingerprint, compareDevices, parseDeviceInfo } from '@/src/lib/device';
 import { generateToken } from '@/src/lib/jwt';
-import { checkRateLimit, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
+import { checkRateLimitAsync, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
 import { getClientIP } from '@/src/lib/geolocation-server';
 
 const loginSchema = z.object({
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
         // Get client IP and check rate limit
         const clientIP = await getClientIP();
         const rateLimitId = getRateLimitIdentifier(clientIP);
-        const rateLimit = checkRateLimit(rateLimitId);
+        const rateLimit = await checkRateLimitAsync(rateLimitId);
 
         if (!rateLimit.allowed) {
             return NextResponse.json(
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
             role: user.role,
         });
 
-        return NextResponse.json(
+        const response = NextResponse.json(
             {
                 message: 'Connexion réussie !',
                 token,
@@ -145,6 +145,18 @@ export async function POST(request: NextRequest) {
                 }
             }
         );
+
+        // Cookie HttpOnly pour protection XSS (le client reçoit aussi le token en JSON pour rétrocompatibilité)
+        const isProd = process.env.NODE_ENV === 'production';
+        response.cookies.set('auth-token', token, {
+            httpOnly: true,
+            secure: isProd,
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60, // 7 jours
+            path: '/',
+        });
+
+        return response;
 
     } catch (error) {
         console.error('Login error:', error);

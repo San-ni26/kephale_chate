@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import useSWR from 'swr';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
@@ -17,7 +18,7 @@ import {
     Trash2,
     Settings,
     Calendar,
-    ExternalLink
+    ExternalLink,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
@@ -38,6 +39,7 @@ import {
 } from '@/src/components/ui/dialog';
 import { EncryptedAttachment } from '@/app/chat/discussion/[id]/EncryptedAttachment';
 import { AudioRecorderComponent } from '@/src/components/AudioRecorder';
+import { DepartmentDocumentsPanel } from '@/src/components/chat/DepartmentDocumentsPanel';
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 
 interface Message {
@@ -91,7 +93,6 @@ export default function DepartmentChatPage() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [pinnedEvents, setPinnedEvents] = useState<PinnedEvent[]>([]);
     const [newMessage, setNewMessage] = useState('');
-    const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
@@ -101,12 +102,20 @@ export default function DepartmentChatPage() {
     const [departmentPrivateKey, setDepartmentPrivateKey] = useState<string | null>(null);
     const [password, setPassword] = useState('');
     const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+    const [documentsPanelOpen, setDocumentsPanelOpen] = useState(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const currentUser = getUser();
+
+    const messagesFetcher = useCallback(async (url: string) => {
+        const res = await fetchWithAuth(url);
+        if (!res.ok) throw new Error('Failed to fetch messages');
+        const data = await res.json();
+        return data;
+    }, []);
 
     const dedupeMessagesById = (list: Message[]) => {
         const seen = new Set<string>();
@@ -117,21 +126,30 @@ export default function DepartmentChatPage() {
         });
     };
 
-    // Polling for new messages
-    useEffect(() => {
-        const interval = setInterval(() => {
-            loadMessages(true);
-        }, 10000);
-
-        return () => clearInterval(interval);
-    }, [deptId]);
+    const { data: messagesData, mutate: mutateMessages, isLoading: messagesLoading } = useSWR(
+        orgId && deptId ? `/api/organizations/${orgId}/departments/${deptId}/messages` : null,
+        messagesFetcher,
+        { refreshInterval: 3000, revalidateOnFocus: true }
+    );
 
     useEffect(() => {
-        if (deptId) {
-            loadDepartment();
-            loadMessages();
+        if (messagesData?.messages != null) {
+            setMessages(dedupeMessagesById(messagesData.messages));
+            if (messagesData.pinnedEvents) setPinnedEvents(messagesData.pinnedEvents);
         }
+    }, [messagesData]);
+
+    useEffect(() => {
+        if (deptId) loadDepartment();
     }, [deptId]);
+
+    useEffect(() => {
+        const openDocs = () => setDocumentsPanelOpen(true);
+        window.addEventListener('department-chat-open-documents', openDocs);
+        return () => window.removeEventListener('department-chat-open-documents', openDocs);
+    }, []);
+
+    const loading = messagesLoading;
 
     const loadDepartment = async () => {
         try {
@@ -175,23 +193,9 @@ export default function DepartmentChatPage() {
         }
     };
 
-    const loadMessages = async (silent = false) => {
-        try {
-            if (!silent) setLoading(true);
-            const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/messages`);
-            if (response.ok) {
-                const data = await response.json();
-                setMessages(dedupeMessagesById(data.messages || []));
-                setPinnedEvents(data.pinnedEvents || []);
-                if (!silent) scrollToBottom();
-            }
-        } catch (error) {
-            console.error('Load messages error:', error);
-            if (!silent) toast.error('Erreur de chargement des messages');
-        } finally {
-            if (!silent) setLoading(false);
-        }
-    };
+    const refreshMessages = useCallback(() => {
+        mutateMessages().then(() => scrollToBottom()).catch(() => {});
+    }, [mutateMessages]);
 
     const scrollToBottom = () => {
         setTimeout(() => {
@@ -268,6 +272,7 @@ export default function DepartmentChatPage() {
             if (response.ok) {
                 const data = await response.json();
                 setMessages(prev => dedupeMessagesById([...prev, data.message]));
+                mutateMessages().catch(() => {});
                 scrollToBottom();
             } else {
                 toast.error("Erreur d'envoi du message vocal");
@@ -324,6 +329,7 @@ export default function DepartmentChatPage() {
             if (response.ok) {
                 const data = await response.json();
                 setMessages(prev => dedupeMessagesById([...prev, data.message]));
+                mutateMessages().catch(() => {});
                 scrollToBottom();
             } else {
                 const error = await response.json();
@@ -433,8 +439,8 @@ export default function DepartmentChatPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Header : masqué sur mobile (même barre que TopNav), visible sur web */}
-            <div className="hidden md:flex fixed top-0 left-0 right-0 md:static bg-background border-b border-border z-40 h-14 md:h-16 items-center px-3 md:px-4 shrink-0">
+            {/* Header : visible sur tous les écrans (icône Fiches toujours visible) */}
+            <div className="flex fixed top-0 left-0 right-0 md:static bg-background border-b border-border z-40 h-14 md:h-16 items-center px-3 md:px-4 shrink-0">
                 <Button
                     variant="ghost"
                     size="icon"
@@ -459,6 +465,17 @@ export default function DepartmentChatPage() {
                 <Button
                     variant="ghost"
                     size="icon"
+                    onClick={() => setDocumentsPanelOpen(true)}
+                    className="text-muted-foreground hover:text-foreground shrink-0"
+                    title="Fiches & documents du département"
+                    aria-label="Fiches & documents"
+                >
+                    <FileText className="w-5 h-5" />
+                </Button>
+
+                <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => router.push(`/chat/organizations/${orgId}/departments/${deptId}`)}
                     className="text-muted-foreground hover:text-foreground"
                     title="Gérer les membres"
@@ -466,6 +483,13 @@ export default function DepartmentChatPage() {
                     <Settings className="w-5 h-5" />
                 </Button>
             </div>
+
+            <DepartmentDocumentsPanel
+                open={documentsPanelOpen}
+                onOpenChange={setDocumentsPanelOpen}
+                orgId={orgId}
+                deptId={deptId}
+            />
 
             {/* Messages */}
             <div
@@ -563,7 +587,11 @@ export default function DepartmentChatPage() {
                                         {message.attachments && message.attachments.length > 0 && (
                                             <div className={`${decryptedContent?.trim() ? 'mt-2' : ''} space-y-2`}>
                                                 {message.attachments.map((att, idx) => (
-                                                    <EncryptedAttachment key={idx} attachment={att} />
+                                                    <EncryptedAttachment
+                                                        key={idx}
+                                                        attachment={att}
+                                                        isOwnMessage={isOwn}
+                                                    />
                                                 ))}
                                             </div>
                                         )}

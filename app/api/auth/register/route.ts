@@ -8,7 +8,7 @@ import { generateDeviceFingerprint } from '@/src/lib/device';
 import { generateKeyPair, encryptPrivateKey } from '@/src/lib/crypto';
 import { generateOTP, generateOTPExpiry } from '@/src/lib/otp';
 import { sendOTPEmail } from '@/src/lib/email';
-import { checkRateLimit, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
+import { checkRateLimitAsync, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
 
 const registerSchema = z.object({
     name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
         const clientIP = await getClientIP();
 
         const rateLimitId = getRateLimitIdentifier(clientIP);
-        const rateLimit = checkRateLimit(rateLimitId);
+        const rateLimit = await checkRateLimitAsync(rateLimitId);
 
 
         if (!rateLimit.allowed) {

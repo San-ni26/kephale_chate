@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Search, Wallet, Lightbulb, BarChart3, TrendingUp, Lock, Unlock } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Search, Wallet, Lightbulb, BarChart3, TrendingUp, Lock, Unlock, FileText } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
@@ -327,6 +327,18 @@ export function TopNav() {
                             {memberCount} membre{memberCount > 1 ? 's' : ''}
                         </p>
                     </div>
+                    {isDeptChatPage && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => window.dispatchEvent(new CustomEvent('department-chat-open-documents'))}
+                            className="text-muted-foreground hover:text-foreground shrink-0"
+                            title="Fiches & documents"
+                            aria-label="Fiches & documents"
+                        >
+                            <FileText className="w-5 h-5" />
+                        </Button>
+                    )}
                     <Button
                         variant="ghost"
                         size="icon"

@@ -62,6 +62,7 @@ model User {
 
   followers Follow[] @relation("UserFollowers")
   following Follow[] @relation("UserFollowing")
+  uploadedDepartmentDocuments DepartmentDocument[] @relation("DocumentUploader")
 
   @@index([email])
   @@index([isOnline])
@@ -181,9 +182,27 @@ model Department {
   meetings          DepartmentMeeting[]
   polls             DepartmentPoll[]
   teamDecisions     TeamDecision[]
+  documents         DepartmentDocument[]
 
   @@index([orgId], map: "Department_orgId_idx")
   @@index([headId])
+}
+
+// Fiches / documents du département (bibliothèque partagée)
+model DepartmentDocument {
+  id        String   @id @default(cuid())
+  deptId    String
+  filename  String
+  type      FileType
+  data      String   @db.Text
+  uploadedBy String
+  createdAt DateTime @default(now())
+
+  department Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  uploader   User       @relation("DocumentUploader", fields: [uploadedBy], references: [id], onDelete: Cascade)
+
+  @@index([deptId])
+  @@index([uploadedBy])
 }
 
 // Objectifs par département

@@ -7,8 +7,16 @@ export interface JWTPayload {
     role: string;
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
+const FALLBACK_SECRET = 'fallback-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || FALLBACK_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+
+/** En production, refuse d'utiliser le secret par défaut */
+export function ensureJwtSecret(): void {
+    if (process.env.NODE_ENV === 'production' && (!process.env.JWT_SECRET || process.env.JWT_SECRET === FALLBACK_SECRET)) {
+        throw new Error('JWT_SECRET doit être défini en production. Définissez la variable d\'environnement JWT_SECRET.');
+    }
+}
 
 /**
  * Generate JWT token

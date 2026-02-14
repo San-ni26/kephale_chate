@@ -66,11 +66,16 @@ export async function GET(
             });
         }
 
-        // Get messages
-        const messages = await prisma.message.findMany({
+        // Pagination: limit 100 messages by default (évite chargement massif)
+        const { searchParams } = new URL(request.url);
+        const limit = Math.min(parseInt(searchParams.get('limit') || '100', 10), 200);
+
+        const messagesRaw = await prisma.message.findMany({
             where: {
                 groupId: conversation.id,
             },
+            take: limit,
+            orderBy: { createdAt: 'desc' }, // Récupérer les plus récents
             include: {
                 sender: {
                     select: {
@@ -89,10 +94,10 @@ export async function GET(
                     },
                 },
             },
-            orderBy: {
-                createdAt: 'asc',
-            },
         });
+
+        // Inverser pour affichage chronologique (plus ancien en premier)
+        const messages = messagesRaw.reverse();
 
         // Événements épinglés (optionnel : ne pas faire échouer le GET si la table ou la requête échoue)
         let events: Array<Record<string, unknown>> = [];

@@ -76,3 +76,8 @@ function cleanupExpiredEntries(): void {
 export function getRateLimitIdentifier(ip: string, userId?: string): string {
     return userId ? `user:${userId}` : `ip:${ip}`;
 }
+
+/**
+ * Re-export async rate limit for auth routes (uses Redis when available)
+ */
+export { checkRateLimitAsync } from '@/src/lib/rate-limit-redis';

@@ -1,6 +1,6 @@
 import { Button } from '@/src/components/ui/button';
 import { Download, Image as ImageIcon, FileText } from 'lucide-react';
-// import { AudioPlayer } from '@/src/components/AudioPlayer'; // Assuming this exists, if not we fall back to audio element
+import { AudioBubbleWhatsApp } from '@/src/components/AudioBubbleWhatsApp';
 
 interface TaskAttachmentProps {
     attachment: {
@@ -10,9 +10,11 @@ interface TaskAttachmentProps {
         fileType?: string | null;
         size?: number | null;
     };
+    /** Pour le style bulle audio (message envoyé par moi) */
+    isOwn?: boolean;
 }
 
-export function TaskAttachment({ attachment }: TaskAttachmentProps) {
+export function TaskAttachment({ attachment, isOwn = false }: TaskAttachmentProps) {
     const isImage = attachment.fileType === 'IMAGE';
     const isAudio = attachment.fileType === 'AUDIO';
     const isPDF = attachment.fileType === 'PDF';
@@ -60,12 +62,9 @@ export function TaskAttachment({ attachment }: TaskAttachmentProps) {
         );
     }
 
-    /*
-    // TODO: Enable if AudioPlayer is available across the project
     if (isAudio) {
-        return <AudioPlayer src={attachment.url} />;
+        return <AudioBubbleWhatsApp src={attachment.url} isOwn={isOwn} />;
     }
-    */
 
     // Display document as file card
     return (

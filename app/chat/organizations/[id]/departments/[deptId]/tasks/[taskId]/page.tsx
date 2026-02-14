@@ -396,7 +396,7 @@ export default function TaskPage() {
                                             {msg.attachments && msg.attachments.length > 0 && (
                                                 <div className="mt-2 space-y-1">
                                                     {msg.attachments.map((att) => (
-                                                        <TaskAttachment key={att.id} attachment={att} />
+                                                        <TaskAttachment key={att.id} attachment={att} isOwn={isMe} />
                                                     ))}
                                                 </div>
                                             )}

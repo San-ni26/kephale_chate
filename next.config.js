@@ -4,6 +4,33 @@ const path = require('path');
 const nextConfig = {
   serverExternalPackages: ['geoip-lite'],
   async headers() {
+    const securityHeaders = [
+      {
+        key: 'X-Frame-Options',
+        value: 'DENY',
+      },
+      {
+        key: 'X-Content-Type-Options',
+        value: 'nosniff',
+      },
+      {
+        key: 'Referrer-Policy',
+        value: 'strict-origin-when-cross-origin',
+      },
+      {
+        key: 'Permissions-Policy',
+        value: 'camera=(), microphone=(self), geolocation=(self)',
+      },
+    ];
+
+    const isProd = process.env.NODE_ENV === 'production';
+    if (isProd) {
+      securityHeaders.push({
+        key: 'Strict-Transport-Security',
+        value: 'max-age=31536000; includeSubDomains; preload',
+      });
+    }
+
     return [
       {
         source: '/sw.js',
@@ -14,6 +41,10 @@ const nextConfig = {
           },
           { key: 'Service-Worker-Allowed', value: '/' },
         ],
+      },
+      {
+        source: '/:path*',
+        headers: securityHeaders,
       },
     ];
   },

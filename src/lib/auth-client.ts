@@ -46,22 +46,12 @@ export interface AuthUser {
 export function setAuth(token: string, user: AuthUser): void {
     if (typeof window === 'undefined') return;
 
+    // Stocker le token pour rétrocompatibilité (Pusher, getAuthHeader, etc.)
     localStorage.setItem(TOKEN_KEY, encryptData(token));
     localStorage.setItem(USER_KEY, encryptData(JSON.stringify(user)));
 
-    // Also set as cookie for middleware (Cookie must remain plain text usually for server to read?
-    // Middleware reads token. If we encrypt token in LocalStorage, that's for client usage.
-    // The cookie is sent to server. The server expects a JWT usually.
-    // If 'token' is the JWT, we can store it encrypted in LS for safety against XSS reading it easily?
-    // But XSS can just read the key if it's in the bundle...
-    // Client-side encryption mainly protects against dumping LS. 
-    // Cookie `auth-token` is httpOnly? No, accessed via `document.cookie` here.
-    // Ideally cookie should be HttpOnly. But here we set it in JS.
-    // We will leave cookie 'auth-token' as is because Middleware/Server needs to read it.
-    // Unless we update Middleware to decrypt? No, that requires key sharing.
-    // The 'token' itself (JWT) is signed.
-
-    document.cookie = `auth-token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Strict`;
+    // Le serveur définit un cookie HttpOnly sur la réponse login - priorité pour l'API.
+    // Ne pas écraser via document.cookie pour garder HttpOnly.
 }
 
 /**
@@ -217,5 +207,6 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}): Pro
     return fetch(url, {
         ...options,
         headers,
+        credentials: options.credentials ?? 'include', // Envoie le cookie HttpOnly si défini par le serveur
     });
 }

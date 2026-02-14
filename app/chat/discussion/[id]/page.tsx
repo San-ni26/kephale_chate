@@ -1263,7 +1263,11 @@ export default function DiscussionPage() {
                                         {message.attachments && message.attachments.length > 0 && (
                                             <div className={`${decryptedContent && decryptedContent.trim() ? 'mt-2' : ''} space-y-2`}>
                                                 {message.attachments.map((att, idx) => (
-                                                    <EncryptedAttachment key={idx} attachment={att} />
+                                                    <EncryptedAttachment
+                                                        key={idx}
+                                                        attachment={att}
+                                                        isOwnMessage={isOwn}
+                                                    />
                                                 ))}
                                             </div>
                                         )}

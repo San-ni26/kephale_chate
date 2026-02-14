@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { checkRateLimitAsync, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
+import { getClientIP } from '@/src/lib/geolocation-server';
 import { z } from 'zod';
 
 const createRSVPSchema = z.object({
@@ -8,12 +10,29 @@ const createRSVPSchema = z.object({
     phone: z.string().min(10, 'Le numéro de téléphone doit contenir au moins 10 chiffres'),
 });
 
-// POST: Submit RSVP (public, no auth required)
+// POST: Submit RSVP (public, no auth required - rate limited)
 export async function POST(
     request: NextRequest,
     { params }: { params: Promise<{ token: string }> }
 ) {
     try {
+        const clientIP = await getClientIP();
+        const rateLimitId = getRateLimitIdentifier(clientIP);
+        const rateLimit = await checkRateLimitAsync(`rsvp:${rateLimitId}`);
+
+        if (!rateLimit.allowed) {
+            return NextResponse.json(
+                { error: 'Trop de tentatives. Veuillez réessayer plus tard.' },
+                {
+                    status: 429,
+                    headers: {
+                        'X-RateLimit-Remaining': '0',
+                        'X-RateLimit-Reset': new Date(rateLimit.resetTime).toISOString(),
+                    },
+                }
+            );
+        }
+
         const { token } = await params;
         const body = await request.json();
         const validatedData = createRSVPSchema.parse(body);

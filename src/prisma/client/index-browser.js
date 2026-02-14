@@ -208,6 +208,16 @@ exports.Prisma.DepartmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DepartmentDocumentScalarFieldEnum = {
+  id: 'id',
+  deptId: 'deptId',
+  filename: 'filename',
+  type: 'type',
+  data: 'data',
+  uploadedBy: 'uploadedBy',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.DepartmentGoalScalarFieldEnum = {
   id: 'id',
   deptId: 'deptId',
@@ -669,18 +679,18 @@ exports.OrgRole = exports.$Enums.OrgRole = {
   MEMBER: 'MEMBER'
 };
 
-exports.DecisionVoteType = exports.$Enums.DecisionVoteType = {
-  FOR: 'FOR',
-  AGAINST: 'AGAINST',
-  ABSTAIN: 'ABSTAIN'
-};
-
 exports.FileType = exports.$Enums.FileType = {
   IMAGE: 'IMAGE',
   PDF: 'PDF',
   WORD: 'WORD',
   AUDIO: 'AUDIO',
   OTHER: 'OTHER'
+};
+
+exports.DecisionVoteType = exports.$Enums.DecisionVoteType = {
+  FOR: 'FOR',
+  AGAINST: 'AGAINST',
+  ABSTAIN: 'ABSTAIN'
 };
 
 exports.RequestStatus = exports.$Enums.RequestStatus = {
@@ -765,6 +775,7 @@ exports.Prisma.ModelName = {
   Organization: 'Organization',
   OrganizationMember: 'OrganizationMember',
   Department: 'Department',
+  DepartmentDocument: 'DepartmentDocument',
   DepartmentGoal: 'DepartmentGoal',
   DepartmentMeeting: 'DepartmentMeeting',
   DepartmentPoll: 'DepartmentPoll',

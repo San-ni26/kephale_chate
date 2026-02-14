@@ -3,7 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { verifyOTP } from '@/src/lib/otp';
-import { checkRateLimit, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
+import { checkRateLimitAsync, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
 import { getClientIP } from '@/src/lib/geolocation-server';
 
 const resetPasswordSchema = z
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     try {
         const clientIP = await getClientIP();
         const rateLimitId = getRateLimitIdentifier(clientIP);
-        const rateLimit = checkRateLimit(`reset-password:${rateLimitId}`);
+        const rateLimit = await checkRateLimitAsync(`reset-password:${rateLimitId}`);
 
         if (!rateLimit.allowed) {
             return NextResponse.json(

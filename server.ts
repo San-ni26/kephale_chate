@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { ensureJwtSecret } from '@/src/lib/jwt';
 import { createServer } from 'http';
 import { parse } from 'url';
 import next from 'next';
@@ -9,6 +10,11 @@ const port = parseInt(process.env.PORT || '3000', 10);
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
+
+// En production, vérifier que JWT_SECRET est défini
+if (process.env.NODE_ENV === 'production') {
+    ensureJwtSecret();
+}
 
 app.prepare().then(() => {
     const server = createServer(async (req, res) => {

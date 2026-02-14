@@ -3,7 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { z } from 'zod';
 import { generateOTP, generateOTPExpiry } from '@/src/lib/otp';
 import { sendPasswordResetOTPEmail } from '@/src/lib/email';
-import { checkRateLimit, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
+import { checkRateLimitAsync, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
 import { getClientIP } from '@/src/lib/geolocation-server';
 
 const forgotPasswordSchema = z.object({
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     try {
         const clientIP = await getClientIP();
         const rateLimitId = getRateLimitIdentifier(clientIP);
-        const rateLimit = checkRateLimit(`forgot-password:${rateLimitId}`);
+        const rateLimit = await checkRateLimitAsync(`forgot-password:${rateLimitId}`);
 
         if (!rateLimit.allowed) {
             return NextResponse.json(
