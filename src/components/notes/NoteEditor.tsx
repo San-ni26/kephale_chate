@@ -88,9 +88,9 @@ export function NoteEditor({ content, onChange, placeholder = "Ã‰crire une noteâ
     if (!editor) return null;
 
     return (
-        <div className={cn("rounded-lg border border-border bg-card overflow-hidden", className)}>
+        <div className={cn("rounded-lg border border-border bg-card overflow-hidden min-w-0", className)}>
             {editable && (
-                <div className="flex flex-wrap items-center gap-0.5 border-b border-border p-1 bg-muted/40">
+                <div className="flex flex-wrap items-center gap-0.5 border-b border-border p-1 bg-muted/40 overflow-x-auto">
                     <MenuButton
                         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
                         active={editor.isActive("heading", { level: 1 })}

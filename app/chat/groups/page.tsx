@@ -236,26 +236,40 @@ export default function GroupsPage() {
 
     /* ───── render ───── */
     return (
-        <div className="flex flex-col h-full pt-16">
+        <div className="flex flex-col min-h-screen sm:min-h-0 sm:h-full pt-14 sm:pt-16 pb-20 sm:pb-4">
             {/* ── header ── */}
-            <div className="shrink-0 px-4 pt-4 pb-3 space-y-3 border-b border-border bg-background/80 backdrop-blur-sm">
-                <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                        <NotepadText className="w-5 h-5 text-primary" />
-                        <h1 className="text-lg font-bold text-foreground">Notes</h1>
+            <div className="shrink-0 px-3 sm:px-4 pt-3 sm:pt-4 pb-3 space-y-3 border-b border-border bg-background/80 backdrop-blur-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                            <NotepadText className="w-5 h-5 text-primary shrink-0" />
+                            <h1 className="text-base sm:text-lg font-bold text-foreground">Notes</h1>
+                        </div>
+                        <Select
+                            value={selectedGroupId ?? ""}
+                            onValueChange={(v) => setSelectedGroupId(v)}
+                        >
+                            <SelectTrigger className="h-8 text-xs bg-muted border-border w-[140px] sm:w-auto sm:min-w-[160px] shrink-0">
+                                <SelectValue placeholder="Groupe…" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-popover border-border">
+                                {groups.map((g) => (
+                                    <SelectItem key={g.id} value={g.id}>
+                                        {g.name || "Sans nom"}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
-
                     <div className="flex items-center gap-2">
-
-
                         <Button
                             size="sm"
-                            className="h-8 gap-1.5"
+                            className="h-8 gap-1.5 flex-1 sm:flex-initial"
                             onClick={openCreateNote}
                             disabled={!selectedGroupId || notesLoading}
                         >
-                            <Plus className="w-4 h-4" />
-                            <span className="hidden sm:inline">Nouvelle note</span>
+                            <Plus className="w-4 h-4 shrink-0" />
+                            <span>Nouvelle note</span>
                         </Button>
                     </div>
                 </div>
@@ -268,14 +282,14 @@ export default function GroupsPage() {
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Rechercher une note…"
-                            className="pl-8 h-8 text-sm bg-muted border-border"
+                            className="pl-8 h-8 text-sm bg-muted border-border w-full"
                         />
                     </div>
                 )}
             </div>
 
             {/* ── contenu ── */}
-            <div className="flex-1 overflow-y-auto px-4 py-4">
+            <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 sm:py-4 min-h-0">
                 {!selectedGroupId ? (
                     /* aucun groupe sélectionné */
                     <EmptyState
@@ -301,7 +315,7 @@ export default function GroupsPage() {
                     />
                 ) : (
                     /* liste des notes */
-                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-2 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3">
                         {filtered.map((note) => (
                             <NoteCard
                                 key={note.id}
@@ -317,7 +331,7 @@ export default function GroupsPage() {
 
             {/* ── Dialog: Créer / Modifier ── */}
             <Dialog open={formOpen} onOpenChange={setFormOpen}>
-                <DialogContent className="bg-card border-border text-foreground max-w-2xl max-h-[90vh] flex flex-col">
+                <DialogContent className="bg-card border-border text-foreground w-[95vw] sm:w-full max-w-2xl max-h-[85vh] sm:max-h-[90vh] flex flex-col">
                     <DialogHeader>
                         <DialogTitle>
                             {editingNote ? "Modifier la note" : "Nouvelle note"}
@@ -366,7 +380,7 @@ export default function GroupsPage() {
 
             {/* ── Dialog: Confirmer suppression ── */}
             <Dialog open={!!deleteTarget} onOpenChange={(o) => !o && setDeleteTarget(null)}>
-                <DialogContent className="bg-card border-border text-foreground sm:max-w-md">
+                <DialogContent className="bg-card border-border text-foreground w-[95vw] sm:w-full max-w-md">
                     <DialogHeader>
                         <DialogTitle>Supprimer la note</DialogTitle>
                         <DialogDescription>
@@ -485,15 +499,15 @@ function NotePdfView({
     return (
         <Dialog open={!!note} onOpenChange={(o) => !o && onClose()}>
             <DialogContent
-                className="bg-white dark:bg-zinc-900 border-border text-foreground max-w-3xl max-h-[95vh] flex flex-col p-0 print:hidden"
+                className="bg-white dark:bg-zinc-900 border-border text-foreground w-[95vw] sm:w-full max-w-3xl max-h-[90vh] sm:max-h-[95vh] flex flex-col p-0 print:hidden"
                 showCloseButton={false}
             >
                 {/* Barre d'outils */}
-                <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-border bg-muted/30 shrink-0">
-                    <DialogTitle className="font-semibold text-foreground truncate flex-1 m-0">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-3 sm:px-4 py-3 border-b border-border bg-muted/30 shrink-0">
+                    <DialogTitle className="font-semibold text-foreground truncate flex-1 m-0 text-sm sm:text-base">
                         {note.title}
                     </DialogTitle>
-                    <div className="flex items-center gap-1 shrink-0">
+                    <div className="flex items-center gap-1 shrink-0 flex-wrap">
                         <Button
                             variant="ghost"
                             size="sm"
@@ -547,7 +561,7 @@ function NotePdfView({
                 </div>
 
                 {/* Métadonnées */}
-                <div className="px-4 py-2 border-b border-border flex items-center gap-3 text-xs text-muted-foreground shrink-0">
+                <div className="px-3 sm:px-4 py-2 border-b border-border flex items-center gap-3 text-xs text-muted-foreground shrink-0">
                     <span className="flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" />
                         {formatDate(note.updatedAt)}
@@ -558,10 +572,10 @@ function NotePdfView({
                 </div>
 
                 {/* Contenu style document PDF */}
-                <div className="flex-1 overflow-y-auto p-6 sm:p-8 min-h-0">
+                <div className="flex-1 overflow-y-auto overflow-x-auto p-3 sm:p-6 md:p-8 min-h-0">
                     <div
                         id="note-pdf-content"
-                        className="note-pdf-document max-w-[210mm] mx-auto bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 rounded-lg shadow-sm p-8 sm:p-12"
+                        className="note-pdf-document max-w-[210mm] mx-auto bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 rounded-lg shadow-sm p-4 sm:p-8 md:p-12 min-w-0 overflow-x-auto"
                         dangerouslySetInnerHTML={{ __html: note.content || "<p></p>" }}
                     />
                 </div>
@@ -594,10 +608,10 @@ function EmptyState({
     description: string;
 }) {
     return (
-        <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
+        <div className="flex flex-col items-center justify-center py-12 sm:py-20 px-4 text-center gap-3">
             {icon}
-            <h3 className="text-base font-semibold text-foreground">{title}</h3>
-            <p className="text-sm text-muted-foreground max-w-xs">{description}</p>
+            <h3 className="text-sm sm:text-base font-semibold text-foreground">{title}</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-xs">{description}</p>
         </div>
     );
 }
@@ -617,35 +631,35 @@ function NoteCard({
 
     return (
         <div
-            className="group relative flex flex-col p-4 rounded-xl border border-border bg-card hover:bg-muted/50 transition-colors cursor-pointer"
+            className="group relative flex flex-col p-3 sm:p-4 rounded-xl border border-border bg-card hover:bg-muted/50 active:bg-muted/70 transition-colors cursor-pointer touch-manipulation"
             onClick={onView}
         >
             {/* titre */}
-            <h3 className="font-semibold text-foreground text-sm line-clamp-1 pr-16">
+            <h3 className="font-semibold text-foreground text-sm line-clamp-1 pr-20 sm:pr-16">
                 {note.title}
             </h3>
 
             {/* aperçu du contenu */}
             {preview && (
-                <p className="mt-1.5 text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+                <p className="mt-1.5 text-xs text-muted-foreground line-clamp-2 sm:line-clamp-3 leading-relaxed">
                     {preview}
                 </p>
             )}
 
             {/* pied : date + auteur */}
-            <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                <Clock className="w-3 h-3" />
-                <span>{formatDate(note.updatedAt)}</span>
+            <div className="mt-2 sm:mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground flex-wrap">
+                <Clock className="w-3 h-3 shrink-0" />
+                <span className="truncate">{formatDate(note.updatedAt)}</span>
                 {note.creator?.name && (
                     <>
-                        <span className="mx-0.5">·</span>
-                        <span>{note.creator.name}</span>
+                        <span className="mx-0.5 shrink-0">·</span>
+                        <span className="truncate">{note.creator.name}</span>
                     </>
                 )}
             </div>
 
-            {/* actions au survol */}
-            <div className="absolute top-3 right-3 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+            {/* actions : visibles sur mobile, au survol sur desktop */}
+            <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex items-center gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                 <Button
                     variant="ghost"
                     size="icon"
