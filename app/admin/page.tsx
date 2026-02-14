@@ -43,7 +43,7 @@ import {
     RefreshCw,
     List,
 } from "lucide-react";
-import { fetchWithAuth, clearAuth } from "@/src/lib/auth-client";
+import { fetchWithAuth, clearAuthAndAllCacheRedirectToLogin } from "@/src/lib/auth-client";
 import { toast } from "sonner";
 
 interface User {
@@ -399,11 +399,11 @@ export default function AdminDashboard() {
     const handleLogout = async () => {
         try {
             await fetch("/api/auth/logout", { method: "POST" });
-            clearAuth();
             toast.success("Déconnexion réussie.");
-            router.push("/login");
         } catch {
-            toast.error("Erreur lors de la déconnexion");
+            // On continue le nettoyage même si l'API échoue
+        } finally {
+            clearAuthAndAllCacheRedirectToLogin(); // Clear auth, cache, SW et redirect /login
         }
     };
 

@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ServiceWorkerRegistration } from "@/src/components/ServiceWorkerRegistration";
 import { NotificationListener } from "@/src/components/chat/NotificationListener";
+import { AuthGuard } from "@/src/components/AuthGuard";
 
 /*
 const geistSans = Geist({
@@ -67,6 +68,7 @@ export default function RootLayout({
       >
         <ServiceWorkerRegistration />
         <NotificationListener />
+        <AuthGuard />
         {children}
       </body>
     </html>

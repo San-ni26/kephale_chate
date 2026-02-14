@@ -139,6 +139,53 @@ export function clearAuth(): void {
     document.cookie = 'auth-token=; path=/; max-age=0';
 }
 
+const LOGIN_PATH = '/login';
+
+/** Routes qui nécessitent auth (si pas de token/user au refresh => clear tout et redirect login) */
+const PROTECTED_PATH_PREFIXES = ['/chat', '/admin'];
+
+/**
+ * Vérifie si la page courante est une route protégée (nécessite auth).
+ */
+export function isProtectedPath(pathname: string): boolean {
+    return PROTECTED_PATH_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(prefix + '/'));
+}
+
+/**
+ * Nettoie tout (auth, localStorage, sessionStorage, caches, service workers)
+ * puis redirige vers la page de connexion.
+ * À utiliser : au rafraîchissement sans auth sur une route protégée, ou à la déconnexion.
+ */
+export function clearAuthAndAllCacheRedirectToLogin(): void {
+    if (typeof window === 'undefined') return;
+
+    // 1. Auth
+    clearAuth();
+
+    // 2. Tout le stockage local/session pour éviter données résiduelles
+    try {
+        localStorage.clear();
+        sessionStorage.clear();
+    } catch {}
+
+    // 3. Cache API (cache du SW, etc.)
+    if ('caches' in window && typeof caches.keys === 'function') {
+        caches.keys().then((names) => {
+            names.forEach((name) => caches.delete(name).catch(() => {}));
+        }).catch(() => {});
+    }
+
+    // 4. Désenregistrer tous les service workers
+    if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+            registrations.forEach((reg) => reg.unregister().catch(() => {}));
+        }).catch(() => {});
+    }
+
+    // 5. Redirection immédiate (full load pour repartir à zéro)
+    window.location.href = LOGIN_PATH;
+}
+
 /**
  * Check if user is authenticated
  */

@@ -45,7 +45,7 @@ export function EnablePushBanner() {
                     }
                 }
             })
-            .catch(() => {});
+            .catch(() => { });
         return () => { cancelled = true; };
     }, [permission]);
 
@@ -61,7 +61,7 @@ export function EnablePushBanner() {
                 fetchWithAuth('/api/push/status', { credentials: 'include' })
                     .then((res) => (res.ok ? res.json() : null))
                     .then((data: PushStatus) => data && setPushStatus(data))
-                    .catch(() => {});
+                    .catch(() => { });
                 toast.success('Notifications activées. Vous recevrez des alertes même quand l\'app est fermée.');
             } else {
                 toast.error(result.error || 'Impossible d\'activer les notifications');
@@ -96,30 +96,16 @@ export function EnablePushBanner() {
     // Avertissement si VAPID non configuré côté serveur
     if (pushStatus && !pushStatus.vapidConfigured && permission === 'granted') {
         return (
-            <div className="bg-amber-500/20 border-b border-amber-500/30 px-3 py-2 flex items-center gap-2 text-sm text-amber-800 dark:text-amber-200">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span className="truncate">
-                    Notifications non configurées sur le serveur (clés VAPID manquantes). Les alertes ne seront pas envoyées.
-                </span>
-            </div>
+            <>
+            </>
         );
     }
 
     // Ligne "Notifications activées" + bouton Test (quand déjà activé et au moins 1 appareil)
     if (showTestRow && permission === 'granted') {
         return (
-            <div className="bg-green-500/10 border-b border-green-500/20 px-3 py-1.5 flex items-center justify-between gap-2 text-sm">
-                <div className="flex items-center gap-2 min-w-0">
-                    <Bell className="w-4 h-4 shrink-0 text-green-600" />
-                    <span className="text-foreground truncate">
-                        Notifications activées ({pushStatus?.subscriptionCount ?? '?'} appareil(s), app fermée incluse)
-                    </span>
-                </div>
-                <Button size="sm" variant="outline" className="h-7 text-xs" onClick={handleTest} disabled={testLoading}>
-                    <Send className="w-3 h-3 mr-1" />
-                    {testLoading ? 'Envoi…' : 'Test'}
-                </Button>
-            </div>
+            <>
+            </>
         );
     }
 

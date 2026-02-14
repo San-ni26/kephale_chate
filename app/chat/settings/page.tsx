@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { clearAuth, getUser, type AuthUser, getAuthHeader } from "@/src/lib/auth-client";
+import { clearAuthAndAllCacheRedirectToLogin, getUser, type AuthUser, getAuthHeader } from "@/src/lib/auth-client";
 
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
@@ -230,11 +230,11 @@ export default function SettingsPage() {
     const handleLogout = async () => {
         try {
             await fetch("/api/auth/logout", { method: "POST" });
-            clearAuth(); // Clear token and user data
             toast.success("Déconnexion réussie.");
-            router.push("/login");
-        } catch (error) {
-            toast.error("Erreur lors de la déconnexion");
+        } catch {
+            // On continue le nettoyage même si l'API échoue
+        } finally {
+            clearAuthAndAllCacheRedirectToLogin(); // Clear auth, cache, SW et redirect /login
         }
     };
 
