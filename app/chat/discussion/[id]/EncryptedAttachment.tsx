@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/src/components/ui/button';
-import { Download, Image as ImageIcon, FileText } from 'lucide-react';
+import { Download, Image as ImageIcon, FileText, Share2, X } from 'lucide-react';
 import { AudioBubbleWhatsApp } from '@/src/components/AudioBubbleWhatsApp';
 import { DocumentBubbleWhatsApp } from '@/src/components/DocumentBubbleWhatsApp';
 import { DocumentViewerFullScreen } from '@/src/components/DocumentViewerFullScreen';
@@ -74,28 +74,101 @@ export function EncryptedAttachment({ attachment, isOwnMessage }: FileAttachment
     };
 
     const [inlineViewOpen, setInlineViewOpen] = useState(false);
+    const [imageViewOpen, setImageViewOpen] = useState(false);
+
+    useEffect(() => {
+        if (!imageViewOpen) return;
+        document.body.style.overflow = 'hidden';
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setImageViewOpen(false);
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.body.style.overflow = '';
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    }, [imageViewOpen]);
 
     // Display image inline
     if (isImage) {
         return (
-            <div className="relative group max-w-sm">
-                <img
-                    src={fileUrl}
-                    alt={attachment.filename}
-                    className="rounded-lg max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => window.open(fileUrl, '_blank')}
-                    loading="lazy"
-                />
-                <Button
-                    size="sm"
-                    variant="secondary"
-                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={(e) => { e.stopPropagation(); handleDownload(); }}
-                >
-                    <Download className="w-4 h-4 mr-1" />
-                    Télécharger
-                </Button>
-            </div>
+            <>
+                <div className="relative group max-w-sm">
+                    <img
+                        src={fileUrl}
+                        alt={attachment.filename}
+                        className="rounded-lg max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => setImageViewOpen(true)}
+                        loading="lazy"
+                    />
+                    <Button
+                        size="sm"
+                        variant="secondary"
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => { e.stopPropagation(); handleDownload(); }}
+                    >
+                        <Download className="w-4 h-4 mr-1" />
+                        Télécharger
+                    </Button>
+                </div>
+                {/* Vue centrée au milieu de la page */}
+                {imageViewOpen && (
+                    <div
+                        className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/90 p-4"
+                        onClick={() => setImageViewOpen(false)}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Aperçu de l'image"
+                    >
+                        <img
+                            src={fileUrl}
+                            alt={attachment.filename}
+                            className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                        <div
+                            className="flex items-center gap-3 mt-4"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {canShareFile() && (
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    className="gap-2"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleShare();
+                                    }}
+                                >
+                                    <Share2 className="w-4 h-4" />
+                                    Partager
+                                </Button>
+                            )}
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                className="gap-2"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDownload();
+                                }}
+                            >
+                                <Download className="w-4 h-4" />
+                                Télécharger
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-white hover:bg-white/20"
+                                onClick={() => setImageViewOpen(false)}
+                                aria-label="Fermer"
+                            >
+                                <X className="w-5 h-5" />
+                            </Button>
+                        </div>
+                    </div>
+                )}
+            </>
         );
     }
 

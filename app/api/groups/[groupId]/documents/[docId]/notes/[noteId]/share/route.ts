@@ -73,11 +73,14 @@ export async function POST(
             return NextResponse.json({ error: 'Vous ne pouvez pas partager une note avec vous-même.' }, { status: 400 });
         }
 
-        const isGroupMember = await prisma.groupMember.findFirst({
+        // S'assurer que l'utilisateur cible est membre du groupe (ajout automatique si besoin)
+        let isGroupMember = await prisma.groupMember.findFirst({
             where: { groupId, userId: targetUser.id },
         });
         if (!isGroupMember) {
-            return NextResponse.json({ error: 'Cet utilisateur n\'est pas membre du groupe.' }, { status: 400 });
+            await prisma.groupMember.create({
+                data: { groupId, userId: targetUser.id },
+            });
         }
 
         const existing = await prisma.groupNoteShare.findUnique({

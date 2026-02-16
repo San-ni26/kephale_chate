@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, PhoneIncoming, PhoneOff, Mic, MicOff, Clock, Volume2 } from 'lucide-react';
+import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, PhoneIncoming, PhoneOff, Mic, MicOff, Clock, Volume2, RotateCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import useSWR from 'swr';
@@ -29,6 +29,7 @@ import {
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 import { EncryptedAttachment } from './EncryptedAttachment';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
+import { cn } from '@/src/lib/utils';
 
 const AudioRecorderComponent = dynamic(
     () => import('@/src/components/AudioRecorder').then(mod => mod.AudioRecorderComponent),
@@ -79,6 +80,146 @@ const fetcher = async (url: string) => {
     if (!res.ok) throw new Error('Failed to fetch');
     return res.json();
 };
+
+/* Bulle de message avec mémorisation du déchiffrement et animation */
+function DiscussionMessageBubble({
+    message,
+    isOwn,
+    canEdit,
+    currentUser,
+    otherUser,
+    privateKey,
+    editingMessageId,
+    editContent,
+    onEditContentChange,
+    onEditOpen,
+    onEditSave,
+    onEditCancel,
+    onDelete,
+    onRetry,
+    isFailed,
+}: {
+    message: Message;
+    isOwn: boolean;
+    canEdit: boolean;
+    currentUser: { id: string; name: string | null; email: string; publicKey: string } | null;
+    otherUser: { id: string; name: string | null; email: string; publicKey: string } | null;
+    privateKey: string | null;
+    editingMessageId: string | null;
+    editContent: string;
+    onEditContentChange: (v: string) => void;
+    onEditOpen: (content: string) => void;
+    onEditSave: () => void;
+    onEditCancel: () => void;
+    onDelete: () => void;
+    onRetry?: () => void;
+    isFailed: boolean;
+}) {
+    const decryptedContent = useMemo(() => {
+        if (!currentUser || !otherUser || !privateKey) return '[Chiffre]';
+        try {
+            const senderPublicKey = message.senderId === currentUser.id
+                ? otherUser.publicKey
+                : (message.sender.publicKey || otherUser.publicKey);
+            return decryptMessage(message.content, privateKey, senderPublicKey) || '';
+        } catch {
+            return '[Erreur de dechiffrement]';
+        }
+    }, [message.id, message.content, message.senderId, message.sender?.publicKey, currentUser?.id, otherUser?.publicKey, privateKey]);
+
+    return (
+        <div
+            className={cn(
+                'flex animate-in fade-in slide-in-from-bottom-2 duration-200',
+                isOwn ? 'justify-end' : 'justify-start'
+            )}
+        >
+            <div className={cn('max-w-[75%]', isOwn ? 'items-end' : 'items-start', 'flex flex-col')}>
+                {editingMessageId === message.id ? (
+                    <div className="bg-card rounded-lg p-3 w-full border border-border">
+                        <Input
+                            value={editContent}
+                            onChange={(e) => onEditContentChange(e.target.value)}
+                            className="mb-2 bg-muted border-border"
+                            autoFocus
+                        />
+                        <div className="flex gap-2">
+                            <Button size="sm" onClick={onEditSave}>Enregistrer</Button>
+                            <Button size="sm" variant="ghost" onClick={onEditCancel}>Annuler</Button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className={cn('group relative', isFailed && 'ring-1 ring-destructive/50 rounded-2xl')}>
+                        {decryptedContent && decryptedContent.trim() && (
+                            <div
+                                className={cn(
+                                    'rounded-2xl px-4 py-2 border',
+                                    isOwn
+                                        ? 'bg-primary text-primary-foreground border-primary'
+                                        : 'bg-muted text-foreground border-border'
+                                )}
+                            >
+                                <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
+                                {message.isEdited && (
+                                    <p className="text-xs opacity-70 mt-1">Modifie</p>
+                                )}
+                            </div>
+                        )}
+
+                        {message.attachments && message.attachments.length > 0 && (
+                            <div className={cn(decryptedContent?.trim() ? 'mt-2' : '', 'space-y-2')}>
+                                {message.attachments.map((att, idx) => (
+                                    <EncryptedAttachment
+                                        key={idx}
+                                        attachment={att}
+                                        isOwnMessage={isOwn}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                            <span className="text-xs text-muted-foreground">
+                                {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true, locale: fr })}
+                            </span>
+                            {isFailed && onRetry && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-7 text-xs text-destructive border-destructive/50 hover:bg-destructive/10"
+                                    onClick={onRetry}
+                                >
+                                    <RotateCw className="w-3 h-3 mr-1" />
+                                    Réessayer
+                                </Button>
+                            )}
+                            {isOwn && canEdit && !isFailed && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground">
+                                            <MoreVertical className="w-4 h-4" />
+                                            <span className="sr-only">Actions</span>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem onClick={() => onEditOpen(decryptedContent || '')}>
+                                            <Edit2 className="w-4 h-4 mr-2" />
+                                            Modifier
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={onDelete} className="text-destructive">
+                                            <Trash2 className="w-4 h-4 mr-2" />
+                                            Supprimer
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
 
 // TURN/STUN servers for reliable WebRTC
 const ICE_SERVERS: RTCIceServer[] = [
@@ -153,15 +294,18 @@ export default function DiscussionPage() {
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const [typingUsers, setTypingUsers] = useState<Record<string, boolean>>({});
+    const [failedMessagePayloads, setFailedMessagePayloads] = useState<Map<string, { encryptedContent: string; attachments?: { filename: string; type: string; data: string }[] }>>(new Map());
+    const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = useCallback(() => {
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        });
     }, []);
 
     // Real-time message handlers
@@ -184,10 +328,17 @@ export default function DiscussionPage() {
         setMessages(prev => prev.filter(m => m.id !== data.messageId));
     }, [conversationId]);
 
-    const { socket: pusher, isConnected, joinConversation, leaveConversation, userChannel } = useWebSocket(
+    const handleUserTyping = useCallback((data: { conversationId: string; userId: string; isTyping: boolean }) => {
+        const me = getUser();
+        if (data.conversationId !== conversationId || data.userId === me?.id) return;
+        setTypingUsers(prev => ({ ...prev, [data.userId]: data.isTyping }));
+    }, [conversationId]);
+
+    const { socket: pusher, isConnected, joinConversation, leaveConversation, userChannel, startTyping, stopTyping } = useWebSocket(
         handleNewMessage,
         handleMessageEdited,
         handleMessageDeleted,
+        handleUserTyping
     );
 
     const currentUser = getUser();
@@ -251,7 +402,7 @@ export default function DiscussionPage() {
         // Mark as read on entering conversation
         fetchWithAuth(`/api/conversations/${conversationId}/read`, {
             method: 'POST',
-        }).catch(() => {});
+        }).catch(() => { });
     }, [conversationId, loading]);
 
     // Also mark as read when new messages arrive while viewing
@@ -262,9 +413,9 @@ export default function DiscussionPage() {
         if (lastMsg && lastMsg.senderId !== currentUser?.id) {
             fetchWithAuth(`/api/conversations/${conversationId}/read`, {
                 method: 'POST',
-            }).catch(() => {});
+            }).catch(() => { });
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messages.length]);
 
     // Join/leave conversation room for real-time updates
@@ -277,6 +428,10 @@ export default function DiscussionPage() {
             leaveConversation(conversationId);
         };
     }, [conversationId, isConnected, joinConversation, leaveConversation]);
+
+    useEffect(() => () => {
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    }, []);
 
     // Initial Fetch - load only the 30 most recent messages
     useEffect(() => {
@@ -427,7 +582,7 @@ export default function DiscussionPage() {
             toast.error("Impossible d'acceder au microphone");
             cleanupCall();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [otherUser, conversationId, initializePeerConnection, cleanupCall, emitCallSignal, endCall]);
 
     const answerCall = useCallback(async () => {
@@ -620,7 +775,7 @@ export default function DiscussionPage() {
         }, 30000);
 
         return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversationId, loading]);
 
     // Load More History - 20 older messages at a time
@@ -750,11 +905,14 @@ export default function DiscussionPage() {
 
         setSending(true);
         const tempId = `temp-${Date.now()}`;
+        let payload: { encryptedContent: string; attachments: { filename: string; type: string; data: string }[] } | null = null;
 
         try {
             const base64Data = await fileToBase64(audioFile);
             const attachment = { filename: audioFile.name, type: 'AUDIO', data: base64Data };
             const encryptedContent = encryptMessage('', privateKey, otherUser.publicKey);
+            payload = { encryptedContent, attachments: [attachment] };
+
             const optimisticMessage: Message = {
                 id: tempId,
                 content: encryptedContent,
@@ -782,12 +940,12 @@ export default function DiscussionPage() {
                 scrollToBottom();
             } else {
                 toast.error("Erreur d'envoi du message vocal");
-                setMessages(prev => prev.filter(m => m.id !== tempId));
+                if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
             }
         } catch (error) {
             console.error('Send audio error:', error);
             toast.error("Erreur d'envoi du message vocal");
-            setMessages(prev => prev.filter(m => m.id !== tempId));
+            if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
         } finally {
             setSending(false);
         }
@@ -804,7 +962,7 @@ export default function DiscussionPage() {
                 setShowPasswordDialog(true);
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentUser]);
 
     const handleUnlock = () => {
@@ -835,9 +993,13 @@ export default function DiscussionPage() {
 
         setNewMessage('');
         setSelectedFiles([]);
+        if (conversationId) stopTyping(conversationId);
+
+        const tempId = `temp-${Date.now()}`;
+        let payload: { encryptedContent: string; attachments?: { filename: string; type: string; data: string }[] } | null = null;
 
         try {
-            let attachments = [];
+            const attachments: { filename: string; type: string; data: string }[] = [];
 
             if (currentFiles.length > 0) {
                 for (const file of currentFiles) {
@@ -857,8 +1019,8 @@ export default function DiscussionPage() {
                 privateKey,
                 otherUser.publicKey
             );
+            payload = { encryptedContent: cipherText, attachments: attachments.length > 0 ? attachments : undefined };
 
-            const tempId = `temp-${Date.now()}`;
             const optimisticMessage: Message = {
                 id: tempId,
                 content: cipherText,
@@ -890,16 +1052,12 @@ export default function DiscussionPage() {
             } else {
                 const error = await response.json();
                 toast.error(error.error || "Erreur d'envoi");
-                setMessages(prev => prev.filter(m => m.id !== tempId));
-                setNewMessage(currentMessage);
-                setSelectedFiles(currentFiles);
+                if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
             }
         } catch (error) {
             console.error('Send message error:', error);
             toast.error("Erreur d'envoi du message");
-            setMessages(prev => prev.filter(m => m.id.startsWith('temp-') === false));
-            setNewMessage(currentMessage);
-            setSelectedFiles(currentFiles);
+            if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
         } finally {
             setSending(false);
         }
@@ -956,19 +1114,41 @@ export default function DiscussionPage() {
         }
     };
 
-    const decryptMessageContent = (message: Message): string => {
-        if (!currentUser || !otherUser || !privateKey) return '[Chiffre]';
+    const handleRetryMessage = useCallback(async (tempId: string) => {
+        const payload = failedMessagePayloads.get(tempId);
+        if (!payload || !conversationId) return;
 
+        setSending(true);
         try {
-            const senderPublicKey = message.senderId === currentUser.id
-                ? otherUser.publicKey
-                : (message.sender.publicKey || otherUser.publicKey);
+            const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: payload.encryptedContent,
+                    attachments: payload.attachments,
+                }),
+            });
 
-            return decryptMessage(message.content, privateKey, senderPublicKey) || '';
+            if (response.ok) {
+                const data = await response.json();
+                setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+                setFailedMessagePayloads(prev => {
+                    const next = new Map(prev);
+                    next.delete(tempId);
+                    return next;
+                });
+                scrollToBottom();
+                toast.success('Message envoye');
+            } else {
+                const error = await response.json();
+                toast.error(error.error || "Erreur d'envoi");
+            }
         } catch (error) {
-            return '[Erreur de dechiffrement]';
+            toast.error("Erreur d'envoi du message");
+        } finally {
+            setSending(false);
         }
-    };
+    }, [failedMessagePayloads, conversationId, scrollToBottom]);
 
     const canEditOrDelete = (message: Message): boolean => {
         if (message.senderId !== currentUser?.id) return false;
@@ -993,8 +1173,20 @@ export default function DiscussionPage() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen bg-background">
-                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+            <div className="flex flex-col h-full bg-background pt-16 md:pt-4 pb-32 md:pb-4 px-4">
+                <div className="flex justify-center py-4">
+                    <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
+                </div>
+                <div className="space-y-4 flex-1 max-w-2xl mx-auto w-full">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <div key={i} className={cn('flex', i % 2 === 0 ? 'justify-end' : 'justify-start')}>
+                            <div className={cn(
+                                'rounded-2xl h-12 animate-pulse',
+                                i % 2 === 0 ? 'bg-primary/20 w-3/4' : 'bg-muted w-2/3'
+                            )} />
+                        </div>
+                    ))}
+                </div>
             </div>
         );
     }
@@ -1215,97 +1407,36 @@ export default function DiscussionPage() {
                 )}
                 {messages.filter((message, index, self) =>
                     self.findIndex(m => m.id === message.id) === index
-                ).map((message) => {
-                    const isOwn = message.senderId === currentUser?.id;
-                    const decryptedContent = decryptMessageContent(message);
-                    const canEdit = canEditOrDelete(message);
-                    const isTemp = message.id.startsWith('temp-');
-
-                    return (
-                        <div
-                            key={message.id}
-                            className={`flex ${isOwn ? 'justify-end' : 'justify-start'} ${isTemp ? 'opacity-70' : ''}`}
-                        >
-                            <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
-                                {editingMessageId === message.id ? (
-                                    <div className="bg-card rounded-lg p-3 w-full border border-border">
-                                        <Input
-                                            value={editContent}
-                                            onChange={(e) => setEditContent(e.target.value)}
-                                            className="mb-2 bg-muted border-border"
-                                            autoFocus
-                                        />
-                                        <div className="flex gap-2">
-                                            <Button size="sm" onClick={() => handleEditMessage(message.id)}>
-                                                Enregistrer
-                                            </Button>
-                                            <Button size="sm" variant="ghost" onClick={() => { setEditingMessageId(null); setEditContent(''); }}>
-                                                Annuler
-                                            </Button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="group relative">
-                                        {decryptedContent && decryptedContent.trim() && (
-                                            <div
-                                                className={`rounded-2xl px-4 py-2 border ${isOwn
-                                                    ? 'bg-primary text-primary-foreground border-primary'
-                                                    : 'bg-muted text-foreground border-border'
-                                                    }`}
-                                            >
-                                                <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
-                                                {message.isEdited && (
-                                                    <p className="text-xs opacity-70 mt-1">Modifie</p>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {message.attachments && message.attachments.length > 0 && (
-                                            <div className={`${decryptedContent && decryptedContent.trim() ? 'mt-2' : ''} space-y-2`}>
-                                                {message.attachments.map((att, idx) => (
-                                                    <EncryptedAttachment
-                                                        key={idx}
-                                                        attachment={att}
-                                                        isOwnMessage={isOwn}
-                                                    />
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <span className="text-xs text-muted-foreground">
-                                                {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true, locale: fr })}
-                                                {isTemp && ' - Envoi...'}
-                                            </span>
-
-                                            {isOwn && canEdit && !isTemp && (
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground">
-                                                            <MoreVertical className="w-4 h-4" />
-                                                            <span className="sr-only">Actions</span>
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem onClick={() => { setEditingMessageId(message.id); setEditContent(decryptedContent); }}>
-                                                            <Edit2 className="w-4 h-4 mr-2" />
-                                                            Modifier
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem onClick={() => handleDeleteMessage(message.id)} className="text-destructive">
-                                                            <Trash2 className="w-4 h-4 mr-2" />
-                                                            Supprimer
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    );
-                })}
-
+                ).map((message) => (
+                    <DiscussionMessageBubble
+                        key={message.id}
+                        message={message}
+                        isOwn={message.senderId === currentUser?.id}
+                        canEdit={canEditOrDelete(message)}
+                        currentUser={currentUser ?? null}
+                        otherUser={otherUser ?? null}
+                        privateKey={privateKey}
+                        editingMessageId={editingMessageId}
+                        editContent={editContent}
+                        onEditContentChange={setEditContent}
+                        onEditOpen={(content) => {
+                            setEditingMessageId(message.id);
+                            setEditContent(content);
+                        }}
+                        onEditSave={() => handleEditMessage(message.id)}
+                        onEditCancel={() => { setEditingMessageId(null); setEditContent(''); }}
+                        onDelete={() => handleDeleteMessage(message.id)}
+                        onRetry={failedMessagePayloads.has(message.id) ? () => handleRetryMessage(message.id) : undefined}
+                        isFailed={failedMessagePayloads.has(message.id)}
+                    />
+                ))}
+                {Object.keys(typingUsers).filter((uid) => typingUsers[uid]).length > 0 && (
+                    <div className="flex justify-start py-1">
+                        <p className="text-xs text-muted-foreground italic animate-pulse">
+                            {otherUser?.name || otherUser?.email || 'Quelqu\'un'} est en train d&apos;écrire...
+                        </p>
+                    </div>
+                )}
                 <div ref={messagesEndRef} />
             </div>
 
@@ -1351,7 +1482,17 @@ export default function DiscussionPage() {
 
                             <Input
                                 value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
+                                onChange={(e) => {
+                                    setNewMessage(e.target.value);
+                                    if (conversationId) {
+                                        startTyping(conversationId);
+                                        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+                                        typingTimeoutRef.current = setTimeout(() => {
+                                            stopTyping(conversationId);
+                                            typingTimeoutRef.current = null;
+                                        }, 2000);
+                                    }
+                                }}
                                 placeholder="Message chiffre..."
                                 className="flex-1"
                                 disabled={sending}

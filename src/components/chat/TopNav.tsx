@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, FileText } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, FileText, NotepadText } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
@@ -29,6 +29,17 @@ export function TopNav() {
 
     const isOrganizationsPage = pathname?.startsWith('/chat/organizations');
     const isFinancesPage = pathname?.startsWith('/chat/finances');
+    const isGroupsPage = pathname?.startsWith('/chat/groups');
+    const isSettingsPage = pathname?.startsWith('/chat/settings');
+    const isChatListPage = pathname === '/chat';
+    const discussionMatch = pathname?.match(/^\/chat\/discussion\/([^/]+)\/?$/);
+    const discussionId = discussionMatch?.[1];
+    const { data: discussionData } = useSWR(
+        discussionId ? `/api/conversations/${discussionId}` : null,
+        fetcher
+    );
+    const discussion = discussionData?.conversation ?? null;
+    const isDiscussionPage = Boolean(discussionId);
     const finances = useFinances();
     // Page événements : /chat/organizations/[id]/events
     const eventsMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/events\/?$/);
@@ -420,10 +431,54 @@ export function TopNav() {
                         </span>
                     )}
                 </div>
-            ) : isOrganizationsPage ? (
-                // Organizations list: simple title
+            ) : isGroupsPage ? (
+                /* Top bar page Notes / Groupes */
+                <div className="flex items-center gap-2 w-full">
+                    <NotepadText className="w-5 h-5 text-primary shrink-0" />
+                    <h2 className="font-semibold text-foreground truncate">Notes</h2>
+                </div>
+            ) : isSettingsPage ? (
+                /* Top bar page Paramètres */
+                <div className="flex items-center gap-2 w-full">
+                    <Settings className="w-5 h-5 text-primary shrink-0" />
+                    <h2 className="font-semibold text-foreground truncate">Paramètres</h2>
+                </div>
+            ) : isDiscussionPage && discussionId ? (
+                /* Top bar page Discussion : retour + nom de la conversation */
+                <>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push('/chat')}
+                        className="mr-2 shrink-0"
+                    >
+                        <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                    </Button>
+                    <div className="flex-1 min-w-0 flex items-center gap-2">
+                        <MessageSquare className="w-5 h-5 text-muted-foreground shrink-0" />
+                        <h2 className="font-semibold text-foreground truncate">
+                            {discussion?.name
+                                ? discussion.name
+                                : discussion?.isDirect && discussion?.members?.length
+                                    ? discussion.members
+                                        .filter((m: { user: { id: string } }) => m.user.id !== user?.id)
+                                        .map((m: { user: { name: string } }) => m.user.name)
+                                        .join(', ') || 'Discussion'
+                                    : 'Discussion'}
+                        </h2>
+                    </div>
+                </>
+            ) : isChatListPage ? (
+                /* Top bar page liste des chats */
+                <div className="flex items-center gap-2 w-full">
+                    <MessageSquare className="w-5 h-5 text-primary shrink-0" />
+                    <h2 className="font-semibold text-foreground truncate">Chats</h2>
+                </div>
+            ) : pathname === '/chat/organizations' ? (
+                /* Top bar page Organisations (liste) */
                 <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-3">
+                        <Building2 className="w-5 h-5 text-primary shrink-0" />
                         <span className="font-semibold text-lg text-foreground">Organisations</span>
                     </div>
                 </div>
@@ -438,7 +493,7 @@ export function TopNav() {
                 </div>
             )}
 
-            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && (
+            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && !isGroupsPage && !isSettingsPage && !isDiscussionPage && (
                 <div className="flex items-center gap-2">
                     {!isOrganizationsPage && <UserSearch />}
 

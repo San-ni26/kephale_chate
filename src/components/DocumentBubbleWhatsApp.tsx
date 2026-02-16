@@ -1,6 +1,6 @@
 'use client';
 
-import { FileText } from 'lucide-react';
+import { FileText, Eye, Download, Share2 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 
 /** Taille approximative en Mo à partir de data URL base64 */
@@ -98,34 +98,33 @@ export function DocumentBubbleWhatsApp({
                 </div>
             </button>
 
-            {/* Actions : Voir, Télécharger, Partager (iOS/Android) */}
+            {/* Actions : Voir, Télécharger, Partager (icônes) */}
             <div className="px-2 pb-1.5 pt-0 flex flex-wrap justify-end gap-1">
                 <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); onView(); }}
-                    className="text-[11px] opacity-90 hover:opacity-100 underline"
+                    className="p-1.5 rounded-md opacity-80 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 transition"
+                    title="Voir"
                 >
-                    Voir
+                    <Eye className="w-4 h-4" />
                 </button>
-                <span className="opacity-70">•</span>
                 <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); onDownload(); }}
-                    className="text-[11px] opacity-90 hover:opacity-100 underline"
+                    className="p-1.5 rounded-md opacity-80 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 transition"
+                    title="Télécharger"
                 >
-                    Télécharger
+                    <Download className="w-4 h-4" />
                 </button>
                 {onShare && (
-                    <>
-                        <span className="opacity-70">•</span>
-                        <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); onShare(); }}
-                            className="text-[11px] opacity-90 hover:opacity-100 underline"
-                        >
-                            Partager
-                        </button>
-                    </>
+                    <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); onShare(); }}
+                        className="p-1.5 rounded-md opacity-80 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 transition"
+                        title="Partager"
+                    >
+                        <Share2 className="w-4 h-4" />
+                    </button>
                 )}
             </div>
         </div>

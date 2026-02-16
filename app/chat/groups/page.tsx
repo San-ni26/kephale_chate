@@ -16,6 +16,7 @@ import {
     UserPlus,
     Users,
     MoreVertical,
+    UserCog,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -47,6 +48,12 @@ import { fetchWithAuth, getUser } from "@/src/lib/auth-client";
 import { toast } from "sonner";
 
 /* ───── types ───── */
+
+type GroupMember = {
+    id: string;
+    userId: string;
+    user: { id: string; name: string | null; email: string; isOnline?: boolean; lastSeen?: string | null };
+};
 
 type Group = {
     id: string;
@@ -128,6 +135,14 @@ export default function GroupsPage() {
     const [renameGroupLoading, setRenameGroupLoading] = useState(false);
     const [deleteGroupTarget, setDeleteGroupTarget] = useState<Group | null>(null);
     const [deleteGroupLoading, setDeleteGroupLoading] = useState(false);
+
+    /* gestion membres */
+    const [membersDialogOpen, setMembersDialogOpen] = useState(false);
+    const [members, setMembers] = useState<GroupMember[]>([]);
+    const [membersLoading, setMembersLoading] = useState(false);
+    const [addMemberEmail, setAddMemberEmail] = useState("");
+    const [addMemberLoading, setAddMemberLoading] = useState(false);
+    const [removeMemberLoading, setRemoveMemberLoading] = useState<string | null>(null);
 
     /* documents / notes */
     const [defaultDocId, setDefaultDocId] = useState<string | null>(null);
@@ -448,6 +463,79 @@ export default function GroupsPage() {
         }
     };
 
+    const loadMembers = useCallback(async (groupId: string) => {
+        setMembersLoading(true);
+        try {
+            const { members: m } = await fetchJson<{ members: GroupMember[] }>(
+                `/api/groups/${groupId}/members`
+            );
+            setMembers(m);
+            return m;
+        } catch (e) {
+            setMembers([]);
+            return [];
+        } finally {
+            setMembersLoading(false);
+        }
+    }, []);
+
+    const openMembersDialog = () => {
+        if (selectedGroupId) {
+            setAddMemberEmail("");
+            setMembersDialogOpen(true);
+            loadMembers(selectedGroupId);
+        }
+    };
+
+    const addMember = async () => {
+        if (!selectedGroupId || !addMemberEmail.trim()) return;
+        const email = addMemberEmail.trim().toLowerCase();
+        setAddMemberLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/groups/${selectedGroupId}/members`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                toast.error(data.error || "Erreur");
+                return;
+            }
+            toast.success("Membre ajouté");
+            setAddMemberEmail("");
+            await loadMembers(selectedGroupId);
+            await mutateGroups();
+        } catch (e) {
+            toast.error("Erreur lors de l'ajout");
+        } finally {
+            setAddMemberLoading(false);
+        }
+    };
+
+    const removeMember = async (userId: string) => {
+        if (!selectedGroupId) return;
+        setRemoveMemberLoading(userId);
+        try {
+            const res = await fetchWithAuth(
+                `/api/groups/${selectedGroupId}/members?userId=${encodeURIComponent(userId)}`,
+                { method: "DELETE" }
+            );
+            const data = await res.json();
+            if (!res.ok) {
+                toast.error(data.error || "Erreur");
+                return;
+            }
+            toast.success("Membre retiré");
+            await loadMembers(selectedGroupId);
+            await mutateGroups();
+        } catch (e) {
+            toast.error("Erreur lors du retrait");
+        } finally {
+            setRemoveMemberLoading(null);
+        }
+    };
+
     /* ── filtrage ── */
     const filtered = search.trim()
         ? notes.filter(
@@ -465,61 +553,7 @@ export default function GroupsPage() {
             {/* ── header ── */}
             <div className="shrink-0 px-3 sm:px-4 pt-3 sm:pt-4 pb-3 space-y-3 border-b border-border bg-background/80 backdrop-blur-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
-                        <div className="flex items-center gap-2 shrink-0">
-                            <NotepadText className="w-5 h-5 text-primary shrink-0" />
-                            <h1 className="text-base sm:text-lg font-bold text-foreground">Notes</h1>
-                        </div>
-                        {groups.length > 0 && (
-                            <div className="flex items-center gap-0.5">
-                                <Select
-                                    value={selectedGroupId ?? ""}
-                                    onValueChange={(v) => setSelectedGroupId(v || null)}
-                                >
-                                    <SelectTrigger className="h-8 max-w-[180px] sm:max-w-[220px] text-sm">
-                                        <SelectValue placeholder="Choisir un groupe" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {groups.map((g) => (
-                                            <SelectItem key={g.id} value={g.id}>
-                                                {g.name || "Sans nom"}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {selectedGroupId && (
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="h-8 w-8 shrink-0"
-                                                aria-label="Options du groupe"
-                                            >
-                                                <MoreVertical className="w-4 h-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem onClick={openRenameGroup}>
-                                                <Pencil className="w-4 h-4" />
-                                                Renommer
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem
-                                                variant="destructive"
-                                                onClick={() => {
-                                                    const g = groups.find((x) => x.id === selectedGroupId);
-                                                    if (g) setDeleteGroupTarget(g);
-                                                }}
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                                Supprimer
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                    <div className="flex items-center gap-2 flex-1 min-w-0" />
                     <div className="flex items-center gap-2">
                         <Button
                             size="sm"
@@ -558,6 +592,54 @@ export default function GroupsPage() {
 
             {/* ── contenu ── */}
             <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 sm:py-4 min-h-0">
+                {groups.length > 0 && (
+                    <div className="flex items-center gap-2 mb-3">
+                        <Select
+                            value={selectedGroupId ?? ""}
+                            onValueChange={(v) => setSelectedGroupId(v || null)}
+                        >
+                            <SelectTrigger className="h-8 max-w-[200px] text-sm">
+                                <SelectValue placeholder="Choisir un groupe" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {groups.map((g) => (
+                                    <SelectItem key={g.id} value={g.id}>
+                                        {g.name || "Sans nom"}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {selectedGroupId && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Options du groupe">
+                                        <MoreVertical className="w-4 h-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start">
+                                    <DropdownMenuItem onClick={openMembersDialog}>
+                                        <UserCog className="w-4 h-4" />
+                                        Gérer les membres
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={openRenameGroup}>
+                                        <Pencil className="w-4 h-4" />
+                                        Renommer
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        variant="destructive"
+                                        onClick={() => {
+                                            const g = groups.find((x) => x.id === selectedGroupId);
+                                            if (g) setDeleteGroupTarget(g);
+                                        }}
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                        Supprimer
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
+                    </div>
+                )}
                 {!selectedGroupId ? (
                     /* aucun groupe ou aucun sélectionné */
                     <EmptyState
@@ -746,6 +828,89 @@ export default function GroupsPage() {
                 </DialogContent>
             </Dialog>
 
+            {/* ── Dialog: Gérer les membres ── */}
+            <Dialog open={membersDialogOpen} onOpenChange={setMembersDialogOpen}>
+                <DialogContent className="bg-card border-border text-foreground w-[95vw] sm:w-full max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Membres du groupe</DialogTitle>
+                        <DialogDescription>
+                            Ajoutez des membres par email ou retirez des personnes du groupe.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-2">
+                        <div className="flex gap-2">
+                            <Input
+                                type="email"
+                                placeholder="email@exemple.com"
+                                value={addMemberEmail}
+                                onChange={(e) => setAddMemberEmail(e.target.value)}
+                                className="bg-muted border-border flex-1"
+                            />
+                            <Button
+                                size="sm"
+                                onClick={addMember}
+                                disabled={addMemberLoading || !addMemberEmail.trim()}
+                            >
+                                {addMemberLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                                Ajouter
+                            </Button>
+                        </div>
+                        <div className="space-y-2">
+                            <div className="text-xs font-medium text-muted-foreground">
+                                Membres ({members.length})
+                            </div>
+                            {membersLoading ? (
+                                <div className="flex justify-center py-6">
+                                    <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                                </div>
+                            ) : (
+                                <div className="space-y-1 max-h-[200px] overflow-y-auto">
+                                    {members.map((m) => (
+                                        <div
+                                            key={m.id}
+                                            className="flex items-center justify-between gap-2 py-2 px-3 rounded-md bg-muted/50 border border-border"
+                                        >
+                                            <div className="min-w-0 flex-1">
+                                                <span className="text-sm font-medium truncate block">
+                                                    {m.user.name || m.user.email}
+                                                </span>
+                                                <span className="text-xs text-muted-foreground truncate block">
+                                                    {m.user.email}
+                                                </span>
+                                            </div>
+                                            {m.user.id !== currentUserId && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    className="h-7 w-7 p-0 text-destructive hover:text-destructive shrink-0"
+                                                    onClick={() => removeMember(m.user.id)}
+                                                    disabled={!!removeMemberLoading}
+                                                    title="Retirer du groupe"
+                                                >
+                                                    {removeMemberLoading === m.user.id ? (
+                                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                                    ) : (
+                                                        <X className="w-3.5 h-3.5" />
+                                                    )}
+                                                </Button>
+                                            )}
+                                            {m.user.id === currentUserId && (
+                                                <span className="text-xs text-muted-foreground shrink-0">Vous</span>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setMembersDialogOpen(false)}>
+                            Fermer
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
             {/* ── Dialog: Créer un groupe ── */}
             <Dialog open={createGroupOpen} onOpenChange={setCreateGroupOpen}>
                 <DialogContent className="bg-card border-border text-foreground w-[95vw] sm:w-full max-w-md">
@@ -804,7 +969,7 @@ export default function GroupsPage() {
                     <DialogHeader>
                         <DialogTitle>Partager la note</DialogTitle>
                         <DialogDescription>
-                            Entrez l&apos;email d&apos;un membre du groupe pour lui donner accès. Choisissez s&apos;il peut modifier ou seulement lire.
+                            Entrez l&apos;email d&apos;une personne pour lui donner accès à la note. Elle sera automatiquement ajoutée au groupe si nécessaire.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-2">

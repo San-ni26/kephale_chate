@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
+import { Textarea } from '@/src/components/ui/textarea';
 import {
     ArrowLeft,
     Send,
@@ -20,6 +21,9 @@ import {
     Settings,
     Calendar,
     ExternalLink,
+    RotateCw,
+    Circle,
+    Wifi,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
@@ -43,6 +47,7 @@ import { AudioRecorderComponent } from '@/src/components/AudioRecorder';
 import { DepartmentDocumentsPanel } from '@/src/components/chat/DepartmentDocumentsPanel';
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
+import { cn } from '@/src/lib/utils';
 
 interface Message {
     id: string;
@@ -84,6 +89,146 @@ interface PinnedEvent {
     token: string;
 }
 
+/* Bulle de message avec mémorisation du déchiffrement et animation */
+function ChatMessageBubble({
+    message,
+    isOwn,
+    canEdit,
+    departmentPrivateKey,
+    editingMessageId,
+    editContent,
+    onEditContentChange,
+    onEditOpen,
+    onEditSave,
+    onEditCancel,
+    onDelete,
+    onRetry,
+    isFailed,
+}: {
+    message: Message;
+    isOwn: boolean;
+    canEdit: boolean;
+    departmentPrivateKey: string | null;
+    editingMessageId: string | null;
+    editContent: string;
+    onEditContentChange: (v: string) => void;
+    onEditOpen: (content: string) => void;
+    onEditSave: () => void;
+    onEditCancel: () => void;
+    onDelete: () => void;
+    onRetry?: () => void;
+    isFailed: boolean;
+}) {
+    const decryptedContent = useMemo(() => {
+        if (!departmentPrivateKey || !message.sender?.publicKey) return '[Chiffré]';
+        try {
+            return decryptMessage(message.content, departmentPrivateKey, message.sender.publicKey) || '';
+        } catch {
+            return '[Erreur de déchiffrement]';
+        }
+    }, [message.id, message.content, message.sender?.publicKey, departmentPrivateKey]);
+
+    return (
+        <div
+            key={message.id}
+            className={cn(
+                'flex animate-in fade-in slide-in-from-bottom-2 duration-200',
+                isOwn ? 'justify-end' : 'justify-start'
+            )}
+        >
+            <div className={cn('max-w-[85%] md:max-w-[75%]', isOwn ? 'items-end' : 'items-start', 'flex flex-col')}>
+                {!isOwn && (
+                    <span className="text-xs text-muted-foreground mb-1 px-2">
+                        {message.sender.name || message.sender.email}
+                    </span>
+                )}
+
+                {editingMessageId === message.id ? (
+                    <div className="bg-card rounded-lg p-3 w-full border border-border">
+                        <Input
+                            value={editContent}
+                            onChange={(e) => onEditContentChange(e.target.value)}
+                            className="mb-2 bg-muted border-border"
+                            autoFocus
+                        />
+                        <div className="flex gap-2">
+                            <Button size="sm" onClick={onEditSave}>Enregistrer</Button>
+                            <Button size="sm" variant="ghost" onClick={onEditCancel}>Annuler</Button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className={cn('group relative', isFailed && 'ring-1 ring-destructive/50 rounded-2xl')}>
+                        {decryptedContent && decryptedContent.trim() && (
+                            <div
+                                className={cn(
+                                    'rounded-2xl px-4 py-2 border',
+                                    isOwn
+                                        ? 'bg-primary text-primary-foreground border-primary'
+                                        : 'bg-muted text-foreground border-border'
+                                )}
+                            >
+                                <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
+                                {message.isEdited && (
+                                    <p className="text-xs opacity-70 mt-1">Modifié</p>
+                                )}
+                            </div>
+                        )}
+
+                        {message.attachments && message.attachments.length > 0 && (
+                            <div className={cn(decryptedContent?.trim() ? 'mt-2' : '', 'space-y-2')}>
+                                {message.attachments.map((att, idx) => (
+                                    <EncryptedAttachment
+                                        key={idx}
+                                        attachment={att}
+                                        isOwnMessage={isOwn}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                            <span className="text-xs text-muted-foreground">
+                                {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true, locale: fr })}
+                            </span>
+                            {isFailed && onRetry && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-7 text-xs text-destructive border-destructive/50 hover:bg-destructive/10"
+                                    onClick={onRetry}
+                                >
+                                    <RotateCw className="w-3 h-3 mr-1" />
+                                    Réessayer
+                                </Button>
+                            )}
+                            {isOwn && canEdit && !isFailed && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground">
+                                            <MoreVertical className="w-4 h-4" />
+                                            <span className="sr-only">Actions</span>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem onClick={() => onEditOpen(decryptedContent || '')}>
+                                            <Edit2 className="w-4 h-4 mr-2" />
+                                            Modifier
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={onDelete} className="text-destructive">
+                                            <Trash2 className="w-4 h-4 mr-2" />
+                                            Supprimer
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
 export default function DepartmentChatPage() {
     const params = useParams();
     const router = useRouter();
@@ -110,6 +255,9 @@ export default function DepartmentChatPage() {
     const [conversationId, setConversationId] = useState<string | null>(null);
     const [hasMore, setHasMore] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [typingUsers, setTypingUsers] = useState<Record<string, boolean>>({});
+    const [failedMessagePayloads, setFailedMessagePayloads] = useState<Map<string, { encryptedContent: string; attachments?: { filename: string; type: string; data: string }[] }>>(new Map());
+    const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -139,7 +287,7 @@ export default function DepartmentChatPage() {
     const { data: messagesData, mutate: mutateMessages, isLoading: messagesLoading } = useSWR(
         messagesUrl,
         messagesFetcher,
-        { refreshInterval: 5000, revalidateOnFocus: true }
+        { refreshInterval: 60000, revalidateOnFocus: true }
     );
 
     const handleNewMessage = useCallback((data: { conversationId: string; message: Message }) => {
@@ -154,11 +302,16 @@ export default function DepartmentChatPage() {
     const handleMessageDeleted = useCallback((data: { conversationId: string; messageId: string }) => {
         setMessages((prev) => prev.filter((m) => m.id !== data.messageId));
     }, []);
+    const handleUserTyping = useCallback((data: { conversationId: string; userId: string; isTyping: boolean }) => {
+        if (data.userId === currentUser?.id) return;
+        setTypingUsers((prev) => ({ ...prev, [data.userId]: data.isTyping }));
+    }, [currentUser?.id]);
 
-    const { joinConversation, leaveConversation, isConnected } = useWebSocket(
+    const { joinConversation, leaveConversation, isConnected, startTyping, stopTyping } = useWebSocket(
         handleNewMessage,
         handleMessageEdited,
-        handleMessageDeleted
+        handleMessageDeleted,
+        handleUserTyping
     );
 
     useEffect(() => {
@@ -178,7 +331,7 @@ export default function DepartmentChatPage() {
 
     useEffect(() => {
         if (!conversationId || messagesLoading) return;
-        fetchWithAuth(`/api/conversations/${conversationId}/read`, { method: 'POST' }).catch(() => {});
+        fetchWithAuth(`/api/conversations/${conversationId}/read`, { method: 'POST' }).catch(() => { });
     }, [conversationId, messagesLoading]);
 
     const lastMessageCountRef = useRef(0);
@@ -199,6 +352,10 @@ export default function DepartmentChatPage() {
         const openDocs = () => setDocumentsPanelOpen(true);
         window.addEventListener('department-chat-open-documents', openDocs);
         return () => window.removeEventListener('department-chat-open-documents', openDocs);
+    }, []);
+
+    useEffect(() => () => {
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     }, []);
 
     const loading = messagesLoading;
@@ -246,14 +403,14 @@ export default function DepartmentChatPage() {
     };
 
     const refreshMessages = useCallback(() => {
-        mutateMessages().then(() => scrollToBottom()).catch(() => {});
+        mutateMessages().then(() => scrollToBottom()).catch(() => { });
     }, [mutateMessages]);
 
-    const scrollToBottom = () => {
-        setTimeout(() => {
+    const scrollToBottom = useCallback(() => {
+        requestAnimationFrame(() => {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-    };
+        });
+    }, []);
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
@@ -310,11 +467,24 @@ export default function DepartmentChatPage() {
 
         setSending(true);
         const encryptedContent = encryptMessage('', privateKey, department.publicKey);
+        const tempId = `temp-${Date.now()}`;
+        const base64Data = await fileToBase64(audioFile);
+        const attachment = { filename: audioFile.name, type: 'AUDIO', data: base64Data };
+
+        const optimisticMessage: Message = {
+            id: tempId,
+            content: encryptedContent,
+            senderId: currentUser.id,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            isEdited: false,
+            attachments: [attachment],
+            sender: { id: currentUser.id, name: currentUser.name || '', email: currentUser.email || '', publicKey: currentUser.publicKey || '' },
+        };
+        setMessages(prev => dedupeMessagesById([...prev, optimisticMessage]));
+        scrollToBottom();
 
         try {
-            const base64Data = await fileToBase64(audioFile);
-            const attachment = { filename: audioFile.name, type: 'AUDIO', data: base64Data };
-
             const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/messages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -323,15 +493,17 @@ export default function DepartmentChatPage() {
 
             if (response.ok) {
                 const data = await response.json();
-                setMessages(prev => dedupeMessagesById([...prev, data.message]));
-                mutateMessages().catch(() => {});
+                setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+                mutateMessages().catch(() => { });
                 scrollToBottom();
             } else {
                 toast.error("Erreur d'envoi du message vocal");
+                setFailedMessagePayloads(prev => new Map(prev).set(tempId, { encryptedContent, attachments: [attachment] }));
             }
         } catch (error) {
             console.error('Send audio error:', error);
             toast.error("Erreur d'envoi du message vocal");
+            setFailedMessagePayloads(prev => new Map(prev).set(tempId, { encryptedContent, attachments: [attachment] }));
         } finally {
             setSending(false);
         }
@@ -350,25 +522,40 @@ export default function DepartmentChatPage() {
 
         setSending(true);
         const plainContent = newMessage.trim() || '';
+        const currentFiles = [...selectedFiles];
         setNewMessage('');
         setSelectedFiles([]);
+        if (conversationId) stopTyping(conversationId);
+
+        let attachments: { filename: string; type: string; data: string }[] = [];
+        if (currentFiles.length > 0) {
+            for (const file of currentFiles) {
+                const base64Data = await fileToBase64(file);
+                const ext = file.name.split('.').pop()?.toLowerCase() || '';
+                let fileType = 'IMAGE';
+                if (['pdf'].includes(ext)) fileType = 'PDF';
+                else if (['doc', 'docx'].includes(ext)) fileType = 'WORD';
+                else if (['webm', 'mp3', 'ogg', 'm4a', 'wav'].includes(ext)) fileType = 'AUDIO';
+                attachments.push({ filename: file.name, type: fileType, data: base64Data });
+            }
+        }
+
+        const encryptedContent = encryptMessage(plainContent, privateKey, department.publicKey);
+        const tempId = `temp-${Date.now()}`;
+        const optimisticMessage: Message = {
+            id: tempId,
+            content: encryptedContent,
+            senderId: currentUser.id,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            isEdited: false,
+            attachments: attachments.length > 0 ? attachments : undefined,
+            sender: { id: currentUser.id, name: currentUser.name || '', email: currentUser.email || '', publicKey: currentUser.publicKey || '' },
+        };
+        setMessages(prev => dedupeMessagesById([...prev, optimisticMessage]));
+        scrollToBottom();
 
         try {
-            let attachments: { filename: string; type: string; data: string }[] = [];
-            if (selectedFiles.length > 0) {
-                for (const file of selectedFiles) {
-                    const base64Data = await fileToBase64(file);
-                    const ext = file.name.split('.').pop()?.toLowerCase() || '';
-                    let fileType = 'IMAGE';
-                    if (['pdf'].includes(ext)) fileType = 'PDF';
-                    else if (['doc', 'docx'].includes(ext)) fileType = 'WORD';
-                    else if (['webm', 'mp3', 'ogg', 'm4a', 'wav'].includes(ext)) fileType = 'AUDIO';
-                    attachments.push({ filename: file.name, type: fileType, data: base64Data });
-                }
-            }
-
-            const encryptedContent = encryptMessage(plainContent, privateKey, department.publicKey);
-
             const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/messages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -380,20 +567,59 @@ export default function DepartmentChatPage() {
 
             if (response.ok) {
                 const data = await response.json();
-                setMessages(prev => dedupeMessagesById([...prev, data.message]));
-                mutateMessages().catch(() => {});
+                setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+                mutateMessages().catch(() => { });
                 scrollToBottom();
+            } else {
+                const error = await response.json();
+                toast.error(error.error || 'Erreur d\'envoi');
+                setFailedMessagePayloads(prev => new Map(prev).set(tempId, { encryptedContent, attachments: attachments.length > 0 ? attachments : undefined }));
+            }
+        } catch (error) {
+            console.error('Send message error:', error);
+            toast.error('Erreur d\'envoi du message');
+            setFailedMessagePayloads(prev => new Map(prev).set(tempId, { encryptedContent, attachments: attachments.length > 0 ? attachments : undefined }));
+        } finally {
+            setSending(false);
+        }
+    };
+
+    const handleRetryMessage = useCallback(async (tempId: string) => {
+        const payload = failedMessagePayloads.get(tempId);
+        if (!payload || !orgId || !deptId) return;
+
+        setSending(true);
+        try {
+            const response = await fetchWithAuth(`/api/organizations/${orgId}/departments/${deptId}/messages`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: payload.encryptedContent,
+                    attachments: payload.attachments,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+                setFailedMessagePayloads(prev => {
+                    const next = new Map(prev);
+                    next.delete(tempId);
+                    return next;
+                });
+                mutateMessages().catch(() => { });
+                scrollToBottom();
+                toast.success('Message envoyé');
             } else {
                 const error = await response.json();
                 toast.error(error.error || 'Erreur d\'envoi');
             }
         } catch (error) {
-            console.error('Send message error:', error);
             toast.error('Erreur d\'envoi du message');
         } finally {
             setSending(false);
         }
-    };
+    }, [failedMessagePayloads, orgId, deptId, mutateMessages, scrollToBottom]);
 
     const handleEditMessage = async (messageId: string) => {
         if (!editContent.trim() || !currentUser || !department?.publicKey || !privateKey) return;
@@ -443,15 +669,6 @@ export default function DepartmentChatPage() {
         return (Date.now() - messageTime) < 5 * 60 * 1000; // 5 minutes
     };
 
-    const decryptMessageContent = useCallback((message: Message): string => {
-        if (!departmentPrivateKey || !message.sender?.publicKey) return '[Chiffré]';
-        try {
-            return decryptMessage(message.content, departmentPrivateKey, message.sender.publicKey) || '';
-        } catch {
-            return '[Erreur de déchiffrement]';
-        }
-    }, [departmentPrivateKey]);
-
     const loadMoreHistory = useCallback(async () => {
         if (!orgId || !deptId || loadingMore || !hasMore || messages.length === 0) return;
         const firstMessage = messages.find((m) => !m.id.startsWith('temp-'));
@@ -493,8 +710,20 @@ export default function DepartmentChatPage() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen bg-background">
-                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+            <div className="flex flex-col min-h-screen md:h-screen bg-background pt-16 pb-36 md:pb-40 px-3 md:px-4">
+                <div className="flex justify-center py-4">
+                    <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
+                </div>
+                <div className="space-y-4 flex-1 max-w-2xl mx-auto w-full">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <div key={i} className={cn('flex', i % 2 === 0 ? 'justify-end' : 'justify-start')}>
+                            <div className={cn(
+                                'rounded-2xl h-12 animate-pulse',
+                                i % 2 === 0 ? 'bg-primary/20 w-3/4' : 'bg-muted w-2/3'
+                            )} />
+                        </div>
+                    ))}
+                </div>
             </div>
         );
     }
@@ -546,8 +775,20 @@ export default function DepartmentChatPage() {
                     <AvatarFallback>{department.name[0]}</AvatarFallback>
                 </Avatar>
 
-                <div className="ml-3 flex-1">
-                    <h2 className="font-semibold text-foreground">{department.name}</h2>
+                <div className="ml-3 flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                        <h2 className="font-semibold text-foreground truncate">{department.name}</h2>
+                        <span
+                            className={cn(
+                                'flex items-center gap-1 shrink-0 text-[10px]',
+                                isConnected ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'
+                            )}
+                            title={isConnected ? 'Connecté en temps réel' : 'Connexion en cours...'}
+                        >
+                            {isConnected ? <Wifi className="w-3 h-3" /> : <Circle className="w-2 h-2 animate-pulse" />}
+                            {isConnected ? 'En direct' : 'Hors ligne'}
+                        </span>
+                    </div>
                     <p className="text-xs text-muted-foreground">
                         {department._count.members} membre{department._count.members > 1 ? 's' : ''}
                     </p>
@@ -659,119 +900,44 @@ export default function DepartmentChatPage() {
                 )}
 
                 <div className="space-y-2">
-                {dedupeMessagesById(messages).map((message) => {
-                    const isOwn = message.senderId === currentUser?.id;
-                    const canEdit = canEditOrDelete(message);
-                    const decryptedContent = decryptMessageContent(message);
-
-                    return (
-                        <div
+                    {dedupeMessagesById(messages).map((message) => (
+                        <ChatMessageBubble
                             key={message.id}
-                            className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
-                        >
-                            <div className={`max-w-[85%] md:max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
-                                {!isOwn && (
-                                    <span className="text-xs text-muted-foreground mb-1 px-2">
-                                        {message.sender.name || message.sender.email}
-                                    </span>
-                                )}
-
-                                {editingMessageId === message.id ? (
-                                    <div className="bg-card rounded-lg p-3 w-full border border-border">
-                                        <Input
-                                            value={editContent}
-                                            onChange={(e) => setEditContent(e.target.value)}
-                                            className="mb-2 bg-muted border-border"
-                                            autoFocus
-                                        />
-                                        <div className="flex gap-2">
-                                            <Button size="sm" onClick={() => handleEditMessage(message.id)}>
-                                                Enregistrer
-                                            </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="ghost"
-                                                onClick={() => { setEditingMessageId(null); setEditContent(''); }}
-                                            >
-                                                Annuler
-                                            </Button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="group relative">
-                                        {decryptedContent && decryptedContent.trim() && (
-                                            <div
-                                                className={`rounded-2xl px-4 py-2 border ${isOwn
-                                                    ? 'bg-primary text-primary-foreground border-primary'
-                                                    : 'bg-muted text-foreground border-border'
-                                                    }`}
-                                            >
-                                                <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
-                                                {message.isEdited && (
-                                                    <p className="text-xs opacity-70 mt-1">Modifié</p>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {message.attachments && message.attachments.length > 0 && (
-                                            <div className={`${decryptedContent?.trim() ? 'mt-2' : ''} space-y-2`}>
-                                                {message.attachments.map((att, idx) => (
-                                                    <EncryptedAttachment
-                                                        key={idx}
-                                                        attachment={att}
-                                                        isOwnMessage={isOwn}
-                                                    />
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <span className="text-xs text-muted-foreground">
-                                                {formatDistanceToNow(new Date(message.createdAt), {
-                                                    addSuffix: true,
-                                                    locale: fr,
-                                                })}
-                                            </span>
-                                            {isOwn && canEdit && (
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-                                                        >
-                                                            <MoreVertical className="w-4 h-4" />
-                                                            <span className="sr-only">Actions</span>
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem
-                                                            onClick={() => {
-                                                                setEditingMessageId(message.id);
-                                                                setEditContent(decryptedContent || '');
-                                                            }}
-                                                        >
-                                                            <Edit2 className="w-4 h-4 mr-2" />
-                                                            Modifier
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleDeleteMessage(message.id)}
-                                                            className="text-destructive"
-                                                        >
-                                                            <Trash2 className="w-4 h-4 mr-2" />
-                                                            Supprimer
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
+                            message={message}
+                            isOwn={message.senderId === currentUser?.id}
+                            canEdit={canEditOrDelete(message)}
+                            departmentPrivateKey={departmentPrivateKey}
+                            editingMessageId={editingMessageId}
+                            editContent={editContent}
+                            onEditContentChange={setEditContent}
+                            onEditOpen={(content) => {
+                                setEditingMessageId(message.id);
+                                setEditContent(content);
+                            }}
+                            onEditSave={() => handleEditMessage(message.id)}
+                            onEditCancel={() => { setEditingMessageId(null); setEditContent(''); }}
+                            onDelete={() => handleDeleteMessage(message.id)}
+                            onRetry={failedMessagePayloads.has(message.id) ? () => handleRetryMessage(message.id) : undefined}
+                            isFailed={failedMessagePayloads.has(message.id)}
+                        />
+                    ))}
+                    {(() => {
+                        const typingIds = Object.keys(typingUsers).filter((uid) => typingUsers[uid]);
+                        if (typingIds.length === 0) return null;
+                        const names = typingIds
+                            .map((uid) => messages.find((m) => m.senderId === uid)?.sender?.name || messages.find((m) => m.senderId === uid)?.sender?.email)
+                            .filter(Boolean) as string[];
+                        const display = names.length > 0 ? (names.length === 1 ? names[0] : names.slice(0, 2).join(' et ')) : 'Quelqu\'un';
+                        const verb = names.length <= 1 ? 'est' : 'sont';
+                        return (
+                            <div className="flex justify-start py-1">
+                                <p className="text-xs text-muted-foreground italic animate-pulse">
+                                    {display} {verb} en train d&apos;écrire...
+                                </p>
                             </div>
-                        </div>
-                    );
-                })}
-                <div ref={messagesEndRef} />
+                        );
+                    })()}
+                    <div ref={messagesEndRef} />
                 </div>
             </div>
 
@@ -823,13 +989,29 @@ export default function DepartmentChatPage() {
                                 <Paperclip className="w-5 h-5" />
                             </Button>
 
-                            <Input
+                            <Textarea
                                 value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSendMessage())}
-                                placeholder="Message chiffré..."
-                                className="flex-1 min-w-0 bg-muted border-border text-foreground placeholder:text-muted-foreground"
+                                onChange={(e) => {
+                                    setNewMessage(e.target.value);
+                                    if (conversationId) {
+                                        startTyping(conversationId);
+                                        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+                                        typingTimeoutRef.current = setTimeout(() => {
+                                            stopTyping(conversationId);
+                                            typingTimeoutRef.current = null;
+                                        }, 2000);
+                                    }
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleSendMessage();
+                                    }
+                                }}
+                                placeholder="Message..."
+                                className="flex-1 min-w-0 bg-muted border-border text-foreground placeholder:text-muted-foreground resize-none min-h-[40px] max-h-32 py-2"
                                 disabled={sending}
+                                rows={1}
                             />
 
                             <Button
