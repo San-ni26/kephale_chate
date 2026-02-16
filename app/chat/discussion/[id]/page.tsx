@@ -81,7 +81,7 @@ const fetcher = async (url: string) => {
     return res.json();
 };
 
-/* Bulle de message avec mémorisation du déchiffrement et animation */
+/* Bulle de message avec mémorisation du déchiffrement */
 function DiscussionMessageBubble({
     message,
     isOwn,
@@ -98,6 +98,7 @@ function DiscussionMessageBubble({
     onDelete,
     onRetry,
     isFailed,
+    displayCreatedAt,
 }: {
     message: Message;
     isOwn: boolean;
@@ -114,6 +115,7 @@ function DiscussionMessageBubble({
     onDelete: () => void;
     onRetry?: () => void;
     isFailed: boolean;
+    displayCreatedAt?: string;
 }) {
     const decryptedContent = useMemo(() => {
         if (!currentUser || !otherUser || !privateKey) return '[Chiffre]';
@@ -127,10 +129,12 @@ function DiscussionMessageBubble({
         }
     }, [message.id, message.content, message.senderId, message.sender?.publicKey, currentUser?.id, otherUser?.publicKey, privateKey]);
 
+    const timestamp = displayCreatedAt ?? message.createdAt;
+
     return (
         <div
             className={cn(
-                'flex animate-in fade-in slide-in-from-bottom-2 duration-200',
+                'flex',
                 isOwn ? 'justify-end' : 'justify-start'
             )}
         >
@@ -180,7 +184,7 @@ function DiscussionMessageBubble({
 
                         <div className="flex items-center gap-2 mt-1 flex-wrap">
                             <span className="text-xs text-muted-foreground">
-                                {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true, locale: fr })}
+                                {formatDistanceToNow(new Date(timestamp), { addSuffix: true, locale: fr })}
                             </span>
                             {isFailed && onRetry && (
                                 <Button
@@ -297,6 +301,8 @@ export default function DiscussionPage() {
     const [typingUsers, setTypingUsers] = useState<Record<string, boolean>>({});
     const [failedMessagePayloads, setFailedMessagePayloads] = useState<Map<string, { encryptedContent: string; attachments?: { filename: string; type: string; data: string }[] }>>(new Map());
     const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const stableMessageKeysRef = useRef<Map<string, string>>(new Map());
+    const stableMessageTimestampsRef = useRef<Map<string, string>>(new Map());
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -311,8 +317,15 @@ export default function DiscussionPage() {
     // Real-time message handlers
     const handleNewMessage = useCallback((data: { conversationId: string; message: Message }) => {
         if (data.conversationId !== conversationId) return;
+        const me = getUser();
         setMessages(prev => {
             if (prev.some(m => m.id === data.message.id)) return prev;
+            const ourTemp = prev.find((m) => m.id.startsWith('temp-') && m.senderId === me?.id);
+            if (ourTemp && data.message.senderId === me?.id) {
+                stableMessageKeysRef.current.set(data.message.id, ourTemp.id);
+                stableMessageTimestampsRef.current.set(data.message.id, ourTemp.createdAt);
+                return prev.map((m) => (m.id === ourTemp.id ? data.message : m));
+            }
             return [...prev, data.message];
         });
         scrollToBottom();
@@ -856,6 +869,11 @@ export default function DiscussionPage() {
         lastMessageCount.current = messages.length;
     }, [messages, loading, currentUser?.id, scrollToBottom]);
 
+    const typingCount = Object.keys(typingUsers).filter((uid) => typingUsers[uid]).length;
+    useEffect(() => {
+        if (typingCount > 0) scrollToBottom();
+    }, [typingCount, scrollToBottom]);
+
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         const validFiles = files.filter(file => {
@@ -935,6 +953,8 @@ export default function DiscussionPage() {
             if (response.ok) {
                 const data = await response.json();
                 if (data.message) {
+                    stableMessageKeysRef.current.set(data.message.id, tempId);
+                    stableMessageTimestampsRef.current.set(data.message.id, optimisticMessage.createdAt);
                     setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
                 }
                 scrollToBottom();
@@ -1047,6 +1067,8 @@ export default function DiscussionPage() {
             if (response.ok) {
                 const data = await response.json();
                 if (data.message) {
+                    stableMessageKeysRef.current.set(data.message.id, tempId);
+                    stableMessageTimestampsRef.current.set(data.message.id, optimisticMessage.createdAt);
                     setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
                 }
             } else {
@@ -1131,7 +1153,14 @@ export default function DiscussionPage() {
 
             if (response.ok) {
                 const data = await response.json();
-                setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+                setMessages((prev) => {
+                    const temp = prev.find((m) => m.id === tempId);
+                    if (temp) {
+                        stableMessageKeysRef.current.set(data.message.id, tempId);
+                        stableMessageTimestampsRef.current.set(data.message.id, temp.createdAt);
+                    }
+                    return prev.map((m) => (m.id === tempId ? data.message : m));
+                });
                 setFailedMessagePayloads(prev => {
                     const next = new Map(prev);
                     next.delete(tempId);
@@ -1409,8 +1438,9 @@ export default function DiscussionPage() {
                     self.findIndex(m => m.id === message.id) === index
                 ).map((message) => (
                     <DiscussionMessageBubble
-                        key={message.id}
+                        key={stableMessageKeysRef.current.get(message.id) ?? message.id}
                         message={message}
+                        displayCreatedAt={stableMessageTimestampsRef.current.get(message.id)}
                         isOwn={message.senderId === currentUser?.id}
                         canEdit={canEditOrDelete(message)}
                         currentUser={currentUser ?? null}
@@ -1430,11 +1460,16 @@ export default function DiscussionPage() {
                         isFailed={failedMessagePayloads.has(message.id)}
                     />
                 ))}
-                {Object.keys(typingUsers).filter((uid) => typingUsers[uid]).length > 0 && (
-                    <div className="flex justify-start py-1">
-                        <p className="text-xs text-muted-foreground italic animate-pulse">
-                            {otherUser?.name || otherUser?.email || 'Quelqu\'un'} est en train d&apos;écrire...
-                        </p>
+                {typingCount > 0 && (
+                    <div className="flex justify-start items-center gap-1.5 py-0.5 animate-pulse">
+                        <span className="flex gap-0.5">
+                            <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                            <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                            <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                        </span>
+                        <span className="text-[11px] text-muted-foreground/70">
+                            {otherUser?.name || otherUser?.email || 'Quelqu\'un'}
+                        </span>
                     </div>
                 )}
                 <div ref={messagesEndRef} />

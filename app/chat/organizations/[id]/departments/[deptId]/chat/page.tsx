@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
@@ -89,7 +89,7 @@ interface PinnedEvent {
     token: string;
 }
 
-/* Bulle de message avec mémorisation du déchiffrement et animation */
+/* Bulle de message avec mémorisation du déchiffrement */
 function ChatMessageBubble({
     message,
     isOwn,
@@ -104,6 +104,7 @@ function ChatMessageBubble({
     onDelete,
     onRetry,
     isFailed,
+    displayCreatedAt,
 }: {
     message: Message;
     isOwn: boolean;
@@ -118,6 +119,7 @@ function ChatMessageBubble({
     onDelete: () => void;
     onRetry?: () => void;
     isFailed: boolean;
+    displayCreatedAt?: string;
 }) {
     const decryptedContent = useMemo(() => {
         if (!departmentPrivateKey || !message.sender?.publicKey) return '[Chiffré]';
@@ -128,11 +130,12 @@ function ChatMessageBubble({
         }
     }, [message.id, message.content, message.sender?.publicKey, departmentPrivateKey]);
 
+    const timestamp = displayCreatedAt ?? message.createdAt;
+
     return (
         <div
-            key={message.id}
             className={cn(
-                'flex animate-in fade-in slide-in-from-bottom-2 duration-200',
+                'flex',
                 isOwn ? 'justify-end' : 'justify-start'
             )}
         >
@@ -188,7 +191,7 @@ function ChatMessageBubble({
 
                         <div className="flex items-center gap-2 mt-1 flex-wrap">
                             <span className="text-xs text-muted-foreground">
-                                {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true, locale: fr })}
+                                {formatDistanceToNow(new Date(timestamp), { addSuffix: true, locale: fr })}
                             </span>
                             {isFailed && onRetry && (
                                 <Button
@@ -258,8 +261,11 @@ export default function DepartmentChatPage() {
     const [typingUsers, setTypingUsers] = useState<Record<string, boolean>>({});
     const [failedMessagePayloads, setFailedMessagePayloads] = useState<Map<string, { encryptedContent: string; attachments?: { filename: string; type: string; data: string }[] }>>(new Map());
     const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const stableMessageKeysRef = useRef<Map<string, string>>(new Map());
+    const stableMessageTimestampsRef = useRef<Map<string, string>>(new Map());
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const messagesContentRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -291,8 +297,15 @@ export default function DepartmentChatPage() {
     );
 
     const handleNewMessage = useCallback((data: { conversationId: string; message: Message }) => {
+        const me = getUser();
         setMessages((prev) => {
             if (prev.some((m) => m.id === data.message.id)) return prev;
+            const ourTemp = prev.find((m) => m.id.startsWith('temp-') && m.senderId === me?.id);
+            if (ourTemp && data.message.senderId === me?.id) {
+                stableMessageKeysRef.current.set(data.message.id, ourTemp.id);
+                stableMessageTimestampsRef.current.set(data.message.id, ourTemp.createdAt);
+                return prev.map((m) => (m.id === ourTemp.id ? data.message : m));
+            }
             return dedupeMessagesById([...prev, data.message]);
         });
     }, []);
@@ -335,14 +348,105 @@ export default function DepartmentChatPage() {
     }, [conversationId, messagesLoading]);
 
     const lastMessageCountRef = useRef(0);
+    const isFirstLoadRef = useRef(true);
+    const typingCount = Object.keys(typingUsers).filter((uid) => typingUsers[uid]).length;
+
+    const scrollToBottom = useCallback(() => {
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                const container = scrollRef.current;
+                if (container) {
+                    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+                } else {
+                    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    }, []);
+
     useEffect(() => {
         if (messagesLoading) return;
-        if (messages.length > lastMessageCountRef.current) {
-            const lastMsg = messages[messages.length - 1];
-            if (lastMsg && lastMsg.senderId !== currentUser?.id) scrollToBottom();
-        }
+        if (messages.length === 0) return;
+
+        const prevCount = lastMessageCountRef.current;
         lastMessageCountRef.current = messages.length;
+
+        const doScroll = () => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    const container = scrollRef.current;
+                    if (container) {
+                        container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+                    } else {
+                        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        };
+
+        if (messages.length > prevCount) {
+            const lastMsg = messages[messages.length - 1];
+            if (lastMsg && lastMsg.senderId !== currentUser?.id) {
+                doScroll();
+            }
+        }
     }, [messages.length, messagesLoading, currentUser?.id]);
+
+    useLayoutEffect(() => {
+        if (messagesLoading || messages.length === 0) return;
+        if (!isFirstLoadRef.current) return;
+
+        isFirstLoadRef.current = false;
+        const scrollToEnd = () => {
+            const container = scrollRef.current;
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+            messagesEndRef.current?.scrollIntoView({ block: 'end', behavior: 'auto' });
+        };
+
+        scrollToEnd();
+        const t1 = setTimeout(scrollToEnd, 50);
+        const t2 = setTimeout(scrollToEnd, 150);
+        const t3 = setTimeout(scrollToEnd, 400);
+        const t4 = setTimeout(scrollToEnd, 800);
+
+        const contentEl = messagesContentRef.current ?? scrollRef.current;
+        if (!contentEl) return;
+        let rafId = 0;
+        const observer = new ResizeObserver(() => {
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(() => scrollToEnd());
+        });
+        observer.observe(contentEl);
+        const stopObserving = () => {
+            observer.disconnect();
+        };
+        const t5 = setTimeout(stopObserving, 2000);
+
+        return () => {
+            clearTimeout(t1);
+            clearTimeout(t2);
+            clearTimeout(t3);
+            clearTimeout(t4);
+            clearTimeout(t5);
+            cancelAnimationFrame(rafId);
+            observer.disconnect();
+        };
+    }, [messages.length, messagesLoading]);
+
+    useEffect(() => {
+        if (typingCount > 0) {
+            requestAnimationFrame(() => {
+                const container = scrollRef.current;
+                if (container) {
+                    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+                } else {
+                    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+    }, [typingCount]);
 
     useEffect(() => {
         if (deptId) loadDepartment();
@@ -404,13 +508,7 @@ export default function DepartmentChatPage() {
 
     const refreshMessages = useCallback(() => {
         mutateMessages().then(() => scrollToBottom()).catch(() => { });
-    }, [mutateMessages]);
-
-    const scrollToBottom = useCallback(() => {
-        requestAnimationFrame(() => {
-            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-        });
-    }, []);
+    }, [mutateMessages, scrollToBottom]);
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
@@ -493,6 +591,8 @@ export default function DepartmentChatPage() {
 
             if (response.ok) {
                 const data = await response.json();
+                stableMessageKeysRef.current.set(data.message.id, tempId);
+                stableMessageTimestampsRef.current.set(data.message.id, optimisticMessage.createdAt);
                 setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
                 mutateMessages().catch(() => { });
                 scrollToBottom();
@@ -567,6 +667,8 @@ export default function DepartmentChatPage() {
 
             if (response.ok) {
                 const data = await response.json();
+                stableMessageKeysRef.current.set(data.message.id, tempId);
+                stableMessageTimestampsRef.current.set(data.message.id, optimisticMessage.createdAt);
                 setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
                 mutateMessages().catch(() => { });
                 scrollToBottom();
@@ -601,7 +703,14 @@ export default function DepartmentChatPage() {
 
             if (response.ok) {
                 const data = await response.json();
-                setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+                setMessages((prev) => {
+                    const temp = prev.find((m) => m.id === tempId);
+                    if (temp) {
+                        stableMessageKeysRef.current.set(data.message.id, tempId);
+                        stableMessageTimestampsRef.current.set(data.message.id, temp.createdAt);
+                    }
+                    return prev.map((m) => (m.id === tempId ? data.message : m));
+                });
                 setFailedMessagePayloads(prev => {
                     const next = new Map(prev);
                     next.delete(tempId);
@@ -899,11 +1008,12 @@ export default function DepartmentChatPage() {
                     </div>
                 )}
 
-                <div className="space-y-2">
+                <div ref={messagesContentRef} className="space-y-2">
                     {dedupeMessagesById(messages).map((message) => (
                         <ChatMessageBubble
-                            key={message.id}
+                            key={stableMessageKeysRef.current.get(message.id) ?? message.id}
                             message={message}
+                            displayCreatedAt={stableMessageTimestampsRef.current.get(message.id)}
                             isOwn={message.senderId === currentUser?.id}
                             canEdit={canEditOrDelete(message)}
                             departmentPrivateKey={departmentPrivateKey}
@@ -921,22 +1031,24 @@ export default function DepartmentChatPage() {
                             isFailed={failedMessagePayloads.has(message.id)}
                         />
                     ))}
-                    {(() => {
-                        const typingIds = Object.keys(typingUsers).filter((uid) => typingUsers[uid]);
-                        if (typingIds.length === 0) return null;
-                        const names = typingIds
-                            .map((uid) => messages.find((m) => m.senderId === uid)?.sender?.name || messages.find((m) => m.senderId === uid)?.sender?.email)
-                            .filter(Boolean) as string[];
-                        const display = names.length > 0 ? (names.length === 1 ? names[0] : names.slice(0, 2).join(' et ')) : 'Quelqu\'un';
-                        const verb = names.length <= 1 ? 'est' : 'sont';
-                        return (
-                            <div className="flex justify-start py-1">
-                                <p className="text-xs text-muted-foreground italic animate-pulse">
-                                    {display} {verb} en train d&apos;écrire...
-                                </p>
-                            </div>
-                        );
-                    })()}
+                    {typingCount > 0 && (
+                        <div className="flex justify-start items-center gap-1.5 py-0.5 animate-pulse">
+                            <span className="flex gap-0.5">
+                                <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                                <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                                <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                            </span>
+                            <span className="text-[11px] text-muted-foreground/70">
+                                {(() => {
+                                    const typingIds = Object.keys(typingUsers).filter((uid) => typingUsers[uid]);
+                                    const names = typingIds
+                                        .map((uid) => messages.find((m) => m.senderId === uid)?.sender?.name || messages.find((m) => m.senderId === uid)?.sender?.email)
+                                        .filter(Boolean) as string[];
+                                    return names.length > 0 ? (names.length === 1 ? names[0] : names.slice(0, 2).join(', ')) : 'Quelqu\'un';
+                                })()}
+                            </span>
+                        </div>
+                    )}
                     <div ref={messagesEndRef} />
                 </div>
             </div>
