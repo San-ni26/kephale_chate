@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
         switch (event) {
             case 'call:invite': {
-                const { recipientId, offer, conversationId } = body;
+                const { recipientId, offer, conversationId, callType } = body;
                 if (!recipientId || !offer || !conversationId) {
                     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
                 }
@@ -55,19 +55,22 @@ export async function POST(request: NextRequest) {
                     console.error('Error fetching caller name:', e);
                 }
 
-                // Stocker appel en attente (Redis) pour destinataire offline
-                await setPendingCall(recipientId, {
+                const pendingData = {
                     callerId: user.userId,
                     callerName,
                     offer,
                     conversationId,
-                });
+                    callType: (callType === 'video' ? 'video' : 'audio') as 'audio' | 'video',
+                };
+
+                // Stocker appel en attente (Redis) pour destinataire offline
+                await setPendingCall(recipientId, pendingData);
 
                 // Marquer l'appelant comme en appel (Redis)
                 await setUserInCall(user.userId, conversationId, recipientId);
 
                 // Send via Pusher + Web Push
-                await notifyIncomingCall(recipientId, user.userId, callerName, offer, conversationId);
+                await notifyIncomingCall(recipientId, user.userId, callerName, offer, conversationId, pendingData.callType);
 
                 return NextResponse.json({ success: true });
             }

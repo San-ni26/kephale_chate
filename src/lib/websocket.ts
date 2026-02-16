@@ -168,10 +168,11 @@ export async function notifyIncomingCall(
     callerId: string,
     callerName: string,
     offer: any,
-    conversationId: string
+    conversationId: string,
+    callType: 'audio' | 'video' = 'audio'
 ) {
     if (process.env.NODE_ENV === 'development') {
-        console.log(`[Call] Notifying ${recipientId} of incoming call from ${callerName}`);
+        console.log(`[Call] Notifying ${recipientId} of incoming ${callType} call from ${callerName}`);
     }
 
     // Send via Pusher (real-time, if user is online in-app)
@@ -181,6 +182,7 @@ export async function notifyIncomingCall(
             callerName,
             offer,
             conversationId,
+            callType,
         });
         if (process.env.NODE_ENV === 'development') console.log('[Call] Pusher call:incoming sent');
     } catch (err) {

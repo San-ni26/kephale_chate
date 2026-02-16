@@ -75,33 +75,35 @@ self.addEventListener('push', function (event) {
             }
 
             console.log('[SW] Showing notification:', data.title || 'Chat');
-            return self.registration.showNotification(data.title || 'Chat', options);
+            return self.registration.showNotification(data.title || 'Chat', options).catch(function (err) {
+                console.warn('[SW] showNotification failed:', err);
+            });
         })
     );
 });
 
 // ============ NOTIFICATION CLICK HANDLER ============
 self.addEventListener('notificationclick', function (event) {
-    console.log('[SW] Notification clicked, action:', event.action);
+    console.log('[SW] Notification clicked, action:', event.action, 'type:', event.notification.data && event.notification.data.type);
 
     var notification = event.notification;
-    var action = event.action;
-    var url = (notification.data && notification.data.url) || '/chat';
+    var action = event.action || '';
+    var data = notification.data || {};
+    var url = data.url || '/chat';
+    var notifType = data.type || 'message';
 
     notification.close();
 
+    // Appel entrant : Refuser
     if (action === 'reject') {
-        var callerId = notification.data && notification.data.callerId;
+        var callerId = data.callerId;
         if (callerId) {
             event.waitUntil(
                 fetch('/api/call/signal', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        event: 'call:reject',
-                        callerId: callerId,
-                    }),
-                    credentials: 'same-origin',
+                    body: JSON.stringify({ event: 'call:reject', callerId: callerId }),
+                    credentials: 'include',
                 }).catch(function (err) {
                     console.error('[SW] Failed to send call rejection:', err);
                 })
@@ -110,24 +112,55 @@ self.addEventListener('notificationclick', function (event) {
         return;
     }
 
-    // URL absolue requise pour openWindow quand le navigateur est ferme
-    var fullUrl = url.startsWith('/') ? self.location.origin + url : url;
+    // Appel en cours : Raccrocher (depuis notification "Appel en cours")
+    if (notifType === 'active_call' && action === 'hangup') {
+        var targetUserId = data.targetUserId;
+        if (targetUserId) {
+            event.waitUntil(
+                fetch('/api/call/signal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event: 'call:end', targetUserId: targetUserId }),
+                    credentials: 'include',
+                }).then(function () {
+                    return self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+                }).then(function (clientList) {
+                    clientList.forEach(function (c) {
+                        try { c.postMessage({ type: 'CALL_ENDED_BY_NOTIFICATION' }); } catch (e) {}
+                    });
+                    if (clientList.length > 0) {
+                        return clientList[0].focus();
+                    }
+                    return Promise.resolve();
+                }).catch(function (err) {
+                    console.error('[SW] Failed to end call:', err);
+                })
+            );
+        }
+        return;
+    }
 
-    // Ouvrir la conversation : réutiliser une fenêtre existante ou ouvrir une nouvelle (app fermée).
+    // Repondre (appel entrant) ou Ouvrir (appel en cours) : ouvrir/focus la conversation
+    var convId = data.conversationId;
+    var fullUrl = url.startsWith('/') ? self.location.origin + url : url;
+    if (notifType === 'call' && convId && !url.includes(convId)) {
+        fullUrl = self.location.origin + '/chat/discussion/' + convId;
+    }
+
     event.waitUntil(
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
             if (clientList.length > 0) {
                 var client = clientList[0];
                 if (client.focus && client.navigate) {
+                    var targetUrl = fullUrl.replace(self.location.origin, '') || '/chat';
                     return client.focus().then(function (c) {
-                        return c.navigate ? c.navigate(url) : Promise.resolve();
+                        return c.navigate ? c.navigate(targetUrl) : Promise.resolve();
                     });
                 }
                 if (client.focus) {
                     return client.focus();
                 }
             }
-            // Aucune fenêtre ouverte (app fermée) : ouvrir l'URL en nouvelle fenêtre/onglet
             return self.clients.openWindow(fullUrl);
         })
     );

@@ -21,6 +21,7 @@ export interface PendingCall {
     callerName: string;
     offer: unknown;
     conversationId: string;
+    callType?: 'audio' | 'video';
 }
 
 /**
