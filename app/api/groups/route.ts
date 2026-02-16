@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 const createGroupSchema = z.object({
     name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
-    memberEmails: z.array(z.string().email()).min(1, 'Au moins un membre requis'),
+    memberEmails: z.array(z.string().email()).default([]), // Optionnel : groupe solo si vide
 });
 
 // GET: Get user's groups
@@ -95,26 +95,26 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const validatedData = createGroupSchema.parse(body);
 
-        // Find users by email
-        const users = await prisma.user.findMany({
-            where: {
-                email: {
-                    in: validatedData.memberEmails,
+        // Find users by email (optionnel : groupe solo si aucun email)
+        let memberIds: string[] = [user.userId];
+        if (validatedData.memberEmails.length > 0) {
+            const users = await prisma.user.findMany({
+                where: {
+                    email: {
+                        in: validatedData.memberEmails,
+                    },
+                    isVerified: true,
+                    isBanned: false,
                 },
-                isVerified: true,
-                isBanned: false,
-            },
-        });
-
-        if (users.length === 0) {
-            return NextResponse.json(
-                { error: 'Aucun utilisateur valide trouvé' },
-                { status: 404 }
-            );
+            });
+            if (users.length === 0) {
+                return NextResponse.json(
+                    { error: 'Aucun utilisateur valide trouvé' },
+                    { status: 404 }
+                );
+            }
+            memberIds = [...new Set([user.userId, ...users.map((u: any) => u.id)])];
         }
-
-        // Create group with members
-        const memberIds = [...new Set([user.userId, ...users.map((u: any) => u.id)])];
 
         const group = await prisma.group.create({
             data: {

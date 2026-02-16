@@ -14,6 +14,8 @@ import {
     X,
     Copy,
     UserPlus,
+    Users,
+    MoreVertical,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -32,6 +34,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/src/components/ui/select";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/src/components/ui/dropdown-menu";
 import { NoteEditor } from "@/src/components/notes/NoteEditor";
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
@@ -102,11 +110,24 @@ async function fetchJson<T>(url: string): Promise<T> {
 
 export default function GroupsPage() {
     /* groupes */
-    const { data: groupsData } = useSWR<{ groups: Group[] }>("/api/groups", fetcher);
+    const { data: groupsData, mutate: mutateGroups } = useSWR<{ groups: Group[] }>("/api/groups", fetcher);
     const groups = groupsData?.groups || [];
 
     /* sélection groupe */
     const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+
+    /* création groupe */
+    const [createGroupOpen, setCreateGroupOpen] = useState(false);
+    const [createGroupName, setCreateGroupName] = useState("");
+    const [createGroupEmails, setCreateGroupEmails] = useState("");
+    const [createGroupLoading, setCreateGroupLoading] = useState(false);
+
+    /* renommer / supprimer groupe */
+    const [renameGroupOpen, setRenameGroupOpen] = useState(false);
+    const [renameGroupName, setRenameGroupName] = useState("");
+    const [renameGroupLoading, setRenameGroupLoading] = useState(false);
+    const [deleteGroupTarget, setDeleteGroupTarget] = useState<Group | null>(null);
+    const [deleteGroupLoading, setDeleteGroupLoading] = useState(false);
 
     /* documents / notes */
     const [defaultDocId, setDefaultDocId] = useState<string | null>(null);
@@ -333,6 +354,100 @@ export default function GroupsPage() {
         }
     };
 
+    const createGroup = async () => {
+        const name = createGroupName.trim();
+        if (!name || name.length < 2) {
+            toast.error("Le nom doit contenir au moins 2 caractères");
+            return;
+        }
+        setCreateGroupLoading(true);
+        try {
+            const memberEmails = createGroupEmails
+                .split(/[\s,;]+/)
+                .map((e) => e.trim().toLowerCase())
+                .filter(Boolean);
+            const res = await fetchWithAuth("/api/groups", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, memberEmails }),
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                toast.error(data.error || "Erreur lors de la création");
+                return;
+            }
+            toast.success("Groupe créé");
+            setCreateGroupOpen(false);
+            setCreateGroupName("");
+            setCreateGroupEmails("");
+            await mutateGroups();
+            if (data.group?.id) {
+                setSelectedGroupId(data.group.id);
+            }
+        } catch (e) {
+            toast.error("Erreur lors de la création du groupe");
+        } finally {
+            setCreateGroupLoading(false);
+        }
+    };
+
+    const openRenameGroup = () => {
+        const g = selectedGroupId ? groups.find((x) => x.id === selectedGroupId) : null;
+        if (g) {
+            setRenameGroupName(g.name || "");
+            setRenameGroupOpen(true);
+        }
+    };
+
+    const renameGroup = async () => {
+        if (!selectedGroupId || renameGroupName.trim().length < 2) return;
+        setRenameGroupLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/groups/${selectedGroupId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: renameGroupName.trim() }),
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                toast.error(data.error || "Erreur");
+                return;
+            }
+            toast.success("Groupe renommé");
+            setRenameGroupOpen(false);
+            await mutateGroups();
+        } catch (e) {
+            toast.error("Erreur lors du renommage");
+        } finally {
+            setRenameGroupLoading(false);
+        }
+    };
+
+    const confirmDeleteGroup = async () => {
+        const g = deleteGroupTarget;
+        if (!g) return;
+        setDeleteGroupLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/groups/${g.id}`, { method: "DELETE" });
+            const data = await res.json();
+            if (!res.ok) {
+                toast.error(data.error || "Erreur");
+                return;
+            }
+            toast.success("Groupe supprimé");
+            setDeleteGroupTarget(null);
+            if (selectedGroupId === g.id) {
+                const rest = groups.filter((x) => x.id !== g.id);
+                setSelectedGroupId(rest[0]?.id ?? null);
+            }
+            await mutateGroups();
+        } catch (e) {
+            toast.error("Erreur lors de la suppression");
+        } finally {
+            setDeleteGroupLoading(false);
+        }
+    };
+
     /* ── filtrage ── */
     const filtered = search.trim()
         ? notes.filter(
@@ -350,14 +465,71 @@ export default function GroupsPage() {
             {/* ── header ── */}
             <div className="shrink-0 px-3 sm:px-4 pt-3 sm:pt-4 pb-3 space-y-3 border-b border-border bg-background/80 backdrop-blur-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <div className="flex items-center gap-2 shrink-0">
                             <NotepadText className="w-5 h-5 text-primary shrink-0" />
                             <h1 className="text-base sm:text-lg font-bold text-foreground">Notes</h1>
                         </div>
-
+                        {groups.length > 0 && (
+                            <div className="flex items-center gap-0.5">
+                                <Select
+                                    value={selectedGroupId ?? ""}
+                                    onValueChange={(v) => setSelectedGroupId(v || null)}
+                                >
+                                    <SelectTrigger className="h-8 max-w-[180px] sm:max-w-[220px] text-sm">
+                                        <SelectValue placeholder="Choisir un groupe" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {groups.map((g) => (
+                                            <SelectItem key={g.id} value={g.id}>
+                                                {g.name || "Sans nom"}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {selectedGroupId && (
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 shrink-0"
+                                                aria-label="Options du groupe"
+                                            >
+                                                <MoreVertical className="w-4 h-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem onClick={openRenameGroup}>
+                                                <Pencil className="w-4 h-4" />
+                                                Renommer
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                variant="destructive"
+                                                onClick={() => {
+                                                    const g = groups.find((x) => x.id === selectedGroupId);
+                                                    if (g) setDeleteGroupTarget(g);
+                                                }}
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                                Supprimer
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                )}
+                            </div>
+                        )}
                     </div>
                     <div className="flex items-center gap-2">
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-8 gap-1.5"
+                            onClick={() => setCreateGroupOpen(true)}
+                        >
+                            <Users className="w-4 h-4 shrink-0" />
+                            <span className="hidden sm:inline">Nouveau groupe</span>
+                        </Button>
                         <Button
                             size="sm"
                             className="h-8 gap-1.5 flex-1 sm:flex-initial"
@@ -387,11 +559,25 @@ export default function GroupsPage() {
             {/* ── contenu ── */}
             <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 sm:py-4 min-h-0">
                 {!selectedGroupId ? (
-                    /* aucun groupe sélectionné */
+                    /* aucun groupe ou aucun sélectionné */
                     <EmptyState
                         icon={<NotepadText className="w-12 h-12 text-muted-foreground/40" />}
-                        title="Sélectionnez un groupe"
-                        description="Choisissez un groupe dans le menu ci-dessus pour afficher et gérer ses notes."
+                        title={groups.length === 0 ? "Créez votre premier groupe de notes" : "Sélectionnez un groupe"}
+                        description={
+                            groups.length === 0
+                                ? "Créez un groupe pour commencer à organiser vos notes. Vous pouvez en ajouter d'autres membres plus tard."
+                                : "Choisissez un groupe dans le menu ci-dessus pour afficher et gérer ses notes."
+                        }
+                        action={
+                            <Button
+                                size="sm"
+                                className="gap-2 mt-2"
+                                onClick={() => setCreateGroupOpen(true)}
+                            >
+                                <Users className="w-4 h-4" />
+                                {groups.length === 0 ? "Créer un groupe" : "Nouveau groupe"}
+                            </Button>
+                        }
                     />
                 ) : notesLoading ? (
                     /* chargement */
@@ -496,6 +682,117 @@ export default function GroupsPage() {
                         <Button variant="destructive" onClick={confirmDelete} disabled={deleting}>
                             {deleting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                             Supprimer
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* ── Dialog: Renommer le groupe ── */}
+            <Dialog open={renameGroupOpen} onOpenChange={setRenameGroupOpen}>
+                <DialogContent className="bg-card border-border text-foreground w-[95vw] sm:w-full max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Renommer le groupe</DialogTitle>
+                        <DialogDescription>
+                            Entrez le nouveau nom du groupe.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-2">
+                        <Input
+                            value={renameGroupName}
+                            onChange={(e) => setRenameGroupName(e.target.value)}
+                            placeholder="Nom du groupe"
+                            className="bg-muted border-border"
+                            autoFocus
+                        />
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setRenameGroupOpen(false)}>
+                            Annuler
+                        </Button>
+                        <Button
+                            onClick={renameGroup}
+                            disabled={renameGroupLoading || renameGroupName.trim().length < 2}
+                        >
+                            {renameGroupLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                            Enregistrer
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* ── Dialog: Supprimer le groupe ── */}
+            <Dialog open={!!deleteGroupTarget} onOpenChange={(o) => !o && setDeleteGroupTarget(null)}>
+                <DialogContent className="bg-card border-border text-foreground w-[95vw] sm:w-full max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Supprimer le groupe</DialogTitle>
+                        <DialogDescription>
+                            Êtes-vous sûr de vouloir supprimer « {deleteGroupTarget?.name || "ce groupe"} » ?
+                            Toutes les notes du groupe seront définitivement supprimées. Cette action est irréversible.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setDeleteGroupTarget(null)}>
+                            Annuler
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={confirmDeleteGroup}
+                            disabled={deleteGroupLoading}
+                        >
+                            {deleteGroupLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                            Supprimer
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* ── Dialog: Créer un groupe ── */}
+            <Dialog open={createGroupOpen} onOpenChange={setCreateGroupOpen}>
+                <DialogContent className="bg-card border-border text-foreground w-[95vw] sm:w-full max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Nouveau groupe de notes</DialogTitle>
+                        <DialogDescription>
+                            Créez un groupe pour organiser vos notes. Vous pouvez en être le seul membre ou inviter d&apos;autres personnes par email.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-2">
+                        <div>
+                            <label className="text-sm font-medium text-foreground mb-1 block">
+                                Nom du groupe
+                            </label>
+                            <Input
+                                value={createGroupName}
+                                onChange={(e) => setCreateGroupName(e.target.value)}
+                                placeholder="Ex. Mes notes personnelles"
+                                className="bg-muted border-border"
+                                autoFocus
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium text-foreground mb-1 block">
+                                Membres (optionnel)
+                            </label>
+                            <Input
+                                value={createGroupEmails}
+                                onChange={(e) => setCreateGroupEmails(e.target.value)}
+                                placeholder="emails séparés par des virgules"
+                                className="bg-muted border-border"
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Laissez vide pour un groupe personnel.
+                            </p>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setCreateGroupOpen(false)}>
+                            Annuler
+                        </Button>
+                        <Button
+                            onClick={createGroup}
+                            disabled={createGroupLoading || createGroupName.trim().length < 2}
+                        >
+                            {createGroupLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                            Créer
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -812,16 +1109,19 @@ function EmptyState({
     icon,
     title,
     description,
+    action,
 }: {
     icon: React.ReactNode;
     title: string;
     description: string;
+    action?: React.ReactNode;
 }) {
     return (
         <div className="flex flex-col items-center justify-center py-12 sm:py-20 px-4 text-center gap-3">
             {icon}
             <h3 className="text-sm sm:text-base font-semibold text-foreground">{title}</h3>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-xs">{description}</p>
+            {action}
         </div>
     );
 }
