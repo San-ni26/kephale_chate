@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, PhoneIncoming, PhoneOff, Mic, MicOff, Clock, Volume2, RotateCw, Video, VideoOff, Monitor, MonitorOff, Maximize2 } from 'lucide-react';
+import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, PhoneIncoming, PhoneOff, Mic, MicOff, Clock, Volume2, RotateCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import useSWR from 'swr';
@@ -18,7 +18,6 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-    DropdownMenuSeparator,
 } from '@/src/components/ui/dropdown-menu';
 import {
     Dialog,
@@ -276,14 +275,11 @@ export default function DiscussionPage() {
     const [isCallActive, setIsCallActive] = useState(false);
     const [isIncomingCall, setIsIncomingCall] = useState(false);
     const [callStatus, setCallStatus] = useState<'idle' | 'dialing' | 'ringing' | 'connecting' | 'connected' | 'ended'>('idle');
-    const [callType, setCallType] = useState<'audio' | 'video'>('audio');
     const [localStream, setLocalStream] = useState<MediaStream | null>(null);
     const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-    const [incomingCallData, setIncomingCallData] = useState<{ callerId: string; callerName?: string; offer: any; conversationId: string; callType?: 'audio' | 'video' } | null>(null);
+    const [incomingCallData, setIncomingCallData] = useState<{ callerId: string; callerName?: string; offer: any; conversationId: string } | null>(null);
     const [isMuted, setIsMuted] = useState(false);
     const [isSpeakerOn, setIsSpeakerOn] = useState(false);
-    const [isVideoEnabled, setIsVideoEnabled] = useState(true);
-    const [isScreenSharing, setIsScreenSharing] = useState(false);
     const [callDuration, setCallDuration] = useState(0);
     const [connectionQuality, setConnectionQuality] = useState<'good' | 'fair' | 'poor' | null>(null);
     const callTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -292,8 +288,6 @@ export default function DiscussionPage() {
     const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
     const localAudioRef = useRef<HTMLAudioElement>(null);
     const remoteAudioRef = useRef<HTMLAudioElement>(null);
-    const localVideoRef = useRef<HTMLVideoElement>(null);
-    const remoteVideoRef = useRef<HTMLVideoElement>(null);
     const localStreamRef = useRef<MediaStream | null>(null);
     const iceCandidateBufferRef = useRef<RTCIceCandidate[]>([]);
     const callStatusRef = useRef(callStatus);
@@ -372,13 +366,19 @@ export default function DiscussionPage() {
     const isCallActiveRef = useRef(isCallActive);
     isCallActiveRef.current = isCallActive;
 
-    // --- Check call status on mount : appel actif ou en attente quand on rentre dans l'app ---
+    // --- Check call status on mount et au retour sur l'onglet : appel actif ou en attente ---
     useEffect(() => {
         if (!conversationId) return;
 
-        const checkCallStatus = async () => {
+        const applyPendingCall = (data: { callerId: string; callerName?: string; offer: any; conversationId: string }) => {
+            setIncomingCallData(data);
+            setIsIncomingCall(true);
+            setCallStatus('ringing');
+        };
+
+        const checkCallStatus = async (claim = true) => {
             try {
-                const res = await fetchWithAuth('/api/call/status?claim=1');
+                const res = await fetchWithAuth(`/api/call/status?claim=${claim ? '1' : '0'}`);
                 if (!res.ok) return;
                 const { activeCall, pendingCall } = await res.json();
 
@@ -391,9 +391,7 @@ export default function DiscussionPage() {
                     return;
                 }
                 if (pendingCall && pendingCall.conversationId === conversationId) {
-                    setIncomingCallData(pendingCall);
-                    setIsIncomingCall(true);
-                    setCallStatus('ringing');
+                    applyPendingCall(pendingCall);
                     return;
                 }
             } catch {
@@ -404,11 +402,9 @@ export default function DiscussionPage() {
             if (stored) {
                 try {
                     const data = JSON.parse(stored);
-                    if (data.conversationId === conversationId) {
+                    if (data.conversationId === conversationId && data.offer) {
                         sessionStorage.removeItem('pendingIncomingCall');
-                        setIncomingCallData(data);
-                        setIsIncomingCall(true);
-                        setCallStatus('ringing');
+                        applyPendingCall(data);
                     }
                 } catch {
                     sessionStorage.removeItem('pendingIncomingCall');
@@ -416,7 +412,23 @@ export default function DiscussionPage() {
             }
         };
 
-        checkCallStatus();
+        checkCallStatus(true);
+
+        const onVisible = () => {
+            if (document.visibilityState === 'visible' && !isCallActiveRef.current) {
+                checkCallStatus(true);
+            }
+        };
+        document.addEventListener('visibilitychange', onVisible);
+
+        const retryTimer = setTimeout(() => {
+            if (!isCallActiveRef.current) checkCallStatus(true);
+        }, 800);
+
+        return () => {
+            document.removeEventListener('visibilitychange', onVisible);
+            clearTimeout(retryTimer);
+        };
     }, [conversationId, router]);
 
     // --- Mark as read when viewing conversation ---
@@ -494,7 +506,7 @@ export default function DiscussionPage() {
         }
     }, []);
 
-    const initializePeerConnection = useCallback((withVideo: boolean) => {
+    const initializePeerConnection = useCallback(() => {
         iceCandidateBufferRef.current = [];
         const pc = new RTCPeerConnection({
             iceServers: ICE_SERVERS,
@@ -514,8 +526,7 @@ export default function DiscussionPage() {
         pc.ontrack = (event) => {
             const stream = event.streams[0];
             setRemoteStream(stream);
-            if (remoteVideoRef.current) remoteVideoRef.current.srcObject = stream;
-            // Audio gere dans useEffect avec play().catch() pour eviter NotAllowedError
+            if (remoteAudioRef.current) remoteAudioRef.current.srcObject = stream;
         };
 
         pc.oniceconnectionstatechange = () => {
@@ -577,8 +588,6 @@ export default function DiscussionPage() {
         setCallDuration(0);
         setIsMuted(false);
         setIsSpeakerOn(false);
-        setIsVideoEnabled(true);
-        setIsScreenSharing(false);
         setConnectionQuality(null);
     }, []);
 
@@ -598,14 +607,8 @@ export default function DiscussionPage() {
         }, 1000);
     }, []);
 
-    const getMediaConstraints = useCallback((video: boolean) => ({
-        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-        video: video ? { width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 24 } } : false,
-    }), []);
-
-    const startCall = useCallback(async (type: 'audio' | 'video' = 'audio') => {
+    const startCall = useCallback(async () => {
         if (!otherUser) return;
-        setCallType(type);
         setIsCallActive(true);
         setCallStatus('dialing');
 
@@ -617,10 +620,10 @@ export default function DiscussionPage() {
         }, 45000);
 
         try {
-            const stream = await navigator.mediaDevices.getUserMedia(getMediaConstraints(type === 'video'));
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
             setLocalStream(stream);
 
-            const pc = initializePeerConnection(type === 'video');
+            const pc = initializePeerConnection();
             stream.getTracks().forEach(track => pc.addTrack(track, stream));
 
             setCallStatus('connecting');
@@ -631,29 +634,26 @@ export default function DiscussionPage() {
                 recipientId: otherUser.id,
                 offer: offer,
                 conversationId: conversationId,
-                callType: type,
             });
 
         } catch (err) {
             console.error('Error starting call:', err);
-            toast.error("Impossible d'acceder au microphone" + (type === 'video' ? ' ou a la camera' : ''));
+            toast.error("Impossible d'acceder au microphone");
             cleanupCall();
         }
-    }, [otherUser, conversationId, initializePeerConnection, cleanupCall, emitCallSignal, endCall, getMediaConstraints]);
+    }, [otherUser, conversationId, initializePeerConnection, cleanupCall, emitCallSignal, endCall]);
 
     const answerCall = useCallback(async () => {
         if (!incomingCallData) return;
-        const incomingType = incomingCallData.callType || 'audio';
         setIsIncomingCall(false);
         setIsCallActive(true);
         setCallStatus('connecting');
-        setCallType(incomingType);
 
         try {
-            const stream = await navigator.mediaDevices.getUserMedia(getMediaConstraints(incomingType === 'video'));
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
             setLocalStream(stream);
 
-            const pc = initializePeerConnection(incomingType === 'video');
+            const pc = initializePeerConnection();
             stream.getTracks().forEach(track => pc.addTrack(track, stream));
 
             await pc.setRemoteDescription(new RTCSessionDescription(incomingCallData.offer));
@@ -676,7 +676,7 @@ export default function DiscussionPage() {
             toast.error("Erreur lors de la reponse");
             cleanupCall();
         }
-    }, [incomingCallData, initializePeerConnection, cleanupCall, emitCallSignal, startCallTimer, getMediaConstraints, addBufferedIceCandidates]);
+    }, [incomingCallData, initializePeerConnection, cleanupCall, emitCallSignal, startCallTimer, addBufferedIceCandidates]);
 
     const rejectCall = useCallback(() => {
         if (incomingCallData) {
@@ -720,60 +720,6 @@ export default function DiscussionPage() {
         }
     }, [isSpeakerOn]);
 
-    const toggleVideo = useCallback(() => {
-        if (!localStreamRef.current) return;
-        const videoTracks = localStreamRef.current.getVideoTracks();
-        videoTracks.forEach(track => {
-            track.enabled = !track.enabled;
-        });
-        setIsVideoEnabled(prev => !prev);
-    }, []);
-
-    const toggleScreenShare = useCallback(async () => {
-        const pc = peerConnectionRef.current;
-        const stream = localStreamRef.current;
-        if (!pc || callType !== 'video') return;
-        try {
-            if (isScreenSharing) {
-                const videoTrack = stream?.getVideoTracks()[0];
-                if (videoTrack) {
-                    const sender = pc.getSenders().find(s => s.track?.kind === 'video');
-                    if (sender) await sender.replaceTrack(videoTrack);
-                }
-                setIsScreenSharing(false);
-            } else {
-                const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
-                const screenTrack = screenStream.getVideoTracks()[0];
-                screenTrack.onended = () => setIsScreenSharing(false);
-                const sender = pc.getSenders().find(s => s.track?.kind === 'video');
-                if (sender) {
-                    await sender.replaceTrack(screenTrack);
-                    setIsScreenSharing(true);
-                } else {
-                    screenStream.getTracks().forEach(t => t.stop());
-                }
-            }
-        } catch (e) {
-            console.warn('[Call] Screen share:', e);
-            toast.error('Partage d\'ecran indisponible');
-        }
-    }, [isScreenSharing, callType]);
-
-    const enterPiP = useCallback(async () => {
-        const video = remoteVideoRef.current || localVideoRef.current;
-        if (video && document.pictureInPictureEnabled) {
-            try {
-                if (document.pictureInPictureElement) {
-                    await document.exitPictureInPicture();
-                } else {
-                    await video.requestPictureInPicture();
-                }
-            } catch (e) {
-                console.warn('[Call] PiP:', e);
-            }
-        }
-    }, []);
-
     const prewarmMedia = useCallback(async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -787,7 +733,7 @@ export default function DiscussionPage() {
     useEffect(() => {
         if (!userChannel || !isConnected) return;
 
-        const handleIncomingCall = (data: { callerId: string; callerName?: string; offer: any; conversationId: string; callType?: 'audio' | 'video' }) => {
+        const handleIncomingCall = (data: { callerId: string; callerName?: string; offer: any; conversationId: string }) => {
             if (isCallActiveRef.current) {
                 emitCallSignal('call:reject', { callerId: data.callerId });
                 return;
@@ -861,7 +807,7 @@ export default function DiscussionPage() {
         };
     }, [userChannel, isConnected, cleanupCall, emitCallSignal, startCallTimer]);
 
-    // Auto-play remote audio + attach streams to video elements
+    // Auto-play remote audio
     useEffect(() => {
         const audio = remoteAudioRef.current;
         if (!audio || !remoteStream) return;
@@ -871,11 +817,6 @@ export default function DiscussionPage() {
         });
     }, [remoteStream]);
 
-    useEffect(() => {
-        if (localVideoRef.current && localStream) {
-            localVideoRef.current.srcObject = localStream;
-        }
-    }, [localStream]);
 
     // Sync local call state : raccroche depuis notification ou retour sur l'app
     useEffect(() => {
@@ -1455,23 +1396,12 @@ export default function DiscussionPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Call Overlay - WhatsApp style with video support */}
+            {/* Call Overlay - WhatsApp style */}
             {(isCallActive || isIncomingCall) && (
                 <div className="fixed inset-0 z-[100] bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center flex-col">
-                    {/* Remote video (fullscreen when video call) */}
-                    {callType === 'video' && remoteStream && (
-                        <video
-                            ref={remoteVideoRef}
-                            autoPlay
-                            playsInline
-                            className="absolute inset-0 w-full h-full object-cover"
-                            style={{ zIndex: 0 }}
-                        />
-                    )}
-
-                    {/* Animated circles background (when no remote video) */}
-                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: callType === 'video' && remoteStream ? 1 : 0 }}>
-                        {callStatus === 'connected' && !(callType === 'video' && remoteStream) && (
+                    {/* Animated circles background */}
+                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+                        {callStatus === 'connected' && (
                             <>
                                 <div className="absolute w-64 h-64 rounded-full border border-white/5 animate-ping" style={{ animationDuration: '3s' }} />
                                 <div className="absolute w-48 h-48 rounded-full border border-white/10 animate-ping" style={{ animationDuration: '2s' }} />
@@ -1485,24 +1415,9 @@ export default function DiscussionPage() {
                         )}
                     </div>
 
-                    {/* Local video preview (video calls) */}
-                    {callType === 'video' && localStream && (
-                        <div className="absolute top-4 right-4 z-20 w-32 h-40 rounded-xl overflow-hidden border-2 border-white/30 shadow-xl bg-black">
-                            <video
-                                ref={localVideoRef}
-                                autoPlay
-                                playsInline
-                                muted
-                                className="w-full h-full object-cover"
-                                style={{ transform: 'scaleX(-1)' }}
-                            />
-                        </div>
-                    )}
-
                     <div className="relative z-10 flex flex-col items-center">
-                        {/* Avatar (when no remote video or connecting) */}
-                        {(!(callType === 'video' && remoteStream) || callStatus === 'connecting') && (
-                            <div className={`relative mb-6 ${callStatus === 'ringing' ? 'animate-bounce' : ''}`}>
+                        {/* Avatar */}
+                        <div className={`relative mb-6 ${callStatus === 'ringing' ? 'animate-bounce' : ''}`}>
                                 <div className={`bg-white/10 p-1 rounded-full ${callStatus === 'connected' ? 'ring-4 ring-green-500/30' : 'ring-4 ring-white/10'}`}>
                                     <Avatar className="w-28 h-28 border-2 border-white/20">
                                         <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${getConversationName()}`} />
@@ -1513,7 +1428,6 @@ export default function DiscussionPage() {
                                     <span className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-gray-800 rounded-full" />
                                 )}
                             </div>
-                        )}
 
                         {/* Name */}
                         <h3 className="text-2xl font-bold text-white mb-1 drop-shadow-lg">
@@ -1522,10 +1436,10 @@ export default function DiscussionPage() {
 
                         {/* Status */}
                         <p className="text-white/80 mb-2 text-sm drop-shadow">
-                            {isIncomingCall && (incomingCallData?.callType === 'video' ? 'Appel video entrant...' : 'Appel vocal entrant...')}
+                            {isIncomingCall && 'Appel vocal entrant...'}
                             {callStatus === 'dialing' && 'Appel en cours...'}
                             {callStatus === 'connecting' && 'Connexion en cours...'}
-                            {callStatus === 'connected' && (callType === 'video' ? 'Appel video' : 'Appel vocal')}
+                            {callStatus === 'connected' && 'Appel vocal'}
                         </p>
 
                         {/* Connection quality indicator */}
@@ -1599,42 +1513,6 @@ export default function DiscussionPage() {
                                         </Button>
                                         <span className="text-white/60 text-xs">Haut-parleur</span>
                                     </div>
-                                    {callType === 'video' && (
-                                        <>
-                                            <div className="flex flex-col items-center gap-2">
-                                                <Button
-                                                    size="lg"
-                                                    className={`rounded-full w-14 h-14 shadow-lg ${!isVideoEnabled ? 'bg-white/20 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
-                                                    onClick={toggleVideo}
-                                                >
-                                                    {isVideoEnabled ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
-                                                </Button>
-                                                <span className="text-white/60 text-xs">{isVideoEnabled ? 'Cacher' : 'Caméra'}</span>
-                                            </div>
-                                            <div className="flex flex-col items-center gap-2">
-                                                <Button
-                                                    size="lg"
-                                                    className={`rounded-full w-14 h-14 shadow-lg ${isScreenSharing ? 'bg-primary/40 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
-                                                    onClick={toggleScreenShare}
-                                                >
-                                                    {isScreenSharing ? <MonitorOff className="w-6 h-6" /> : <Monitor className="w-6 h-6" />}
-                                                </Button>
-                                                <span className="text-white/60 text-xs">{isScreenSharing ? 'Arreter' : 'Partager'}</span>
-                                            </div>
-                                            {typeof document !== 'undefined' && document.pictureInPictureEnabled && (
-                                                <div className="flex flex-col items-center gap-2">
-                                                    <Button
-                                                        size="lg"
-                                                        className="rounded-full w-14 h-14 shadow-lg bg-white/10 text-white hover:bg-white/20"
-                                                        onClick={enterPiP}
-                                                    >
-                                                        <Maximize2 className="w-6 h-6" />
-                                                    </Button>
-                                                    <span className="text-white/60 text-xs">PiP</span>
-                                                </div>
-                                            )}
-                                        </>
-                                    )}
                                     <div className="flex flex-col items-center gap-2">
                                         <Button
                                             size="lg"
@@ -1687,33 +1565,19 @@ export default function DiscussionPage() {
                     )}
                 </div>
 
-                {/* Call Button - Dropdown audio/video + prewarm on hover */}
+                {/* Call Button */}
                 <div className="flex items-center gap-1 md:mr-4">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                disabled={isCallActive || !otherUser}
-                                onMouseEnter={prewarmMedia}
-                                title="Appeler"
-                                className="hover:bg-primary/10"
-                            >
-                                <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => startCall('audio')}>
-                                <Phone className="w-4 h-4 mr-2" />
-                                Appel vocal
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => startCall('video')}>
-                                <Video className="w-4 h-4 mr-2" />
-                                Appel video
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        disabled={isCallActive || !otherUser}
+                        onMouseEnter={prewarmMedia}
+                        onClick={startCall}
+                        title="Appel vocal"
+                        className="hover:bg-primary/10"
+                    >
+                        <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                    </Button>
                 </div>
             </div>
 

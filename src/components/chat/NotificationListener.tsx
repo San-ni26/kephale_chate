@@ -59,7 +59,7 @@ export function NotificationListener() {
                             icon: '/icons/icon-192x192.png',
                             tag: 'msg-' + data.conversationId,
                         });
-                    } catch (e) {}
+                    } catch (e) { }
                 }
                 return;
             }
@@ -96,7 +96,7 @@ export function NotificationListener() {
                             icon: '/icons/icon-192x192.png',
                             tag: 'dept-' + data.deptId,
                         });
-                    } catch (e) {}
+                    } catch (e) { }
                 }
                 return;
             }
@@ -172,7 +172,7 @@ export function NotificationListener() {
                         tag: 'call-' + data.conversationId,
                         requireInteraction: true,
                     });
-                } catch (e) {}
+                } catch (e) { }
             }
         };
 

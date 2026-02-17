@@ -8,7 +8,7 @@ import { getRedis } from './redis';
 const CALL_PREFIX = 'call:user:';
 const PENDING_PREFIX = 'call:pending:';
 const TTL_ACTIVE = 300; // 5 min max en appel
-const TTL_PENDING = 60; // Appel en attente 60s
+const TTL_PENDING = 90; // Appel en attente 90s
 
 export interface CallState {
     conversationId: string;
@@ -21,7 +21,6 @@ export interface PendingCall {
     callerName: string;
     offer: unknown;
     conversationId: string;
-    callType?: 'audio' | 'video';
 }
 
 /**
@@ -104,7 +103,15 @@ export async function getUsersInCall(userIds: string[]): Promise<Record<string, 
 
         userIds.forEach((id, i) => {
             const data = replies[i];
-            result[id] = data ? (JSON.parse(data) as CallState) : null;
+            if (!data) {
+                result[id] = null;
+                return;
+            }
+            try {
+                result[id] = typeof data === 'string' ? (JSON.parse(data) as CallState) : (data as CallState);
+            } catch {
+                result[id] = null;
+            }
         });
     } catch (err) {
         console.error('[Call] getUsersInCall error:', err);

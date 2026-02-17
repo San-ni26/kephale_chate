@@ -26,8 +26,9 @@ export interface RegisterPushResult {
 /**
  * Demande la permission, crée l'abonnement push et l'envoie au serveur.
  * À appeler après un geste utilisateur (bouton) pour de meilleurs résultats sur certains navigateurs.
+ * @param forceResubscribe - Si true, desabonne puis re-souscrit (utile apres VapidPkHashMismatch)
  */
-export async function registerPushSubscription(): Promise<RegisterPushResult> {
+export async function registerPushSubscription(forceResubscribe = false): Promise<RegisterPushResult> {
     if (typeof window === 'undefined') {
         return { ok: false, error: 'Côté serveur' };
     }
@@ -88,6 +89,10 @@ export async function registerPushSubscription(): Promise<RegisterPushResult> {
         }
 
         let subscription = await registration.pushManager.getSubscription();
+        if (forceResubscribe && subscription) {
+            await subscription.unsubscribe();
+            subscription = null;
+        }
         if (!subscription) {
             const keyBytes = urlBase64ToUint8Array(vapidKey);
             subscription = await registration.pushManager.subscribe({

@@ -18,6 +18,7 @@ export function EnablePushBanner() {
     const [permission, setPermission] = useState<NotificationPermission | null>(null);
     const [showTestRow, setShowTestRow] = useState(false);
     const [pushStatus, setPushStatus] = useState<PushStatus>(null);
+    const [needsResubscribe, setNeedsResubscribe] = useState(false);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -38,10 +39,11 @@ export function EnablePushBanner() {
             .then((data: PushStatus) => {
                 if (!cancelled && data) {
                     setPushStatus(data);
-                    // Si permission accordée mais 0 appareil, afficher le bandeau "Activer"
+                    // Si permission accordée mais 0 appareil (ex: abonnements supprimes pour VapidPkHashMismatch)
                     if (data.subscriptionCount === 0) {
                         setShowTestRow(false);
                         setVisible(true);
+                        setNeedsResubscribe(true);
                     }
                 }
             })
@@ -52,11 +54,12 @@ export function EnablePushBanner() {
     const handleEnable = async () => {
         setLoading(true);
         try {
-            const result = await registerPushSubscription();
+            const result = await registerPushSubscription(needsResubscribe);
             if (result.ok) {
                 setPermission('granted');
                 setVisible(false);
                 setShowTestRow(true);
+                setNeedsResubscribe(false);
                 // Rafraîchir le statut pour afficher le nombre d'appareils
                 fetchWithAuth('/api/push/status', { credentials: 'include' })
                     .then((res) => (res.ok ? res.json() : null))

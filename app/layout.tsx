@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ServiceWorkerRegistration } from "@/src/components/ServiceWorkerRegistration";
 import { NotificationListener } from "@/src/components/chat/NotificationListener";
+import { ActiveCallBanner } from "@/src/components/chat/ActiveCallBanner";
 import { AuthGuard } from "@/src/components/AuthGuard";
 
 /*
@@ -70,6 +71,7 @@ export default function RootLayout({
         <NotificationListener />
         <AuthGuard />
         {children}
+        <ActiveCallBanner />
       </body>
     </html>
   );

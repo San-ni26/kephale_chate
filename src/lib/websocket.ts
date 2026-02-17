@@ -139,11 +139,7 @@ export async function notifyNewMessage(message: any, conversationId: string) {
                         }
                     } catch (err: any) {
                         console.error(`[Notify] Push failed for ${sub.endpoint.substring(0, 50)}:`, err.statusCode || err.message);
-                        // Clean up dead subscriptions
-                        if (err.statusCode === 410 || err.statusCode === 404) {
-                            if (process.env.NODE_ENV === 'development') {
-                                console.log(`[Notify] Removing dead subscription: ${sub.endpoint.substring(0, 50)}`);
-                            }
+                        if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
                             await prisma.pushSubscription.delete({
                                 where: { endpoint: sub.endpoint }
                             }).catch(() => {});
@@ -168,11 +164,10 @@ export async function notifyIncomingCall(
     callerId: string,
     callerName: string,
     offer: any,
-    conversationId: string,
-    callType: 'audio' | 'video' = 'audio'
+    conversationId: string
 ) {
     if (process.env.NODE_ENV === 'development') {
-        console.log(`[Call] Notifying ${recipientId} of incoming ${callType} call from ${callerName}`);
+        console.log(`[Call] Notifying ${recipientId} of incoming call from ${callerName}`);
     }
 
     // Send via Pusher (real-time, if user is online in-app)
@@ -182,7 +177,6 @@ export async function notifyIncomingCall(
             callerName,
             offer,
             conversationId,
-            callType,
         });
         if (process.env.NODE_ENV === 'development') console.log('[Call] Pusher call:incoming sent');
     } catch (err) {
@@ -223,10 +217,13 @@ export async function notifyIncomingCall(
                     }
                 } catch (err: any) {
                     console.error(`[Call] Push failed:`, err.statusCode || err.message);
-                    if (err.statusCode === 410 || err.statusCode === 404) {
+                    if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
                         await prisma.pushSubscription.delete({
                             where: { endpoint: sub.endpoint }
                         }).catch(() => {});
+                        if (err.statusCode === 400 && process.env.NODE_ENV === 'development') {
+                            console.warn('[Call] Abonnement supprime (VapidPkHashMismatch). L\'utilisateur doit re-activer les notifications.');
+                        }
                     }
                 }
             }));

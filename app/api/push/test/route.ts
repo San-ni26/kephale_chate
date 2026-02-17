@@ -57,9 +57,10 @@ export async function POST(request: NextRequest) {
                     endpoint: sub.endpoint.substring(0, 50) + '...',
                     status: 'failed',
                     error: err.statusCode || err.message,
+                    needsResubscribe: err.statusCode === 400,
                 });
                 // Clean up dead subscriptions
-                if (err.statusCode === 410 || err.statusCode === 404) {
+                if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
                     await prisma.pushSubscription.delete({
                         where: { endpoint: sub.endpoint },
                     }).catch(() => {});

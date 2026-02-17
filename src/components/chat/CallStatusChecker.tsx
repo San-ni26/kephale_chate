@@ -2,7 +2,8 @@
 
 /**
  * Vérifie l'état d'appel au chargement et quand l'app redevient visible.
- * Redirige vers la conversation si un appel est en attente ou actif ailleurs.
+ * - Appel en attente (pending) : redirige vers la conversation pour répondre
+ * - Appel actif (active) : géré par ActiveCallBanner (pas de redirection auto)
  */
 
 import { useEffect, useRef } from 'react';
@@ -20,15 +21,14 @@ export function CallStatusChecker() {
             try {
                 const res = await fetchWithAuth('/api/call/status');
                 if (!res.ok) return;
-                const { activeCall, pendingCall } = await res.json();
+                const { pendingCall } = await res.json();
                 const current = pathnameRef.current || '';
 
-                const target = pendingCall?.conversationId || activeCall?.conversationId;
-                if (!target) return;
+                // Seulement rediriger pour un appel EN ATTENTE (entrant)
+                if (!pendingCall?.conversationId) return;
+                if (current.includes(`/chat/discussion/${pendingCall.conversationId}`)) return;
 
-                if (current.includes(`/chat/discussion/${target}`)) return;
-
-                router.push(`/chat/discussion/${target}`);
+                router.push(`/chat/discussion/${pendingCall.conversationId}`);
             } catch {
                 // Silencieux
             }
