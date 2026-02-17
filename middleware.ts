@@ -8,35 +8,39 @@ const protectedRoutes = ['/chat', '/admin'];
 // Routes that should redirect to chat if already authenticated
 const authRoutes = ['/login', '/register'];
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Get token from cookie or Authorization header
     const token = request.cookies.get('auth-token')?.value ||
         request.headers.get('authorization')?.replace('Bearer ', '');
 
-    // Check if route requires authentication
-    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
-    const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
-
     // Decode token if present (using unsafe decode for Edge Runtime)
-    // Note: The token signature was already verified when it was created
-    // This is just to check if it exists and hasn't expired
     const user = token ? decodeTokenUnsafe(token) : null;
 
-    // Redirect to login if accessing protected route without valid token
+    // Page d'accueil (/) : rediriger les utilisateurs connectés vers /chat
+    if (pathname === '/') {
+        if (user) {
+            return NextResponse.redirect(new URL('/chat', request.url));
+        }
+        return NextResponse.next();
+    }
+
+    // Routes protégées : rediriger vers login si non authentifié
+    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
     if (isProtectedRoute && !user) {
         const loginUrl = new URL('/login', request.url);
         loginUrl.searchParams.set('redirect', pathname);
         return NextResponse.redirect(loginUrl);
     }
 
-    // Redirect to chat if accessing auth routes with valid token
+    // Routes auth (login, register) : rediriger vers chat si déjà connecté
+    const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
     if (isAuthRoute && user) {
         return NextResponse.redirect(new URL('/chat', request.url));
     }
 
-    // Check admin routes (ADMIN ou SUPER_ADMIN)
+    // Admin : vérifier le rôle
     if (pathname.startsWith('/admin') && user?.role !== 'SUPER_ADMIN' && user?.role !== 'ADMIN') {
         return NextResponse.redirect(new URL('/chat', request.url));
     }
@@ -47,12 +51,7 @@ export async function proxy(request: NextRequest) {
 export const config = {
     matcher: [
         /*
-         * Match all request paths except for the ones starting with:
-         * - api (API routes)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * - public folder
+         * Exclure : api, _next/static, _next/image, favicon, fichiers statiques
          */
         '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*|public).*)',
     ],

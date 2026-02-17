@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { toast } from 'sonner';
 import { usePathname, useRouter } from 'next/navigation';
-import { fetchWithAuth } from '@/src/lib/auth-client';
+import { fetchWithAuth, getToken, isProtectedPath } from '@/src/lib/auth-client';
 import { registerPushSubscription, syncPushSubscriptionIfGranted } from '@/src/lib/register-push-client';
 import { useCallContext } from '@/src/contexts/CallContext';
 
@@ -196,10 +196,11 @@ export function NotificationListener() {
         };
     }, [userChannel, isConnected, callContext]);
 
-    // Enregistrement Web Push initial (dès que possible après chargement)
+    // Enregistrement Web Push initial (uniquement si utilisateur authentifié)
     useEffect(() => {
         if (typeof window === 'undefined') return;
         if (pushRegistered.current) return;
+        if (!isProtectedPath(pathname) || !getToken()) return;
 
         const run = async () => {
             const result = await registerPushSubscription();
@@ -207,14 +208,15 @@ export function NotificationListener() {
         };
         const timeout = setTimeout(run, 1500);
         return () => clearTimeout(timeout);
-    }, []);
+    }, [pathname]);
 
-    // Re-synchroniser l'abonnement push au retour sur l'app (notifications même app fermée)
+    // Re-synchroniser l'abonnement push au retour sur l'app (uniquement si authentifié)
     useEffect(() => {
         if (typeof document === 'undefined') return;
 
         const onVisibilityChange = () => {
             if (document.visibilityState !== 'visible') return;
+            if (!getToken()) return;
             syncPushSubscriptionIfGranted().then((ok) => {
                 if (ok) pushRegistered.current = true;
             });
