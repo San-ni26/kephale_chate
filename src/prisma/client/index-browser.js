@@ -190,6 +190,108 @@ exports.Prisma.OrganizationScalarFieldEnum = {
   ownerId: 'ownerId'
 };
 
+exports.Prisma.OrganizationCollaborationScalarFieldEnum = {
+  id: 'id',
+  orgAId: 'orgAId',
+  orgBId: 'orgBId',
+  status: 'status',
+  createdBy: 'createdBy',
+  invitedBy: 'invitedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CollaborationGroupScalarFieldEnum = {
+  id: 'id',
+  collaborationId: 'collaborationId',
+  name: 'name',
+  publicKey: 'publicKey',
+  headId: 'headId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CollaborationGroupMemberScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  userId: 'userId',
+  orgId: 'orgId',
+  encryptedDeptKey: 'encryptedDeptKey',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CollaborationTaskScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  startDate: 'startDate',
+  dueDate: 'dueDate',
+  completedAt: 'completedAt',
+  groupId: 'groupId',
+  creatorId: 'creatorId',
+  assigneeId: 'assigneeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CollaborationDocumentScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  filename: 'filename',
+  type: 'type',
+  data: 'data',
+  uploadedBy: 'uploadedBy',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CollaborationNoteScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  title: 'title',
+  content: 'content',
+  textSize: 'textSize',
+  order: 'order',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CollaborationEditorialItemScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  status: 'status',
+  channel: 'channel',
+  scheduledAt: 'scheduledAt',
+  publishedAt: 'publishedAt',
+  assigneeId: 'assigneeId',
+  order: 'order',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DepartmentEditorialItemScalarFieldEnum = {
+  id: 'id',
+  deptId: 'deptId',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  status: 'status',
+  channel: 'channel',
+  scheduledAt: 'scheduledAt',
+  publishedAt: 'publishedAt',
+  assigneeId: 'assigneeId',
+  order: 'order',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.OrganizationMemberScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -309,6 +411,7 @@ exports.Prisma.GroupScalarFieldEnum = {
   name: 'name',
   isDirect: 'isDirect',
   deptId: 'deptId',
+  collaborationGroupId: 'collaborationGroupId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -713,16 +816,24 @@ exports.InvitationType = exports.$Enums.InvitationType = {
   OTHER: 'OTHER'
 };
 
-exports.OrgRole = exports.$Enums.OrgRole = {
-  OWNER: 'OWNER',
-  ADMIN: 'ADMIN',
-  MEMBER: 'MEMBER'
+exports.CollaborationStatus = exports.$Enums.CollaborationStatus = {
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  REJECTED: 'REJECTED'
 };
 
-exports.NoteTextSize = exports.$Enums.NoteTextSize = {
-  SMALL: 'SMALL',
-  NORMAL: 'NORMAL',
-  LARGE: 'LARGE'
+exports.TaskStatus = exports.$Enums.TaskStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.TaskPriority = exports.$Enums.TaskPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
 };
 
 exports.FileType = exports.$Enums.FileType = {
@@ -731,6 +842,35 @@ exports.FileType = exports.$Enums.FileType = {
   WORD: 'WORD',
   AUDIO: 'AUDIO',
   OTHER: 'OTHER'
+};
+
+exports.NoteTextSize = exports.$Enums.NoteTextSize = {
+  SMALL: 'SMALL',
+  NORMAL: 'NORMAL',
+  LARGE: 'LARGE'
+};
+
+exports.EditorialItemType = exports.$Enums.EditorialItemType = {
+  ARTICLE: 'ARTICLE',
+  POST: 'POST',
+  VIDEO: 'VIDEO',
+  STORY: 'STORY',
+  PODCAST: 'PODCAST',
+  NEWSLETTER: 'NEWSLETTER',
+  OTHER: 'OTHER'
+};
+
+exports.EditorialStatus = exports.$Enums.EditorialStatus = {
+  DRAFT: 'DRAFT',
+  IN_PROGRESS: 'IN_PROGRESS',
+  REVIEW: 'REVIEW',
+  PUBLISHED: 'PUBLISHED'
+};
+
+exports.OrgRole = exports.$Enums.OrgRole = {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  MEMBER: 'MEMBER'
 };
 
 exports.DecisionVoteType = exports.$Enums.DecisionVoteType = {
@@ -774,20 +914,6 @@ exports.PostType = exports.$Enums.PostType = {
   CONTENT: 'CONTENT'
 };
 
-exports.TaskStatus = exports.$Enums.TaskStatus = {
-  PENDING: 'PENDING',
-  IN_PROGRESS: 'IN_PROGRESS',
-  COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
-};
-
-exports.TaskPriority = exports.$Enums.TaskPriority = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  URGENT: 'URGENT'
-};
-
 exports.PersonalTaskStatus = exports.$Enums.PersonalTaskStatus = {
   TODO: 'TODO',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -819,6 +945,14 @@ exports.Prisma.ModelName = {
   InvitationGuest: 'InvitationGuest',
   Follow: 'Follow',
   Organization: 'Organization',
+  OrganizationCollaboration: 'OrganizationCollaboration',
+  CollaborationGroup: 'CollaborationGroup',
+  CollaborationGroupMember: 'CollaborationGroupMember',
+  CollaborationTask: 'CollaborationTask',
+  CollaborationDocument: 'CollaborationDocument',
+  CollaborationNote: 'CollaborationNote',
+  CollaborationEditorialItem: 'CollaborationEditorialItem',
+  DepartmentEditorialItem: 'DepartmentEditorialItem',
   OrganizationMember: 'OrganizationMember',
   Department: 'Department',
   DepartmentNote: 'DepartmentNote',

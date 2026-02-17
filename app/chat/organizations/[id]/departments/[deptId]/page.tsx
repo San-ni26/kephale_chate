@@ -39,7 +39,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
-import { CheckCircle2, Clock, AlertCircle, Calendar as CalendarIcon, ClipboardList, Crown, Target, Calendar, BarChart3, Vote } from "lucide-react";
+import { CheckCircle2, Clock, AlertCircle, Calendar as CalendarIcon, ClipboardList, Crown, Target, Calendar, BarChart3, Vote, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -98,6 +98,7 @@ import DepartmentMeetingsTab from '@/src/components/organizations/DepartmentMeet
 import DepartmentPollsTab from '@/src/components/organizations/DepartmentPollsTab';
 import DepartmentDecisionsTab from '@/src/components/organizations/DepartmentDecisionsTab';
 import { DepartmentDocumentsPanel } from '@/src/components/chat/DepartmentDocumentsPanel';
+import { EditorialPlanningPanel } from '@/src/components/collaboration/EditorialPlanningPanel';
 
 function DepartmentReportsTab({
     orgId,
@@ -242,8 +243,9 @@ export default function DepartmentDetailPage() {
     const [documentsPanelOpen, setDocumentsPanelOpen] = useState(false);
     const [documentsPanelTab, setDocumentsPanelTab] = useState<'documents' | 'notes'>('documents');
     const [documentsPanelCreateNote, setDocumentsPanelCreateNote] = useState(false);
+    const [editorialPanelOpen, setEditorialPanelOpen] = useState(false);
     useEffect(() => {
-        if (tabParam === 'reports' || tabParam === 'tasks' || tabParam === 'goals' || tabParam === 'meetings' || tabParam === 'polls' || tabParam === 'decisions') setActiveTab(tabParam);
+        if (tabParam === 'reports' || tabParam === 'tasks' || tabParam === 'goals' || tabParam === 'meetings' || tabParam === 'polls' || tabParam === 'decisions' || tabParam === 'editorial') setActiveTab(tabParam);
     }, [tabParam]);
 
     const handleSetDepartmentHead = async (userId: string | null) => {
@@ -751,6 +753,10 @@ export default function DepartmentDetailPage() {
                         <Vote className="w-4 h-4" />
                         Décisions
                     </TabsTrigger>
+                    <TabsTrigger value="editorial" className="flex items-center gap-2">
+                        <CalendarIcon className="w-4 h-4" />
+                        Planning éditorial
+                    </TabsTrigger>
                 </TabsList>
 
                 {canAddOrRemoveMember && (
@@ -1037,6 +1043,32 @@ export default function DepartmentDetailPage() {
                         orgId={orgId}
                         deptId={deptId}
                         canManage={canCreateTask}
+                    />
+                </TabsContent>
+
+                <TabsContent value="editorial">
+                    <Card
+                        className="bg-card border-border hover:border-primary/50 transition cursor-pointer"
+                        onClick={() => setEditorialPanelOpen(true)}
+                    >
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle className="text-lg flex items-center gap-2">
+                                <CalendarIcon className="w-5 h-5" />
+                                Planning éditorial
+                            </CardTitle>
+                            <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                                Planifiez vos contenus (articles, posts, vidéos…) et suivez leur avancement. Tous les membres du département peuvent créer et modifier.
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <EditorialPlanningPanel
+                        open={editorialPanelOpen}
+                        onOpenChange={setEditorialPanelOpen}
+                        baseUrl={`/api/organizations/${orgId}/departments/${deptId}`}
+                        members={department.members.map((m) => ({ id: m.id, user: { id: m.user.id, name: m.user.name ?? null, email: m.user.email } }))}
                     />
                 </TabsContent>
             </Tabs>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2, ClipboardList, CheckCircle2, AlertCircle, Clock, MoreVertical, Loader2, ImagePlus, FileText, StickyNote, FolderOpen } from "lucide-react";
+import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2, ClipboardList, CheckCircle2, AlertCircle, Clock, MoreVertical, Loader2, ImagePlus, FileText, StickyNote, FolderOpen, Handshake } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
@@ -168,6 +168,18 @@ export default function OrganizationDashboard() {
         fetcher
     );
     const orgMembers: OrgMember[] = membersData?.members || [];
+
+    // Collaborations
+    const { data: collabData, mutate: mutateCollaborations } = useSWR<{
+        collaborations: Array<{
+            id: string;
+            status: string;
+            orgA: { id: string; name: string; code: string; logo?: string };
+            orgB: { id: string; name: string; code: string; logo?: string };
+            groups: Array<{ id: string; name: string; _count: { members: number } }>;
+        }>;
+    }>(orgId ? `/api/organizations/${orgId}/collaborations` : null, fetcher);
+    const collaborations = collabData?.collaborations || [];
     const [updatingRoleUserId, setUpdatingRoleUserId] = useState<string | null>(null);
 
     const currentMonth = format(new Date(), 'yyyy-MM');
@@ -443,6 +455,11 @@ export default function OrganizationDashboard() {
 
     const [removingMemberUserId, setRemovingMemberUserId] = useState<string | null>(null);
 
+    // Collaborations
+    const [showCreateCollabDialog, setShowCreateCollabDialog] = useState(false);
+    const [collabOrgCode, setCollabOrgCode] = useState("");
+    const [creatingCollab, setCreatingCollab] = useState(false);
+
     const handleRemoveMemberFromOrg = async (userId: string, memberName: string) => {
         if (!orgId || !confirm(`Supprimer ${memberName || 'ce membre'} de l'organisation ? Il sera retiré de tous les départements.`)) return;
         setRemovingMemberUserId(userId);
@@ -511,6 +528,91 @@ export default function OrganizationDashboard() {
             toast.error('Erreur serveur');
         } finally {
             setDeletingOrg(false);
+        }
+    };
+
+    const handleCreateCollaboration = async () => {
+        if (!orgId || !collabOrgCode.trim()) {
+            toast.error('Saisissez le code de l\'organisation à inviter');
+            return;
+        }
+        setCreatingCollab(true);
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/collaborations`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orgCode: collabOrgCode.trim() }),
+            });
+            const text = await res.text();
+            let data: { error?: string } = {};
+            try {
+                data = text ? JSON.parse(text) : {};
+            } catch {
+                data = { error: res.ok ? 'Réponse invalide' : `Erreur ${res.status}` };
+            }
+            if (res.ok) {
+                toast.success('Invitation de collaboration envoyée');
+                setShowCreateCollabDialog(false);
+                setCollabOrgCode('');
+                mutateCollaborations();
+            } else {
+                toast.error(data.error || 'Erreur');
+            }
+        } catch (e) {
+            console.error('Create collaboration error:', e);
+            toast.error('Erreur serveur');
+        } finally {
+            setCreatingCollab(false);
+        }
+    };
+
+    const handleAcceptRejectCollaboration = async (collabId: string, action: 'accept' | 'reject') => {
+        if (!orgId) return;
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/collaborations/${collabId}/${action}`, {
+                method: 'POST',
+            });
+            const text = await res.text();
+            let data: { error?: string } = {};
+            try {
+                data = text ? JSON.parse(text) : {};
+            } catch {
+                data = { error: res.ok ? 'Réponse invalide' : `Erreur ${res.status}` };
+            }
+            if (res.ok) {
+                toast.success(action === 'accept' ? 'Collaboration acceptée' : 'Invitation refusée');
+                mutateCollaborations();
+            } else {
+                toast.error(data.error || 'Erreur');
+            }
+        } catch (e) {
+            console.error('Accept/reject collaboration error:', e);
+            toast.error('Erreur serveur');
+        }
+    };
+
+    const handleDeleteCollaboration = async (collabId: string) => {
+        if (!orgId || !confirm('Supprimer cette collaboration ? Tous les groupes et données seront supprimés.')) return;
+        try {
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/collaborations/${collabId}`, {
+                method: 'DELETE',
+            });
+            const text = await res.text();
+            let err: { error?: string } = {};
+            try {
+                err = text ? JSON.parse(text) : {};
+            } catch {
+                err = { error: res.ok ? 'Réponse invalide' : `Erreur ${res.status}` };
+            }
+            if (res.ok) {
+                toast.success('Collaboration supprimée');
+                mutateCollaborations();
+            } else {
+                toast.error(err.error || 'Erreur');
+            }
+        } catch (e) {
+            console.error('Delete collaboration error:', e);
+            toast.error('Erreur serveur');
         }
     };
 
@@ -831,6 +933,45 @@ export default function OrganizationDashboard() {
                         )}
                     </div>
 
+                    {/* Collaborations (non-admin) */}
+                    {collaborations.length > 0 && (
+                        <div className="space-y-4 pt-4 border-t border-border">
+                            <h2 className="text-lg md:text-xl font-semibold text-foreground flex items-center gap-2">
+                                <Handshake className="w-5 h-5" />
+                                Mes Collaborations
+                            </h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                                {collaborations
+                                    .filter((c) => c.status === 'ACTIVE')
+                                    .map((collab) => {
+                                        const otherOrg = collab.orgA.id === orgId ? collab.orgB : collab.orgA;
+                                        return (
+                                            <Card
+                                                key={collab.id}
+                                                className="bg-card border-border hover:border-primary/50 transition cursor-pointer"
+                                                onClick={() => router.push(`/chat/organizations/${orgId}/collaborations/${collab.id}`)}
+                                            >
+                                                <CardContent className="pt-4">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <Avatar className="h-10 w-10">
+                                                            <AvatarFallback>{otherOrg.name[0]}</AvatarFallback>
+                                                        </Avatar>
+                                                        <div>
+                                                            <p className="font-medium truncate">{otherOrg.name}</p>
+                                                            <p className="text-xs text-muted-foreground">{collab.groups.length} groupe{collab.groups.length > 1 ? 's' : ''}</p>
+                                                        </div>
+                                                    </div>
+                                                    <Button size="sm" variant="secondary" className="w-full mt-2">
+                                                        Ouvrir
+                                                    </Button>
+                                                </CardContent>
+                                            </Card>
+                                        );
+                                    })}
+                            </div>
+                        </div>
+                    )}
+
                     {/* My Tasks Section */}
                     {renderMyTasks()}
                 </div>
@@ -1020,6 +1161,117 @@ export default function OrganizationDashboard() {
                     )}
                 </div>
 
+                {/* Collaborations Section */}
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+                            <Handshake className="w-5 h-5" />
+                            Collaborations
+                        </h2>
+                        {isAdmin && (
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                className="border-primary text-primary hover:bg-primary/10"
+                                onClick={() => setShowCreateCollabDialog(true)}
+                            >
+                                <Plus className="w-4 h-4 mr-2" />
+                                Nouvelle collaboration
+                            </Button>
+                        )}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                        Collaborez avec d&apos;autres organisations : créez des groupes, ajoutez des membres des deux équipes et utilisez les outils de collaboration (chat, tâches, documents).
+                    </p>
+
+                    {collaborations.length === 0 ? (
+                        <div className="text-center py-12 border-2 border-dashed border-border rounded-xl">
+                            <Handshake className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                            <p className="text-muted-foreground">Aucune collaboration</p>
+                            <p className="text-sm text-muted-foreground mb-4">Invitez une autre organisation par son code pour commencer</p>
+                            {isAdmin && (
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="border-primary text-primary hover:bg-primary/10"
+                                    onClick={() => setShowCreateCollabDialog(true)}
+                                >
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Créer une collaboration
+                                </Button>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {collaborations.map((collab) => {
+                                const otherOrg = collab.orgA.id === orgId ? collab.orgB : collab.orgA;
+                                const isPending = collab.status === 'PENDING';
+                                const isOrgB = collab.orgB.id === orgId;
+                                const canAcceptReject = isPending && isOrgB;
+
+                                return (
+                                    <Card
+                                        key={collab.id}
+                                        className={`bg-card border-border transition cursor-pointer ${collab.status === 'ACTIVE' ? 'hover:border-primary/50' : 'opacity-90'}`}
+                                        onClick={() => collab.status === 'ACTIVE' && router.push(`/chat/organizations/${orgId}/collaborations/${collab.id}`)}
+                                    >
+                                        <CardHeader className="pb-2">
+                                            <div className="flex items-center gap-2">
+                                                <Avatar className="h-10 w-10 border border-border">
+                                                    <AvatarImage src={otherOrg.logo ? `https://api.dicebear.com/7.x/initials/svg?seed=${otherOrg.name}` : undefined} />
+                                                    <AvatarFallback>{otherOrg.name[0]}</AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex-1 min-w-0">
+                                                    <CardTitle className="text-base truncate">{otherOrg.name}</CardTitle>
+                                                    <p className="text-xs text-muted-foreground">Code: {otherOrg.code}</p>
+                                                </div>
+                                            </div>
+                                        </CardHeader>
+                                        <CardContent className="space-y-3">
+                                            <div className="flex items-center gap-2">
+                                                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                                    collab.status === 'ACTIVE' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                                                    collab.status === 'PENDING' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                                                    'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                                                }`}>
+                                                    {collab.status === 'ACTIVE' ? 'Active' : collab.status === 'PENDING' ? 'En attente' : 'Refusée'}
+                                                </span>
+                                            </div>
+                                            {collab.status === 'ACTIVE' && (
+                                                <p className="text-sm text-muted-foreground">
+                                                    {collab.groups.length} groupe{collab.groups.length > 1 ? 's' : ''}
+                                                </p>
+                                            )}
+                                            <div className="flex gap-2 flex-wrap" onClick={(e) => e.stopPropagation()}>
+                                                {canAcceptReject && (
+                                                    <>
+                                                        <Button size="sm" className="flex-1 bg-green-600 hover:bg-green-700" onClick={() => handleAcceptRejectCollaboration(collab.id, 'accept')}>
+                                                            Accepter
+                                                        </Button>
+                                                        <Button size="sm" variant="outline" className="flex-1 text-destructive" onClick={() => handleAcceptRejectCollaboration(collab.id, 'reject')}>
+                                                            Refuser
+                                                        </Button>
+                                                    </>
+                                                )}
+                                                {collab.status === 'ACTIVE' && (
+                                                    <Button size="sm" variant="secondary" className="flex-1" onClick={() => router.push(`/chat/organizations/${orgId}/collaborations/${collab.id}`)}>
+                                                        Ouvrir
+                                                    </Button>
+                                                )}
+                                                {(collab.status === 'ACTIVE' || (isPending && !isOrgB)) && (
+                                                    <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteCollaboration(collab.id)}>
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+
                 {/* My Tasks Section for Admins */}
                 {renderMyTasks()}
 
@@ -1078,6 +1330,35 @@ export default function OrganizationDashboard() {
                         <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsEditOpen(false)}>Annuler</Button>
                             <Button onClick={handleUpdateDepartment}>Enregistrer</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Create Collaboration Dialog */}
+                <Dialog open={showCreateCollabDialog} onOpenChange={setShowCreateCollabDialog}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Nouvelle collaboration</DialogTitle>
+                        </DialogHeader>
+                        <p className="text-sm text-muted-foreground">
+                            Entrez le code à 12 chiffres de l&apos;organisation que vous souhaitez inviter. L&apos;administrateur de cette organisation devra accepter l&apos;invitation.
+                        </p>
+                        <div className="py-2">
+                            <Label>Code de l&apos;organisation</Label>
+                            <Input
+                                value={collabOrgCode}
+                                onChange={(e) => setCollabOrgCode(e.target.value.replace(/\D/g, '').slice(0, 12))}
+                                placeholder="123456789012"
+                                className="mt-2 font-mono"
+                                maxLength={12}
+                            />
+                        </div>
+                        <DialogFooter>
+                            <Button variant="ghost" onClick={() => { setShowCreateCollabDialog(false); setCollabOrgCode(''); }}>Annuler</Button>
+                            <Button onClick={handleCreateCollaboration} disabled={creatingCollab || collabOrgCode.length !== 12}>
+                                {creatingCollab ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                                Envoyer l&apos;invitation
+                            </Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

@@ -109,8 +109,15 @@ export async function GET(
             select: { encryptedDeptKey: true },
         });
 
+        // Les membres du département voient la liste des membres (pour le planning éditorial "Assigné à")
+        const showMembers = canSeeMembers || !!currentMember;
+        const departmentResponseWithMembers = {
+            ...departmentResponse,
+            members: showMembers ? membersWithPresence : [],
+        };
+
         return NextResponse.json({
-            department: departmentResponse,
+            department: departmentResponseWithMembers,
             currentMemberEncryptedDeptKey: currentMember?.encryptedDeptKey ?? null,
             userOrgRole: orgMember?.role ?? null,
             orgOwnerId: org?.ownerId ?? null,

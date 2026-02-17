@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, FileText, NotepadText } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, FileText, NotepadText } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
@@ -85,6 +85,53 @@ export function TopNav() {
     const isDeptDetailPage = Boolean(orgId && deptId && !isDeptChatPage && !isDeptReportsPage);
     const deptUrl = orgId && deptId ? `/chat/organizations/${orgId}/departments/${deptId}` : '';
     const deptChatUrl = orgId && deptId ? `${deptUrl}/chat` : '';
+
+    // Page groupe de collaboration (détail ou chat) : retour, avatar, nom, membres, documents/chat
+    const collabGroupMatch = pathname?.match(
+        /^\/chat\/organizations\/([^/]+)\/collaborations\/([^/]+)\/groups\/([^/]+)(?:\/chat)?\/?$/
+    );
+    const collabOrgId = collabGroupMatch?.[1];
+    const collabId = collabGroupMatch?.[2];
+    const collabGroupId = collabGroupMatch?.[3];
+    const isCollabGroupChatPage = pathname?.endsWith('/chat');
+    const isCollabGroupDetailPage = Boolean(collabOrgId && collabId && collabGroupId && !isCollabGroupChatPage);
+    const { data: collabGroupData } = useSWR<{ group: { name: string; members?: { id: string }[]; _count?: { members: number } } }>(
+        collabOrgId && collabId && collabGroupId
+            ? `/api/organizations/${collabOrgId}/collaborations/${collabId}/groups/${collabGroupId}`
+            : null,
+        fetcher
+    );
+    const collabGroup = collabGroupData?.group;
+    const collabGroupName = collabGroup?.name ?? null;
+    const collabMemberCount = collabGroup?._count?.members ?? collabGroup?.members?.length ?? 0;
+    const isCollabGroupPage = Boolean(collabOrgId && collabId && collabGroupId);
+    const collabGroupUrl = collabOrgId && collabId && collabGroupId
+        ? `/chat/organizations/${collabOrgId}/collaborations/${collabId}/groups/${collabGroupId}`
+        : '';
+    const collabChatUrl = collabGroupUrl ? `${collabGroupUrl}/chat` : '';
+
+    // Page détail collaboration (sans groupe) : /chat/organizations/[id]/collaborations/[collabId]
+    const collabDetailMatch = pathname?.match(
+        /^\/chat\/organizations\/([^/]+)\/collaborations\/([^/]+)\/?$/
+    );
+    const collabDetailOrgId = collabDetailMatch?.[1];
+    const collabDetailId = collabDetailMatch?.[2];
+    const isCollabDetailPage = Boolean(collabDetailOrgId && collabDetailId) && !pathname?.includes('/groups');
+    const { data: collabDetailData } = useSWR<{ collaboration: { orgA: { id: string; name: string; logo?: string }; orgB: { id: string; name: string; logo?: string }; groups?: { id: string }[] } }>(
+        collabDetailOrgId && collabDetailId
+            ? `/api/organizations/${collabDetailOrgId}/collaborations/${collabDetailId}`
+            : null,
+        fetcher
+    );
+    const collabDetail = collabDetailData?.collaboration;
+    const collabDetailOtherOrg = collabDetail
+        ? (collabDetail.orgA.id === collabDetailOrgId ? collabDetail.orgB : collabDetail.orgA)
+        : null;
+    const collabDetailGroupCount = collabDetail?.groups?.length ?? 0;
+    const collabDetailUrl = collabDetailOrgId && collabDetailId
+        ? `/chat/organizations/${collabDetailOrgId}/collaborations/${collabDetailId}`
+        : '';
+    const collabDetailOrgUrl = collabDetailOrgId ? `/chat/organizations/${collabDetailOrgId}` : '';
 
     // Page tâche : titre + statut + actions dans la top bar
     const taskMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)\/tasks\/([^/]+)\/?$/);
@@ -307,6 +354,102 @@ export function TopNav() {
                                 </Button>
                             )}
                         </div>
+                    )}
+                </>
+            ) : isCollabGroupPage && collabGroupUrl ? (
+                /* Top bar groupe collaboration (détail ou chat) : retour, avatar, nom, membres, documents, chat/paramètres */
+                <>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                            router.push(
+                                isCollabGroupChatPage
+                                    ? collabGroupUrl
+                                    : `/chat/organizations/${collabOrgId}/collaborations/${collabId}`
+                            )
+                        }
+                        className="mr-2 shrink-0"
+                        title={isCollabGroupChatPage ? 'Retour au groupe' : 'Retour à la collaboration'}
+                    >
+                        <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                    </Button>
+                    <Avatar className="h-10 w-10 border border-border shrink-0">
+                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(collabGroupName || '')}`} />
+                        <AvatarFallback>{(collabGroupName || 'G')[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3 flex-1 min-w-0">
+                        <h2 className="font-semibold text-foreground truncate">
+                            {collabGroupName || 'Groupe'}
+                        </h2>
+                        <p className="text-xs text-muted-foreground truncate">
+                            {collabMemberCount > 0
+                                ? `${collabMemberCount} membre${collabMemberCount > 1 ? 's' : ''} · Collaboration`
+                                : 'Collaboration inter-organisations'}
+                        </p>
+                    </div>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => window.dispatchEvent(new CustomEvent('collaboration-chat-open-documents'))}
+                        className="text-muted-foreground hover:text-foreground shrink-0"
+                        title="Documents & notes"
+                        aria-label="Documents et notes"
+                    >
+                        <FileText className="w-5 h-5" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                            router.push(isCollabGroupChatPage ? collabGroupUrl : collabChatUrl)
+                        }
+                        className="text-muted-foreground hover:text-foreground shrink-0"
+                        title={
+                            isCollabGroupChatPage
+                                ? 'Gérer le groupe'
+                                : 'Ouvrir le chat'
+                        }
+                    >
+                        {isCollabGroupChatPage ? (
+                            <Settings className="w-5 h-5" />
+                        ) : (
+                            <MessageSquare className="w-5 h-5" />
+                        )}
+                    </Button>
+                </>
+            ) : isCollabDetailPage && collabDetailUrl ? (
+                /* Top bar détail collaboration : retour, avatar, nom, orgA ↔ orgB */
+                <>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push(collabDetailOrgUrl)}
+                        className="mr-2 shrink-0"
+                        title="Retour à l'organisation"
+                    >
+                        <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                    </Button>
+                    <Avatar className="h-10 w-10 border border-border shrink-0">
+                        {collabDetailOtherOrg?.logo ? (
+                            <AvatarImage src={collabDetailOtherOrg.logo} />
+                        ) : null}
+                        <AvatarFallback>
+                            <Handshake className="w-5 h-5" />
+                        </AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3 flex-1 min-w-0">
+                        <h2 className="font-semibold text-foreground truncate">
+                            Collaboration avec {collabDetailOtherOrg?.name || '…'}
+                        </h2>
+                        <p className="text-xs text-muted-foreground truncate">
+                            {collabDetail?.orgA?.name} ↔ {collabDetail?.orgB?.name}
+                        </p>
+                    </div>
+                    {collabDetailGroupCount > 0 && (
+                        <span className="text-xs text-muted-foreground shrink-0">
+                            {collabDetailGroupCount} groupe{collabDetailGroupCount > 1 ? 's' : ''}
+                        </span>
                     )}
                 </>
             ) : (isDeptChatPage || isDeptDetailPage || isDeptReportsPage) && departmentName && deptUrl ? (

@@ -200,7 +200,7 @@ export function NotificationListener() {
     useEffect(() => {
         if (typeof window === 'undefined') return;
         if (pushRegistered.current) return;
-        if (!isProtectedPath(pathname) || !getToken()) return;
+        if (!pathname || !isProtectedPath(pathname) || !getToken()) return;
 
         const run = async () => {
             const result = await registerPushSubscription();
