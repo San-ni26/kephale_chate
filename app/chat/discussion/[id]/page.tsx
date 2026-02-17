@@ -9,6 +9,8 @@ import { Input } from '@/src/components/ui/input';
 import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, RotateCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
+import { sendWithOfflineQueue } from '@/src/lib/offline-queue';
+import { createCacheAwareFetcher, addMessageToCache, removeMessageFromCache } from '@/src/lib/api-cache';
 import useSWR from 'swr';
 
 import { formatDistanceToNow } from 'date-fns';
@@ -269,6 +271,8 @@ export default function DiscussionPage() {
         });
     }, []);
 
+    const messagesCacheUrl = conversationId ? `/api/conversations/${conversationId}/messages?limit=30` : null;
+
     // Real-time message handlers
     const handleNewMessage = useCallback((data: { conversationId: string; message: Message }) => {
         if (data.conversationId !== conversationId) return;
@@ -283,18 +287,21 @@ export default function DiscussionPage() {
             }
             return [...prev, data.message];
         });
+        if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, data.message);
         scrollToBottom();
-    }, [conversationId, scrollToBottom]);
+    }, [conversationId, scrollToBottom, messagesCacheUrl]);
 
     const handleMessageEdited = useCallback((data: { conversationId: string; message: Message }) => {
         if (data.conversationId !== conversationId) return;
         setMessages(prev => prev.map(m => m.id === data.message.id ? data.message : m));
-    }, [conversationId]);
+        if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, data.message);
+    }, [conversationId, messagesCacheUrl]);
 
     const handleMessageDeleted = useCallback((data: { conversationId: string; messageId: string }) => {
         if (data.conversationId !== conversationId) return;
         setMessages(prev => prev.filter(m => m.id !== data.messageId));
-    }, [conversationId]);
+        if (messagesCacheUrl) removeMessageFromCache(messagesCacheUrl, data.messageId);
+    }, [conversationId, messagesCacheUrl]);
 
     const handleUserTyping = useCallback((data: { conversationId: string; userId: string; isTyping: boolean }) => {
         const me = getUser();
@@ -422,18 +429,26 @@ export default function DiscussionPage() {
         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     }, []);
 
-    // Initial Fetch - load only the 30 most recent messages
+    // Initial Fetch - même logique, le fetcher retourne le cache si dispo (transparent)
     useEffect(() => {
         if (!conversationId) return;
 
+        const url = `/api/conversations/${conversationId}/messages?limit=30`;
+        const fetcher = createCacheAwareFetcher(async (u: string) => {
+            const res = await fetchWithAuth(u);
+            if (!res.ok) throw new Error('Failed to fetch');
+            return res.json();
+        });
+
         const loadInitialMessages = async () => {
             try {
-                const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages?limit=30`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setMessages(data.messages);
-                    setHasMore(data.hasMore !== false);
-                }
+                const data = await fetcher(url);
+                setMessages(data.messages);
+                setHasMore(data.hasMore !== false);
+                fetcher(url).then((fresh) => {
+                    setMessages(fresh.messages);
+                    setHasMore(fresh.hasMore !== false);
+                });
             } catch (error) {
                 console.error("Failed to load messages", error);
                 toast.error("Erreur de chargement des messages");
@@ -631,21 +646,25 @@ export default function DiscussionPage() {
 
             setMessages(prev => [...prev, optimisticMessage]);
 
-            const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: encryptedContent, attachments: [attachment] }),
-            });
+            const url = `/api/conversations/${conversationId}/messages`;
+            const bodyStr = JSON.stringify({ content: encryptedContent, attachments: [attachment] });
+            const result = await sendWithOfflineQueue(url, { method: 'POST', body: bodyStr }, tempId, (u, opts) =>
+                fetchWithAuth(u, opts as RequestInit)
+            );
 
-            if (response.ok) {
-                const data = await response.json();
+            if (result.queued) {
+                toast.info('Message vocal en attente (hors ligne)');
+                if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
+            } else if (result.ok && result.response) {
+                const data = await result.response.json();
                 if (data.message) {
                     stableMessageKeysRef.current.set(data.message.id, tempId);
                     stableMessageTimestampsRef.current.set(data.message.id, optimisticMessage.createdAt);
                     setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+                    addMessageToCache(`/api/conversations/${conversationId}/messages?limit=30`, data.message);
                 }
                 scrollToBottom();
-            } else {
+            } else if (result.response) {
                 toast.error("Erreur d'envoi du message vocal");
                 if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
             }
@@ -742,24 +761,28 @@ export default function DiscussionPage() {
             setMessages(prev => [...prev, optimisticMessage]);
             scrollToBottom();
 
-            const response = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: cipherText,
-                    attachments: attachments.length > 0 ? attachments : undefined,
-                }),
+            const url = `/api/conversations/${conversationId}/messages`;
+            const bodyStr = JSON.stringify({
+                content: cipherText,
+                attachments: attachments.length > 0 ? attachments : undefined,
             });
+            const result = await sendWithOfflineQueue(url, { method: 'POST', body: bodyStr }, tempId, (u, opts) =>
+                fetchWithAuth(u, opts as RequestInit)
+            );
 
-            if (response.ok) {
-                const data = await response.json();
+            if (result.queued) {
+                toast.info('Message en attente (hors ligne)');
+                if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
+            } else if (result.ok && result.response) {
+                const data = await result.response.json();
                 if (data.message) {
                     stableMessageKeysRef.current.set(data.message.id, tempId);
                     stableMessageTimestampsRef.current.set(data.message.id, optimisticMessage.createdAt);
                     setMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+                    addMessageToCache(`/api/conversations/${conversationId}/messages?limit=30`, data.message);
                 }
-            } else {
-                const error = await response.json();
+            } else if (result.response) {
+                const error = await result.response.json();
                 toast.error(error.error || "Erreur d'envoi");
                 if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
             }
@@ -792,6 +815,8 @@ export default function DiscussionPage() {
             });
 
             if (response.ok) {
+                const data = await response.json();
+                if (data.message) addMessageToCache(`/api/conversations/${conversationId}/messages?limit=30`, data.message);
                 toast.success('Message modifie');
             } else {
                 toast.error('Erreur de modification');
@@ -812,6 +837,7 @@ export default function DiscussionPage() {
             const response = await fetchWithAuth(`/api/messages/${messageId}`, { method: 'DELETE' });
 
             if (response.ok) {
+                removeMessageFromCache(`/api/conversations/${conversationId}/messages?limit=30`, messageId);
                 toast.success('Message supprime');
             } else {
                 setMessages(originalMessages);
@@ -853,6 +879,7 @@ export default function DiscussionPage() {
                     next.delete(tempId);
                     return next;
                 });
+                addMessageToCache(`/api/conversations/${conversationId}/messages?limit=30`, data.message);
                 scrollToBottom();
                 toast.success('Message envoye');
             } else {

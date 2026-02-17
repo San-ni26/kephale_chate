@@ -3,6 +3,7 @@
 import { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import useSWR from 'swr';
+import { createCacheAwareFetcher, addMessageToCache, removeMessageFromCache } from '@/src/lib/api-cache';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
@@ -24,6 +25,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
+import { sendWithOfflineQueue } from '@/src/lib/offline-queue';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import {
@@ -249,7 +251,7 @@ export default function CollaborationGroupChatPage() {
 
     const currentUser = getUser();
 
-    const messagesFetcher = useCallback(async (url: string) => {
+    const baseFetcher = useCallback(async (url: string) => {
         const res = await fetchWithAuth(url);
         if (!res.ok) throw new Error('Failed to fetch messages');
         const text = await res.text();
@@ -259,6 +261,7 @@ export default function CollaborationGroupChatPage() {
             return { messages: [], hasMore: false, conversationId: null };
         }
     }, []);
+    const messagesFetcher = useMemo(() => createCacheAwareFetcher(baseFetcher), [baseFetcher]);
 
     const dedupeMessagesById = (list: Message[]) => {
         const seen = new Set<string>();
@@ -272,6 +275,7 @@ export default function CollaborationGroupChatPage() {
     const messagesUrl = orgId && collabId && groupId
         ? `/api/organizations/${orgId}/collaborations/${collabId}/groups/${groupId}/messages?limit=30`
         : null;
+    const messagesCacheUrl = messagesUrl;
 
     const { data: messagesData, mutate: mutateMessages, isLoading: messagesLoading } = useSWR(
         messagesUrl,
@@ -291,15 +295,18 @@ export default function CollaborationGroupChatPage() {
             }
             return dedupeMessagesById([...prev, data.message]);
         });
-    }, []);
+        if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, data.message);
+    }, [messagesCacheUrl]);
 
     const handleMessageEdited = useCallback((data: { conversationId: string; message: Message }) => {
         setMessages((prev) => prev.map((m) => (m.id === data.message.id ? data.message : m)));
-    }, []);
+        if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, data.message);
+    }, [messagesCacheUrl]);
 
     const handleMessageDeleted = useCallback((data: { conversationId: string; messageId: string }) => {
         setMessages((prev) => prev.filter((m) => m.id !== data.messageId));
-    }, []);
+        if (messagesCacheUrl) removeMessageFromCache(messagesCacheUrl, data.messageId);
+    }, [messagesCacheUrl]);
 
     const handleUserTyping = useCallback((data: { conversationId: string; userId: string; isTyping: boolean }) => {
         if (data.userId === currentUser?.id) return;
@@ -568,23 +575,24 @@ export default function CollaborationGroupChatPage() {
         scrollToBottom();
 
         try {
-            const res = await fetchWithAuth(
-                `/api/organizations/${orgId}/collaborations/${collabId}/groups/${groupId}/messages`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: encryptedContent, attachments: [attachment] }),
-                }
+            const url = `/api/organizations/${orgId}/collaborations/${collabId}/groups/${groupId}/messages`;
+            const bodyStr = JSON.stringify({ content: encryptedContent, attachments: [attachment] });
+            const result = await sendWithOfflineQueue(url, { method: 'POST', body: bodyStr }, tempId, (u, opts) =>
+                fetchWithAuth(u, opts as RequestInit)
             );
 
-            if (res.ok) {
-                const data = await res.json();
+            if (result.queued) {
+                toast.info('Message vocal en attente (hors ligne)');
+                setFailedMessagePayloads((prev) => new Map(prev).set(tempId, { encryptedContent, attachments: [attachment] }));
+            } else if (result.ok && result.response) {
+                const data = await result.response.json();
                 stableMessageKeysRef.current.set(data.message.id, tempId);
                 stableMessageTimestampsRef.current.set(data.message.id, optimisticMessage.createdAt);
                 setMessages((prev) => prev.map((m) => (m.id === tempId ? data.message : m)));
+                if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, data.message);
                 mutateMessages().catch(() => {});
                 scrollToBottom();
-            } else {
+            } else if (result.response) {
                 toast.error("Erreur d'envoi du message vocal");
                 setFailedMessagePayloads((prev) => new Map(prev).set(tempId, { encryptedContent, attachments: [attachment] }));
             }
@@ -644,27 +652,28 @@ export default function CollaborationGroupChatPage() {
         scrollToBottom();
 
         try {
-            const res = await fetchWithAuth(
-                `/api/organizations/${orgId}/collaborations/${collabId}/groups/${groupId}/messages`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content: encryptedContent,
-                        attachments: attachments.length > 0 ? attachments : undefined,
-                    }),
-                }
+            const url = `/api/organizations/${orgId}/collaborations/${collabId}/groups/${groupId}/messages`;
+            const bodyStr = JSON.stringify({
+                content: encryptedContent,
+                attachments: attachments.length > 0 ? attachments : undefined,
+            });
+            const result = await sendWithOfflineQueue(url, { method: 'POST', body: bodyStr }, tempId, (u, opts) =>
+                fetchWithAuth(u, opts as RequestInit)
             );
 
-            if (res.ok) {
-                const data = await res.json();
+            if (result.queued) {
+                toast.info('Message en attente (hors ligne)');
+                setFailedMessagePayloads((prev) => new Map(prev).set(tempId, { encryptedContent, attachments: attachments.length > 0 ? attachments : undefined }));
+            } else if (result.ok && result.response) {
+                const data = await result.response.json();
                 stableMessageKeysRef.current.set(data.message.id, tempId);
                 stableMessageTimestampsRef.current.set(data.message.id, optimisticMessage.createdAt);
                 setMessages((prev) => prev.map((m) => (m.id === tempId ? data.message : m)));
+                if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, data.message);
                 mutateMessages().catch(() => {});
                 scrollToBottom();
-            } else {
-                const error = await res.json();
+            } else if (result.response) {
+                const error = await result.response.json();
                 toast.error(error.error || "Erreur d'envoi");
                 setFailedMessagePayloads((prev) => new Map(prev).set(tempId, { encryptedContent, attachments: attachments.length > 0 ? attachments : undefined }));
             }
@@ -711,6 +720,7 @@ export default function CollaborationGroupChatPage() {
                         next.delete(tempId);
                         return next;
                     });
+                    if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, data.message);
                     mutateMessages().catch(() => {});
                     scrollToBottom();
                     toast.success('Message envoyé');
@@ -724,7 +734,7 @@ export default function CollaborationGroupChatPage() {
                 setSending(false);
             }
         },
-        [failedMessagePayloads, orgId, collabId, groupId, mutateMessages, scrollToBottom]
+        [failedMessagePayloads, orgId, collabId, groupId, messagesCacheUrl, mutateMessages, scrollToBottom]
     );
 
     const handleEditMessage = async (messageId: string) => {
@@ -743,6 +753,7 @@ export default function CollaborationGroupChatPage() {
                 setMessages((prev) => prev.map((msg) => (msg.id === messageId ? data.message : msg)));
                 setEditingMessageId(null);
                 setEditContent('');
+                if (messagesCacheUrl && data.message) addMessageToCache(messagesCacheUrl, data.message);
                 toast.success('Message modifié');
             }
         } catch {
@@ -760,6 +771,7 @@ export default function CollaborationGroupChatPage() {
 
             if (response.ok) {
                 setMessages((prev) => prev.filter((msg) => msg.id !== messageId));
+                if (messagesCacheUrl) removeMessageFromCache(messagesCacheUrl, messageId);
                 toast.success('Message supprimé');
             }
         } catch {

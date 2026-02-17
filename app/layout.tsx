@@ -6,6 +6,9 @@ import { NotificationListener } from "@/src/components/chat/NotificationListener
 import { GlobalCallOverlay } from "@/src/components/chat/GlobalCallOverlay";
 import { AuthGuard } from "@/src/components/AuthGuard";
 import { CallProvider } from "@/src/contexts/CallContext";
+import { SWRProvider } from "@/src/providers/SWRProvider";
+import { OfflineBanner } from "@/src/components/chat/OfflineBanner";
+import { OfflineQueueSync } from "@/src/components/chat/OfflineQueueSync";
 
 /*
 const geistSans = Geist({
@@ -69,11 +72,15 @@ export default function RootLayout({
         className={`antialiased`}
       >
         <CallProvider>
-          <ServiceWorkerRegistration />
-          <NotificationListener />
-          <AuthGuard />
-          {children}
-          <GlobalCallOverlay />
+          <SWRProvider>
+            <ServiceWorkerRegistration />
+            <NotificationListener />
+            <OfflineBanner />
+            <OfflineQueueSync />
+            <AuthGuard />
+            {children}
+            <GlobalCallOverlay />
+          </SWRProvider>
         </CallProvider>
       </body>
     </html>

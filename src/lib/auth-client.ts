@@ -158,6 +158,9 @@ export function clearAuthAndAllCacheRedirectToLogin(): void {
         sessionStorage.clear();
     } catch { }
 
+    // 2b. File d'attente hors ligne (IndexedDB)
+    import('@/src/lib/offline-queue').then((m) => m.clearOfflineQueue()).catch(() => {});
+
     // 3. Cache API (cache du SW, etc.)
     if ('caches' in window && typeof caches.keys === 'function') {
         caches.keys().then((names) => {

@@ -38,15 +38,57 @@ export function NotificationListener() {
             senderName?: string;
             createdAt: string;
             orgId?: string;
+            collabId?: string;
             deptId?: string;
             groupId?: string;
             type?: string;
         }) => {
             const currentPath = pathnameRef.current;
+            const isTabFocused = typeof document !== 'undefined' && document.hasFocus();
 
-            // Discussion privée : ne pas notifier si l'utilisateur est déjà dans cette conversation
+            // Ne pas notifier si l'utilisateur est dans la conversation ET que l'onglet est actif
+            const shouldSkip = (inConversation: boolean) => inConversation && isTabFocused;
+
+            // Groupe de collaboration : ne pas notifier si l'utilisateur est déjà dans ce chat (et onglet actif)
+            if (data.type === 'collaboration_message' || (data.orgId && data.collabId && data.groupId && !data.deptId)) {
+                const notifOrgId = data.orgId;
+                const notifCollabId = data.collabId;
+                const notifGroupId = data.groupId;
+                const collabChatMatch = currentPath?.match(/^\/chat\/organizations\/([^/]+)\/collaborations\/([^/]+)\/groups\/([^/]+)\/chat/);
+                if (collabChatMatch) {
+                    const [, currentOrgId, currentCollabId, currentGroupId] = collabChatMatch;
+                    const inThisChat = !!(notifOrgId && notifCollabId && notifGroupId && currentOrgId === notifOrgId && currentCollabId === notifCollabId && currentGroupId === notifGroupId);
+                    if (shouldSkip(inThisChat)) return;
+                }
+                if (!notifOrgId || !notifCollabId || !notifGroupId) return;
+                const collabChatPath = `/chat/organizations/${notifOrgId}/collaborations/${notifCollabId}/groups/${notifGroupId}/chat`;
+                if (process.env.NODE_ENV === 'development') {
+                    console.log('[Notification] Received (collaboration):', data.content);
+                }
+                toast(data.senderName ?? 'Nouveau message', {
+                    description: data.content,
+                    action: {
+                        label: 'Voir',
+                        onClick: () => routerRef.current.push(collabChatPath)
+                    },
+                    duration: 5000,
+                });
+                if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                    try {
+                        new Notification(data.senderName ?? 'Nouveau message', {
+                            body: data.content,
+                            icon: '/icons/icon-192x192.png',
+                            tag: 'collab-' + data.groupId,
+                        });
+                    } catch (e) { }
+                }
+                return;
+            }
+
+            // Discussion privée : ne pas notifier si l'utilisateur est déjà dans cette conversation (et onglet actif)
             if (data.conversationId) {
-                if (currentPath?.includes(`/chat/discussion/${data.conversationId}`)) return;
+                const inThisDiscussion = currentPath?.includes(`/chat/discussion/${data.conversationId}`);
+                if (shouldSkip(!!inThisDiscussion)) return;
                 if (process.env.NODE_ENV === 'development') {
                     console.log('[Notification] Received:', data.senderName);
                 }
@@ -70,16 +112,15 @@ export function NotificationListener() {
                 return;
             }
 
-            // Discussion département : ne pas notifier si l'utilisateur est déjà dans le chat du département
+            // Discussion département : ne pas notifier si l'utilisateur est déjà dans le chat du département (et onglet actif)
             if (data.type === 'department_message' || (data.orgId && data.deptId)) {
                 const notifOrgId = data.orgId;
                 const notifDeptId = data.deptId;
-                // Si on est sur une page chat département, extraire org/dept de l'URL pour comparer
                 const deptChatMatch = currentPath?.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)\/chat/);
                 if (deptChatMatch) {
                     const [, currentOrgId, currentDeptId] = deptChatMatch;
-                    if (notifOrgId && notifDeptId && currentOrgId === notifOrgId && currentDeptId === notifDeptId) return;
-                    // type department_message sans orgId/deptId dans le payload : ne pas afficher si on est sur un chat dept
+                    const inThisDeptChat = !!(notifOrgId && notifDeptId && currentOrgId === notifOrgId && currentDeptId === notifDeptId);
+                    if (shouldSkip(inThisDeptChat)) return;
                     if (data.type === 'department_message' && !notifOrgId && !notifDeptId) return;
                 }
                 if (!notifOrgId || !notifDeptId) return; // pas de lien "Voir" possible

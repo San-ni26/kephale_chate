@@ -157,6 +157,125 @@ export async function notifyNewMessage(message: any, conversationId: string) {
 }
 
 /**
+ * Notify members of a collaboration group about a new message.
+ * Same flow as notifyNewMessage but with the correct URL for collaboration group chat.
+ * Web Push works when the app is closed.
+ */
+export async function notifyCollaborationGroupNewMessage(
+    message: any,
+    conversationId: string,
+    params: { orgId: string; collabId: string; groupId: string }
+) {
+    const { orgId, collabId, groupId } = params;
+    const chatUrl = `/chat/organizations/${orgId}/collaborations/${collabId}/groups/${groupId}/chat`;
+
+    let groupMembers;
+    try {
+        groupMembers = await prisma.groupMember.findMany({
+            where: {
+                groupId: conversationId,
+                userId: { not: message.senderId }
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
+            }
+        });
+    } catch (err) {
+        console.error('[Notify] Error fetching group members for collaboration:', err);
+        return;
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+        console.log('[Notify] Notifying', groupMembers.length, 'collaboration group members');
+    }
+
+    const notificationPromises = groupMembers.map(async (member) => {
+        const notificationContent = `Nouveau message de ${message.sender?.name || 'Utilisateur'}`;
+
+        try {
+            const notification = await prisma.notification.create({
+                data: {
+                    userId: member.userId,
+                    content: notificationContent,
+                    isRead: false,
+                }
+            });
+
+            try {
+                await emitToUser(member.userId, 'notification:new', {
+                    id: notification.id,
+                    content: notificationContent,
+                    messageId: message.id,
+                    conversationId,
+                    senderName: message.sender?.name || 'Utilisateur',
+                    orgId,
+                    collabId,
+                    groupId,
+                    type: 'collaboration_message',
+                    createdAt:
+                        notification.createdAt instanceof Date
+                            ? notification.createdAt.toISOString()
+                            : String(notification.createdAt),
+                });
+            } catch (err) {
+                console.error(`[Notify] Error sending Pusher notification to user ${member.userId}:`, err);
+            }
+
+            const subscriptions = await prisma.pushSubscription.findMany({
+                where: { userId: member.userId }
+            });
+
+            if (subscriptions.length === 0 && process.env.NODE_ENV === 'development') {
+                console.warn(`[Notify] User ${member.userId} n'a aucune subscription push`);
+            }
+
+            if (subscriptions.length > 0) {
+                const senderName = message.sender?.name || 'Utilisateur';
+                const payload = JSON.stringify({
+                    title: senderName,
+                    body: 'Nouveau message',
+                    icon: '/icons/icon-192x192.png',
+                    url: chatUrl,
+                    type: 'message',
+                    data: {
+                        conversationId,
+                        messageId: message.id,
+                        orgId,
+                        collabId,
+                        groupId,
+                    }
+                });
+
+                await Promise.allSettled(subscriptions.map(async (sub) => {
+                    try {
+                        await sendPushNotification({
+                            endpoint: sub.endpoint,
+                            keys: { p256dh: sub.p256dh, auth: sub.auth }
+                        }, payload);
+                    } catch (err: any) {
+                        if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
+                            await prisma.pushSubscription.delete({
+                                where: { endpoint: sub.endpoint }
+                            }).catch(() => {});
+                        }
+                        throw err;
+                    }
+                }));
+            }
+        } catch (err) {
+            console.error(`[Notify] Error creating notification for user ${member.userId}:`, err);
+        }
+    });
+
+    await Promise.all(notificationPromises);
+}
+
+/**
  * Send call notification to a user via Pusher + Web Push
  * The Web Push is critical for calls - it's how the phone rings when the app is closed!
  */

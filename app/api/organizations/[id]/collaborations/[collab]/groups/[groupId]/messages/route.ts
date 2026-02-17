@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
 import { emitToConversation } from '@/src/lib/pusher-server';
+import { notifyCollaborationGroupNewMessage } from '@/src/lib/websocket';
 
 export const dynamic = 'force-dynamic';
 
@@ -277,6 +278,16 @@ export async function POST(
             });
         } catch (pusherErr) {
             console.error('[Collab messages] Pusher broadcast error:', pusherErr);
+        }
+
+        try {
+            await notifyCollaborationGroupNewMessage(message, conversation.id, {
+                orgId,
+                collabId,
+                groupId,
+            });
+        } catch (notifyErr) {
+            console.error('[Collab messages] Notification error:', notifyErr);
         }
 
         return NextResponse.json({ message }, { status: 201 });

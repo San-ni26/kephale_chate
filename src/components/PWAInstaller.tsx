@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
+/**
+ * PWAInstaller : prompt d'installation + écoute des mises à jour du SW.
+ * L'enregistrement du SW est géré par ServiceWorkerRegistration (évite doublon).
+ */
 export function PWAInstaller() {
     const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
     const [showInstallButton, setShowInstallButton] = useState(false);
@@ -10,67 +14,37 @@ export function PWAInstaller() {
     useEffect(() => {
         if (!('serviceWorker' in navigator)) return;
 
-        const setupServiceWorker = async () => {
+        // Écouter les mises à jour du SW (enregistré par ServiceWorkerRegistration)
+        const setupUpdateListener = async () => {
             try {
-                // Unregister ALL old service workers first
-                const registrations = await navigator.serviceWorker.getRegistrations();
-                for (const reg of registrations) {
-                    const swUrl = reg.active?.scriptURL || reg.installing?.scriptURL || '';
-                    // Kill anything that's NOT our sw.js
-                    if (!swUrl.endsWith('/sw.js')) {
-                        console.log('[SW] Removing old SW:', swUrl);
-                        await reg.unregister();
-                    }
-                }
+                const registration = await navigator.serviceWorker.getRegistration('/');
+                if (!registration) return;
 
-                // Register our sw.js
-                console.log('[SW] Registering /sw.js');
-                const registration = await navigator.serviceWorker.register('/sw.js', {
-                    updateViaCache: 'none',
-                });
-                console.log('[SW] Registered, scope:', registration.scope);
-
-                // Force update
-                await registration.update().catch(() => {});
-
-                // If waiting, activate immediately
-                if (registration.waiting) {
-                    registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-                }
-
-                // Handle future updates
                 registration.addEventListener('updatefound', () => {
                     const newWorker = registration.installing;
                     if (newWorker) {
                         newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed') {
-                                newWorker.postMessage({ type: 'SKIP_WAITING' });
-                                if (navigator.serviceWorker.controller) {
-                                    toast.info('Mise a jour disponible', {
-                                        action: {
-                                            label: 'Recharger',
-                                            onClick: () => window.location.reload(),
-                                        },
-                                        duration: 10000,
-                                    });
-                                }
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                toast.info('Mise a jour disponible', {
+                                    action: {
+                                        label: 'Recharger',
+                                        onClick: () => window.location.reload(),
+                                    },
+                                    duration: 10000,
+                                });
                             }
                         });
                     }
                 });
-
-                // Periodic update check
-                setInterval(() => registration.update().catch(() => {}), 30 * 60 * 1000);
-
-            } catch (error) {
-                console.error('[SW] Setup failed:', error);
+            } catch {
+                // Ignorer
             }
         };
 
         if (document.readyState === 'complete') {
-            setupServiceWorker();
+            setupUpdateListener();
         } else {
-            window.addEventListener('load', setupServiceWorker, { once: true });
+            window.addEventListener('load', setupUpdateListener, { once: true });
         }
 
         // PWA install prompt

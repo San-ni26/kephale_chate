@@ -1,9 +1,12 @@
 /**
  * Service Worker for Chat Kephale
- * Handles: Push notifications (messages + calls), notification clicks
- * This is the ONLY service worker - no Workbox, no precaching.
+ * Handles: Push notifications (messages + calls), notification clicks,
+ * precache des pages critiques, fetch handler pour mode hors ligne.
  * Push notifications work on all platforms including Vercel.
  */
+
+var CACHE_VERSION = 'kephale-v1';
+var PRECACHE_URLS = ['/', '/login', '/register', '/chat', '/offline', '/manifest.json', '/icons/icon-192x192.png', '/icons/icon-512x512.png'];
 
 // ============ PUSH NOTIFICATION HANDLER ============
 // S'affiche même quand l'app est fermée (navigateur ou onglet) : le SW reste actif pour les push.
@@ -182,12 +185,148 @@ self.addEventListener('notificationclick', function (event) {
 // ============ LIFECYCLE ============
 self.addEventListener('install', function (event) {
     console.log('[SW] Installing...');
-    self.skipWaiting();
+    event.waitUntil(
+        caches.open(CACHE_VERSION).then(function (cache) {
+            return cache.addAll(PRECACHE_URLS).catch(function (err) {
+                console.warn('[SW] Precache failed for some URLs:', err);
+            });
+        }).then(function () {
+            return self.skipWaiting();
+        })
+    );
 });
 
 self.addEventListener('activate', function (event) {
     console.log('[SW] Activating...');
-    event.waitUntil(self.clients.claim());
+    event.waitUntil(
+        caches.keys().then(function (keys) {
+            return Promise.all(keys.filter(function (k) { return k !== CACHE_VERSION; }).map(function (k) { return caches.delete(k); }));
+        }).then(function () {
+            return self.clients.claim();
+        })
+    );
+});
+
+// ============ FETCH HANDLER (offline support) ============
+self.addEventListener('fetch', function (event) {
+    var url = new URL(event.request.url);
+    if (url.origin !== self.location.origin) return;
+
+    // Navigation : network-first, fallback cache, puis /offline si hors ligne
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).catch(function () {
+                return caches.match(event.request).then(function (cached) {
+                    if (cached) return cached;
+                    return caches.match('/offline').then(function (offline) {
+                        return offline || new Response('Hors ligne', { status: 503, statusText: 'Service Unavailable' });
+                    });
+                });
+            })
+        );
+        return;
+    }
+
+    // Assets statiques : cache-first pour perf
+    if (url.pathname.startsWith('/_next/static/') || url.pathname.startsWith('/icons/')) {
+        event.respondWith(
+            caches.match(event.request).then(function (cached) {
+                if (cached) return cached;
+                return fetch(event.request).then(function (res) {
+                    var clone = res.clone();
+                    caches.open(CACHE_VERSION).then(function (cache) { cache.put(event.request, clone); });
+                    return res;
+                });
+            })
+        );
+        return;
+    }
+
+    // GET /api/* : network-first, cache fallback pour consultation hors ligne (TTL ~5 min via nom de cache)
+    if (url.pathname.startsWith('/api/') && event.request.method === 'GET') {
+        var apiCacheName = CACHE_VERSION + '-api';
+        event.respondWith(
+            fetch(event.request).then(function (res) {
+                if (res.ok && res.status === 200) {
+                    var clone = res.clone();
+                    caches.open(apiCacheName).then(function (cache) { cache.put(event.request, clone); });
+                }
+                return res;
+            }).catch(function () {
+                return caches.open(apiCacheName).then(function (cache) {
+                    return cache.match(event.request);
+                }).then(function (cached) {
+                    return cached || new Response(JSON.stringify({ error: 'Hors ligne' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
+                });
+            })
+        );
+        return;
+    }
+
+    // API POST/PATCH/DELETE : network only
+});
+
+// ============ BACKGROUND SYNC (file messages hors ligne) ============
+var DB_NAME = 'kephale-offline-queue';
+var STORE_NAME = 'messages';
+
+function swOpenDB() {
+    return new Promise(function (resolve, reject) {
+        var req = indexedDB.open(DB_NAME, 1);
+        req.onerror = function () { reject(req.error); };
+        req.onsuccess = function () { resolve(req.result); };
+        req.onupgradeneeded = function (e) {
+            var db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+            }
+        };
+    });
+}
+
+function swProcessQueue() {
+    return swOpenDB().then(function (db) {
+        return new Promise(function (resolve) {
+            var tx = db.transaction(STORE_NAME, 'readonly');
+            var store = tx.objectStore(STORE_NAME);
+            var req = store.getAll();
+            req.onsuccess = function () {
+                var items = req.result || [];
+                db.close();
+                Promise.all(items.map(function (item) {
+                    return fetch(item.url, {
+                        method: item.method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: item.body,
+                        credentials: 'include',
+                    }).then(function (res) {
+                        if (res.ok) {
+                            return swOpenDB().then(function (db2) {
+                                return new Promise(function (res2) {
+                                    var tx2 = db2.transaction(STORE_NAME, 'readwrite');
+                                    tx2.objectStore(STORE_NAME).delete(item.id);
+                                    tx2.oncomplete = function () { db2.close(); res2(); };
+                                });
+                            }).then(function () {
+                                return self.clients.matchAll().then(function (clients) {
+                                    clients.forEach(function (c) {
+                                        try { c.postMessage({ type: 'QUEUE_ITEM_SENT', tempId: item.tempId, itemId: item.id }); } catch (e) {}
+                                    });
+                                });
+                            });
+                        }
+                        return Promise.resolve();
+                    }).catch(function () { return Promise.resolve(); });
+                })).then(resolve);
+            };
+        });
+    });
+}
+
+self.addEventListener('sync', function (event) {
+    if (event.tag === 'kephale-send-messages') {
+        event.waitUntil(swProcessQueue());
+    }
 });
 
 // Handle skip waiting message from client
