@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, PhoneIncoming, PhoneOff, Mic, MicOff, Clock, Volume2, RotateCw } from 'lucide-react';
+import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, RotateCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import useSWR from 'swr';
@@ -226,30 +226,6 @@ function DiscussionMessageBubble({
     );
 }
 
-// TURN/STUN servers for reliable WebRTC
-const ICE_SERVERS: RTCIceServer[] = [
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' },
-    { urls: 'stun:stun2.l.google.com:19302' },
-    { urls: 'stun:stun3.l.google.com:19302' },
-    // Free TURN servers for better connectivity
-    {
-        urls: 'turn:openrelay.metered.ca:80',
-        username: 'openrelayproject',
-        credential: 'openrelayproject',
-    },
-    {
-        urls: 'turn:openrelay.metered.ca:443',
-        username: 'openrelayproject',
-        credential: 'openrelayproject',
-    },
-    {
-        urls: 'turn:openrelay.metered.ca:443?transport=tcp',
-        username: 'openrelayproject',
-        credential: 'openrelayproject',
-    },
-];
-
 export default function DiscussionPage() {
     const params = useParams();
     const router = useRouter();
@@ -271,34 +247,6 @@ export default function DiscussionPage() {
     const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
     const [editContent, setEditContent] = useState('');
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
-
-    // Call State
-    const [isCallActive, setIsCallActive] = useState(false);
-    const [isIncomingCall, setIsIncomingCall] = useState(false);
-    const [callStatus, setCallStatus] = useState<'idle' | 'dialing' | 'ringing' | 'connecting' | 'connected' | 'ended'>('idle');
-    const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-    const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-    const [incomingCallData, setIncomingCallData] = useState<{ callerId: string; callerName?: string; offer: any; conversationId: string } | null>(null);
-    const [isMuted, setIsMuted] = useState(false);
-    const [isSpeakerOn, setIsSpeakerOn] = useState(false);
-    const [callDuration, setCallDuration] = useState(0);
-    const [connectionQuality, setConnectionQuality] = useState<'good' | 'fair' | 'poor' | null>(null);
-    const callTimerRef = useRef<NodeJS.Timeout | null>(null);
-    const callTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-    const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
-    const localAudioRef = useRef<HTMLAudioElement>(null);
-    const remoteAudioRef = useRef<HTMLAudioElement>(null);
-    const localStreamRef = useRef<MediaStream | null>(null);
-    const iceCandidateBufferRef = useRef<RTCIceCandidate[]>([]);
-    const callStatusRef = useRef(callStatus);
-    const activeCallNotificationRef = useRef<Notification | null>(null);
-    callStatusRef.current = callStatus;
-
-    // Keep localStreamRef in sync
-    useEffect(() => {
-        localStreamRef.current = localStream;
-    }, [localStream]);
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
@@ -363,27 +311,15 @@ export default function DiscussionPage() {
     const currentUser = getUser();
     const otherUser = conversation?.members.find(m => m.user.id !== currentUser?.id)?.user;
     const callContext = useCallContext();
+    const isCallActiveRef = useRef(false);
+    isCallActiveRef.current = callContext?.activeCall !== null;
 
-    // Refs for call state
-    const isCallActiveRef = useRef(isCallActive);
-    isCallActiveRef.current = isCallActive;
-    const otherUserRef = useRef(otherUser);
-    otherUserRef.current = otherUser;
-
-    // Sync isInCall to CallContext (pour NotificationListener - pas de toast si deja en appel)
-    useEffect(() => {
-        callContext?.setInCall(isCallActive || isIncomingCall);
-        return () => { callContext?.setInCall(false); };
-    }, [isCallActive, isIncomingCall, callContext]);
-
-    // --- Check call status on mount et au retour sur l'onglet : appel actif ou en attente ---
+    // --- Check call status on mount : redirection si appel ailleurs, ou appliquer appel en attente ---
     useEffect(() => {
         if (!conversationId) return;
 
         const applyPendingCall = (data: { callerId: string; callerName?: string; offer: any; conversationId: string }) => {
-            setIncomingCallData(data);
-            setIsIncomingCall(true);
-            setCallStatus('ringing');
+            callContext?.setIncomingCallData(data);
         };
 
         const checkCallStatus = async (claim = true) => {
@@ -439,7 +375,7 @@ export default function DiscussionPage() {
             document.removeEventListener('visibilitychange', onVisible);
             clearTimeout(retryTimer);
         };
-    }, [conversationId, router]);
+    }, [conversationId, router, callContext]);
 
     // --- Mark as read when viewing conversation ---
     useEffect(() => {
@@ -501,432 +437,6 @@ export default function DiscussionPage() {
 
         loadInitialMessages();
     }, [conversationId]);
-
-    // --- Call functions ---
-
-    const emitCallSignal = useCallback(async (event: string, data: any) => {
-        try {
-            await fetchWithAuth('/api/call/signal', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ event, ...data }),
-            });
-        } catch (err) {
-            console.error(`Error sending call signal ${event}:`, err);
-        }
-    }, []);
-
-    const initializePeerConnection = useCallback(() => {
-        iceCandidateBufferRef.current = [];
-        const pc = new RTCPeerConnection({
-            iceServers: ICE_SERVERS,
-            iceCandidatePoolSize: 10,
-            bundlePolicy: 'max-bundle',
-        });
-
-        pc.onicecandidate = (event) => {
-            if (event.candidate && otherUser) {
-                emitCallSignal('call:ice-candidate', {
-                    targetUserId: otherUser.id,
-                    candidate: event.candidate,
-                });
-            }
-        };
-
-        pc.ontrack = (event) => {
-            const stream = event.streams[0];
-            setRemoteStream(stream);
-            if (remoteAudioRef.current) remoteAudioRef.current.srcObject = stream;
-        };
-
-        pc.oniceconnectionstatechange = () => {
-            const state = pc.iceConnectionState;
-            if (state === 'connected' || state === 'completed') {
-                setConnectionQuality('good');
-            } else if (state === 'failed' || state === 'disconnected') {
-                setConnectionQuality('poor');
-                if (state === 'failed') toast.error('Connexion instable...');
-            }
-        };
-
-        peerConnectionRef.current = pc;
-        return pc;
-    }, [otherUser, emitCallSignal]);
-
-    const addBufferedIceCandidates = useCallback(async () => {
-        const pc = peerConnectionRef.current;
-        const buffer = iceCandidateBufferRef.current;
-        if (!pc || buffer.length === 0) return;
-        for (const candidate of buffer) {
-            try {
-                await pc.addIceCandidate(new RTCIceCandidate(candidate));
-            } catch (e) {
-                console.warn('[WebRTC] Failed to add buffered ICE candidate', e);
-            }
-        }
-        iceCandidateBufferRef.current = [];
-    }, []);
-
-    // cleanupCall: resets local state WITHOUT emitting to server
-    const cleanupCall = useCallback(() => {
-        if (localStreamRef.current) {
-            localStreamRef.current.getTracks().forEach(track => track.stop());
-        }
-        if (peerConnectionRef.current) {
-            peerConnectionRef.current.close();
-            peerConnectionRef.current = null;
-        }
-        if (callTimerRef.current) {
-            clearInterval(callTimerRef.current);
-            callTimerRef.current = null;
-        }
-        if (callTimeoutRef.current) {
-            clearTimeout(callTimeoutRef.current);
-            callTimeoutRef.current = null;
-        }
-        iceCandidateBufferRef.current = [];
-        if (activeCallNotificationRef.current) {
-            activeCallNotificationRef.current.close();
-            activeCallNotificationRef.current = null;
-        }
-        setLocalStream(null);
-        setIsCallActive(false);
-        setIsIncomingCall(false);
-        setCallStatus('idle');
-        setIncomingCallData(null);
-        setRemoteStream(null);
-        setCallDuration(0);
-        setIsMuted(false);
-        setIsSpeakerOn(false);
-        setConnectionQuality(null);
-    }, []);
-
-    // endCall: actively ends the call and notifies the remote user
-    const endCall = useCallback(() => {
-        if (isCallActiveRef.current && otherUser) {
-            emitCallSignal('call:end', { targetUserId: otherUser.id });
-        }
-        cleanupCall();
-    }, [otherUser, emitCallSignal, cleanupCall]);
-
-    // Start call duration timer
-    const startCallTimer = useCallback(() => {
-        setCallDuration(0);
-        callTimerRef.current = setInterval(() => {
-            setCallDuration(prev => prev + 1);
-        }, 1000);
-    }, []);
-
-    const startCall = useCallback(async () => {
-        if (!otherUser) return;
-        setIsCallActive(true);
-        setCallStatus('dialing');
-
-        callTimeoutRef.current = setTimeout(() => {
-            if (isCallActiveRef.current && callStatusRef.current === 'dialing') {
-                toast.info('Pas de reponse');
-                endCall();
-            }
-        }, 45000);
-
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
-            setLocalStream(stream);
-
-            const pc = initializePeerConnection();
-            stream.getTracks().forEach(track => pc.addTrack(track, stream));
-
-            setCallStatus('connecting');
-            const offer = await pc.createOffer({ iceRestart: false });
-            await pc.setLocalDescription(offer);
-
-            await emitCallSignal('call:invite', {
-                recipientId: otherUser.id,
-                offer: offer,
-                conversationId: conversationId,
-            });
-
-        } catch (err) {
-            console.error('Error starting call:', err);
-            toast.error("Impossible d'acceder au microphone");
-            cleanupCall();
-        }
-    }, [otherUser, conversationId, initializePeerConnection, cleanupCall, emitCallSignal, endCall]);
-
-    const answerCall = useCallback(async () => {
-        if (!incomingCallData) return;
-        setIsIncomingCall(false);
-        setIsCallActive(true);
-        setCallStatus('connecting');
-
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
-            setLocalStream(stream);
-
-            const pc = initializePeerConnection();
-            stream.getTracks().forEach(track => pc.addTrack(track, stream));
-
-            await pc.setRemoteDescription(new RTCSessionDescription(incomingCallData.offer));
-            await addBufferedIceCandidates();
-
-            const answer = await pc.createAnswer();
-            await pc.setLocalDescription(answer);
-
-            await emitCallSignal('call:answer', {
-                callerId: incomingCallData.callerId,
-                answer: answer,
-                conversationId: incomingCallData.conversationId,
-            });
-
-            setCallStatus('connected');
-            startCallTimer();
-
-        } catch (err) {
-            console.error('Error answering call:', err);
-            toast.error("Erreur lors de la reponse");
-            cleanupCall();
-        }
-    }, [incomingCallData, initializePeerConnection, cleanupCall, emitCallSignal, startCallTimer, addBufferedIceCandidates]);
-
-    const rejectCall = useCallback(() => {
-        if (incomingCallData) {
-            emitCallSignal('call:reject', { callerId: incomingCallData.callerId });
-        }
-        setIsIncomingCall(false);
-        setIncomingCallData(null);
-        setCallStatus('idle');
-    }, [incomingCallData, emitCallSignal]);
-
-    const toggleMute = useCallback(() => {
-        if (localStreamRef.current) {
-            localStreamRef.current.getAudioTracks().forEach(track => {
-                track.enabled = !track.enabled;
-            });
-            setIsMuted(prev => !prev);
-        }
-    }, []);
-
-    const toggleSpeaker = useCallback(async () => {
-        const audio = remoteAudioRef.current;
-        if (!audio || typeof (audio as any).setSinkId !== 'function') return;
-        try {
-            if (isSpeakerOn) {
-                await (audio as any).setSinkId('');
-            } else {
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                const outputs = devices.filter((d) => d.kind === 'audiooutput');
-                const speaker = outputs.find(
-                    (d) =>
-                        d.label.toLowerCase().includes('speaker') ||
-                        d.label.toLowerCase().includes('haut-parleur')
-                ) || outputs[0];
-                if (speaker?.deviceId) {
-                    await (audio as any).setSinkId(speaker.deviceId);
-                }
-            }
-            setIsSpeakerOn((prev) => !prev);
-        } catch (e) {
-            console.warn('[Call] Speaker toggle:', e);
-        }
-    }, [isSpeakerOn]);
-
-    const prewarmMedia = useCallback(async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            stream.getTracks().forEach(t => t.stop());
-        } catch {
-            // Ignore - user may not have granted permission yet
-        }
-    }, []);
-
-    // WebRTC Call Signaling via Pusher userChannel
-    useEffect(() => {
-        if (!userChannel || !isConnected) return;
-
-        const handleIncomingCall = (data: { callerId: string; callerName?: string; offer: any; conversationId: string }) => {
-            if (isCallActiveRef.current) {
-                emitCallSignal('call:reject', { callerId: data.callerId });
-                return;
-            }
-            setIncomingCallData(data);
-            setIsIncomingCall(true);
-            setCallStatus('ringing');
-        };
-
-        const handleCallAnswered = async (data: { answer: any; responderId: string }) => {
-            const pc = peerConnectionRef.current;
-            if (!pc) return;
-            if (callTimeoutRef.current) {
-                clearTimeout(callTimeoutRef.current);
-                callTimeoutRef.current = null;
-            }
-            try {
-                await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
-                const buffer = iceCandidateBufferRef.current;
-                for (const candidate of buffer) {
-                    try {
-                        await pc.addIceCandidate(new RTCIceCandidate(candidate));
-                    } catch (e) {
-                        console.warn('[WebRTC] Failed to add buffered ICE candidate', e);
-                    }
-                }
-                iceCandidateBufferRef.current = [];
-                setCallStatus('connected');
-                startCallTimer();
-            } catch (e) {
-                console.error('Error setting remote description:', e);
-            }
-        };
-
-        const handleCallRejected = () => {
-            toast.info('Appel rejete');
-            cleanupCall();
-        };
-
-        const handleCallEnded = () => {
-            toast.info('Appel termine');
-            cleanupCall();
-        };
-
-        const handleIceCandidate = async (data: { candidate: any; senderId: string }) => {
-            const pc = peerConnectionRef.current;
-            if (!pc) return;
-            if (pc.remoteDescription) {
-                try {
-                    await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-                } catch (e) {
-                    console.warn('Error adding ICE candidate', e);
-                }
-            } else {
-                iceCandidateBufferRef.current.push(data.candidate);
-            }
-        };
-
-        userChannel.bind('call:incoming', handleIncomingCall);
-        userChannel.bind('call:answered', handleCallAnswered);
-        userChannel.bind('call:rejected', handleCallRejected);
-        userChannel.bind('call:ended', handleCallEnded);
-        userChannel.bind('call:ice-candidate', handleIceCandidate);
-
-        return () => {
-            userChannel.unbind('call:incoming', handleIncomingCall);
-            userChannel.unbind('call:answered', handleCallAnswered);
-            userChannel.unbind('call:rejected', handleCallRejected);
-            userChannel.unbind('call:ended', handleCallEnded);
-            userChannel.unbind('call:ice-candidate', handleIceCandidate);
-        };
-    }, [userChannel, isConnected, cleanupCall, emitCallSignal, startCallTimer]);
-
-    // Auto-play remote audio
-    useEffect(() => {
-        const audio = remoteAudioRef.current;
-        if (!audio || !remoteStream) return;
-        audio.srcObject = remoteStream;
-        audio.play().catch(() => {
-            // NotAllowedError: autoplay bloque (ex: onglet en arriere-plan)
-        });
-    }, [remoteStream]);
-
-
-    // Sync local call state : raccroche depuis notification ou retour sur l'app
-    useEffect(() => {
-        const onVisible = async () => {
-            if (!isCallActiveRef.current || !conversationId) return;
-            try {
-                const res = await fetchWithAuth('/api/call/status');
-                if (!res.ok) return;
-                const { activeCall } = await res.json();
-                if (!activeCall || activeCall.conversationId !== conversationId) {
-                    cleanupCall();
-                }
-            } catch {
-                // Ignore
-            }
-        };
-        const onSwMessage = (e: MessageEvent) => {
-            if (e.data?.type === 'CALL_ENDED_BY_NOTIFICATION') cleanupCall();
-        };
-        document.addEventListener('visibilitychange', onVisible);
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.addEventListener('message', onSwMessage);
-        }
-        return () => {
-            document.removeEventListener('visibilitychange', onVisible);
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.removeEventListener('message', onSwMessage);
-            }
-        };
-    }, [conversationId, cleanupCall]);
-
-    // Notification persistante "Appel en cours" : Raccrocher / Ouvrir meme si l'app est en arriere-plan
-    useEffect(() => {
-        if (callStatus !== 'connected' || !otherUser || !conversationId) return;
-        if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
-
-        let notif: Notification | null = null;
-        try {
-            const name = otherUser.name || otherUser.email || 'Utilisateur';
-            notif = new Notification(`Appel en cours - ${name}`, {
-                body: 'Appuyez pour revenir ou raccrocher',
-                icon: '/icons/icon-192x192.png',
-                tag: `active-call-${conversationId}`,
-                requireInteraction: true,
-                silent: true,
-                data: {
-                    type: 'active_call',
-                    conversationId,
-                    targetUserId: otherUser.id,
-                    url: `/chat/discussion/${conversationId}`,
-                },
-                actions: [
-                    { action: 'hangup', title: 'Raccrocher' },
-                    { action: 'open', title: 'Ouvrir' },
-                ],
-            } as NotificationOptions);
-            activeCallNotificationRef.current = notif;
-
-            notif.onclick = () => {
-                window.focus();
-                notif?.close();
-                activeCallNotificationRef.current = null;
-            };
-        } catch {
-            // NotAllowedError: permission refuse ou autre
-        }
-
-        return () => {
-            notif?.close();
-            activeCallNotificationRef.current = null;
-        };
-    }, [callStatus, otherUser, conversationId]);
-
-    // Cleanup call on unmount : fermer la connexion ET notifier le serveur si on etait en appel
-    useEffect(() => {
-        return () => {
-            const wasInCall = isCallActiveRef.current;
-            const targetUser = otherUserRef.current;
-            if (wasInCall && targetUser) {
-                fetchWithAuth('/api/call/signal', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ event: 'call:end', targetUserId: targetUser.id }),
-                }).catch(() => {});
-            }
-            if (peerConnectionRef.current) {
-                peerConnectionRef.current.close();
-                peerConnectionRef.current = null;
-            }
-            if (localStreamRef.current) {
-                localStreamRef.current.getTracks().forEach(track => track.stop());
-            }
-            if (callTimerRef.current) {
-                clearInterval(callTimerRef.current);
-            }
-            if (callTimeoutRef.current) {
-                clearTimeout(callTimeoutRef.current);
-            }
-        };
-    }, []);
 
     // Fallback polling - only fetch NEW messages after the last known one
     useEffect(() => {
@@ -1363,13 +873,6 @@ export default function DiscussionPage() {
         return conversation.name || 'Discussion';
     };
 
-    // Format call duration as mm:ss
-    const formatCallDuration = (seconds: number) => {
-        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-        const s = (seconds % 60).toString().padStart(2, '0');
-        return `${m}:${s}`;
-    };
-
     if (loading) {
         return (
             <div className="flex flex-col h-full bg-background pt-16 md:pt-4 pb-32 md:pb-4 px-4">
@@ -1415,144 +918,6 @@ export default function DiscussionPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Call Overlay - WhatsApp style */}
-            {(isCallActive || isIncomingCall) && (
-                <div className="fixed inset-0 z-[100] bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center flex-col">
-                    {/* Animated circles background */}
-                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-                        {callStatus === 'connected' && (
-                            <>
-                                <div className="absolute w-64 h-64 rounded-full border border-white/5 animate-ping" style={{ animationDuration: '3s' }} />
-                                <div className="absolute w-48 h-48 rounded-full border border-white/10 animate-ping" style={{ animationDuration: '2s' }} />
-                            </>
-                        )}
-                        {(callStatus === 'dialing' || callStatus === 'ringing' || callStatus === 'connecting') && (
-                            <>
-                                <div className="absolute w-40 h-40 rounded-full bg-primary/10 animate-pulse" />
-                                <div className="absolute w-56 h-56 rounded-full bg-primary/5 animate-pulse" style={{ animationDelay: '0.5s' }} />
-                            </>
-                        )}
-                    </div>
-
-                    <div className="relative z-10 flex flex-col items-center">
-                        {/* Avatar */}
-                        <div className={`relative mb-6 ${callStatus === 'ringing' ? 'animate-bounce' : ''}`}>
-                                <div className={`bg-white/10 p-1 rounded-full ${callStatus === 'connected' ? 'ring-4 ring-green-500/30' : 'ring-4 ring-white/10'}`}>
-                                    <Avatar className="w-28 h-28 border-2 border-white/20">
-                                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${getConversationName()}`} />
-                                        <AvatarFallback className="text-3xl bg-primary/20 text-white">{getConversationName()[0]}</AvatarFallback>
-                                    </Avatar>
-                                </div>
-                                {callStatus === 'connected' && (
-                                    <span className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-gray-800 rounded-full" />
-                                )}
-                            </div>
-
-                        {/* Name */}
-                        <h3 className="text-2xl font-bold text-white mb-1 drop-shadow-lg">
-                            {isIncomingCall ? (incomingCallData?.callerName || otherUser?.name || 'Utilisateur') : (otherUser?.name || 'Utilisateur')}
-                        </h3>
-
-                        {/* Status */}
-                        <p className="text-white/80 mb-2 text-sm drop-shadow">
-                            {isIncomingCall && 'Appel vocal entrant...'}
-                            {callStatus === 'dialing' && 'Appel en cours...'}
-                            {callStatus === 'connecting' && 'Connexion en cours...'}
-                            {callStatus === 'connected' && 'Appel vocal'}
-                        </p>
-
-                        {/* Connection quality indicator */}
-                        {callStatus === 'connected' && connectionQuality && (
-                            <div className={cn(
-                                'text-xs px-2 py-0.5 rounded-full mb-2',
-                                connectionQuality === 'good' && 'bg-green-500/30 text-green-200',
-                                connectionQuality === 'fair' && 'bg-amber-500/30 text-amber-200',
-                                connectionQuality === 'poor' && 'bg-red-500/30 text-red-200'
-                            )}>
-                                {connectionQuality === 'good' && 'Bonne connexion'}
-                                {connectionQuality === 'fair' && 'Connexion moyenne'}
-                                {connectionQuality === 'poor' && 'Connexion instable'}
-                            </div>
-                        )}
-
-                        {/* Timer */}
-                        {callStatus === 'connected' && (
-                            <div className="flex items-center gap-1.5 text-white/80 mb-8">
-                                <Clock className="w-4 h-4" />
-                                <span className="text-lg font-mono">{formatCallDuration(callDuration)}</span>
-                            </div>
-                        )}
-
-                        {callStatus !== 'connected' && <div className="mb-8" />}
-
-                        {/* Action buttons */}
-                        <div className="flex items-center gap-4 flex-wrap justify-center">
-                            {isIncomingCall ? (
-                                <>
-                                    <div className="flex flex-col items-center gap-2">
-                                        <Button
-                                            size="lg"
-                                            className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
-                                            onClick={rejectCall}
-                                        >
-                                            <PhoneOff className="w-7 h-7 text-white" />
-                                        </Button>
-                                        <span className="text-white/60 text-xs">Refuser</span>
-                                    </div>
-                                    <div className="flex flex-col items-center gap-2">
-                                        <Button
-                                            size="lg"
-                                            className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/30 animate-pulse"
-                                            onClick={answerCall}
-                                        >
-                                            <PhoneIncoming className="w-7 h-7 text-white" />
-                                        </Button>
-                                        <span className="text-white/60 text-xs">Repondre</span>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="flex flex-col items-center gap-2">
-                                        <Button
-                                            size="lg"
-                                            className={`rounded-full w-14 h-14 shadow-lg ${isMuted ? 'bg-white/20 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
-                                            onClick={toggleMute}
-                                        >
-                                            {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-                                        </Button>
-                                        <span className="text-white/60 text-xs">{isMuted ? 'Unmute' : 'Mute'}</span>
-                                    </div>
-                                    <div className="flex flex-col items-center gap-2">
-                                        <Button
-                                            size="lg"
-                                            className={`rounded-full w-14 h-14 shadow-lg ${isSpeakerOn ? 'bg-primary/40 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
-                                            onClick={toggleSpeaker}
-                                        >
-                                            <Volume2 className="w-6 h-6" />
-                                        </Button>
-                                        <span className="text-white/60 text-xs">Haut-parleur</span>
-                                    </div>
-                                    <div className="flex flex-col items-center gap-2">
-                                        <Button
-                                            size="lg"
-                                            className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
-                                            onClick={endCall}
-                                        >
-                                            <PhoneOff className="w-7 h-7 text-white" />
-                                        </Button>
-                                        <span className="text-white/60 text-xs">Raccrocher</span>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Hidden Audio Elements */}
-                    <audio ref={remoteAudioRef} autoPlay playsInline className="hidden" />
-                    <audio ref={localAudioRef} autoPlay playsInline muted className="hidden" />
-                </div>
-            )}
-
             {/* Header */}
             <div className="fixed top-0 left-0 right-0 md:static md:w-full bg-background border-b border-border z-[60] h-16 flex items-center px-4 shrink-0">
                 <Button
@@ -1589,9 +954,13 @@ export default function DiscussionPage() {
                     <Button
                         variant="ghost"
                         size="icon"
-                        disabled={isCallActive || !otherUser}
-                        onMouseEnter={prewarmMedia}
-                        onClick={startCall}
+                        disabled={!!callContext?.activeCall || !otherUser}
+                        onMouseEnter={callContext?.prewarmMedia}
+                        onClick={() => {
+                            if (otherUser && conversationId) {
+                                callContext?.startCall(conversationId, otherUser.id, otherUser.name || otherUser.email || 'Utilisateur');
+                            }
+                        }}
                         title="Appel vocal"
                         className="hover:bg-primary/10"
                     >

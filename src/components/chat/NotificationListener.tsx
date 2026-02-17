@@ -23,6 +23,8 @@ export function NotificationListener() {
     pathnameRef.current = pathname;
     routerRef.current = router;
     isInCallRef.current = callContext?.isInCall ?? false;
+    const hasIncomingCallInContextRef = useRef(false);
+    hasIncomingCallInContextRef.current = !!(callContext?.incomingCallData ?? callContext?.isIncomingCall);
 
     // Listen for in-app notifications via Pusher
     useEffect(() => {
@@ -128,6 +130,7 @@ export function NotificationListener() {
             conversationId: string;
         }) => {
             if (isInCallRef.current) return;
+            if (hasIncomingCallInContextRef.current) return; // GlobalCallOverlay affiche deja l'appel entrant
             const currentPath = pathnameRef.current;
             if (currentPath?.includes(`/chat/discussion/${data.conversationId}`)) return;
 
