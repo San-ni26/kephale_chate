@@ -152,19 +152,22 @@ self.addEventListener('notificationclick', function (event) {
 
     // Repondre (appel entrant) ou Ouvrir (appel en cours) : ouvrir/focus la conversation
     var convId = data.conversationId;
-    var fullUrl = url.startsWith('/') ? self.location.origin + url : url;
-    if (notifType === 'call' && convId && !url.includes(convId)) {
-        fullUrl = self.location.origin + '/chat/discussion/' + convId;
+    var basePath = (url && url.startsWith('/')) ? url : ('/chat' + (convId ? '/discussion/' + convId : ''));
+    if (notifType === 'call' && convId) {
+        basePath = '/chat/discussion/' + convId;
+        if (action === 'answer') {
+            basePath += '?answer=1';
+        }
     }
+    var fullUrl = self.location.origin + basePath;
 
     event.waitUntil(
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
             if (clientList.length > 0) {
                 var client = clientList[0];
                 if (client.focus && client.navigate) {
-                    var targetUrl = fullUrl.replace(self.location.origin, '') || '/chat';
                     return client.focus().then(function (c) {
-                        return c.navigate ? c.navigate(targetUrl) : Promise.resolve();
+                        return c.navigate ? c.navigate(fullUrl) : Promise.resolve();
                     });
                 }
                 if (client.focus) {

@@ -80,6 +80,7 @@ interface CallContextValue {
     // Actions
     startCall: (conversationId: string, otherUserId: string, otherUserName: string) => Promise<void>;
     answerCall: () => Promise<void>;
+    answerCallWithData: (data: IncomingCallData) => Promise<void>;
     rejectCall: () => void;
     endCall: () => void;
     toggleMute: () => void;
@@ -335,6 +336,51 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         cleanupCall,
     ]);
 
+    const answerCallWithData = useCallback(
+        async (data: IncomingCallData) => {
+            stopRingtone();
+            setIsIncomingCall(false);
+            setIsInCall(true);
+            setActiveCall({
+                conversationId: data.conversationId,
+                otherUserId: data.callerId,
+                otherUserName: data.callerName || 'Utilisateur',
+            });
+            setCallStatus('connecting');
+            setIncomingCallDataState(null);
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+                });
+                setLocalStream(stream);
+
+                const pc = initializePeerConnection(data.callerId);
+                stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+
+                await pc.setRemoteDescription(new RTCSessionDescription(data.offer as RTCSessionDescriptionInit));
+                await addBufferedIceCandidates();
+
+                const answer = await pc.createAnswer();
+                await pc.setLocalDescription(answer);
+
+                await emitCallSignal('call:answer', {
+                    callerId: data.callerId,
+                    answer,
+                    conversationId: data.conversationId,
+                });
+
+                setCallStatus('connected');
+                startCallTimer();
+            } catch (err) {
+                console.error('[Call] Answer error:', err);
+                toast.error('Erreur lors de la reponse');
+                cleanupCall();
+            }
+        },
+        [initializePeerConnection, addBufferedIceCandidates, emitCallSignal, startCallTimer, cleanupCall]
+    );
+
     const rejectCall = useCallback(() => {
         stopRingtone();
         const data = incomingCallData;
@@ -562,6 +608,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         connectionQuality,
         startCall,
         answerCall,
+        answerCallWithData,
         rejectCall,
         endCall,
         toggleMute,

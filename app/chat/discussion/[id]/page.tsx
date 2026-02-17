@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
@@ -229,6 +229,7 @@ function DiscussionMessageBubble({
 export default function DiscussionPage() {
     const params = useParams();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const conversationId = params?.id as string;
 
     const { data: conversationData } = useSWR(
@@ -337,7 +338,13 @@ export default function DiscussionPage() {
                     return;
                 }
                 if (pendingCall && pendingCall.conversationId === conversationId) {
-                    applyPendingCall(pendingCall);
+                    const shouldAutoAnswer = searchParams?.get('answer') === '1';
+                    if (shouldAutoAnswer && callContext?.answerCallWithData) {
+                        callContext.answerCallWithData(pendingCall);
+                        router.replace(`/chat/discussion/${conversationId}`, { scroll: false });
+                    } else {
+                        applyPendingCall(pendingCall);
+                    }
                     return;
                 }
             } catch {
@@ -375,7 +382,7 @@ export default function DiscussionPage() {
             document.removeEventListener('visibilitychange', onVisible);
             clearTimeout(retryTimer);
         };
-    }, [conversationId, router, callContext]);
+    }, [conversationId, router, callContext, searchParams]);
 
     // --- Mark as read when viewing conversation ---
     useEffect(() => {

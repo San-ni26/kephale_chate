@@ -8,7 +8,7 @@ import { getRedis } from './redis';
 const CALL_PREFIX = 'call:user:';
 const PENDING_PREFIX = 'call:pending:';
 const TTL_ACTIVE = 300; // 5 min max en appel
-const TTL_PENDING = 90; // Appel en attente 90s
+const TTL_PENDING = 120; // Appel en attente 2 min (temps pour ouvrir l'app)
 
 export interface CallState {
     conversationId: string;
