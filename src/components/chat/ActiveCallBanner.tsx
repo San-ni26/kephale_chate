@@ -8,7 +8,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Phone, X } from 'lucide-react';
+import { Phone, X, PhoneOff } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import { cn } from '@/src/lib/utils';
@@ -45,7 +45,11 @@ export function ActiveCallBanner() {
             if (document.visibilityState === 'visible') checkStatus();
         };
         document.addEventListener('visibilitychange', onVisible);
-        return () => document.removeEventListener('visibilitychange', onVisible);
+        const interval = setInterval(checkStatus, 8000);
+        return () => {
+            document.removeEventListener('visibilitychange', onVisible);
+            clearInterval(interval);
+        };
     }, []);
 
     const isOnDiscussionPage = activeCall && pathname?.includes(`/chat/discussion/${activeCall.conversationId}`);
@@ -55,6 +59,21 @@ export function ActiveCallBanner() {
 
     const handleRejoin = () => {
         router.push(`/chat/discussion/${activeCall!.conversationId}`);
+    };
+
+    const handleHangUp = async () => {
+        if (!activeCall?.withUserId) return;
+        try {
+            await fetchWithAuth('/api/call/signal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ event: 'call:end', targetUserId: activeCall.withUserId }),
+            });
+            setActiveCall(null);
+            setDismissed(true);
+        } catch {
+            checkStatus();
+        }
     };
 
     return (
@@ -72,7 +91,7 @@ export function ActiveCallBanner() {
                 <p className="truncate font-medium text-white">
                     Appel en cours{activeCall.withUserName ? ` avec ${activeCall.withUserName}` : ''}
                 </p>
-                <p className="text-xs text-white/80">Cliquez pour rejoindre</p>
+                <p className="text-xs text-white/80">Rejoindre ou raccrocher</p>
             </div>
             <div className="flex shrink-0 gap-1">
                 <Button
@@ -82,6 +101,15 @@ export function ActiveCallBanner() {
                     onClick={handleRejoin}
                 >
                     Rejoindre
+                </Button>
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 text-white/80 hover:bg-red-500/30 hover:text-white"
+                    onClick={handleHangUp}
+                    aria-label="Raccrocher"
+                >
+                    <PhoneOff className="h-4 w-4" />
                 </Button>
                 <Button
                     size="icon"

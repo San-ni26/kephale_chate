@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { usePathname, useRouter } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/auth-client';
 import { registerPushSubscription, syncPushSubscriptionIfGranted } from '@/src/lib/register-push-client';
+import { useCallContext } from '@/src/contexts/CallContext';
 
 const PENDING_CALL_KEY = 'pendingIncomingCall';
 
@@ -14,11 +15,14 @@ export function NotificationListener() {
     const router = useRouter();
     const { userChannel, isConnected } = useWebSocket();
     const pushRegistered = useRef(false);
+    const callContext = useCallContext();
 
     const pathnameRef = useRef(pathname);
     const routerRef = useRef(router);
+    const isInCallRef = useRef(false);
     pathnameRef.current = pathname;
     routerRef.current = router;
+    isInCallRef.current = callContext?.isInCall ?? false;
 
     // Listen for in-app notifications via Pusher
     useEffect(() => {
@@ -123,6 +127,7 @@ export function NotificationListener() {
             offer: any;
             conversationId: string;
         }) => {
+            if (isInCallRef.current) return;
             const currentPath = pathnameRef.current;
             if (currentPath?.includes(`/chat/discussion/${data.conversationId}`)) return;
 
@@ -186,7 +191,7 @@ export function NotificationListener() {
             userChannel.unbind('notification:new', handleNewNotification);
             userChannel.unbind('call:incoming', handleIncomingCall);
         };
-    }, [userChannel, isConnected]);
+    }, [userChannel, isConnected, callContext]);
 
     // Enregistrement Web Push initial (dès que possible après chargement)
     useEffect(() => {

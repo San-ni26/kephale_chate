@@ -119,6 +119,9 @@ export async function POST(request: NextRequest) {
                     return NextResponse.json({ error: 'Missing targetUserId' }, { status: 400 });
                 }
 
+                // Supprimer l'appel en attente du destinataire (si l'appelant raccroche avant reponse)
+                await clearPendingCall(targetUserId);
+
                 // Fin d'appel pour les deux (Redis)
                 await setUserCallEnded(user.userId);
                 await setUserCallEnded(targetUserId);

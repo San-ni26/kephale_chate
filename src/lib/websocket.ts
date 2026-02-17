@@ -8,6 +8,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { sendPushNotification } from '@/src/lib/push';
 import { emitToUser, emitToConversation } from '@/src/lib/pusher-server';
+import { isUserInCall } from '@/src/lib/call-redis';
 
 // Re-export helpers for backward compatibility
 export { emitToUser, emitToConversation };
@@ -168,6 +169,14 @@ export async function notifyIncomingCall(
 ) {
     if (process.env.NODE_ENV === 'development') {
         console.log(`[Call] Notifying ${recipientId} of incoming call from ${callerName}`);
+    }
+
+    const recipientInCall = await isUserInCall(recipientId);
+    if (recipientInCall) {
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`[Call] Recipient ${recipientId} deja en appel, skip notification`);
+        }
+        return;
     }
 
     // Send via Pusher (real-time, if user is online in-app)

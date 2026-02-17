@@ -29,6 +29,7 @@ import {
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 import { EncryptedAttachment } from './EncryptedAttachment';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
+import { useCallContext } from '@/src/contexts/CallContext';
 import { cn } from '@/src/lib/utils';
 
 const AudioRecorderComponent = dynamic(
@@ -361,10 +362,19 @@ export default function DiscussionPage() {
 
     const currentUser = getUser();
     const otherUser = conversation?.members.find(m => m.user.id !== currentUser?.id)?.user;
+    const callContext = useCallContext();
 
     // Refs for call state
     const isCallActiveRef = useRef(isCallActive);
     isCallActiveRef.current = isCallActive;
+    const otherUserRef = useRef(otherUser);
+    otherUserRef.current = otherUser;
+
+    // Sync isInCall to CallContext (pour NotificationListener - pas de toast si deja en appel)
+    useEffect(() => {
+        callContext?.setInCall(isCallActive || isIncomingCall);
+        return () => { callContext?.setInCall(false); };
+    }, [isCallActive, isIncomingCall, callContext]);
 
     // --- Check call status on mount et au retour sur l'onglet : appel actif ou en attente ---
     useEffect(() => {
@@ -890,9 +900,18 @@ export default function DiscussionPage() {
         };
     }, [callStatus, otherUser, conversationId]);
 
-    // Cleanup call on unmount
+    // Cleanup call on unmount : fermer la connexion ET notifier le serveur si on etait en appel
     useEffect(() => {
         return () => {
+            const wasInCall = isCallActiveRef.current;
+            const targetUser = otherUserRef.current;
+            if (wasInCall && targetUser) {
+                fetchWithAuth('/api/call/signal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event: 'call:end', targetUserId: targetUser.id }),
+                }).catch(() => {});
+            }
             if (peerConnectionRef.current) {
                 peerConnectionRef.current.close();
                 peerConnectionRef.current = null;

@@ -5,6 +5,7 @@ import { ServiceWorkerRegistration } from "@/src/components/ServiceWorkerRegistr
 import { NotificationListener } from "@/src/components/chat/NotificationListener";
 import { ActiveCallBanner } from "@/src/components/chat/ActiveCallBanner";
 import { AuthGuard } from "@/src/components/AuthGuard";
+import { CallProvider } from "@/src/contexts/CallContext";
 
 /*
 const geistSans = Geist({
@@ -67,11 +68,13 @@ export default function RootLayout({
       <body
         className={`antialiased`}
       >
-        <ServiceWorkerRegistration />
-        <NotificationListener />
-        <AuthGuard />
-        {children}
-        <ActiveCallBanner />
+        <CallProvider>
+          <ServiceWorkerRegistration />
+          <NotificationListener />
+          <AuthGuard />
+          {children}
+          <ActiveCallBanner />
+        </CallProvider>
       </body>
     </html>
   );
