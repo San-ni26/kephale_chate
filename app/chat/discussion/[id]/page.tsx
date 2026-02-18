@@ -1104,7 +1104,7 @@ export default function DiscussionPage() {
 
     if (loading) {
         return (
-            <div className="flex flex-col h-full bg-background pt-16 md:pt-4 pb-32 md:pb-4 px-4">
+            <div className="flex flex-col h-full bg-background pt-16 pb-32 px-4 min-h-0">
                 <div className="flex justify-center py-4">
                     <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
                 </div>
@@ -1123,7 +1123,7 @@ export default function DiscussionPage() {
     }
 
     return (
-        <div className="flex flex-col h-full bg-background text-foreground pt-2 md:pt-0">
+        <div className="flex flex-col h-full bg-background text-foreground min-h-0">
             <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
                 <DialogContent>
                     <DialogHeader>
@@ -1147,7 +1147,7 @@ export default function DiscussionPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Header */}
+            {/* Header - fixed top-0 pour remplacer la TopNav sur mobile, static sur desktop */}
             <ScreenshotBlocker
                 enabled={shouldBlockScreenshot}
                 className="fixed top-0 left-0 right-0 md:static md:w-full bg-background border-b border-border z-[60] h-16 flex items-center px-4 shrink-0 min-w-0"
@@ -1341,8 +1341,8 @@ export default function DiscussionPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Overlay: Déverrouiller (quand discussion verrouillée, code demandé à chaque session) */}
-            {lockState.isLocked && !isUnlockedSession && (
+            {/* Overlay: Déverrouiller (quand discussion verrouillée, code demandé à chaque session) - masqué si le dialog mot de passe est ouvert */}
+            {lockState.isLocked && !isUnlockedSession && !showPasswordDialog && (
                 <div className="fixed inset-0 z-[70] flex items-center justify-center bg-background/95 backdrop-blur-sm px-4">
                     <div className="w-full max-w-sm p-6 rounded-2xl border border-border bg-card shadow-lg">
                         <div className="flex justify-center mb-4">
@@ -1377,10 +1377,11 @@ export default function DiscussionPage() {
                 </div>
             )}
 
-            {/* Bannière demande de suppression (Pro/Pro) */}
+            {/* Bannière demande de suppression (Pro/Pro) - fixe sous la top bar sur mobile */}
             {deletionRequest && (
                 <div className={cn(
-                    "mx-4 mt-2 p-3 rounded-lg border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3",
+                    "p-3 rounded-lg border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3",
+                    "fixed top-16 left-0 right-0 z-[55] mx-4 mt-2 md:relative md:top-auto md:left-auto md:right-auto",
                     isDeletionRequester
                         ? "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400"
                         : "bg-destructive/10 border-destructive/30 text-destructive"
@@ -1422,7 +1423,10 @@ export default function DiscussionPage() {
 
             {/* Messages */}
             <div
-                className="flex-1 overflow-y-auto px-4 pt-16 md:pt-4 pb-32 md:pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                className={cn(
+                    "flex-1 overflow-y-auto px-4 pb-32 md:pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-0",
+                    deletionRequest ? "pt-36 md:pt-16" : "pt-16"
+                )}
                 ref={scrollRef}
             >
                 <ScreenshotBlocker enabled={shouldBlockScreenshot} className="min-h-full space-y-2">

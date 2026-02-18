@@ -9,6 +9,8 @@ import { CallProvider } from "@/src/contexts/CallContext";
 import { SWRProvider } from "@/src/providers/SWRProvider";
 import { OfflineBanner } from "@/src/components/chat/OfflineBanner";
 import { OfflineQueueSync } from "@/src/components/chat/OfflineQueueSync";
+import { ThemeProvider } from "@/src/components/ThemeProvider";
+import { Toaster } from "@/src/components/ui/sonner";
 
 /*
 const geistSans = Geist({
@@ -68,20 +70,26 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Kephale" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body
-        className={`antialiased`}
-      >
-        <CallProvider>
-          <SWRProvider>
-            <ServiceWorkerRegistration />
-            <NotificationListener />
-            <OfflineBanner />
-            <OfflineQueueSync />
-            <AuthGuard />
-            {children}
-            <GlobalCallOverlay />
-          </SWRProvider>
-        </CallProvider>
+      <body className="antialiased" suppressHydrationWarning>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <CallProvider>
+            <SWRProvider>
+              <ServiceWorkerRegistration />
+              <NotificationListener />
+              <OfflineBanner />
+              <OfflineQueueSync />
+              <AuthGuard />
+              {children}
+              <GlobalCallOverlay />
+              <Toaster />
+            </SWRProvider>
+          </CallProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,6 +1,5 @@
 import { BottomNav } from "@/src/components/chat/BottomNav";
 import { TopNav } from "@/src/components/chat/TopNav";
-import { EnablePushBanner } from "@/src/components/chat/EnablePushBanner";
 import { NotificationPermissionModal } from "@/src/components/chat/NotificationPermissionModal";
 import { PWAInstaller } from "@/src/components/PWAInstaller";
 import { PresenceHeartbeat } from "@/src/components/chat/PresenceHeartbeat";
@@ -20,8 +19,6 @@ export default function ChatLayout({
                 <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
                     {/* Top Bar : visible sur mobile et desktop */}
                     <TopNav />
-                    {/* Bandeau "Activer les notifications (même app fermée)" */}
-                    <EnablePushBanner />
 
                     <div className="flex-1 flex overflow-hidden">
                         {/* Desktop Sidebar (Conversation List) */}
@@ -30,7 +27,7 @@ export default function ChatLayout({
                         </div>
 
                         {/* Main Content Area */}
-                        <main className="flex-1 flex flex-col relative h-full w-full overflow-y-auto overflow-x-hidden">
+                        <main className="flex-1 flex flex-col relative min-h-0 w-full overflow-y-auto overflow-x-hidden">
                             {children}
                         </main>
                     </div>

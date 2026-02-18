@@ -22,10 +22,23 @@ export function TopNav() {
     const pathname = usePathname();
     const feedSearch = useFeedSearch();
     const isNotificationsPage = pathname?.startsWith('/chat/notifications');
+    const publicPageMatch = pathname?.match(/^\/chat\/page\/([^/]+)\/?$/);
+    const publicPageHandle = publicPageMatch?.[1];
+    const isPublicPageView = Boolean(publicPageHandle);
+    const publicPageHandleDecoded = publicPageHandle?.includes("%")
+        ? (() => { try { return decodeURIComponent(publicPageHandle); } catch { return publicPageHandle; } })()
+        : publicPageHandle;
+    const { data: publicPageData } = useSWR<{ page: { handle: string; user?: { name: string; avatarUrl?: string | null } } }>(
+        isPublicPageView && publicPageHandleDecoded ? `/api/page/${encodeURIComponent(publicPageHandleDecoded)}` : null,
+        fetcher
+    );
+    const publicPage = publicPageData?.page;
     const [user, setUser] = useState<any>(null);
     const [searchEmail, setSearchEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [showOrgRequestDialog, setShowOrgRequestDialog] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
 
     const isOrganizationsPage = pathname?.startsWith('/chat/organizations');
     const isFinancesPage = pathname?.startsWith('/chat/finances');
@@ -293,7 +306,7 @@ export function TopNav() {
                     <div className="relative flex-1 min-w-0 max-w-xl">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground shrink-0 pointer-events-none" />
                         <Input
-                            placeholder="Rechercher des pages ou des publications..."
+                            placeholder="Rechercher des pages (@) ou des publications..."
                             value={feedSearch.searchQ}
                             onChange={(e) => feedSearch.setSearchQ(e.target.value)}
                             onFocus={() => feedSearch.setSearchOpen(true)}
@@ -650,6 +663,38 @@ export function TopNav() {
                         <span className="font-semibold text-lg text-foreground">Organisations</span>
                     </div>
                 </div>
+            ) : mounted && isPublicPageView ? (
+                /* Top bar page publique : retour + avatar + nom compact, sans recherche ni plus */
+                <div className="flex items-center gap-2 w-full min-w-0">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push('/chat/notifications')}
+                        className="shrink-0"
+                    >
+                        <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                    </Button>
+                    {publicPage ? (
+                        <>
+                            <Avatar className="h-9 w-9 border border-border shrink-0">
+                                <AvatarImage src={publicPage.user?.avatarUrl ?? undefined} className="object-cover" />
+                                <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                                    {publicPage.handle?.slice(1, 3).toUpperCase() ?? "?"}
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0 flex-1">
+                                <h2 className="font-semibold text-foreground truncate text-sm">
+                                    {publicPage.handle}
+                                </h2>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <div className="h-9 w-9 rounded-full bg-muted animate-pulse shrink-0" />
+                            <div className="h-4 w-24 bg-muted animate-pulse rounded" />
+                        </div>
+                    )}
+                </div>
             ) : (
                 // Default Chat Header View
                 <div className="flex items-center gap-3">
@@ -661,7 +706,7 @@ export function TopNav() {
                 </div>
             )}
 
-            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && !isGroupsPage && !isSettingsPage && !isDiscussionPage && (
+            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && !isGroupsPage && !isSettingsPage && !isDiscussionPage && !(mounted && isPublicPageView) && (
                 <div className="flex items-center gap-2">
                     {!isOrganizationsPage && <UserSearch />}
 

@@ -699,6 +699,7 @@ exports.Prisma.PushSubscriptionScalarFieldEnum = {
   endpoint: 'endpoint',
   p256dh: 'p256dh',
   auth: 'auth',
+  deviceName: 'deviceName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

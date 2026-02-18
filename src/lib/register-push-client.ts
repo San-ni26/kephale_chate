@@ -23,6 +23,24 @@ export interface RegisterPushResult {
     error?: string;
 }
 
+/** Dérive un nom lisible pour l'appareil à partir du navigateur */
+export function getDeviceName(): string {
+    if (typeof navigator === 'undefined') return 'Appareil';
+    const ua = navigator.userAgent;
+    const platform = navigator.platform || '';
+    if (/iPhone|iPod/i.test(ua)) return 'iPhone';
+    if (/iPad/i.test(ua)) return 'iPad';
+    if (/Android/i.test(ua)) {
+        if (/Mobile/i.test(ua)) return 'Android (téléphone)';
+        return 'Android (tablette)';
+    }
+    if (/Mac/i.test(platform) || /Macintosh/i.test(ua)) return 'Mac';
+    if (/Win/i.test(platform) || /Windows/i.test(ua)) return 'PC Windows';
+    if (/Linux/i.test(platform)) return 'Linux';
+    if (/CrOS/i.test(ua)) return 'Chromebook';
+    return 'Appareil';
+}
+
 /**
  * Demande la permission, crée l'abonnement push et l'envoie au serveur.
  * À appeler après un geste utilisateur (bouton) pour de meilleurs résultats sur certains navigateurs.
@@ -103,6 +121,7 @@ export async function registerPushSubscription(forceResubscribe = false): Promis
         }
 
         const subJson = subscription.toJSON();
+        const deviceName = getDeviceName();
         const res = await fetchWithAuth('/api/push/subscribe', {
             method: 'POST',
             credentials: 'include',
@@ -112,6 +131,7 @@ export async function registerPushSubscription(forceResubscribe = false): Promis
                     endpoint: subJson.endpoint,
                     keys: subJson.keys,
                 },
+                deviceName,
             }),
         });
 
@@ -138,6 +158,18 @@ export function canAskPushPermission(): boolean {
 export function getNotificationPermission(): NotificationPermission | null {
     if (typeof window === 'undefined' || !('Notification' in window)) return null;
     return Notification.permission;
+}
+
+/** Récupère l'endpoint de l'abonnement push actuel (pour identifier l'appareil courant). */
+export async function getCurrentPushEndpoint(): Promise<string | null> {
+    if (typeof window === 'undefined' || !('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+    try {
+        const reg = await navigator.serviceWorker.getRegistration('/');
+        const sub = await reg?.pushManager?.getSubscription();
+        return sub?.endpoint ?? null;
+    } catch {
+        return null;
+    }
 }
 
 /**

@@ -20,6 +20,8 @@ import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
 import { TaskManagement } from "@/src/components/settings/TaskManagement";
 import { ProAccountSection } from "@/src/components/settings/ProAccountSection";
+import { ThemeSelector } from "@/src/components/settings/ThemeSelector";
+import { EnablePushBanner } from "@/src/components/chat/EnablePushBanner";
 
 export default function SettingsPage() {
     const router = useRouter();
@@ -338,6 +340,12 @@ export default function SettingsPage() {
             </div>
 
             <div className="space-y-4">
+                {/* Apparence / Thème */}
+                <ThemeSelector />
+
+                {/* Notifications */}
+                <EnablePushBanner variant="settings" />
+
                 {/* Public Page Section */}
                 <Card className="bg-card border-border">
                     <CardHeader>
@@ -369,7 +377,7 @@ export default function SettingsPage() {
                         ) : (
                             <Dialog open={isCreatePageOpen} onOpenChange={setIsCreatePageOpen}>
                                 <DialogTrigger asChild>
-                                    <Button className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white">
+                                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                                         <User className="mr-2 h-4 w-4" /> Créer ma Page Publique
                                     </Button>
                                 </DialogTrigger>

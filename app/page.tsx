@@ -48,7 +48,7 @@ export default function LandingPage() {
                         <h3 className="text-xl font-semibold mb-8 text-center text-primary/80 uppercase tracking-wider">Gestion & Productivité</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <FeatureCard
-                                icon={<Building2 className="w-8 h-8 text-indigo-500" />}
+                                icon={<Building2 className="w-8 h-8 text-foreground" />}
                                 title="Organisations & Départements"
                                 desc="Créez votre structure d'entreprise, gérez vos départements et vos équipes en toute simplicité."
                             />

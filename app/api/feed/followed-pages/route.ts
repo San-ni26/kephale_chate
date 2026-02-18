@@ -43,13 +43,37 @@ export async function GET(request: NextRequest) {
                               }
                           })
                         : await prisma.post.count({ where: { pageId: page.id } });
+
+                    // Premier post non lu (pour scroll) et dernier post (pour image fond carte)
+                    const firstUnreadPost = readPostIds.length
+                        ? await prisma.post.findFirst({
+                              where: {
+                                  pageId: page.id,
+                                  id: { notIn: readPostIds }
+                              },
+                              orderBy: { createdAt: "desc" },
+                              select: { id: true, imageUrl: true }
+                          })
+                        : await prisma.post.findFirst({
+                              where: { pageId: page.id },
+                              orderBy: { createdAt: "desc" },
+                              select: { id: true, imageUrl: true }
+                          });
+                    const latestPost = await prisma.post.findFirst({
+                        where: { pageId: page.id },
+                        orderBy: { createdAt: "desc" },
+                        select: { id: true, imageUrl: true }
+                    });
+
                     return {
                         pageId: page.id,
                         userId: page.userId,
                         handle: page.handle,
-                        avatarUrl: page.user.avatarUrl,
                         name: page.user.name,
-                        unreadCount
+                        avatarUrl: page.user.avatarUrl,
+                        unreadCount,
+                        firstUnreadPostId: firstUnreadPost?.id ?? null,
+                        latestPostImageUrl: latestPost?.imageUrl ?? null
                     };
                 })
         );

@@ -9,48 +9,54 @@ export async function GET(request: NextRequest) {
     if (!user) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
     const { searchParams } = new URL(request.url);
-    const q = (searchParams.get("q") || "").trim().toLowerCase();
+    const q = (searchParams.get("q") || "").trim();
+    const qLower = q.toLowerCase();
     if (!q || q.length < 2) {
         return NextResponse.json({ pages: [], posts: [] });
     }
 
-    const handleLike = `%${q}%`;
-    const contentLike = `%${q}%`;
+    const isPageSearch = q.startsWith("@");
+    const handleLike = `%${qLower}%`;
+    const contentLike = `%${qLower}%`;
 
     try {
         const [pages, posts] = await Promise.all([
             prisma.userPage.findMany({
-                where: {
-                    OR: [
-                        { handle: { contains: q, mode: "insensitive" } },
-                        { bio: { contains: handleLike, mode: "insensitive" } }
-                    ]
-                },
+                where: isPageSearch
+                    ? { handle: { contains: qLower, mode: "insensitive" } }
+                    : {
+                          OR: [
+                              { handle: { contains: qLower, mode: "insensitive" } },
+                              { bio: { contains: handleLike, mode: "insensitive" } }
+                          ]
+                      },
                 take: 15,
                 include: {
                     user: { select: { avatarUrl: true, name: true } },
                     _count: { select: { posts: true } }
                 }
             }),
-            prisma.post.findMany({
-                where: {
-                    OR: [
-                        { content: { contains: contentLike, mode: "insensitive" } },
-                        { caption: { contains: contentLike, mode: "insensitive" } }
-                    ]
-                },
-                take: 20,
-                orderBy: { createdAt: "desc" },
-                include: {
-                    page: {
-                        include: {
-                            user: { select: { avatarUrl: true, name: true } }
-                        }
-                    },
-                    likes: { select: { userId: true } },
-                    _count: { select: { comments: true } }
-                }
-            })
+            isPageSearch
+                ? []
+                : prisma.post.findMany({
+                      where: {
+                          OR: [
+                              { content: { contains: contentLike, mode: "insensitive" } },
+                              { caption: { contains: contentLike, mode: "insensitive" } }
+                          ]
+                      },
+                      take: 20,
+                      orderBy: { createdAt: "desc" },
+                      include: {
+                          page: {
+                              include: {
+                                  user: { select: { avatarUrl: true, name: true } }
+                              }
+                          },
+                          likes: { select: { userId: true } },
+                          _count: { select: { comments: true } }
+                      }
+                  })
         ]);
 
         const followingIds = await prisma.follow.findMany({

@@ -9,7 +9,8 @@ import {
     UserPlus,
     UserCheck,
     X,
-    Loader2
+    Loader2,
+    Plus
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 import { Skeleton } from "@/src/components/ui/skeleton";
@@ -22,6 +23,7 @@ import { fr } from "date-fns/locale";
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
 import { useFeedSearch } from "@/src/contexts/FeedSearchContext";
+import { useRouter } from "next/navigation";
 
 interface Comment {
     id: string;
@@ -61,11 +63,14 @@ interface FollowedPage {
     avatarUrl: string | null;
     name: string | null;
     unreadCount: number;
+    firstUnreadPostId?: string | null;
+    latestPostImageUrl?: string | null;
 }
 
 export default function FeedPage() {
+    const router = useRouter();
     const { searchQ, setSearchQ, searchOpen, setSearchOpen, closeSearch } = useFeedSearch();
-    const [user, setUser] = useState<AuthUser | null>(null);
+    const [user, setUser] = useState<AuthUser | null>(() => (typeof window !== "undefined" ? getUser() : null));
     const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
     const [commentText, setCommentText] = useState("");
     const [replyToId, setReplyToId] = useState<string | null>(null);
@@ -80,7 +85,10 @@ export default function FeedPage() {
         "/api/feed/followed-pages",
         fetcher
     );
-    const followedPages: FollowedPage[] = followedData?.pages ?? [];
+    const { data: userPageData } = useSWR(user ? "/api/user-page" : null, fetcher);
+    const userPage = userPageData?.userPage;
+    const allFollowedPages: FollowedPage[] = followedData?.pages ?? [];
+    const followedPagesWithNewPosts = allFollowedPages.filter((p) => p.unreadCount > 0);
 
     const feedKey = `/api/feed?limit=12&offset=${feedOffset}`;
     const { data: feedData, error: feedError, mutate: mutateFeed } = useSWR<{
@@ -382,25 +390,26 @@ export default function FeedPage() {
                             <>
                                 {searchResults.pages?.length > 0 && (
                                     <p className="text-xs font-medium text-muted-foreground px-2 py-1">
-                                        Pages
+                                        {searchQ.trim().startsWith("@") ? "Pages (cliquez pour voir les posts)" : "Pages"}
                                     </p>
                                 )}
                                 <div className="flex gap-2 overflow-x-auto pb-2">
                                     {searchResults.pages?.map((p: { id?: string; pageId?: string; userId: string; handle: string; avatarUrl?: string | null; user?: { avatarUrl?: string | null }; unreadCount?: number }) => (
-                                        <a
+                                        <button
                                             key={p.pageId ?? p.id ?? p.userId}
-                                            href="#"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                closeSearch();
+                                            type="button"
+                                            onClick={() => {
+                                                const target = `/chat/page/${encodeURIComponent(p.handle)}`;
+                                                router.push(target);
+                                                setTimeout(() => closeSearch(), 0);
                                             }}
-                                            className="flex flex-col items-center shrink-0 gap-1 p-2 rounded-lg hover:bg-muted/50"
+                                            className="flex flex-col items-center shrink-0 gap-1 p-2 rounded-lg hover:bg-muted/50 transition-colors"
                                         >
                                             <div className="relative">
                                                 <Avatar className="h-12 w-12 ring-2 ring-background">
-                                                    <AvatarImage src={(p.avatarUrl ?? p.user?.avatarUrl) ?? undefined} />
+                                                    <AvatarImage src={(p.avatarUrl ?? p.user?.avatarUrl) ?? undefined} className="object-cover" />
                                                     <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                                                        {p.handle.slice(1, 3).toUpperCase()}
+                                                        {p.handle?.slice(1, 3).toUpperCase() ?? "?"}
                                                     </AvatarFallback>
                                                 </Avatar>
                                                 {"unreadCount" in p && Number((p as { unreadCount?: number }).unreadCount) > 0 && (
@@ -410,7 +419,7 @@ export default function FeedPage() {
                                             <span className="text-xs font-medium truncate max-w-[72px]">
                                                 {p.handle}
                                             </span>
-                                        </a>
+                                        </button>
                                     ))}
                                 </div>
                                 {searchResults.posts?.length > 0 && (
@@ -453,40 +462,74 @@ export default function FeedPage() {
                 </div>
             )}
 
-            {/* Bandeau pages suivies (cercles + nom, indicateur non lu) */}
-            {!searchOpen && followedPages.length > 0 && (
+            {/* Bandeau style stories : Ajouter un poste + pages avec nouveau post */}
+            {!searchOpen && (userPage || followedPagesWithNewPosts.length > 0) && (
                 <div className="border-b border-border/50 bg-background/80 py-3 px-2">
-                    <div className="flex gap-4 overflow-x-auto pb-1 scrollbar-hide">
-                        {followedPages.map((page) => (
+                    <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
+                        {userPage && (
+                            <button
+                                type="button"
+                                onClick={() => router.push("/chat/my-page?create=1")}
+                                className="flex flex-col items-center shrink-0 gap-2 min-w-[100px] w-[100px]"
+                            >
+                                <div className="relative h-24 w-[100px] rounded-xl overflow-hidden bg-muted flex items-center justify-center border border-border">
+                                    <Avatar className="h-14 w-14 ring-2 ring-background">
+                                        <AvatarImage src={user?.avatarUrl ?? undefined} className="object-cover" />
+                                        <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                                            {user?.name?.substring(0, 2).toUpperCase() ?? "?"}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div className="absolute bottom-1 right-1 h-10 w-10 rounded-full bg-primary flex items-center justify-center ring-2 ring-background">
+                                        <Plus className="h-5 w-5 text-primary-foreground" />
+                                    </div>
+                                </div>
+                                <span className="text-xs font-medium text-foreground text-center leading-tight">
+                                    Ajouter{" "}
+                                    <br />
+                                    un poste
+                                </span>
+                            </button>
+                        )}
+                        {followedPagesWithNewPosts.map((page) => (
                             <button
                                 key={page.pageId}
                                 type="button"
                                 onClick={() => {
-                                    const firstUnread = posts.find(
+                                    const postId = page.firstUnreadPostId ?? posts.find(
                                         (p) => p.page.userId === page.userId && !p.isRead
-                                    );
-                                    if (firstUnread) scrollToPost(firstUnread.id);
+                                    )?.id;
+                                    if (postId) scrollToPost(postId);
                                 }}
-                                className="flex flex-col items-center shrink-0 gap-1.5 min-w-[64px]"
+                                className="flex flex-col items-center shrink-0 gap-2 min-w-[100px] w-[100px]"
                             >
-                                <div className="relative">
-                                    <Avatar
-                                        className={`h-12 w-12 ring-2 ${page.unreadCount > 0
-                                            ? "ring-primary ring-offset-2 ring-offset-background"
-                                            : "ring-border"
-                                            }`}
-                                    >
-                                        <AvatarImage src={page.avatarUrl ?? undefined} />
-                                        <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                                            {page.handle.slice(1, 3).toUpperCase()}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    {page.unreadCount > 0 && (
-                                        <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-primary border-2 border-background" />
+                                <div className="relative h-24 w-[100px] rounded-xl overflow-hidden border border-border">
+                                    {page.latestPostImageUrl ? (
+                                        <img
+                                            src={page.latestPostImageUrl}
+                                            alt=""
+                                            className="absolute inset-0 w-full h-full object-cover blur-sm scale-110"
+                                        />
+                                    ) : (
+                                        <div className="absolute inset-0 bg-muted" />
                                     )}
+                                    <div className="absolute inset-0 bg-muted/40" />
+                                    <div className="absolute inset-0 flex items-center justify-center pt-2">
+                                        <Avatar
+                                            className={`h-12 w-12 ring-2 ring-background shrink-0 ${
+                                                page.unreadCount > 0
+                                                    ? "ring-green-500 ring-offset-2 ring-offset-background"
+                                                    : "ring-border"
+                                            }`}
+                                        >
+                                            <AvatarImage src={page.avatarUrl ?? undefined} className="object-cover" />
+                                            <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                                                {page.handle.slice(1, 3).toUpperCase()}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                    </div>
                                 </div>
-                                <span className="text-xs font-medium text-foreground truncate max-w-[64px]">
-                                    {page.handle}
+                                <span className="text-xs font-medium text-foreground truncate max-w-[100px] text-center">
+                                    {page.name || page.handle}
                                 </span>
                             </button>
                         ))}

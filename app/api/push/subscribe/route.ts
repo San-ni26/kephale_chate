@@ -21,7 +21,8 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Utilisateur introuvable. Veuillez vous reconnecter.' }, { status: 401 });
         }
 
-        const { subscription } = await request.json();
+        const body = await request.json();
+        const { subscription, deviceName } = body || {};
 
         if (!subscription || !subscription.endpoint || typeof subscription.endpoint !== 'string') {
             return NextResponse.json({ error: 'Subscription non valide (endpoint manquant)' }, { status: 400 });
@@ -31,20 +32,32 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Subscription non valide (clés p256dh/auth manquantes)' }, { status: 400 });
         }
 
-        // Save subscription
+        // Éviter les doublons : si cet utilisateur a déjà cet appareil (même endpoint), retourner succès
+        const existing = await prisma.pushSubscription.findUnique({
+            where: { endpoint: subscription.endpoint },
+        });
+        if (existing?.userId === user.userId) {
+            return NextResponse.json({ success: true }, { status: 200 });
+        }
+
+        const deviceNameStr = typeof deviceName === 'string' && deviceName.trim() ? deviceName.trim() : null;
+
+        // Créer ou mettre à jour (endpoint @unique : un seul enregistrement par appareil)
         await prisma.pushSubscription.upsert({
             where: { endpoint: subscription.endpoint },
             update: {
                 userId: user.userId,
                 p256dh: keys.p256dh,
                 auth: keys.auth,
+                deviceName: deviceNameStr,
             },
             create: {
                 userId: user.userId,
                 endpoint: subscription.endpoint,
                 p256dh: keys.p256dh,
                 auth: keys.auth,
-            }
+                deviceName: deviceNameStr,
+            },
         });
 
         return NextResponse.json({ success: true }, { status: 200 });

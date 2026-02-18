@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef, useCallback, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getUser, getAuthHeader, updateAuthUser, type AuthUser } from "@/src/lib/auth-client";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
@@ -18,8 +18,9 @@ import { Skeleton } from "@/src/components/ui/skeleton";
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
 
-export default function MyPage() {
+function MyPageContent() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [user, setUser] = useState<AuthUser | null>(null);
     // userPage handled by SWR
     const [posts, setPosts] = useState<any[]>([]);
@@ -85,6 +86,14 @@ export default function MyPage() {
             fetchMorePosts(userPage.id, null, true);
         }
     }, [userPage?.id]); // Only trigger when ID changes/loads
+
+    // Ouvrir le dialogue création si ?create=1
+    useEffect(() => {
+        if (searchParams?.get("create") === "1" && userPage) {
+            setIsCreateOpen(true);
+            router.replace("/chat/my-page", { scroll: false });
+        }
+    }, [searchParams, userPage, router]);
 
 
     const fetchMorePosts = async (pageId: string, currentCursor: string | null, isInitial = false) => {
@@ -845,6 +854,14 @@ export default function MyPage() {
                 </DialogContent>
             </Dialog>
         </div>
+    );
+}
+
+export default function MyPage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><Skeleton className="h-32 w-full max-w-md" /></div>}>
+            <MyPageContent />
+        </Suspense>
     );
 }
 
