@@ -19,6 +19,7 @@ import { clearAuthAndAllCacheRedirectToLogin, getUser, type AuthUser, getAuthHea
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
 import { TaskManagement } from "@/src/components/settings/TaskManagement";
+import { ProAccountSection } from "@/src/components/settings/ProAccountSection";
 
 export default function SettingsPage() {
     const router = useRouter();
@@ -472,7 +473,8 @@ export default function SettingsPage() {
                     </CardContent>
                 </Card>
 
-
+                {/* Compte Pro */}
+                <ProAccountSection />
 
                 {/* Tâches */}
                 <div className="space-y-4">

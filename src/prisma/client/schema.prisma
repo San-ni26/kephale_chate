@@ -8,57 +8,60 @@ datasource db {
 }
 
 model User {
-  id                       String                    @id @default(cuid())
-  email                    String                    @unique
-  name                     String?
-  avatarUrl                String?                   @db.Text
-  password                 String
-  phone                    String?
-  publicKey                String                    @db.Text
-  encryptedPrivateKey      String                    @db.Text
-  otpCode                  String?
-  otpExpiry                DateTime?
-  isVerified               Boolean                   @default(false)
-  deviceId                 String?
-  deviceInfo               Json?
-  location                 Json?
-  allowedCountry           String?
-  isBanned                 Boolean                   @default(false)
-  isFirstLogin             Boolean                   @default(true)
-  currentLocation          Json?
-  lastSeen                 DateTime?
-  isOnline                 Boolean                   @default(false)
-  role                     UserRole                  @default(USER)
-  canPublishNotifications  Boolean                   @default(false)
-  createdAt                DateTime                  @default(now())
-  updatedAt                DateTime                  @updatedAt
-  publishedAnnouncements   Announcement[]
-  deptMemberships          DepartmentMember[]
-  groupMemberships         GroupMember[]
-  sentMessages             Message[]
-  notifications            Notification[]
-  orgMemberships           OrganizationMember[]
-  userPage                 UserPage?
-  likes                    Like[]
-  comments                 Comment[]
-  postReads                PostRead[]
-  assignedTasks            Task[]                    @relation("TaskAssignee")
-  createdTasks             Task[]                    @relation("TaskCreator")
-  headedDepartments        Department[]              @relation("DepartmentHead")
-  taskMessages             TaskMessage[]
-  departmentMonthlyReports DepartmentMonthlyReport[]
-  createdMeetings          DepartmentMeeting[]       @relation("MeetingCreator")
-  createdPolls             DepartmentPoll[]          @relation("PollCreator")
-  createdDecisions         TeamDecision[]            @relation("DecisionCreator")
-  pollVotes                PollVote[]
-  decisionVotes            DecisionVote[]
-  pushSubscriptions        PushSubscription[]
-  invitations              UserInvitation[]
-  personalTasks            UserPersonalTask[]
-  financialGoals           UserFinancialGoal[]
-  financialProfile         UserFinancialProfile?
-  monthlyStatements        UserMonthlyStatement[]
-  financialEntries         UserFinancialEntry[]
+  id                        String                        @id @default(cuid())
+  email                     String                        @unique
+  name                      String?
+  avatarUrl                 String?                       @db.Text
+  password                  String
+  phone                     String?
+  publicKey                 String                        @db.Text
+  encryptedPrivateKey       String                        @db.Text
+  otpCode                   String?
+  otpExpiry                 DateTime?
+  isVerified                Boolean                       @default(false)
+  deviceId                  String?
+  deviceInfo                Json?
+  location                  Json?
+  allowedCountry            String?
+  isBanned                  Boolean                       @default(false)
+  isFirstLogin              Boolean                       @default(true)
+  currentLocation           Json?
+  lastSeen                  DateTime?
+  isOnline                  Boolean                       @default(false)
+  role                      UserRole                      @default(USER)
+  canPublishNotifications   Boolean                       @default(false)
+  createdAt                 DateTime                      @default(now())
+  updatedAt                 DateTime                      @updatedAt
+  publishedAnnouncements    Announcement[]
+  deptMemberships           DepartmentMember[]
+  groupMemberships          GroupMember[]
+  sentMessages              Message[]
+  notifications             Notification[]
+  orgMemberships            OrganizationMember[]
+  userPage                  UserPage?
+  likes                     Like[]
+  comments                  Comment[]
+  postReads                 PostRead[]
+  assignedTasks             Task[]                        @relation("TaskAssignee")
+  createdTasks              Task[]                        @relation("TaskCreator")
+  headedDepartments         Department[]                  @relation("DepartmentHead")
+  taskMessages              TaskMessage[]
+  departmentMonthlyReports  DepartmentMonthlyReport[]
+  createdMeetings           DepartmentMeeting[]           @relation("MeetingCreator")
+  createdPolls              DepartmentPoll[]              @relation("PollCreator")
+  createdDecisions          TeamDecision[]                @relation("DecisionCreator")
+  pollVotes                 PollVote[]
+  decisionVotes             DecisionVote[]
+  pushSubscriptions         PushSubscription[]
+  proSubscription           UserProSubscription?
+  proSettings               UserProSettings?
+  invitations               UserInvitation[]
+  personalTasks             UserPersonalTask[]
+  financialGoals            UserFinancialGoal[]
+  financialProfile          UserFinancialProfile?
+  monthlyStatements         UserMonthlyStatement[]
+  financialEntries          UserFinancialEntry[]
+  deletionRequestsInitiated ConversationDeletionRequest[] @relation("DeletionRequestRequester")
 
   followers                        Follow[]                     @relation("UserFollowers")
   following                        Follow[]                     @relation("UserFollowing")
@@ -562,21 +565,37 @@ model DepartmentMember {
 }
 
 model Group {
-  id                   String              @id @default(cuid())
+  id                   String                       @id @default(cuid())
   name                 String?
-  isDirect             Boolean             @default(false)
+  isDirect             Boolean                      @default(false)
   deptId               String?
   collaborationGroupId String?
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @updatedAt
-  department           Department?         @relation(fields: [deptId], references: [id], map: "Group_deptId_fk")
-  collaborationGroup   CollaborationGroup? @relation("CollaborationGroupConversations", fields: [collaborationGroupId], references: [id], onDelete: Cascade)
+  lockCodeHash         String?                      @db.VarChar(255)
+  lockSetByUserId      String?
+  lockedAt             DateTime?
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+  department           Department?                  @relation(fields: [deptId], references: [id], map: "Group_deptId_fk")
+  collaborationGroup   CollaborationGroup?          @relation("CollaborationGroupConversations", fields: [collaborationGroupId], references: [id], onDelete: Cascade)
   members              GroupMember[]
   messages             Message[]
   documents            GroupDocument[]
+  deletionRequest      ConversationDeletionRequest?
 
   @@index([deptId], map: "Group_deptId_idx")
   @@index([collaborationGroupId])
+}
+
+model ConversationDeletionRequest {
+  id          String   @id @default(cuid())
+  groupId     String   @unique
+  requestedBy String
+  createdAt   DateTime @default(now())
+
+  group     Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  requester User  @relation("DeletionRequestRequester", fields: [requestedBy], references: [id], onDelete: Cascade)
+
+  @@index([requestedBy])
 }
 
 model GroupDocument {
@@ -1073,6 +1092,42 @@ model PushSubscription {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum UserProPlan {
+  MONTHLY
+  SIX_MONTHS
+  TWELVE_MONTHS
+}
+
+model UserProSubscription {
+  id        String      @id @default(cuid())
+  userId    String      @unique
+  plan      UserProPlan @default(MONTHLY)
+  startDate DateTime    @default(now())
+  endDate   DateTime
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([endDate])
+  @@index([isActive])
+}
+
+model UserProSettings {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  blurOldMessages   Boolean  @default(true)
+  preventScreenshot Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }

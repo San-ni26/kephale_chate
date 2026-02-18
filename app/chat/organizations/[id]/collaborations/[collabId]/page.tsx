@@ -218,7 +218,7 @@ export default function CollaborationDetailPage() {
                     <div className="flex items-center justify-between">
                         <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
                             <Building2 className="w-5 h-5" />
-                            Groupes de collaboration
+                            Groupes
                         </h2>
                         {canManageGroups && (
                             <Button
@@ -232,7 +232,7 @@ export default function CollaborationDetailPage() {
                         )}
                     </div>
                     <p className="text-sm text-muted-foreground">
-                        Les groupes permettent de regrouper des membres des deux organisations pour travailler ensemble (chat, tâches, documents).
+                        Liste des groupes de collaboration.
                     </p>
 
                     {groups.length === 0 ? (

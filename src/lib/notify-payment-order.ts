@@ -11,7 +11,7 @@ import { prisma } from '@/src/lib/prisma';
 import { emitToUser } from '@/src/lib/pusher-server';
 import { sendPushNotification } from '@/src/lib/push';
 
-export type PaymentOrderType = 'CREATE' | 'UPGRADE';
+export type PaymentOrderType = 'CREATE' | 'UPGRADE' | 'USER_PRO';
 
 export interface NotifyPaymentOrderParams {
     orderId: string;
@@ -38,7 +38,7 @@ export async function notifySuperAdminNewPaymentOrder(params: NotifyPaymentOrder
             return;
         }
 
-        const typeLabel = type === 'UPGRADE' ? 'Mise à niveau d\'abonnement' : 'Nouvelle organisation';
+        const typeLabel = type === 'UPGRADE' ? 'Mise à niveau d\'abonnement' : type === 'USER_PRO' ? 'Compte Pro' : 'Nouvelle organisation';
         const content = `${typeLabel} : ordre de paiement en attente — ${name} — Plan ${plan} — ${amountFcfa.toLocaleString('fr-FR')} FCFA`;
 
         for (const admin of superAdmins) {

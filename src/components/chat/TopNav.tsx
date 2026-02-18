@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, FileText, NotepadText } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, LockOpen, FileText, NotepadText, Phone } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
@@ -587,7 +587,7 @@ export function TopNav() {
                     <h2 className="font-semibold text-foreground truncate">Paramètres</h2>
                 </div>
             ) : isDiscussionPage && discussionId ? (
-                /* Top bar page Discussion : retour + nom de la conversation */
+                /* Top bar page Discussion : retour + nom + icône cadenas (Pro) + appel */
                 <>
                     <Button
                         variant="ghost"
@@ -609,6 +609,31 @@ export function TopNav() {
                                         .join(', ') || 'Discussion'
                                     : 'Discussion'}
                         </h2>
+                    </div>
+                    {/* Icône cadenas + appel : visible pour toutes les discussions (directes ou non) */}
+                    <div className="flex items-center gap-1 shrink-0">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => window.dispatchEvent(new CustomEvent('discussion-lock-click'))}
+                            title={discussion?.isLocked ? 'Code de verrouillage' : 'Verrouiller la discussion'}
+                            className="hover:bg-primary/10"
+                        >
+                            {discussion?.isLocked ? (
+                                <LockOpen className="w-5 h-5 text-amber-500" />
+                            ) : (
+                                <Lock className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                            )}
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => window.dispatchEvent(new CustomEvent('discussion-call-click'))}
+                            title="Appel vocal"
+                            className="hover:bg-primary/10"
+                        >
+                            <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                        </Button>
                     </div>
                 </>
             ) : isChatListPage ? (

@@ -6,11 +6,11 @@ import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, RotateCw } from 'lucide-react';
+import { ArrowLeft, Send, Paperclip, Loader2, Image as ImageIcon, FileText, MoreVertical, Edit2, Trash2, ArrowUp, Phone, RotateCw, Check, X, Lock, LockOpen, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import { sendWithOfflineQueue } from '@/src/lib/offline-queue';
-import { createCacheAwareFetcher, addMessageToCache, removeMessageFromCache } from '@/src/lib/api-cache';
+import { addMessageToCache, removeMessageFromCache } from '@/src/lib/api-cache';
 import useSWR from 'swr';
 
 import { formatDistanceToNow } from 'date-fns';
@@ -20,6 +20,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
+    DropdownMenuSeparator,
 } from '@/src/components/ui/dropdown-menu';
 import {
     Dialog,
@@ -31,7 +32,10 @@ import {
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 import { EncryptedAttachment } from './EncryptedAttachment';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
+import { useInitialMessages } from '@/src/hooks/useInitialMessages';
+import { useDiscussionLockState } from '@/src/hooks/useDiscussionLockState';
 import { useCallContext } from '@/src/contexts/CallContext';
+import { ScreenshotBlocker } from '@/src/components/chat/ScreenshotBlocker';
 import { cn } from '@/src/lib/utils';
 
 const AudioRecorderComponent = dynamic(
@@ -76,6 +80,14 @@ interface Conversation {
             inCall?: boolean;
         };
     }[];
+    deletionRequest?: {
+        id: string;
+        requestedBy: string;
+        requester: { id: string; name: string | null };
+    } | null;
+    isLocked?: boolean;
+    currentUserIsPro?: boolean;
+    lockSetByUserId?: string | null;
 }
 
 const fetcher = async (url: string) => {
@@ -83,6 +95,8 @@ const fetcher = async (url: string) => {
     if (!res.ok) throw new Error('Failed to fetch');
     return res.json();
 };
+
+const BLUR_THRESHOLD_MS = 24 * 60 * 60 * 1000;
 
 /* Bulle de message avec mémorisation du déchiffrement */
 function DiscussionMessageBubble({
@@ -102,6 +116,7 @@ function DiscussionMessageBubble({
     onRetry,
     isFailed,
     displayCreatedAt,
+    isBlurred,
 }: {
     message: Message;
     isOwn: boolean;
@@ -119,6 +134,7 @@ function DiscussionMessageBubble({
     onRetry?: () => void;
     isFailed: boolean;
     displayCreatedAt?: string;
+    isBlurred?: boolean;
 }) {
     const decryptedContent = useMemo(() => {
         if (!currentUser || !otherUser || !privateKey) return '[Chiffre]';
@@ -160,10 +176,11 @@ function DiscussionMessageBubble({
                         {decryptedContent && decryptedContent.trim() && (
                             <div
                                 className={cn(
-                                    'rounded-2xl px-4 py-2 border',
+                                    'rounded-2xl px-4 py-2 border transition-all duration-200',
                                     isOwn
                                         ? 'bg-primary text-primary-foreground border-primary'
-                                        : 'bg-muted text-foreground border-border'
+                                        : 'bg-muted text-foreground border-border',
+                                    isBlurred && 'blur-md select-none pointer-events-none opacity-70'
                                 )}
                             >
                                 <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
@@ -174,7 +191,7 @@ function DiscussionMessageBubble({
                         )}
 
                         {message.attachments && message.attachments.length > 0 && (
-                            <div className={cn(decryptedContent?.trim() ? 'mt-2' : '', 'space-y-2')}>
+                            <div className={cn(decryptedContent?.trim() ? 'mt-2' : '', 'space-y-2', isBlurred && 'blur-md select-none pointer-events-none opacity-70')}>
                                 {message.attachments.map((att, idx) => (
                                     <EncryptedAttachment
                                         key={idx}
@@ -234,12 +251,35 @@ export default function DiscussionPage() {
     const searchParams = useSearchParams();
     const conversationId = params?.id as string;
 
-    const { data: conversationData } = useSWR(
+    const { data: conversationData, mutate: mutateConversation } = useSWR(
         conversationId ? `/api/conversations/${conversationId}` : null,
         fetcher,
-        { refreshInterval: 15000 } // Rafraichir la presence (en ligne) toutes les 15s
+        { refreshInterval: 15000, dedupingInterval: 5000 }
     );
     const conversation: Conversation | null = conversationData?.conversation || null;
+    const lockState = useDiscussionLockState(conversation);
+
+    const isDirectTwoPerson = !!(conversation?.isDirect && conversation?.members?.length === 2);
+    const { data: userProStatus } = useSWR(
+        isDirectTwoPerson ? '/api/user-pro/status' : null,
+        fetcher,
+        { dedupingInterval: 60000, revalidateOnFocus: false }
+    );
+    const preventScreenshot = userProStatus?.settings?.preventScreenshot ?? false;
+    const blurOldMessages = userProStatus?.settings?.blurOldMessages ?? false;
+    const shouldBlockScreenshot = preventScreenshot && lockState.canUseLock;
+
+    const [blurEnabled, setBlurEnabled] = useState(true);
+    const shouldApplyBlur = blurOldMessages && lockState.canUseLock && blurEnabled;
+
+    const [deletionActionLoading, setDeletionActionLoading] = useState(false);
+    const [showLockDialog, setShowLockDialog] = useState(false);
+    const [showChangeCodeDialog, setShowChangeCodeDialog] = useState(false);
+    const [lockCode, setLockCode] = useState('');
+    const [currentCodeForChange, setCurrentCodeForChange] = useState('');
+    const [newCodeForChange, setNewCodeForChange] = useState('');
+    const [lockActionLoading, setLockActionLoading] = useState(false);
+    const [isUnlockedSession, setIsUnlockedSession] = useState(false);
 
     const [newMessage, setNewMessage] = useState('');
     const [sending, setSending] = useState(false);
@@ -251,10 +291,12 @@ export default function DiscussionPage() {
     const [editContent, setEditContent] = useState('');
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
 
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { messages, setMessages, loading, hasMore, setHasMore } = useInitialMessages(conversationId);
+    const blurredMessageIds = useMemo(
+        () => (shouldApplyBlur ? new Set(messages.filter(m => Date.now() - new Date(m.createdAt).getTime() > BLUR_THRESHOLD_MS).map(m => m.id)) : new Set<string>()),
+        [messages, shouldApplyBlur]
+    );
     const [loadingMore, setLoadingMore] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
     const [typingUsers, setTypingUsers] = useState<Record<string, boolean>>({});
     const [failedMessagePayloads, setFailedMessagePayloads] = useState<Map<string, { encryptedContent: string; attachments?: { filename: string; type: string; data: string }[] }>>(new Map());
     const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -429,35 +471,22 @@ export default function DiscussionPage() {
         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     }, []);
 
-    // Initial Fetch - même logique, le fetcher retourne le cache si dispo (transparent)
+    // Vérifier sessionStorage pour déverrouillage de session (code déjà entré)
+    useEffect(() => {
+        if (!conversationId || !conversation?.isLocked) return;
+        const key = `unlocked_${conversationId}`;
+        const stored = typeof sessionStorage !== 'undefined' && sessionStorage.getItem(key);
+        setIsUnlockedSession(!!stored);
+    }, [conversationId, conversation?.isLocked]);
+
+    // À chaque entrée dans la discussion, le code est demandé : on efface au départ
     useEffect(() => {
         if (!conversationId) return;
-
-        const url = `/api/conversations/${conversationId}/messages?limit=30`;
-        const fetcher = createCacheAwareFetcher(async (u: string) => {
-            const res = await fetchWithAuth(u);
-            if (!res.ok) throw new Error('Failed to fetch');
-            return res.json();
-        });
-
-        const loadInitialMessages = async () => {
-            try {
-                const data = await fetcher(url);
-                setMessages(data.messages);
-                setHasMore(data.hasMore !== false);
-                fetcher(url).then((fresh) => {
-                    setMessages(fresh.messages);
-                    setHasMore(fresh.hasMore !== false);
-                });
-            } catch (error) {
-                console.error("Failed to load messages", error);
-                toast.error("Erreur de chargement des messages");
-            } finally {
-                setLoading(false);
+        return () => {
+            if (typeof sessionStorage !== 'undefined') {
+                sessionStorage.removeItem(`unlocked_${conversationId}`);
             }
         };
-
-        loadInitialMessages();
     }, [conversationId]);
 
     // Fallback polling - only fetch NEW messages after the last known one
@@ -907,6 +936,172 @@ export default function DiscussionPage() {
         return conversation.name || 'Discussion';
     };
 
+    const deletionRequest = conversation?.deletionRequest;
+    const isDeletionRequester = deletionRequest && deletionRequest.requestedBy === currentUser?.id;
+
+    const handleAcceptDeletion = async () => {
+        if (!conversationId || deletionActionLoading) return;
+        setDeletionActionLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/conversations/${conversationId}/accept-deletion`, { method: 'POST' });
+            if (res.ok) {
+                toast.success('Discussion supprimée');
+                router.push('/chat');
+            } else {
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.error || 'Erreur');
+            }
+        } catch {
+            toast.error('Erreur réseau');
+        } finally {
+            setDeletionActionLoading(false);
+        }
+    };
+
+    const handleRejectDeletion = async () => {
+        if (!conversationId || deletionActionLoading) return;
+        setDeletionActionLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/conversations/${conversationId}/reject-deletion`, { method: 'POST' });
+            if (res.ok) {
+                toast.success('Demande de suppression refusée');
+                mutateConversation();
+            } else {
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.error || 'Erreur');
+            }
+        } catch {
+            toast.error('Erreur réseau');
+        } finally {
+            setDeletionActionLoading(false);
+        }
+    };
+
+    const handleLock = async () => {
+        if (!conversationId || lockActionLoading || !/^\d{4}$/.test(lockCode)) return;
+        setLockActionLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/conversations/${conversationId}/lock`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: lockCode }),
+            });
+            if (res.ok) {
+                toast.success('Discussion verrouillée');
+                setLockCode('');
+                setShowLockDialog(false);
+                mutateConversation();
+            } else {
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.error || 'Erreur');
+            }
+        } catch {
+            toast.error('Erreur réseau');
+        } finally {
+            setLockActionLoading(false);
+        }
+    };
+
+    const handleUnlockWithCode = async () => {
+        if (!conversationId || lockActionLoading || !/^\d{4}$/.test(lockCode)) return;
+        setLockActionLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/conversations/${conversationId}/verify-lock-code`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: lockCode }),
+            });
+            if (res.ok) {
+                sessionStorage.setItem(`unlocked_${conversationId}`, '1');
+                setIsUnlockedSession(true);
+                setLockCode('');
+                toast.success('Accès autorisé');
+            } else {
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.error || 'Code incorrect');
+            }
+        } catch {
+            toast.error('Erreur réseau');
+        } finally {
+            setLockActionLoading(false);
+        }
+    };
+
+    const handleDisableLock = async () => {
+        if (!conversationId || lockActionLoading) return;
+        setLockActionLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/conversations/${conversationId}/disable-lock`, { method: 'POST' });
+            if (res.ok) {
+                sessionStorage.removeItem(`unlocked_${conversationId}`);
+                setIsUnlockedSession(false);
+                setLockCode('');
+                toast.success('Verrouillage désactivé');
+                mutateConversation();
+            } else {
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.error || 'Erreur');
+            }
+        } catch {
+            toast.error('Erreur réseau');
+        } finally {
+            setLockActionLoading(false);
+        }
+    };
+
+    const handleChangeCode = async () => {
+        if (!conversationId || lockActionLoading || !/^\d{4}$/.test(currentCodeForChange) || !/^\d{4}$/.test(newCodeForChange)) return;
+        setLockActionLoading(true);
+        try {
+            const res = await fetchWithAuth(`/api/conversations/${conversationId}/change-lock-code`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ currentCode: currentCodeForChange, newCode: newCodeForChange }),
+            });
+            if (res.ok) {
+                toast.success('Code modifié. L\'autre utilisateur recevra le nouveau code par email.');
+                setShowChangeCodeDialog(false);
+                setCurrentCodeForChange('');
+                setNewCodeForChange('');
+                mutateConversation();
+            } else {
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.error || 'Erreur');
+            }
+        } catch {
+            toast.error('Erreur réseau');
+        } finally {
+            setLockActionLoading(false);
+        }
+    };
+
+    // Écouter les clics depuis la TopNav (icône cadenas / appel) - après définition des variables
+    useEffect(() => {
+        const onLockClick = () => {
+            if (lockState.isLocked && !isUnlockedSession) return;
+            if (!lockState.userIsPro) {
+                toast.error('Compte Pro requis pour verrouiller la discussion');
+                return;
+            }
+            if (lockState.isLocked && isUnlockedSession && lockState.canManageLock) {
+                setShowChangeCodeDialog(true);
+            } else {
+                setShowLockDialog(true);
+            }
+        };
+        const onCallClick = () => {
+            if (otherUser && conversationId) {
+                callContext?.startCall(conversationId, otherUser.id, otherUser.name || otherUser.email || 'Utilisateur');
+            }
+        };
+        window.addEventListener('discussion-lock-click', onLockClick);
+        window.addEventListener('discussion-call-click', onCallClick);
+        return () => {
+            window.removeEventListener('discussion-lock-click', onLockClick);
+            window.removeEventListener('discussion-call-click', onCallClick);
+        };
+    }, [conversationId, otherUser, lockState.userIsPro, lockState.isLocked, isUnlockedSession, lockState.canManageLock, callContext]);
+
     if (loading) {
         return (
             <div className="flex flex-col h-full bg-background pt-16 md:pt-4 pb-32 md:pb-4 px-4">
@@ -953,7 +1148,10 @@ export default function DiscussionPage() {
             </Dialog>
 
             {/* Header */}
-            <div className="fixed top-0 left-0 right-0 md:static md:w-full bg-background border-b border-border z-[60] h-16 flex items-center px-4 shrink-0">
+            <ScreenshotBlocker
+                enabled={shouldBlockScreenshot}
+                className="fixed top-0 left-0 right-0 md:static md:w-full bg-background border-b border-border z-[60] h-16 flex items-center px-4 shrink-0 min-w-0"
+            >
                 <Button
                     variant="ghost"
                     size="icon"
@@ -968,8 +1166,8 @@ export default function DiscussionPage() {
                     <AvatarFallback>{getConversationName()[0]}</AvatarFallback>
                 </Avatar>
 
-                <div className="ml-3 flex-1">
-                    <h2 className="font-semibold text-foreground">{getConversationName()}</h2>
+                <div className="ml-3 flex-1 min-w-0 overflow-hidden">
+                    <h2 className="font-semibold text-foreground truncate">{getConversationName()}</h2>
                     {otherUser && (
                         <p className="text-xs text-muted-foreground">
                             {otherUser.inCall ? (
@@ -983,8 +1181,70 @@ export default function DiscussionPage() {
                     )}
                 </div>
 
-                {/* Call Button */}
-                <div className="flex items-center gap-1 md:mr-4">
+                {/* Blur (Pro) + Lock (Pro) + Call Button */}
+                <div className="flex items-center gap-1 md:mr-4 shrink-0">
+                    {blurOldMessages && lockState.canUseLock && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setBlurEnabled(prev => !prev)}
+                            title={blurEnabled ? 'Afficher les anciens messages' : 'Flouter les anciens messages'}
+                            className="hover:bg-primary/10"
+                        >
+                            {blurEnabled ? (
+                                <EyeOff className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                            ) : (
+                                <Eye className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                            )}
+                        </Button>
+                    )}
+                    {lockState.showLockIcon && (
+                        lockState.canManageLock && isUnlockedSession ? (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        title="Options de verrouillage"
+                                        className="hover:bg-primary/10"
+                                    >
+                                        <LockOpen className="w-5 h-5 text-amber-500 hover:text-amber-400" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => setShowChangeCodeDialog(true)}>
+                                        <Lock className="w-4 h-4 mr-2" />
+                                        Changer le code
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={handleDisableLock} className="text-destructive">
+                                        Désactiver le verrouillage
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        ) : (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => {
+                                    if (lockState.isLocked) return;
+                                    if (!lockState.userIsPro) {
+                                        toast.error('Compte Pro requis pour verrouiller la discussion');
+                                        return;
+                                    }
+                                    setShowLockDialog(true);
+                                }}
+                                title={lockState.isLocked ? 'Entrez le code pour accéder' : lockState.userIsPro ? 'Verrouiller la discussion' : 'Verrouiller (Compte Pro requis)'}
+                                className="hover:bg-primary/10"
+                            >
+                                {lockState.isLocked ? (
+                                    <LockOpen className="w-5 h-5 text-amber-500 hover:text-amber-400" />
+                                ) : (
+                                    <Lock className={cn("w-5 h-5", lockState.userIsPro ? "text-muted-foreground hover:text-primary" : "text-muted-foreground/60")} />
+                                )}
+                            </Button>
+                        )
+                    )}
                     <Button
                         variant="ghost"
                         size="icon"
@@ -1001,13 +1261,171 @@ export default function DiscussionPage() {
                         <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
                     </Button>
                 </div>
-            </div>
+            </ScreenshotBlocker>
+
+            {/* Dialog: Verrouiller (définir le code) */}
+            <Dialog open={showLockDialog} onOpenChange={setShowLockDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Verrouiller la discussion</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Définissez un code à 4 chiffres. L&apos;autre utilisateur Pro recevra ce code par email. À chaque ouverture, le code sera demandé.
+                        </p>
+                        <Input
+                            type="password"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            maxLength={4}
+                            placeholder="••••"
+                            value={lockCode}
+                            onChange={(e) => setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                            onKeyDown={(e) => e.key === 'Enter' && handleLock()}
+                            className="text-center text-lg tracking-[0.5em]"
+                        />
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => { setShowLockDialog(false); setLockCode(''); }}>Annuler</Button>
+                        <Button onClick={handleLock} disabled={lockActionLoading || lockCode.length !== 4}>
+                            {lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Lock className="w-4 h-4 mr-2" />}
+                            Verrouiller
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Dialog: Changer le code */}
+            <Dialog open={showChangeCodeDialog} onOpenChange={(open) => { setShowChangeCodeDialog(open); if (!open) { setCurrentCodeForChange(''); setNewCodeForChange(''); } }}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Changer le code</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4 space-y-4">
+                        <p className="text-sm text-muted-foreground">
+                            L&apos;autre utilisateur Pro recevra le nouveau code par email.
+                        </p>
+                        <div>
+                            <label className="text-sm font-medium mb-2 block">Code actuel</label>
+                            <Input
+                                type="password"
+                                inputMode="numeric"
+                                maxLength={4}
+                                placeholder="••••"
+                                value={currentCodeForChange}
+                                onChange={(e) => setCurrentCodeForChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                className="text-center text-lg tracking-[0.5em]"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium mb-2 block">Nouveau code</label>
+                            <Input
+                                type="password"
+                                inputMode="numeric"
+                                maxLength={4}
+                                placeholder="••••"
+                                value={newCodeForChange}
+                                onChange={(e) => setNewCodeForChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                onKeyDown={(e) => e.key === 'Enter' && handleChangeCode()}
+                                className="text-center text-lg tracking-[0.5em]"
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => { setShowChangeCodeDialog(false); setCurrentCodeForChange(''); setNewCodeForChange(''); }}>Annuler</Button>
+                        <Button onClick={handleChangeCode} disabled={lockActionLoading || currentCodeForChange.length !== 4 || newCodeForChange.length !== 4 || currentCodeForChange === newCodeForChange}>
+                            {lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Lock className="w-4 h-4 mr-2" />}
+                            Changer le code
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Overlay: Déverrouiller (quand discussion verrouillée, code demandé à chaque session) */}
+            {lockState.isLocked && !isUnlockedSession && (
+                <div className="fixed inset-0 z-[70] flex items-center justify-center bg-background/95 backdrop-blur-sm px-4">
+                    <div className="w-full max-w-sm p-6 rounded-2xl border border-border bg-card shadow-lg">
+                        <div className="flex justify-center mb-4">
+                            <div className="h-14 w-14 rounded-full bg-amber-500/10 flex items-center justify-center">
+                                <Lock className="w-7 h-7 text-amber-500" />
+                            </div>
+                        </div>
+                        <h3 className="text-lg font-semibold text-center mb-2">Discussion verrouillée</h3>
+                        <p className="text-sm text-muted-foreground text-center mb-4">
+                            Entrez le code à 4 chiffres pour déverrouiller.
+                        </p>
+                        <Input
+                            type="password"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            maxLength={4}
+                            placeholder="••••"
+                            value={lockCode}
+                            onChange={(e) => setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                            onKeyDown={(e) => e.key === 'Enter' && handleUnlockWithCode()}
+                            className="text-center text-lg tracking-[0.5em] mb-4"
+                        />
+                        <Button
+                            className="w-full"
+                            onClick={handleUnlockWithCode}
+                            disabled={lockActionLoading || lockCode.length !== 4}
+                        >
+                            {lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <LockOpen className="w-4 h-4 mr-2" />}
+                            Déverrouiller
+                        </Button>
+                    </div>
+                </div>
+            )}
+
+            {/* Bannière demande de suppression (Pro/Pro) */}
+            {deletionRequest && (
+                <div className={cn(
+                    "mx-4 mt-2 p-3 rounded-lg border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3",
+                    isDeletionRequester
+                        ? "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400"
+                        : "bg-destructive/10 border-destructive/30 text-destructive"
+                )}>
+                    <p className="text-sm">
+                        {isDeletionRequester
+                            ? "Vous avez demandé la suppression. En attente de l'acceptation de l'autre utilisateur."
+                            : `${deletionRequest.requester.name || 'L\'autre utilisateur'} demande de supprimer cette discussion.`}
+                    </p>
+                    {!isDeletionRequester && (
+                        <div className="flex gap-2 shrink-0">
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                className="border-destructive/50 text-destructive hover:bg-destructive/10"
+                                onClick={handleRejectDeletion}
+                                disabled={deletionActionLoading}
+                            >
+                                <X className="w-4 h-4 mr-1" />
+                                Refuser
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={handleAcceptDeletion}
+                                disabled={deletionActionLoading}
+                            >
+                                {deletionActionLoading ? (
+                                    <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                                ) : (
+                                    <Check className="w-4 h-4 mr-1" />
+                                )}
+                                Accepter
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Messages */}
             <div
-                className="flex-1 overflow-y-auto px-4 pt-16 md:pt-4 pb-32 md:pb-4 space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                className="flex-1 overflow-y-auto px-4 pt-16 md:pt-4 pb-32 md:pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                 ref={scrollRef}
             >
+                <ScreenshotBlocker enabled={shouldBlockScreenshot} className="min-h-full space-y-2">
                 {/* Load More Button */}
                 {hasMore && (
                     <div className="flex justify-center py-2">
@@ -1047,6 +1465,7 @@ export default function DiscussionPage() {
                         onDelete={() => handleDeleteMessage(message.id)}
                         onRetry={failedMessagePayloads.has(message.id) ? () => handleRetryMessage(message.id) : undefined}
                         isFailed={failedMessagePayloads.has(message.id)}
+                        isBlurred={blurredMessageIds.has(message.id)}
                     />
                 ))}
                 {typingCount > 0 && (
@@ -1062,6 +1481,7 @@ export default function DiscussionPage() {
                     </div>
                 )}
                 <div ref={messagesEndRef} />
+                </ScreenshotBlocker>
             </div>
 
             {/* Input */}

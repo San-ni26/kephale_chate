@@ -8,6 +8,7 @@ import { prisma } from '@/src/lib/prisma';
 import { requireAdmin, AuthenticatedRequest } from '@/src/middleware/auth';
 import { generateOrganizationCode } from '@/src/lib/otp';
 import { getSubscriptionLimits, calculateSubscriptionEndDate } from '@/src/lib/subscription';
+import { calculateUserProEndDate } from '@/src/lib/user-pro';
 import type { SubscriptionPlan } from '@/src/prisma/client';
 
 export async function PATCH(
@@ -46,6 +47,58 @@ export async function PATCH(
                 data: { status: 'REJECTED', rejectedAt: new Date() },
             });
             return NextResponse.json({ message: 'Ordre rejeté' });
+        }
+
+        // === USER_PRO : abonnement Compte Pro utilisateur ===
+        if (order.type === 'USER_PRO') {
+            const userProPlan = order.plan as 'MONTHLY' | 'SIX_MONTHS' | 'TWELVE_MONTHS';
+            const startDate = new Date();
+            const endDate = calculateUserProEndDate(startDate, userProPlan);
+
+            await prisma.$transaction(async (tx) => {
+                const existing = await tx.userProSubscription.findUnique({
+                    where: { userId: order.userId },
+                });
+
+                if (existing) {
+                    await tx.userProSubscription.update({
+                        where: { userId: order.userId },
+                        data: {
+                            plan: userProPlan,
+                            startDate,
+                            endDate,
+                            isActive: true,
+                        },
+                    });
+                } else {
+                    await tx.userProSubscription.create({
+                        data: {
+                            userId: order.userId,
+                            plan: userProPlan,
+                            startDate,
+                            endDate,
+                            isActive: true,
+                        },
+                    });
+                }
+
+                await tx.userProSettings.upsert({
+                    where: { userId: order.userId },
+                    create: { userId: order.userId },
+                    update: {},
+                });
+
+                await tx.paymentOrder.update({
+                    where: { id },
+                    data: {
+                        status: 'APPROVED',
+                        approvedBy: user!.userId,
+                        approvedAt: new Date(),
+                    },
+                });
+            });
+
+            return NextResponse.json({ message: 'Compte Pro activé avec succès' });
         }
 
         const plan = order.plan as SubscriptionPlan;

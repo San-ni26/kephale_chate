@@ -429,3 +429,137 @@ export async function sendEventInvitationEmail(
     return false;
   }
 }
+
+/**
+ * Envoie un email pour informer qu'un numéro est injoignable (appel et WhatsApp)
+ * Utilisé par l'admin pour les ordres de paiement en attente
+ */
+export async function sendUnreachablePhoneNotificationEmail(
+  email: string,
+  name?: string | null,
+  phone?: string | null
+): Promise<boolean> {
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
+      to: email,
+      subject: 'Votre numéro est injoignable - Chat Kephale',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 30px; text-align: center; color: white; }
+            .header h1 { margin: 0; font-size: 24px; }
+            .content { padding: 40px 30px; }
+            .alert { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; margin: 20px 0; border-radius: 4px; }
+            .info { color: #64748b; font-size: 14px; line-height: 1.6; }
+            .footer { background: #f8fafc; padding: 20px; text-align: center; color: #94a3b8; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>📞 Chat Kephale</h1>
+            </div>
+            <div class="content">
+              <h2 style="color: #1e293b; margin-top: 0;">Bonjour ${name || 'Utilisateur'},</h2>
+              <p style="color: #475569; font-size: 16px;">Nous avons tenté de vous joindre par téléphone et WhatsApp concernant votre demande d'abonnement Compte Pro, mais votre numéro est actuellement injoignable.</p>
+              <div class="alert">
+                <strong>📱 Numéro concerné :</strong> ${phone || 'Non renseigné'}
+              </div>
+              <p style="color: #475569; font-size: 16px;">Merci de nous contacter ou de mettre à jour vos coordonnées pour finaliser votre paiement.</p>
+              <div class="info">
+                <p>Si vous avez des questions, n'hésitez pas à nous répondre à cet email.</p>
+              </div>
+            </div>
+            <div class="footer">
+              <p>&copy; 2024 Chat Kephale - Application de messagerie sécurisée</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error('Error sending unreachable phone notification email:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('DEV: Unreachable notification email failed for', email, error);
+    }
+    return false;
+  }
+}
+
+/**
+ * Envoie le code de verrouillage d'une discussion à l'autre utilisateur Pro
+ */
+export async function sendDiscussionLockCodeEmail(
+  email: string,
+  name: string | null,
+  code: string,
+  setterName: string | null,
+  isNewCode = false
+): Promise<boolean> {
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
+      to: email,
+      subject: isNewCode ? 'Code de discussion modifié - Chat Kephale' : 'Code de verrouillage - Chat Kephale',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); padding: 30px; text-align: center; color: white; }
+            .header h1 { margin: 0; font-size: 24px; }
+            .content { padding: 40px 30px; }
+            .code-box { background: #f1f5f9; border: 2px dashed #6366f1; border-radius: 8px; padding: 20px; text-align: center; font-size: 28px; font-weight: bold; letter-spacing: 8px; color: #1e293b; margin: 24px 0; }
+            .info { color: #64748b; font-size: 14px; line-height: 1.6; }
+            .footer { background: #f8fafc; padding: 20px; text-align: center; color: #94a3b8; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🔐 Chat Kephale</h1>
+            </div>
+            <div class="content">
+              <h2 style="color: #1e293b; margin-top: 0;">Bonjour ${name || 'Utilisateur'},</h2>
+              <p style="color: #475569; font-size: 16px;">
+                ${isNewCode
+                  ? `${setterName || 'Un utilisateur'} a modifié le code de verrouillage de votre discussion.`
+                  : `${setterName || 'Un utilisateur'} a verrouillé votre discussion avec un code.`}
+              </p>
+              <p style="color: #475569; font-size: 16px;">Utilisez ce code pour accéder à la discussion :</p>
+              <div class="code-box">${code}</div>
+              <div class="info">
+                <p>🔒 Ne partagez ce code qu'avec les personnes autorisées.</p>
+                <p>Chaque fois que vous ouvrirez cette discussion, ce code vous sera demandé.</p>
+              </div>
+            </div>
+            <div class="footer">
+              <p>&copy; 2024 Chat Kephale - Application de messagerie sécurisée</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error('Error sending lock code email:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('DEV: Lock code email failed for', email, error);
+    }
+    return false;
+  }
+}

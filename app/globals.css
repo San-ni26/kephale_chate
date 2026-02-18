@@ -128,6 +128,17 @@
   --sidebar-ring: oklch(0.6 0.2 264);
 }
 
+/* Anti-capture discussions Pro : empêche sélection, copie, drag images */
+.kephale-anti-screenshot img,
+.kephale-anti-screenshot video,
+.kephale-anti-screenshot canvas {
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -ms-user-drag: none;
+  user-drag: none;
+  pointer-events: auto;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -412,8 +412,18 @@ exports.Prisma.GroupScalarFieldEnum = {
   isDirect: 'isDirect',
   deptId: 'deptId',
   collaborationGroupId: 'collaborationGroupId',
+  lockCodeHash: 'lockCodeHash',
+  lockSetByUserId: 'lockSetByUserId',
+  lockedAt: 'lockedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConversationDeletionRequestScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  requestedBy: 'requestedBy',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.GroupDocumentScalarFieldEnum = {
@@ -693,6 +703,26 @@ exports.Prisma.PushSubscriptionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserProSubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  plan: 'plan',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserProSettingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  blurOldMessages: 'blurOldMessages',
+  preventScreenshot: 'preventScreenshot',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.UserPersonalTaskScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -914,6 +944,12 @@ exports.PostType = exports.$Enums.PostType = {
   CONTENT: 'CONTENT'
 };
 
+exports.UserProPlan = exports.$Enums.UserProPlan = {
+  MONTHLY: 'MONTHLY',
+  SIX_MONTHS: 'SIX_MONTHS',
+  TWELVE_MONTHS: 'TWELVE_MONTHS'
+};
+
 exports.PersonalTaskStatus = exports.$Enums.PersonalTaskStatus = {
   TODO: 'TODO',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -965,6 +1001,7 @@ exports.Prisma.ModelName = {
   DecisionVote: 'DecisionVote',
   DepartmentMember: 'DepartmentMember',
   Group: 'Group',
+  ConversationDeletionRequest: 'ConversationDeletionRequest',
   GroupDocument: 'GroupDocument',
   GroupNote: 'GroupNote',
   GroupNoteShare: 'GroupNoteShare',
@@ -992,6 +1029,8 @@ exports.Prisma.ModelName = {
   TaskAttachment: 'TaskAttachment',
   DepartmentMonthlyReport: 'DepartmentMonthlyReport',
   PushSubscription: 'PushSubscription',
+  UserProSubscription: 'UserProSubscription',
+  UserProSettings: 'UserProSettings',
   UserPersonalTask: 'UserPersonalTask',
   UserFinancialGoal: 'UserFinancialGoal',
   UserFinancialProfile: 'UserFinancialProfile',

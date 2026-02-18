@@ -3,6 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { getOnlineUserIds } from '@/src/lib/presence';
 import { getUsersInCall } from '@/src/lib/call-redis';
+import { isUserProActive } from '@/src/lib/user-pro';
 
 export async function GET(
     request: NextRequest,
@@ -20,7 +21,7 @@ export async function GET(
 
         const conversationId = params.id;
 
-        // Get conversation with members
+        // Get conversation with members and pending deletion request (Pro/Pro)
         const conversation = await prisma.group.findUnique({
             where: { id: conversationId },
             include: {
@@ -45,6 +46,13 @@ export async function GET(
                         publicKey: true,
                     },
                 },
+                deletionRequest: {
+                    include: {
+                        requester: {
+                            select: { id: true, name: true },
+                        },
+                    },
+                },
             },
         });
 
@@ -64,9 +72,18 @@ export async function GET(
             );
         }
 
-        // Merger presence Redis (en ligne) + statut appel (en appel)
+        // Merger presence Redis (en ligne) + statut appel (en appel) + currentUserIsPro
+        const memberIds = conversation.members.map(m => m.user.id);
+        const proSub = await prisma.userProSubscription.findFirst({
+            where: { userId: user.userId, isActive: true },
+            select: { endDate: true },
+        });
+        const currentUserIsPro = !!proSub && isUserProActive(proSub.endDate);
+        const isLocked = !!conversation.lockCodeHash;
+        const lockSetByUserId = conversation.lockSetByUserId ?? null;
+        const { lockCodeHash: _omit, ...conversationSafe } = conversation;
+
         if (conversation.members.length > 0) {
-            const memberIds = conversation.members.map(m => m.user.id);
             const [presenceMap, callMap] = await Promise.all([
                 getOnlineUserIds(memberIds),
                 getUsersInCall(memberIds),
@@ -80,17 +97,39 @@ export async function GET(
                 },
             }));
             return NextResponse.json({
-                conversation: { ...conversation, members: membersWithPresence },
+                conversation: {
+                    ...conversationSafe,
+                    members: membersWithPresence,
+                    isLocked,
+                    currentUserIsPro,
+                    lockSetByUserId,
+                },
             }, { status: 200 });
         }
 
-        return NextResponse.json({ conversation }, { status: 200 });
+        return NextResponse.json({
+            conversation: {
+                ...conversationSafe,
+                isLocked,
+                currentUserIsPro,
+                lockSetByUserId,
+            },
+        }, { status: 200 });
 
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Get conversation error:', error);
+        const isTimeout = error instanceof Error && (
+            error.message?.includes('ETIMEDOUT') ||
+            error.message?.includes('timeout') ||
+            (error as { code?: string }).code === 'ETIMEDOUT'
+        );
         return NextResponse.json(
-            { error: 'Erreur lors de la récupération de la conversation' },
-            { status: 500 }
+            {
+                error: isTimeout
+                    ? 'Connexion à la base de données expirée. Vérifiez que PostgreSQL est démarré et accessible.'
+                    : 'Erreur lors de la récupération de la conversation',
+            },
+            { status: isTimeout ? 503 : 500 }
         );
     }
 }
@@ -129,6 +168,59 @@ export async function DELETE(
                 { error: 'Accès refusé' },
                 { status: 403 }
             );
+        }
+
+        // Règle Pro : un utilisateur Standard ne peut pas supprimer si l'autre est Pro
+        // Pro/Pro : les deux doivent accepter → créer une requête de suppression
+        if (group.isDirect && group.members.length === 2) {
+            const memberIds = group.members.map(m => m.userId);
+            const proSubs = await prisma.userProSubscription.findMany({
+                where: { userId: { in: memberIds }, isActive: true },
+                select: { userId: true, endDate: true },
+            });
+            const proUserIds = new Set(
+                proSubs.filter(s => isUserProActive(s.endDate)).map(s => s.userId)
+            );
+            const currentUserIsPro = proUserIds.has(user.userId);
+            const otherMember = group.members.find(m => m.userId !== user.userId);
+            const otherUserIsPro = otherMember ? proUserIds.has(otherMember.userId) : false;
+
+            if (!currentUserIsPro && otherUserIsPro) {
+                return NextResponse.json(
+                    { error: 'Seul le membre Pro peut supprimer cette discussion.' },
+                    { status: 403 }
+                );
+            }
+
+            // Pro/Pro : créer une requête de suppression au lieu de supprimer directement
+            if (currentUserIsPro && otherUserIsPro) {
+                const existingRequest = await prisma.conversationDeletionRequest.findUnique({
+                    where: { groupId: conversationId },
+                });
+                if (existingRequest) {
+                    if (existingRequest.requestedBy === user.userId) {
+                        return NextResponse.json(
+                            { error: 'Vous avez déjà demandé la suppression. En attente de l\'acceptation de l\'autre utilisateur.' },
+                            { status: 400 }
+                        );
+                    }
+                    // L'autre a demandé, le current user accepte → on supprimera via accept-deletion
+                    return NextResponse.json(
+                        { error: 'Utilisez le bouton "Accepter" dans la discussion pour confirmer la suppression.' },
+                        { status: 400 }
+                    );
+                }
+                await prisma.conversationDeletionRequest.create({
+                    data: {
+                        groupId: conversationId,
+                        requestedBy: user.userId,
+                    },
+                });
+                return NextResponse.json(
+                    { success: true, requestSent: true, message: 'Demande de suppression envoyée. L\'autre utilisateur doit accepter.' },
+                    { status: 200 }
+                );
+            }
         }
 
         await prisma.group.delete({

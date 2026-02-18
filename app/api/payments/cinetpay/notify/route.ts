@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { generateOrganizationCode } from '@/src/lib/otp';
 import { getSubscriptionLimits, calculateSubscriptionEndDate } from '@/src/lib/subscription';
+import { calculateUserProEndDate } from '@/src/lib/user-pro';
 import type { SubscriptionPlan } from '@/src/prisma/client';
 
 /**
@@ -72,9 +73,62 @@ export async function POST(request: NextRequest) {
             return new NextResponse(null, { status: 200 });
         }
 
+        const startDate = new Date();
+
+        // === USER_PRO : abonnement Compte Pro utilisateur ===
+        if (pending.type === 'USER_PRO') {
+            const userProPlan = pending.plan as 'MONTHLY' | 'SIX_MONTHS' | 'TWELVE_MONTHS';
+            const endDate = calculateUserProEndDate(startDate, userProPlan);
+
+            await prisma.$transaction(async (tx) => {
+                const existing = await tx.userProSubscription.findUnique({
+                    where: { userId: pending.userId },
+                });
+
+                if (existing) {
+                    await tx.userProSubscription.update({
+                        where: { userId: pending.userId },
+                        data: {
+                            plan: userProPlan,
+                            startDate,
+                            endDate,
+                            isActive: true,
+                        },
+                    });
+                } else {
+                    await tx.userProSubscription.create({
+                        data: {
+                            userId: pending.userId,
+                            plan: userProPlan,
+                            startDate,
+                            endDate,
+                            isActive: true,
+                        },
+                    });
+                }
+
+                await tx.userProSettings.upsert({
+                    where: { userId: pending.userId },
+                    create: { userId: pending.userId },
+                    update: {},
+                });
+
+                await tx.pendingSubscriptionPayment.delete({
+                    where: { id: pending.id },
+                });
+            });
+
+            console.log('CinetPay: Compte Pro activé après paiement', {
+                transaction_id: cpmTransId,
+                userId: pending.userId,
+                plan: pending.plan,
+            });
+
+            return new NextResponse(null, { status: 200 });
+        }
+
         const plan = pending.plan as SubscriptionPlan;
         const limits = getSubscriptionLimits(plan);
-        const startDate = new Date();
         const endDate = calculateSubscriptionEndDate(startDate, plan);
 
         // === UPGRADE : mise à jour de l'abonnement existant ===

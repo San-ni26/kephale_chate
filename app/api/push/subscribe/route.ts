@@ -13,6 +13,14 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
         }
 
+        // Vérifier que l'utilisateur existe en base (évite l'erreur de clé étrangère si le compte a été supprimé)
+        const dbUser = await prisma.user.findUnique({
+            where: { id: user.userId },
+        });
+        if (!dbUser) {
+            return NextResponse.json({ error: 'Utilisateur introuvable. Veuillez vous reconnecter.' }, { status: 401 });
+        }
+
         const { subscription } = await request.json();
 
         if (!subscription || !subscription.endpoint || typeof subscription.endpoint !== 'string') {

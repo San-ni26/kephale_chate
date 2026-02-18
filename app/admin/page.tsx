@@ -105,7 +105,7 @@ interface PaymentOrder {
     amountFcfa: number;
     status: string;
     createdAt: string;
-    user?: { email: string; name: string | null };
+    user?: { email: string; name: string | null; phone?: string | null };
 }
 
 interface Organization {
@@ -264,6 +264,7 @@ export default function AdminDashboard() {
     const [performanceDetailsOpen, setPerformanceDetailsOpen] = useState(false);
     const [performanceDeleteConfirm, setPerformanceDeleteConfirm] = useState<"push" | "notifications-unread" | "notifications-all" | null>(null);
     const [performanceDeleting, setPerformanceDeleting] = useState(false);
+    const [sendingUnreachableEmail, setSendingUnreachableEmail] = useState<string | null>(null);
 
     // Charger les users: recherche (min 2 car.) ou "afficher tous" (all=1)
     useEffect(() => {
@@ -393,6 +394,25 @@ export default function AdminDashboard() {
             }
         } catch {
             toast.error("Erreur réseau");
+        }
+    };
+
+    const handleSendUnreachableEmail = async (orderId: string) => {
+        setSendingUnreachableEmail(orderId);
+        try {
+            const res = await fetchWithAuth(`/api/admin/payment-orders/${orderId}/notify-unreachable`, {
+                method: "POST",
+            });
+            const data = await res.json();
+            if (res.ok) {
+                toast.success("Email envoyé : numéro injoignable par appel et WhatsApp");
+            } else {
+                toast.error(data.error || "Erreur lors de l'envoi");
+            }
+        } catch {
+            toast.error("Erreur réseau");
+        } finally {
+            setSendingUnreachableEmail(null);
         }
     };
 
@@ -738,11 +758,37 @@ export default function AdminDashboard() {
                                                     <p className="text-sm text-neutral-400 truncate">
                                                         {order.user?.email || order.userId} • {order.amountFcfa?.toLocaleString("fr-FR")} FCFA
                                                     </p>
+                                                    {order.user?.phone && (
+                                                        <p className="text-sm text-neutral-300 flex items-center gap-2 mt-1">
+                                                            <span>{order.user.phone}</span>
+                                                            <a
+                                                                href={`tel:${order.user.phone.replace(/\s/g, "")}`}
+                                                                className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-green-600/20 text-green-400 hover:bg-green-600/40 transition-colors"
+                                                                title="Appeler"
+                                                            >
+                                                                <Phone className="h-4 w-4" />
+                                                            </a>
+                                                        </p>
+                                                    )}
                                                     <p className="text-xs text-neutral-500">
                                                         {new Date(order.createdAt).toLocaleString("fr-FR")}
                                                     </p>
                                                 </div>
-                                                <div className="flex gap-2 shrink-0">
+                                                <div className="flex flex-wrap gap-2 shrink-0">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+                                                        onClick={() => handleSendUnreachableEmail(order.id)}
+                                                        disabled={sendingUnreachableEmail === order.id}
+                                                    >
+                                                        {sendingUnreachableEmail === order.id ? (
+                                                            <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                                                        ) : (
+                                                            <Mail className="h-4 w-4 mr-2" />
+                                                        )}
+                                                        Envoyer mail
+                                                    </Button>
                                                     <Button size="sm" variant="outline" className="border-red-500 text-red-400 hover:bg-red-500/10" onClick={() => handleOrderAction(order.id, "reject")}>
                                                         Rejeter
                                                     </Button>

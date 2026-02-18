@@ -3,6 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { getOnlineUserIds } from '@/src/lib/presence';
 import { getUsersInCall } from '@/src/lib/call-redis';
+import { isUserProActive } from '@/src/lib/user-pro';
 
 // GET: Get all conversations for the authenticated user
 export async function GET(request: NextRequest) {
@@ -60,18 +61,31 @@ export async function GET(request: NextRequest) {
                         publicKey: true,
                     },
                 },
+                deletionRequest: {
+                    include: {
+                        requester: { select: { id: true, name: true } },
+                    },
+                },
             },
             orderBy: {
                 updatedAt: 'desc',
             },
         });
 
-        // Calculate unread counts and merge Redis presence + statut appel
+        // Calculate unread counts and merge Redis presence + statut appel + statut Pro
         const memberUserIds = [...new Set(conversations.flatMap(c => c.members.map(m => m.user.id)))];
-        const [presenceMap, callMap] = await Promise.all([
+        const [presenceMap, callMap, proSubscriptions] = await Promise.all([
             getOnlineUserIds(memberUserIds),
             getUsersInCall(memberUserIds),
+            prisma.userProSubscription.findMany({
+                where: { userId: { in: memberUserIds }, isActive: true },
+                select: { userId: true, endDate: true },
+            }),
         ]);
+
+        const proUserIds = new Set(
+            proSubscriptions.filter(s => isUserProActive(s.endDate)).map(s => s.userId)
+        );
 
         const conversationsWithUnread = await Promise.all(
             conversations.map(async (conv) => {
@@ -86,13 +100,14 @@ export async function GET(request: NextRequest) {
                     },
                 });
 
-                // Merge Redis presence + statut appel
+                // Merge Redis presence + statut appel + statut Pro
                 const membersWithPresence = conv.members.map(m => ({
                     ...m,
                     user: {
                         ...m.user,
                         isOnline: presenceMap[m.user.id] ?? m.user.isOnline,
                         inCall: !!callMap[m.user.id],
+                        isPro: proUserIds.has(m.user.id),
                     },
                 }));
 

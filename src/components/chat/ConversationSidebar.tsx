@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { User, Search, MessageSquarePlus, Building2, NotepadText, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet, Trash2 } from 'lucide-react';
+import { User, Search, MessageSquarePlus, Building2, NotepadText, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet, Trash2, Crown } from 'lucide-react';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
 import { fetchWithAuth } from '@/src/lib/auth-client';
@@ -29,6 +29,7 @@ interface Conversation {
             name: string;
             email: string;
             isOnline?: boolean;
+            isPro?: boolean;
         };
     }[];
     messages: {
@@ -112,15 +113,19 @@ export function ConversationSidebar() {
         setDeleteLoading(true);
         try {
             const res = await fetchWithAuth(`/api/conversations/${conversationToDelete}`, { method: 'DELETE' });
+            const data = await res.json().catch(() => ({}));
             if (res.ok) {
-                toast.success('Discussion supprimée');
+                if (data.requestSent) {
+                    toast.success('Demande de suppression envoyée. L\'autre utilisateur doit accepter.');
+                } else {
+                    toast.success('Discussion supprimée');
+                }
                 setConversationToDelete(null);
                 mutateConversations();
-                if (pathname === `/chat/discussion/${conversationToDelete}`) {
+                if (!data.requestSent && pathname === `/chat/discussion/${conversationToDelete}`) {
                     router.push('/chat');
                 }
             } else {
-                const data = await res.json().catch(() => ({}));
                 toast.error(data.error || 'Impossible de supprimer');
             }
         } catch {
@@ -217,24 +222,36 @@ export function ConversationSidebar() {
                                         {!isCollapsed && (
                                             <div className="ml-3 flex-1 min-w-0 transition-opacity duration-200">
                                                 <div className="flex justify-between items-baseline mb-1">
-                                                    <h3 className={`text-sm truncate ${unread > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground'}`}>
-                                                        {chatName}
-                                                    </h3>
+                                                    <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                                                        <h3 className={`text-sm truncate ${unread > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground'}`}>
+                                                            {chatName}
+                                                        </h3>
+                                                        {otherMember?.isPro && (
+                                                            <span className="shrink-0 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-500/20 text-amber-600 dark:text-amber-400">
+                                                                <Crown className="w-3 h-3" /> Pro
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                     <div className="flex items-center gap-1 shrink-0 ml-2">
                                                         {lastMessage && (
                                                             <span className={`text-[10px] ${unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
                                                                 {formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr })}
                                                             </span>
                                                         )}
-                                                        <button
-                                                            type="button"
-                                                            onClick={(e) => openDeleteDialog(e, chat.id)}
-                                                            className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-opacity"
-                                                            title="Supprimer la discussion"
-                                                            aria-label="Supprimer la discussion"
-                                                        >
-                                                            <Trash2 className="w-3.5 h-3.5" />
-                                                        </button>
+                                                        {!(
+                                                            otherMember?.isPro &&
+                                                            !chat.members.find(m => m.user.id === currentUserId)?.user?.isPro
+                                                        ) && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={(e) => openDeleteDialog(e, chat.id)}
+                                                                className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-opacity"
+                                                                title="Supprimer la discussion"
+                                                                aria-label="Supprimer la discussion"
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center justify-between">

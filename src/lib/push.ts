@@ -47,9 +47,15 @@ export async function sendPushNotification(subscription: PushSubscriptionData, p
         );
 
         return { success: true };
-    } catch (error) {
-        console.error('Error sending push notification:', error);
-        // Typically remove invalid subscriptions here or return error code
+    } catch (error: any) {
+        // 410/404 = subscription expirée ou désabonnée - le caller supprimera l'endpoint
+        if (error?.statusCode === 410 || error?.statusCode === 404) {
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('[Push] Subscription expirée (410/404), sera supprimée:', error?.endpoint?.substring(0, 60) + '...');
+            }
+        } else {
+            console.error('Error sending push notification:', error);
+        }
         throw error;
     }
 }
