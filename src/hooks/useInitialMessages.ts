@@ -31,7 +31,11 @@ export function useInitialMessages(conversationId: string | null) {
         const url = `/api/conversations/${conversationId}/messages?limit=30`;
         const msgFetcher = createCacheAwareFetcher(async (u: string) => {
             const res = await fetchWithAuth(u);
-            if (!res.ok) throw new Error('Failed to fetch');
+            if (!res.ok) {
+                const errBody = await res.json().catch(() => ({}));
+                const msg = (errBody as { error?: string })?.error || `Erreur ${res.status}`;
+                throw new Error(msg);
+            }
             return res.json();
         });
 

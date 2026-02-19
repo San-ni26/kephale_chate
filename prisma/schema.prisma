@@ -8,77 +8,77 @@ datasource db {
 }
 
 model User {
-  id                      String               @id @default(cuid())
-  email                   String               @unique
-  name                    String?
-  avatarUrl               String?              @db.Text
-  password                String
-  phone                   String?
-  publicKey               String               @db.Text
-  encryptedPrivateKey     String               @db.Text
-  otpCode                 String?
-  otpExpiry               DateTime?
-  isVerified              Boolean              @default(false)
-  deviceId                String?
-  deviceInfo              Json?
-  location                Json?
-  allowedCountry          String?
-  isBanned                Boolean              @default(false)
-  isFirstLogin            Boolean              @default(true)
-  currentLocation         Json?
-  lastSeen                DateTime?
-  isOnline                Boolean              @default(false)
-  role                    UserRole             @default(USER)
-  canPublishNotifications Boolean              @default(false)
-  createdAt               DateTime             @default(now())
-  updatedAt               DateTime             @updatedAt
-  publishedAnnouncements  Announcement[]
-  deptMemberships         DepartmentMember[]
-  groupMemberships        GroupMember[]
-  sentMessages            Message[]
-  notifications           Notification[]
-  orgMemberships          OrganizationMember[]
-  userPage                UserPage?
-  likes                   Like[]
-  comments                Comment[]
-  postReads               PostRead[]
-  assignedTasks           Task[]               @relation("TaskAssignee")
-  createdTasks            Task[]               @relation("TaskCreator")
-  headedDepartments       Department[]         @relation("DepartmentHead")
-  taskMessages            TaskMessage[]
-  departmentMonthlyReports DepartmentMonthlyReport[]
-  createdMeetings         DepartmentMeeting[] @relation("MeetingCreator")
-  createdPolls            DepartmentPoll[]    @relation("PollCreator")
-  createdDecisions        TeamDecision[]     @relation("DecisionCreator")
-  pollVotes               PollVote[]
-  decisionVotes           DecisionVote[]
-  pushSubscriptions       PushSubscription[]
-  proSubscription         UserProSubscription?
-  proSettings             UserProSettings?
-  invitations             UserInvitation[]
-  personalTasks           UserPersonalTask[]
-  financialGoals          UserFinancialGoal[]
-  financialProfile        UserFinancialProfile?
-  monthlyStatements       UserMonthlyStatement[]
-  financialEntries        UserFinancialEntry[]
+  id                        String                        @id @default(cuid())
+  email                     String                        @unique
+  name                      String?
+  avatarUrl                 String?                       @db.Text
+  password                  String
+  phone                     String?
+  publicKey                 String                        @db.Text
+  encryptedPrivateKey       String                        @db.Text
+  otpCode                   String?
+  otpExpiry                 DateTime?
+  isVerified                Boolean                       @default(false)
+  deviceId                  String?
+  deviceInfo                Json?
+  location                  Json?
+  allowedCountry            String?
+  isBanned                  Boolean                       @default(false)
+  isFirstLogin              Boolean                       @default(true)
+  currentLocation           Json?
+  lastSeen                  DateTime?
+  isOnline                  Boolean                       @default(false)
+  role                      UserRole                      @default(USER)
+  canPublishNotifications   Boolean                       @default(false)
+  createdAt                 DateTime                      @default(now())
+  updatedAt                 DateTime                      @updatedAt
+  publishedAnnouncements    Announcement[]
+  deptMemberships           DepartmentMember[]
+  groupMemberships          GroupMember[]
+  sentMessages              Message[]
+  notifications             Notification[]
+  orgMemberships            OrganizationMember[]
+  userPage                  UserPage?
+  likes                     Like[]
+  comments                  Comment[]
+  postReads                 PostRead[]
+  assignedTasks             Task[]                        @relation("TaskAssignee")
+  createdTasks              Task[]                        @relation("TaskCreator")
+  headedDepartments         Department[]                  @relation("DepartmentHead")
+  taskMessages              TaskMessage[]
+  departmentMonthlyReports  DepartmentMonthlyReport[]
+  createdMeetings           DepartmentMeeting[]           @relation("MeetingCreator")
+  createdPolls              DepartmentPoll[]              @relation("PollCreator")
+  createdDecisions          TeamDecision[]                @relation("DecisionCreator")
+  pollVotes                 PollVote[]
+  decisionVotes             DecisionVote[]
+  pushSubscriptions         PushSubscription[]
+  proSubscription           UserProSubscription?
+  proSettings               UserProSettings?
+  invitations               UserInvitation[]
+  personalTasks             UserPersonalTask[]
+  financialGoals            UserFinancialGoal[]
+  financialProfile          UserFinancialProfile?
+  monthlyStatements         UserMonthlyStatement[]
+  financialEntries          UserFinancialEntry[]
   deletionRequestsInitiated ConversationDeletionRequest[] @relation("DeletionRequestRequester")
 
-  followers Follow[] @relation("UserFollowers")
-  following Follow[] @relation("UserFollowing")
-  uploadedDepartmentDocuments DepartmentDocument[] @relation("DocumentUploader")
-  groupNotes                  GroupNote[]          @relation("GroupNoteCreator")
-  departmentNotes              DepartmentNote[]     @relation("DepartmentNoteCreator")
-  noteSharesReceived          GroupNoteShare[]     @relation("NoteShareRecipient")
-  collaborationGroupMembers   CollaborationGroupMember[]
-  headedCollaborationGroups   CollaborationGroup[] @relation("CollaborationGroupHead")
-  createdCollaborationTasks   CollaborationTask[] @relation("CollaborationTaskCreator")
-  assignedCollaborationTasks  CollaborationTask[] @relation("CollaborationTaskAssignee")
-  uploadedCollaborationDocs   CollaborationDocument[] @relation("CollaborationDocumentUploader")
-  collaborationNotes          CollaborationNote[]  @relation("CollaborationNoteCreator")
-  createdEditorialItems       CollaborationEditorialItem[] @relation("EditorialItemCreator")
-  assignedEditorialItems      CollaborationEditorialItem[] @relation("EditorialItemAssignee")
-  createdDepartmentEditorialItems DepartmentEditorialItem[] @relation("DepartmentEditorialItemCreator")
-  assignedDepartmentEditorialItems DepartmentEditorialItem[] @relation("DepartmentEditorialItemAssignee")
+  followers                        Follow[]                     @relation("UserFollowers")
+  following                        Follow[]                     @relation("UserFollowing")
+  uploadedDepartmentDocuments      DepartmentDocument[]         @relation("DocumentUploader")
+  groupNotes                       GroupNote[]                  @relation("GroupNoteCreator")
+  departmentNotes                  DepartmentNote[]             @relation("DepartmentNoteCreator")
+  noteSharesReceived               GroupNoteShare[]             @relation("NoteShareRecipient")
+  collaborationGroupMembers        CollaborationGroupMember[]
+  headedCollaborationGroups        CollaborationGroup[]         @relation("CollaborationGroupHead")
+  createdCollaborationTasks        CollaborationTask[]          @relation("CollaborationTaskCreator")
+  assignedCollaborationTasks       CollaborationTask[]          @relation("CollaborationTaskAssignee")
+  uploadedCollaborationDocs        CollaborationDocument[]      @relation("CollaborationDocumentUploader")
+  collaborationNotes               CollaborationNote[]          @relation("CollaborationNoteCreator")
+  createdEditorialItems            CollaborationEditorialItem[] @relation("EditorialItemCreator")
+  assignedEditorialItems           CollaborationEditorialItem[] @relation("EditorialItemAssignee")
+  createdDepartmentEditorialItems  DepartmentEditorialItem[]    @relation("DepartmentEditorialItemCreator")
+  assignedDepartmentEditorialItems DepartmentEditorialItem[]    @relation("DepartmentEditorialItemAssignee")
 
   @@index([email])
   @@index([isOnline])
@@ -148,21 +148,21 @@ model Follow {
 }
 
 model Organization {
-  id                    String                    @id @default(cuid())
-  name                  String
-  code                  String                    @unique
-  logo                  String?                   @db.Text
-  address               String?                   @db.Text
-  isSuspended           Boolean                   @default(false)
-  createdAt             DateTime                  @default(now())
-  updatedAt             DateTime                 @updatedAt
-  ownerId               String
-  departments           Department[]
-  members               OrganizationMember[]
-  subscription          Subscription?
-  events                EventInvitation[]
-  collaborationsAsA     OrganizationCollaboration[] @relation("OrgACollaborations")
-  collaborationsAsB     OrganizationCollaboration[] @relation("OrgBCollaborations")
+  id                        String                      @id @default(cuid())
+  name                      String
+  code                      String                      @unique
+  logo                      String?                     @db.Text
+  address                   String?                     @db.Text
+  isSuspended               Boolean                     @default(false)
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+  ownerId                   String
+  departments               Department[]
+  members                   OrganizationMember[]
+  subscription              Subscription?
+  events                    EventInvitation[]
+  collaborationsAsA         OrganizationCollaboration[] @relation("OrgACollaborations")
+  collaborationsAsB         OrganizationCollaboration[] @relation("OrgBCollaborations")
   collaborationGroupMembers CollaborationGroupMember[]
 
   @@index([code])
@@ -177,18 +177,18 @@ enum CollaborationStatus {
 }
 
 model OrganizationCollaboration {
-  id              String              @id @default(cuid())
-  orgAId          String
-  orgBId          String
-  status          CollaborationStatus  @default(PENDING)
-  createdBy       String              // Utilisateur qui initie (doit être admin/owner de orgA)
-  invitedBy       String?             // Utilisateur de orgB qui a accepté
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
+  id        String              @id @default(cuid())
+  orgAId    String
+  orgBId    String
+  status    CollaborationStatus @default(PENDING)
+  createdBy String // Utilisateur qui initie (doit être admin/owner de orgA)
+  invitedBy String? // Utilisateur de orgB qui a accepté
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
 
-  orgA            Organization        @relation("OrgACollaborations", fields: [orgAId], references: [id], onDelete: Cascade)
-  orgB            Organization        @relation("OrgBCollaborations", fields: [orgBId], references: [id], onDelete: Cascade)
-  groups          CollaborationGroup[]
+  orgA   Organization         @relation("OrgACollaborations", fields: [orgAId], references: [id], onDelete: Cascade)
+  orgB   Organization         @relation("OrgBCollaborations", fields: [orgBId], references: [id], onDelete: Cascade)
+  groups CollaborationGroup[]
 
   @@unique([orgAId, orgBId])
   @@index([orgAId])
@@ -197,22 +197,22 @@ model OrganizationCollaboration {
 
 // Groupe/département au sein d'une collaboration (équivalent département)
 model CollaborationGroup {
-  id              String                     @id @default(cuid())
+  id              String   @id @default(cuid())
   collaborationId String
   name            String
-  publicKey       String                     @db.Text
+  publicKey       String   @db.Text
   headId          String?
-  createdAt       DateTime                   @default(now())
-  updatedAt       DateTime                   @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  collaboration   OrganizationCollaboration @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
-  head            User?                      @relation("CollaborationGroupHead", fields: [headId], references: [id], onDelete: SetNull)
-  members         CollaborationGroupMember[]
-  conversations   Group[]                    @relation("CollaborationGroupConversations")
-  tasks           CollaborationTask[]
-  documents       CollaborationDocument[]
-  notes           CollaborationNote[]
-  editorialItems  CollaborationEditorialItem[]
+  collaboration  OrganizationCollaboration    @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
+  head           User?                        @relation("CollaborationGroupHead", fields: [headId], references: [id], onDelete: SetNull)
+  members        CollaborationGroupMember[]
+  conversations  Group[]                      @relation("CollaborationGroupConversations")
+  tasks          CollaborationTask[]
+  documents      CollaborationDocument[]
+  notes          CollaborationNote[]
+  editorialItems CollaborationEditorialItem[]
 
   @@index([collaborationId])
   @@index([headId])
@@ -220,16 +220,16 @@ model CollaborationGroup {
 
 // Membre d'un groupe de collaboration (provient de orgA ou orgB)
 model CollaborationGroupMember {
-  id               String            @id @default(cuid())
+  id               String   @id @default(cuid())
   groupId          String
   userId           String
-  orgId            String            // Organisation d'origine du membre
-  encryptedDeptKey String            @db.Text
-  createdAt        DateTime          @default(now())
+  orgId            String // Organisation d'origine du membre
+  encryptedDeptKey String   @db.Text
+  createdAt        DateTime @default(now())
 
-  group            CollaborationGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organization     Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  group        CollaborationGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   @@unique([groupId, userId])
   @@index([groupId])
@@ -252,9 +252,9 @@ model CollaborationTask {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  group       CollaborationGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  creator     User               @relation("CollaborationTaskCreator", fields: [creatorId], references: [id], onDelete: Cascade)
-  assignee    User               @relation("CollaborationTaskAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
+  group    CollaborationGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  creator  User               @relation("CollaborationTaskCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  assignee User               @relation("CollaborationTaskAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
 
   @@index([groupId])
   @@index([assigneeId])
@@ -279,15 +279,15 @@ model CollaborationDocument {
 
 // Note dans un groupe de collaboration
 model CollaborationNote {
-  id         String       @id @default(cuid())
-  groupId    String
-  title      String
-  content    String       @db.Text
-  textSize   NoteTextSize @default(NORMAL)
-  order      Int          @default(0)
-  createdBy  String
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  id        String       @id @default(cuid())
+  groupId   String
+  title     String
+  content   String       @db.Text
+  textSize  NoteTextSize @default(NORMAL)
+  order     Int          @default(0)
+  createdBy String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 
   group   CollaborationGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
   creator User               @relation("CollaborationNoteCreator", fields: [createdBy], references: [id], onDelete: Cascade)
@@ -343,7 +343,7 @@ model DepartmentEditorialItem {
   deptId      String
   title       String
   description String?           @db.Text
-  type        EditorialItemType  @default(POST)
+  type        EditorialItemType @default(POST)
   status      EditorialStatus   @default(DRAFT)
   channel     String?           @db.VarChar(100)
   scheduledAt DateTime?
@@ -377,27 +377,27 @@ model OrganizationMember {
 }
 
 model Department {
-  id                String                    @id @default(cuid())
-  name              String
-  orgId             String
-  publicKey         String                    @db.Text
-  headId            String?                   // Chef du département (peut attribuer des tâches)
-  createdAt         DateTime                 @default(now())
-  updatedAt         DateTime                 @updatedAt
-  organization      Organization             @relation(fields: [orgId], references: [id], onDelete: Cascade, map: "Department_orgId_fk")
-  head              User?                     @relation("DepartmentHead", fields: [headId], references: [id], onDelete: SetNull)
-  members           DepartmentMember[]
-  conversations     Group[]
-  tasks             Task[]
-  eventBroadcasts   EventDepartmentBroadcast[]
-  monthlyReports    DepartmentMonthlyReport[]
-  goals             DepartmentGoal[]
-  meetings          DepartmentMeeting[]
-  polls             DepartmentPoll[]
-  teamDecisions     TeamDecision[]
-  documents         DepartmentDocument[]
-  notes             DepartmentNote[]
-  editorialItems    DepartmentEditorialItem[]
+  id              String                     @id @default(cuid())
+  name            String
+  orgId           String
+  publicKey       String                     @db.Text
+  headId          String? // Chef du département (peut attribuer des tâches)
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+  organization    Organization               @relation(fields: [orgId], references: [id], onDelete: Cascade, map: "Department_orgId_fk")
+  head            User?                      @relation("DepartmentHead", fields: [headId], references: [id], onDelete: SetNull)
+  members         DepartmentMember[]
+  conversations   Group[]
+  tasks           Task[]
+  eventBroadcasts EventDepartmentBroadcast[]
+  monthlyReports  DepartmentMonthlyReport[]
+  goals           DepartmentGoal[]
+  meetings        DepartmentMeeting[]
+  polls           DepartmentPoll[]
+  teamDecisions   TeamDecision[]
+  documents       DepartmentDocument[]
+  notes           DepartmentNote[]
+  editorialItems  DepartmentEditorialItem[]
 
   @@index([orgId], map: "Department_orgId_idx")
   @@index([headId])
@@ -423,13 +423,13 @@ model DepartmentNote {
 
 // Fiches / documents du département (bibliothèque partagée)
 model DepartmentDocument {
-  id        String   @id @default(cuid())
-  deptId    String
-  filename  String
-  type      FileType
-  data      String   @db.Text
+  id         String   @id @default(cuid())
+  deptId     String
+  filename   String
+  type       FileType
+  data       String   @db.Text
   uploadedBy String
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 
   department Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
   uploader   User       @relation("DocumentUploader", fields: [uploadedBy], references: [id], onDelete: Cascade)
@@ -444,10 +444,10 @@ model DepartmentGoal {
   deptId       String
   title        String
   description  String?  @db.Text
-  targetValue  Float?   // Valeur cible (ex: 100 pour 100%)
+  targetValue  Float? // Valeur cible (ex: 100 pour 100%)
   currentValue Float    @default(0)
-  period       String   // "MONTHLY" | "QUARTERLY" | "YEARLY"
-  periodKey    String   // "2025-02" ou "2025-Q1" ou "2025"
+  period       String // "MONTHLY" | "QUARTERLY" | "YEARLY"
+  periodKey    String // "2025-02" ou "2025-Q1" ou "2025"
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -462,7 +462,7 @@ model DepartmentMeeting {
   id          String    @id @default(cuid())
   deptId      String
   title       String
-  description String?  @db.Text
+  description String?   @db.Text
   agenda      String?   @db.Text
   meetingDate DateTime
   location    String?
@@ -473,7 +473,7 @@ model DepartmentMeeting {
   updatedAt   DateTime  @updatedAt
 
   department Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
-  creator     User       @relation("MeetingCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  creator    User       @relation("MeetingCreator", fields: [createdBy], references: [id], onDelete: Cascade)
 
   @@index([deptId])
   @@index([meetingDate])
@@ -481,17 +481,17 @@ model DepartmentMeeting {
 
 // Sondages rapides
 model DepartmentPoll {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   deptId    String
-  question  String   @db.Text
-  options   Json     // ["Option A", "Option B", ...]
+  question  String    @db.Text
+  options   Json // ["Option A", "Option B", ...]
   endDate   DateTime?
   createdBy String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  department Department  @relation(fields: [deptId], references: [id], onDelete: Cascade)
-  creator    User        @relation("PollCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  department Department @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  creator    User       @relation("PollCreator", fields: [createdBy], references: [id], onDelete: Cascade)
   votes      PollVote[]
 
   @@index([deptId])
@@ -502,11 +502,11 @@ model PollVote {
   id          String   @id @default(cuid())
   pollId      String
   userId      String
-  optionIndex Int      // Index de l'option choisie (0-based)
+  optionIndex Int // Index de l'option choisie (0-based)
   createdAt   DateTime @default(now())
 
   poll DepartmentPoll @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  user User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([pollId, userId])
   @@index([pollId])
@@ -530,8 +530,8 @@ model TeamDecision {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  department Department  @relation(fields: [deptId], references: [id], onDelete: Cascade)
-  creator    User         @relation("DecisionCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  department Department     @relation(fields: [deptId], references: [id], onDelete: Cascade)
+  creator    User           @relation("DecisionCreator", fields: [createdBy], references: [id], onDelete: Cascade)
   votes      DecisionVote[]
 
   @@index([deptId])
@@ -539,11 +539,11 @@ model TeamDecision {
 }
 
 model DecisionVote {
-  id         String          @id @default(cuid())
+  id         String           @id @default(cuid())
   decisionId String
   userId     String
   vote       DecisionVoteType
-  createdAt  DateTime        @default(now())
+  createdAt  DateTime         @default(now())
 
   decision TeamDecision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
   user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -565,18 +565,18 @@ model DepartmentMember {
 }
 
 model Group {
-  id                   String               @id @default(cuid())
+  id                   String                       @id @default(cuid())
   name                 String?
-  isDirect             Boolean              @default(false)
+  isDirect             Boolean                      @default(false)
   deptId               String?
   collaborationGroupId String?
-  lockCodeHash         String?              @db.VarChar(255)
+  lockCodeHash         String?                      @db.VarChar(255)
   lockSetByUserId      String?
   lockedAt             DateTime?
-  createdAt            DateTime             @default(now())
-  updatedAt            DateTime             @updatedAt
-  department           Department?          @relation(fields: [deptId], references: [id], map: "Group_deptId_fk")
-  collaborationGroup   CollaborationGroup?  @relation("CollaborationGroupConversations", fields: [collaborationGroupId], references: [id], onDelete: Cascade)
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+  department           Department?                  @relation(fields: [deptId], references: [id], map: "Group_deptId_fk")
+  collaborationGroup   CollaborationGroup?          @relation("CollaborationGroupConversations", fields: [collaborationGroupId], references: [id], onDelete: Cascade)
   members              GroupMember[]
   messages             Message[]
   documents            GroupDocument[]
@@ -592,8 +592,8 @@ model ConversationDeletionRequest {
   requestedBy String
   createdAt   DateTime @default(now())
 
-  group    Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  requester User @relation("DeletionRequestRequester", fields: [requestedBy], references: [id], onDelete: Cascade)
+  group     Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  requester User  @relation("DeletionRequestRequester", fields: [requestedBy], references: [id], onDelete: Cascade)
 
   @@index([requestedBy])
 }
@@ -617,17 +617,17 @@ enum NoteTextSize {
 }
 
 model GroupNote {
-  id         String      @id @default(cuid())
+  id         String           @id @default(cuid())
   documentId String
   title      String
-  content    String      @db.Text
-  textSize   NoteTextSize @default(NORMAL)
-  order      Int         @default(0)
+  content    String           @db.Text
+  textSize   NoteTextSize     @default(NORMAL)
+  order      Int              @default(0)
   createdBy  String
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  document   GroupDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  creator    User          @relation("GroupNoteCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  document   GroupDocument    @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  creator    User             @relation("GroupNoteCreator", fields: [createdBy], references: [id], onDelete: Cascade)
   shares     GroupNoteShare[]
 
   @@index([documentId])
@@ -635,11 +635,11 @@ model GroupNote {
 }
 
 model GroupNoteShare {
-  id            String   @id @default(cuid())
-  noteId        String
+  id           String   @id @default(cuid())
+  noteId       String
   sharedWithId String
-  canEdit       Boolean  @default(true)
-  createdAt     DateTime @default(now())
+  canEdit      Boolean  @default(true)
+  createdAt    DateTime @default(now())
 
   note       GroupNote @relation(fields: [noteId], references: [id], onDelete: Cascade)
   sharedWith User      @relation("NoteShareRecipient", fields: [sharedWithId], references: [id], onDelete: Cascade)
@@ -798,7 +798,7 @@ model PendingSubscriptionPayment {
   logo          String?  @db.Text
   address       String?  @db.Text
   requestId     String?
-  orgId         String?  // Si renseigné = upgrade d'un abonnement existant
+  orgId         String? // Si renseigné = upgrade d'un abonnement existant
   type          String   @default("CREATE") // CREATE | UPGRADE
   createdAt     DateTime @default(now())
 
@@ -813,22 +813,22 @@ enum PaymentOrderStatus {
 }
 
 model PaymentOrder {
-  id          String            @id @default(cuid())
-  userId      String
-  plan        String
-  name        String
-  logo        String?           @db.Text
-  address     String?           @db.Text
-  requestId   String?
-  orgId       String?           // Si renseigné = upgrade d'un abonnement existant
-  type        String            @default("CREATE") // CREATE | UPGRADE
-  amountFcfa  Int
-  status      PaymentOrderStatus @default(PENDING)
-  approvedBy  String?
-  approvedAt  DateTime?
-  rejectedAt  DateTime?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  id         String             @id @default(cuid())
+  userId     String
+  plan       String
+  name       String
+  logo       String?            @db.Text
+  address    String?            @db.Text
+  requestId  String?
+  orgId      String? // Si renseigné = upgrade d'un abonnement existant
+  type       String             @default("CREATE") // CREATE | UPGRADE
+  amountFcfa Int
+  status     PaymentOrderStatus @default(PENDING)
+  approvedBy String?
+  approvedAt DateTime?
+  rejectedAt DateTime?
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
 
   @@index([userId])
   @@index([status])
@@ -858,20 +858,20 @@ model Subscription {
 }
 
 model EventInvitation {
-  id                  String                     @id @default(cuid())
-  orgId               String
-  title               String
-  description         String?                    @db.Text
-  eventType           EventType                  @default(OTHER)
-  eventDate           DateTime
-  maxAttendees        Int
-  imageUrl            String?                    @db.Text
-  token               String                     @unique
-  createdBy           String
-  createdAt           DateTime                  @default(now())
-  updatedAt           DateTime                  @updatedAt
-  organization        Organization              @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  rsvps               InvitationRSVP[]
+  id                   String                     @id @default(cuid())
+  orgId                String
+  title                String
+  description          String?                    @db.Text
+  eventType            EventType                  @default(OTHER)
+  eventDate            DateTime
+  maxAttendees         Int
+  imageUrl             String?                    @db.Text
+  token                String                     @unique
+  createdBy            String
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+  organization         Organization               @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  rsvps                InvitationRSVP[]
   departmentBroadcasts EventDepartmentBroadcast[]
 
   @@index([orgId])
@@ -880,11 +880,11 @@ model EventInvitation {
 }
 
 model EventDepartmentBroadcast {
-  id         String           @id @default(cuid())
+  id         String          @id @default(cuid())
   eventId    String
   deptId     String
-  createdAt  DateTime         @default(now())
-  event      EventInvitation  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  createdAt  DateTime        @default(now())
+  event      EventInvitation @relation(fields: [eventId], references: [id], onDelete: Cascade)
   department Department      @relation(fields: [deptId], references: [id], onDelete: Cascade)
 
   @@unique([eventId, deptId])
@@ -922,16 +922,16 @@ enum PostType {
 }
 
 model Post {
-  id        String    @id @default(cuid())
+  id        String     @id @default(cuid())
   pageId    String
   type      PostType
-  content   String    @db.Text
-  imageUrl  String?   @db.Text
-  caption   String?   @db.Text
+  content   String     @db.Text
+  imageUrl  String?    @db.Text
+  caption   String?    @db.Text
   reference String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  page      UserPage  @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  page      UserPage   @relation(fields: [pageId], references: [id], onDelete: Cascade)
   likes     Like[]
   comments  Comment[]
   postReads PostRead[]
@@ -970,7 +970,7 @@ model Comment {
 }
 
 model PostRead {
-  id     String @id @default(cuid())
+  id     String   @id @default(cuid())
   userId String
   postId String
   readAt DateTime @default(now())
@@ -1069,7 +1069,7 @@ model DepartmentMonthlyReport {
   id        String   @id @default(cuid())
   deptId    String
   userId    String
-  month     String   // "yyyy-MM" (ex: "2025-02")
+  month     String // "yyyy-MM" (ex: "2025-02")
   content   String   @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1104,14 +1104,14 @@ enum UserProPlan {
 }
 
 model UserProSubscription {
-  id        String       @id @default(cuid())
-  userId    String       @unique
-  plan      UserProPlan  @default(MONTHLY)
-  startDate DateTime     @default(now())
+  id        String      @id @default(cuid())
+  userId    String      @unique
+  plan      UserProPlan @default(MONTHLY)
+  startDate DateTime    @default(now())
   endDate   DateTime
-  isActive  Boolean      @default(true)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -1150,16 +1150,16 @@ enum PersonalTaskPriority {
 }
 
 model UserPersonalTask {
-  id          String              @id @default(cuid())
+  id          String               @id @default(cuid())
   userId      String
   title       String
-  description String?             @db.Text
-  status      PersonalTaskStatus  @default(TODO)
+  description String?              @db.Text
+  status      PersonalTaskStatus   @default(TODO)
   priority    PersonalTaskPriority @default(MEDIUM)
   dueDate     DateTime?
   completedAt DateTime?
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -1169,38 +1169,38 @@ model UserPersonalTask {
 }
 
 enum FinancialGoalType {
-  ANNUAL_SAVINGS    // Épargne annuelle
-  MATERIAL_PURCHASE  // Achat d'un bien matériel (voiture, téléphone, etc.)
+  ANNUAL_SAVINGS // Épargne annuelle
+  MATERIAL_PURCHASE // Achat d'un bien matériel (voiture, téléphone, etc.)
 }
 
 model UserFinancialGoal {
-  id              String             @id @default(cuid())
-  userId          String
-  type            FinancialGoalType   @default(ANNUAL_SAVINGS)
-  year            Int?                // Pour ANNUAL_SAVINGS
-  targetItem      String?             @db.Text // Pour MATERIAL_PURCHASE: "Voiture", "Téléphone"
-  targetAmount    Float
-  targetDate      DateTime?           // Pour MATERIAL_PURCHASE: date souhaitée d'achat
-  label           String?             @db.Text
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  id           String            @id @default(cuid())
+  userId       String
+  type         FinancialGoalType @default(ANNUAL_SAVINGS)
+  year         Int? // Pour ANNUAL_SAVINGS
+  targetItem   String?           @db.Text // Pour MATERIAL_PURCHASE: "Voiture", "Téléphone"
+  targetAmount Float
+  targetDate   DateTime? // Pour MATERIAL_PURCHASE: date souhaitée d'achat
+  label        String?           @db.Text
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
 
-  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  progress  UserMonthlyProgress[]
+  user     User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  progress UserMonthlyProgress[]
 
   @@index([userId])
   @@index([type])
 }
 
 model UserFinancialProfile {
-  id                    String   @id @default(cuid())
-  userId                String   @unique
-  monthlySalary         Float    @default(0)
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  monthlySalary        Float    @default(0)
   supplementaryIncome  Float    @default(0)
-  currency              String   @default("FCFA")
-  preferredSavingsRate  Float?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  currency             String   @default("FCFA")
+  preferredSavingsRate Float?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -1229,22 +1229,22 @@ model UserMonthlyStatement {
 // Entrées financières détaillées : salaire, revenus supplémentaires, dépenses
 // Chaque entrée a une note et peut être confirmée pour le calcul du graphique
 enum FinancialEntryType {
-  SALARY              // Salaire reçu
+  SALARY // Salaire reçu
   SUPPLEMENTARY_INCOME // Revenu supplémentaire (freelance, bonus...)
-  EXPENSE             // Dépense
+  EXPENSE // Dépense
 }
 
 model UserFinancialEntry {
-  id          String            @id @default(cuid())
+  id          String             @id @default(cuid())
   userId      String
   year        Int
   month       Int
   type        FinancialEntryType
   amount      Float
-  note        String?           @db.Text
-  isConfirmed Boolean           @default(false)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  note        String?            @db.Text
+  isConfirmed Boolean            @default(false)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -1254,14 +1254,14 @@ model UserFinancialEntry {
 }
 
 model UserMonthlyProgress {
-  id          String   @id @default(cuid())
-  goalId      String
-  year        Int
-  month       Int      // 1-12
-  amount      Float    @default(0) // Montant épargné pour cette entrée (FCFA)
-  notes       String?  @db.Text
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  goalId    String
+  year      Int
+  month     Int // 1-12
+  amount    Float    @default(0) // Montant épargné pour cette entrée (FCFA)
+  notes     String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   goal UserFinancialGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
 

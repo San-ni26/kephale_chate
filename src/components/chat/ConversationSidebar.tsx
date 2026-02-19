@@ -46,7 +46,7 @@ export function ConversationSidebar() {
     const pathname = usePathname();
     const router = useRouter();
     const { data: profileData } = useSWR('/api/users/profile', fetcher);
-    const { data: conversationsData, mutate: mutateConversations } = useSWR('/api/conversations', fetcher, {
+    const { data: conversationsData, error: conversationsError, mutate: mutateConversations } = useSWR('/api/conversations', fetcher, {
         refreshInterval: 15000, // Refresh every 15s pour mise à jour présence (Redis)
     });
     const [searchQuery, setSearchQuery] = useState('');
@@ -136,7 +136,7 @@ export function ConversationSidebar() {
     }
 
     return (
-        <div className={`flex flex-col h-full border-r border-border bg-card w-full transition-all duration-300 ease-in-out ${isCollapsed ? 'md:w-[80px]' : 'md:w-[350px] lg:w-[400px]'
+        <div className={`flex flex-col h-full min-h-0 border-r border-border bg-card w-full transition-all duration-300 ease-in-out ${isCollapsed ? 'md:w-[80px]' : 'md:w-[350px] lg:w-[400px]'
             }`}>
             {/* Header */}
             <div className={`p-4 border-b border-border bg-background/50 backdrop-blur sticky top-0 z-10 flex flex-col gap-4 ${isCollapsed ? 'items-center' : ''
@@ -178,8 +178,20 @@ export function ConversationSidebar() {
             </div>
 
             {/* List */}
-            <div className="flex-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
-                {filteredConversations.length === 0 ? (
+            <div className="flex-1 min-h-0 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+                {conversationsError ? (
+                    <div className="flex flex-col items-center justify-center h-40 text-muted-foreground text-sm gap-2">
+                        {!isCollapsed && (
+                            <>
+                                <p>Erreur de chargement</p>
+                                <Button variant="ghost" size="sm" onClick={() => mutateConversations()}>
+                                    Réessayer
+                                </Button>
+                            </>
+                        )}
+                        {isCollapsed && <MessageSquare className="w-6 h-6 opacity-20" />}
+                    </div>
+                ) : filteredConversations.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-40 text-muted-foreground text-sm">
                         {!isCollapsed && <p>Aucune conversation</p>}
                         {isCollapsed && <MessageSquare className="w-6 h-6 opacity-20" />}

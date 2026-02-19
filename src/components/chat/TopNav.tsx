@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, LockOpen, FileText, NotepadText, Phone } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, LockOpen, FileText, NotepadText, Phone, KeyRound, ShieldOff, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
@@ -12,7 +12,15 @@ import { useFinances } from '@/src/contexts/FinancesContext';
 import { toast } from 'sonner';
 import { useRouter, usePathname } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/auth-client';
+import { cn } from '@/src/lib/utils';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/src/components/ui/dropdown-menu';
 import OrganizationRequestDialog from '@/src/components/organizations/OrganizationRequestDialog';
+import { useDiscussionBlurState } from '@/src/contexts/DiscussionBlurContext';
 import useSWR from 'swr';
 
 const fetcher = (url: string) => fetchWithAuth(url).then((r) => (r.ok ? r.json() : null));
@@ -21,6 +29,7 @@ export function TopNav() {
     const router = useRouter();
     const pathname = usePathname();
     const feedSearch = useFeedSearch();
+    const discussionBlurState = useDiscussionBlurState();
     const isNotificationsPage = pathname?.startsWith('/chat/notifications');
     const publicPageMatch = pathname?.match(/^\/chat\/page\/([^/]+)\/?$/);
     const publicPageHandle = publicPageMatch?.[1];
@@ -599,8 +608,8 @@ export function TopNav() {
                     <Settings className="w-5 h-5 text-primary shrink-0" />
                     <h2 className="font-semibold text-foreground truncate">Paramètres</h2>
                 </div>
-            ) : isDiscussionPage && discussionId ? (
-                /* Top bar page Discussion : retour + nom + icône cadenas (Pro) + appel */
+            ) : mounted && isDiscussionPage && discussionId ? (
+                /* Top bar page Discussion : retour + avatar + nom + statut + icône cadenas (Pro) + appel */
                 <>
                     <Button
                         variant="ghost"
@@ -610,8 +619,23 @@ export function TopNav() {
                     >
                         <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
                     </Button>
-                    <div className="flex-1 min-w-0 flex items-center gap-2">
-                        <MessageSquare className="w-5 h-5 text-muted-foreground shrink-0" />
+                    <Avatar className="h-10 w-10 border border-border shrink-0">
+                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(
+                            discussion?.name
+                                ? discussion.name
+                                : discussion?.isDirect && discussion?.members?.length
+                                    ? (discussion.members.find((m: { user: { id: string } }) => m.user.id !== user?.id)?.user?.name || 'Discussion')
+                                    : 'Discussion'
+                        )}`} />
+                        <AvatarFallback>
+                            {discussion?.name
+                                ? discussion.name[0]
+                                : discussion?.isDirect && discussion?.members?.length
+                                    ? (discussion.members.find((m: { user: { id: string } }) => m.user.id !== user?.id)?.user?.name?.[0] || 'D')
+                                    : 'D'}
+                        </AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3 flex-1 min-w-0 overflow-hidden">
                         <h2 className="font-semibold text-foreground truncate">
                             {discussion?.name
                                 ? discussion.name
@@ -622,22 +646,75 @@ export function TopNav() {
                                         .join(', ') || 'Discussion'
                                     : 'Discussion'}
                         </h2>
+                        {discussion?.isDirect && discussion?.members?.length && (() => {
+                            const other = discussion.members.find((m: { user: { id: string } }) => m.user.id !== user?.id)?.user;
+                            return other ? (
+                                <p className="text-xs text-muted-foreground">
+                                    {other.inCall ? (
+                                        <span className="text-amber-500 font-medium">En appel</span>
+                                    ) : other.isOnline ? (
+                                        <span className="text-green-500 font-medium">En ligne</span>
+                                    ) : (
+                                        'Hors ligne'
+                                    )}
+                                </p>
+                            ) : null;
+                        })()}
                     </div>
-                    {/* Icône cadenas + appel : visible pour toutes les discussions (directes ou non) */}
+                    {/* Icône flou (œil) + cadenas + appel : visible pour toutes les discussions (directes ou non) */}
                     <div className="flex items-center gap-1 shrink-0">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => window.dispatchEvent(new CustomEvent('discussion-lock-click'))}
-                            title={discussion?.isLocked ? 'Code de verrouillage' : 'Verrouiller la discussion'}
-                            className="hover:bg-primary/10"
-                        >
-                            {discussion?.isLocked ? (
-                                <LockOpen className="w-5 h-5 text-amber-500" />
-                            ) : (
-                                <Lock className="w-5 h-5 text-muted-foreground hover:text-primary" />
-                            )}
-                        </Button>
+                        {discussionBlurState?.showBlurToggle && (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={discussionBlurState.onToggle}
+                                title={discussionBlurState.blurEnabled ? 'Afficher les anciens messages' : 'Flouter les anciens messages'}
+                                className={cn(
+                                    'hover:bg-primary/10',
+                                    discussionBlurState.blurEnabled ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                                )}
+                            >
+                                {discussionBlurState.blurEnabled ? (
+                                    <Eye className="w-5 h-5" />
+                                ) : (
+                                    <EyeOff className="w-5 h-5" />
+                                )}
+                            </Button>
+                        )}
+                        {discussion?.isLocked && discussion?.currentUserIsPro ? (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        title="Code de verrouillage"
+                                        className="hover:bg-primary/10"
+                                    >
+                                        <LockOpen className="w-5 h-5 text-amber-500" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => window.dispatchEvent(new CustomEvent('discussion-lock-disable'))}>
+                                        <ShieldOff className="w-4 h-4 mr-2" />
+                                        Désactiver
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => window.dispatchEvent(new CustomEvent('discussion-lock-change-code'))}>
+                                        <KeyRound className="w-4 h-4 mr-2" />
+                                        Modifier le code
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        ) : (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => window.dispatchEvent(new CustomEvent('discussion-lock-click'))}
+                                title={discussion?.currentUserIsPro ? 'Verrouiller la discussion' : 'Verrouiller (Compte Pro requis)'}
+                                className="hover:bg-primary/10"
+                            >
+                                <Lock className={cn("w-5 h-5", discussion?.currentUserIsPro ? "text-muted-foreground hover:text-primary" : "text-muted-foreground/60")} />
+                            </Button>
+                        )}
                         <Button
                             variant="ghost"
                             size="icon"
@@ -706,7 +783,7 @@ export function TopNav() {
                 </div>
             )}
 
-            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && !isGroupsPage && !isSettingsPage && !isDiscussionPage && !(mounted && isPublicPageView) && (
+            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && !isGroupsPage && !isSettingsPage && !(mounted && isDiscussionPage) && !(mounted && isPublicPageView) && (
                 <div className="flex items-center gap-2">
                     {!isOrganizationsPage && <UserSearch />}
 

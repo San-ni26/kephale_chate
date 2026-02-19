@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
@@ -35,6 +35,7 @@ import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { useInitialMessages } from '@/src/hooks/useInitialMessages';
 import { useDiscussionLockState } from '@/src/hooks/useDiscussionLockState';
 import { useCallContext } from '@/src/contexts/CallContext';
+import { useSetDiscussionBlur } from '@/src/contexts/DiscussionBlurContext';
 import { ScreenshotBlocker } from '@/src/components/chat/ScreenshotBlocker';
 import { cn } from '@/src/lib/utils';
 
@@ -99,14 +100,14 @@ const fetcher = async (url: string) => {
 const BLUR_THRESHOLD_MS = 24 * 60 * 60 * 1000;
 
 /* Bulle de message avec mémorisation du déchiffrement */
-function DiscussionMessageBubble({
+const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
     message,
     isOwn,
     canEdit,
     currentUser,
     otherUser,
     privateKey,
-    editingMessageId,
+    isEditing,
     editContent,
     onEditContentChange,
     onEditOpen,
@@ -124,7 +125,7 @@ function DiscussionMessageBubble({
     currentUser: { id: string; name: string | null; email: string; publicKey: string } | null;
     otherUser: { id: string; name: string | null; email: string; publicKey: string } | null;
     privateKey: string | null;
-    editingMessageId: string | null;
+    isEditing: boolean;
     editContent: string;
     onEditContentChange: (v: string) => void;
     onEditOpen: (content: string) => void;
@@ -158,7 +159,7 @@ function DiscussionMessageBubble({
             )}
         >
             <div className={cn('max-w-[75%]', isOwn ? 'items-end' : 'items-start', 'flex flex-col')}>
-                {editingMessageId === message.id ? (
+                {isEditing ? (
                     <div className="bg-card rounded-lg p-3 w-full border border-border">
                         <Input
                             value={editContent}
@@ -243,7 +244,23 @@ function DiscussionMessageBubble({
             </div>
         </div>
     );
-}
+}, (prev, next) => {
+    return (
+        prev.message.id === next.message.id &&
+        prev.message.content === next.message.content &&
+        prev.message.isEdited === next.message.isEdited &&
+        prev.isOwn === next.isOwn &&
+        prev.canEdit === next.canEdit &&
+        prev.isEditing === next.isEditing &&
+        prev.editContent === next.editContent &&
+        prev.isFailed === next.isFailed &&
+        prev.isBlurred === next.isBlurred &&
+        prev.privateKey === next.privateKey &&
+        prev.currentUser?.id === next.currentUser?.id &&
+        prev.otherUser?.publicKey === next.otherUser?.publicKey &&
+        prev.displayCreatedAt === next.displayCreatedAt
+    );
+});
 
 export default function DiscussionPage() {
     const params = useParams();
@@ -275,6 +292,7 @@ export default function DiscussionPage() {
     const [deletionActionLoading, setDeletionActionLoading] = useState(false);
     const [showLockDialog, setShowLockDialog] = useState(false);
     const [showChangeCodeDialog, setShowChangeCodeDialog] = useState(false);
+    const [showDisableLockDialog, setShowDisableLockDialog] = useState(false);
     const [lockCode, setLockCode] = useState('');
     const [currentCodeForChange, setCurrentCodeForChange] = useState('');
     const [newCodeForChange, setNewCodeForChange] = useState('');
@@ -286,6 +304,11 @@ export default function DiscussionPage() {
     const [privateKey, setPrivateKey] = useState<string | null>(null);
     const [password, setPassword] = useState('');
     const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showLockCode, setShowLockCode] = useState(false);
+    const [showCurrentCode, setShowCurrentCode] = useState(false);
+    const [showNewCode, setShowNewCode] = useState(false);
+    const [showUnlockOverlayCode, setShowUnlockOverlayCode] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
     const [editContent, setEditContent] = useState('');
@@ -296,6 +319,16 @@ export default function DiscussionPage() {
         () => (shouldApplyBlur ? new Set(messages.filter(m => Date.now() - new Date(m.createdAt).getTime() > BLUR_THRESHOLD_MS).map(m => m.id)) : new Set<string>()),
         [messages, shouldApplyBlur]
     );
+
+    const uniqueMessages = useMemo(() => {
+        const seen = new Set<string>();
+        return messages.filter(m => {
+            if (seen.has(m.id)) return false;
+            seen.add(m.id);
+            return true;
+        });
+    }, [messages]);
+
     const [loadingMore, setLoadingMore] = useState(false);
     const [typingUsers, setTypingUsers] = useState<Record<string, boolean>>({});
     const [failedMessagePayloads, setFailedMessagePayloads] = useState<Map<string, { encryptedContent: string; attachments?: { filename: string; type: string; data: string }[] }>>(new Map());
@@ -312,6 +345,25 @@ export default function DiscussionPage() {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
         });
     }, []);
+
+    const setDiscussionBlur = useSetDiscussionBlur();
+
+    // Exposer le toggle flou à la TopNav (icône œil dans la barre supérieure)
+    useEffect(() => {
+        const showBlurToggle = blurOldMessages && lockState.canUseLock;
+        if (showBlurToggle) {
+            setDiscussionBlur({
+                showBlurToggle: true,
+                blurEnabled,
+                onToggle: () => setBlurEnabled(prev => !prev),
+            });
+        } else {
+            setDiscussionBlur(null);
+        }
+        return () => {
+            setDiscussionBlur(null);
+        };
+    }, [blurOldMessages, lockState.canUseLock, blurEnabled, setDiscussionBlur]);
 
     const messagesCacheUrl = conversationId ? `/api/conversations/${conversationId}/messages?limit=30` : null;
 
@@ -358,8 +410,8 @@ export default function DiscussionPage() {
         handleUserTyping
     );
 
-    const currentUser = getUser();
-    const otherUser = conversation?.members.find(m => m.user.id !== currentUser?.id)?.user;
+    const currentUser = useMemo(() => getUser(), []);
+    const otherUser = useMemo(() => conversation?.members.find(m => m.user.id !== currentUser?.id)?.user, [conversation?.members, currentUser?.id]);
     const callContext = useCallContext();
     const isCallActiveRef = useRef(false);
     isCallActiveRef.current = callContext?.activeCall !== null;
@@ -922,11 +974,21 @@ export default function DiscussionPage() {
         }
     }, [failedMessagePayloads, conversationId, scrollToBottom]);
 
-    const canEditOrDelete = (message: Message): boolean => {
+    const canEditOrDelete = useCallback((message: Message): boolean => {
         if (message.senderId !== currentUser?.id) return false;
         const messageTime = new Date(message.createdAt).getTime();
         return (Date.now() - messageTime) < 5 * 60 * 1000;
-    };
+    }, [currentUser?.id]);
+
+    const handleEditOpen = useCallback((messageId: string, content: string) => {
+        setEditingMessageId(messageId);
+        setEditContent(content);
+    }, []);
+
+    const handleEditCancel = useCallback(() => {
+        setEditingMessageId(null);
+        setEditContent('');
+    }, []);
 
     const getConversationName = () => {
         if (!conversation) return 'Chargement...';
@@ -1036,6 +1098,7 @@ export default function DiscussionPage() {
                 sessionStorage.removeItem(`unlocked_${conversationId}`);
                 setIsUnlockedSession(false);
                 setLockCode('');
+                setShowDisableLockDialog(false);
                 toast.success('Verrouillage désactivé');
                 mutateConversation();
             } else {
@@ -1078,15 +1141,21 @@ export default function DiscussionPage() {
     // Écouter les clics depuis la TopNav (icône cadenas / appel) - après définition des variables
     useEffect(() => {
         const onLockClick = () => {
-            if (lockState.isLocked && !isUnlockedSession) return;
             if (!lockState.userIsPro) {
                 toast.error('Compte Pro requis pour verrouiller la discussion');
                 return;
             }
-            if (lockState.isLocked && isUnlockedSession && lockState.canManageLock) {
+            if (lockState.isLocked) return; // Menu géré par TopNav
+            setShowLockDialog(true);
+        };
+        const onLockDisable = () => setShowDisableLockDialog(true);
+        const onLockChangeCode = () => {
+            if (!isUnlockedSession && lockState.canManageLock) {
+                toast.error('Déverrouillez d\'abord la discussion pour modifier le code');
+                return;
+            }
+            if (isUnlockedSession && lockState.canManageLock) {
                 setShowChangeCodeDialog(true);
-            } else {
-                setShowLockDialog(true);
             }
         };
         const onCallClick = () => {
@@ -1095,12 +1164,16 @@ export default function DiscussionPage() {
             }
         };
         window.addEventListener('discussion-lock-click', onLockClick);
+        window.addEventListener('discussion-lock-disable', onLockDisable);
+        window.addEventListener('discussion-lock-change-code', onLockChangeCode);
         window.addEventListener('discussion-call-click', onCallClick);
         return () => {
             window.removeEventListener('discussion-lock-click', onLockClick);
+            window.removeEventListener('discussion-lock-disable', onLockDisable);
+            window.removeEventListener('discussion-lock-change-code', onLockChangeCode);
             window.removeEventListener('discussion-call-click', onCallClick);
         };
-    }, [conversationId, otherUser, lockState.userIsPro, lockState.isLocked, isUnlockedSession, lockState.canManageLock, callContext]);
+    }, [conversationId, otherUser, lockState.userIsPro, lockState.isLocked, lockState.canManageLock, isUnlockedSession, callContext]);
 
     if (loading) {
         return (
@@ -1133,13 +1206,26 @@ export default function DiscussionPage() {
                         <p className="text-sm text-muted-foreground mb-4">
                             Entrez votre mot de passe pour dechiffrer votre cle privee et acceder aux messages.
                         </p>
-                        <Input
-                            type="password"
-                            placeholder="Votre mot de passe"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
-                        />
+                        <div className="relative">
+                            <Input
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder="Votre mot de passe"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
+                                className="pr-10"
+                            />
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
+                                onClick={() => setShowPassword(!showPassword)}
+                                aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                            >
+                                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </Button>
+                        </div>
                     </div>
                     <DialogFooter>
                         <Button onClick={handleUnlock}>Deverrouiller</Button>
@@ -1147,121 +1233,7 @@ export default function DiscussionPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Header - fixed top-0 pour remplacer la TopNav sur mobile, static sur desktop */}
-            <ScreenshotBlocker
-                enabled={shouldBlockScreenshot}
-                className="fixed top-0 left-0 right-0 md:static md:w-full bg-background border-b border-border z-[60] h-16 flex items-center px-4 shrink-0 min-w-0"
-            >
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => router.push('/chat')}
-                    className="mr-3 md:hidden"
-                >
-                    <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
-                </Button>
 
-                <Avatar className="h-10 w-10 border border-border">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${getConversationName()}`} />
-                    <AvatarFallback>{getConversationName()[0]}</AvatarFallback>
-                </Avatar>
-
-                <div className="ml-3 flex-1 min-w-0 overflow-hidden">
-                    <h2 className="font-semibold text-foreground truncate">{getConversationName()}</h2>
-                    {otherUser && (
-                        <p className="text-xs text-muted-foreground">
-                            {otherUser.inCall ? (
-                                <span className="text-amber-500 font-medium">En appel</span>
-                            ) : otherUser.isOnline ? (
-                                <span className="text-green-500 font-medium">En ligne</span>
-                            ) : (
-                                'Hors ligne'
-                            )}
-                        </p>
-                    )}
-                </div>
-
-                {/* Blur (Pro) + Lock (Pro) + Call Button */}
-                <div className="flex items-center gap-1 md:mr-4 shrink-0">
-                    {blurOldMessages && lockState.canUseLock && (
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setBlurEnabled(prev => !prev)}
-                            title={blurEnabled ? 'Afficher les anciens messages' : 'Flouter les anciens messages'}
-                            className="hover:bg-primary/10"
-                        >
-                            {blurEnabled ? (
-                                <EyeOff className="w-5 h-5 text-muted-foreground hover:text-primary" />
-                            ) : (
-                                <Eye className="w-5 h-5 text-muted-foreground hover:text-primary" />
-                            )}
-                        </Button>
-                    )}
-                    {lockState.showLockIcon && (
-                        lockState.canManageLock && isUnlockedSession ? (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        title="Options de verrouillage"
-                                        className="hover:bg-primary/10"
-                                    >
-                                        <LockOpen className="w-5 h-5 text-amber-500 hover:text-amber-400" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={() => setShowChangeCodeDialog(true)}>
-                                        <Lock className="w-4 h-4 mr-2" />
-                                        Changer le code
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={handleDisableLock} className="text-destructive">
-                                        Désactiver le verrouillage
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        ) : (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => {
-                                    if (lockState.isLocked) return;
-                                    if (!lockState.userIsPro) {
-                                        toast.error('Compte Pro requis pour verrouiller la discussion');
-                                        return;
-                                    }
-                                    setShowLockDialog(true);
-                                }}
-                                title={lockState.isLocked ? 'Entrez le code pour accéder' : lockState.userIsPro ? 'Verrouiller la discussion' : 'Verrouiller (Compte Pro requis)'}
-                                className="hover:bg-primary/10"
-                            >
-                                {lockState.isLocked ? (
-                                    <LockOpen className="w-5 h-5 text-amber-500 hover:text-amber-400" />
-                                ) : (
-                                    <Lock className={cn("w-5 h-5", lockState.userIsPro ? "text-muted-foreground hover:text-primary" : "text-muted-foreground/60")} />
-                                )}
-                            </Button>
-                        )
-                    )}
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        disabled={!!callContext?.activeCall || !otherUser}
-                        onMouseEnter={callContext?.prewarmMedia}
-                        onClick={() => {
-                            if (otherUser && conversationId) {
-                                callContext?.startCall(conversationId, otherUser.id, otherUser.name || otherUser.email || 'Utilisateur');
-                            }
-                        }}
-                        title="Appel vocal"
-                        className="hover:bg-primary/10"
-                    >
-                        <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
-                    </Button>
-                </div>
-            </ScreenshotBlocker>
 
             {/* Dialog: Verrouiller (définir le code) */}
             <Dialog open={showLockDialog} onOpenChange={setShowLockDialog}>
@@ -1273,17 +1245,29 @@ export default function DiscussionPage() {
                         <p className="text-sm text-muted-foreground mb-4">
                             Définissez un code à 4 chiffres. L&apos;autre utilisateur Pro recevra ce code par email. À chaque ouverture, le code sera demandé.
                         </p>
-                        <Input
-                            type="password"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            maxLength={4}
-                            placeholder="••••"
-                            value={lockCode}
-                            onChange={(e) => setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                            onKeyDown={(e) => e.key === 'Enter' && handleLock()}
-                            className="text-center text-lg tracking-[0.5em]"
-                        />
+                        <div className="relative">
+                            <Input
+                                type={showLockCode ? 'text' : 'password'}
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                maxLength={4}
+                                placeholder="••••"
+                                value={lockCode}
+                                onChange={(e) => setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                onKeyDown={(e) => e.key === 'Enter' && handleLock()}
+                                className="text-center text-lg tracking-[0.5em] pr-10"
+                            />
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
+                                onClick={() => setShowLockCode(!showLockCode)}
+                                aria-label={showLockCode ? 'Masquer le code' : 'Afficher le code'}
+                            >
+                                {showLockCode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </Button>
+                        </div>
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => { setShowLockDialog(false); setLockCode(''); }}>Annuler</Button>
@@ -1307,28 +1291,52 @@ export default function DiscussionPage() {
                         </p>
                         <div>
                             <label className="text-sm font-medium mb-2 block">Code actuel</label>
-                            <Input
-                                type="password"
-                                inputMode="numeric"
-                                maxLength={4}
-                                placeholder="••••"
-                                value={currentCodeForChange}
-                                onChange={(e) => setCurrentCodeForChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                                className="text-center text-lg tracking-[0.5em]"
-                            />
+                            <div className="relative">
+                                <Input
+                                    type={showCurrentCode ? 'text' : 'password'}
+                                    inputMode="numeric"
+                                    maxLength={4}
+                                    placeholder="••••"
+                                    value={currentCodeForChange}
+                                    onChange={(e) => setCurrentCodeForChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                    className="text-center text-lg tracking-[0.5em] pr-10"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
+                                    onClick={() => setShowCurrentCode(!showCurrentCode)}
+                                    aria-label={showCurrentCode ? 'Masquer' : 'Afficher'}
+                                >
+                                    {showCurrentCode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </Button>
+                            </div>
                         </div>
                         <div>
                             <label className="text-sm font-medium mb-2 block">Nouveau code</label>
-                            <Input
-                                type="password"
-                                inputMode="numeric"
-                                maxLength={4}
-                                placeholder="••••"
-                                value={newCodeForChange}
-                                onChange={(e) => setNewCodeForChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                                onKeyDown={(e) => e.key === 'Enter' && handleChangeCode()}
-                                className="text-center text-lg tracking-[0.5em]"
-                            />
+                            <div className="relative">
+                                <Input
+                                    type={showNewCode ? 'text' : 'password'}
+                                    inputMode="numeric"
+                                    maxLength={4}
+                                    placeholder="••••"
+                                    value={newCodeForChange}
+                                    onChange={(e) => setNewCodeForChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleChangeCode()}
+                                    className="text-center text-lg tracking-[0.5em] pr-10"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
+                                    onClick={() => setShowNewCode(!showNewCode)}
+                                    aria-label={showNewCode ? 'Masquer' : 'Afficher'}
+                                >
+                                    {showNewCode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </Button>
+                            </div>
                         </div>
                     </div>
                     <DialogFooter>
@@ -1336,6 +1344,27 @@ export default function DiscussionPage() {
                         <Button onClick={handleChangeCode} disabled={lockActionLoading || currentCodeForChange.length !== 4 || newCodeForChange.length !== 4 || currentCodeForChange === newCodeForChange}>
                             {lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Lock className="w-4 h-4 mr-2" />}
                             Changer le code
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Dialog: Confirmation désactiver le verrouillage */}
+            <Dialog open={showDisableLockDialog} onOpenChange={setShowDisableLockDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Désactiver le verrouillage</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                        <p className="text-sm text-muted-foreground">
+                            Êtes-vous sûr de vouloir désactiver le code de verrouillage ? Cette discussion ne sera plus protégée.
+                        </p>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowDisableLockDialog(false)}>Annuler</Button>
+                        <Button variant="destructive" onClick={handleDisableLock} disabled={lockActionLoading}>
+                            {lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                            Désactiver
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -1354,17 +1383,29 @@ export default function DiscussionPage() {
                         <p className="text-sm text-muted-foreground text-center mb-4">
                             Entrez le code à 4 chiffres pour déverrouiller.
                         </p>
-                        <Input
-                            type="password"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            maxLength={4}
-                            placeholder="••••"
-                            value={lockCode}
-                            onChange={(e) => setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                            onKeyDown={(e) => e.key === 'Enter' && handleUnlockWithCode()}
-                            className="text-center text-lg tracking-[0.5em] mb-4"
-                        />
+                        <div className="relative mb-4">
+                            <Input
+                                type={showUnlockOverlayCode ? 'text' : 'password'}
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                maxLength={4}
+                                placeholder="••••"
+                                value={lockCode}
+                                onChange={(e) => setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                onKeyDown={(e) => e.key === 'Enter' && handleUnlockWithCode()}
+                                className="text-center text-lg tracking-[0.5em] pr-10"
+                            />
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
+                                onClick={() => setShowUnlockOverlayCode(!showUnlockOverlayCode)}
+                                aria-label={showUnlockOverlayCode ? 'Masquer le code' : 'Afficher le code'}
+                            >
+                                {showUnlockOverlayCode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </Button>
+                        </div>
                         <Button
                             className="w-full"
                             onClick={handleUnlockWithCode}
@@ -1430,81 +1471,62 @@ export default function DiscussionPage() {
                 ref={scrollRef}
             >
                 <ScreenshotBlocker enabled={shouldBlockScreenshot} className="min-h-full space-y-2">
-                {/* Load More Button */}
-                {hasMore && (
-                    <div className="flex justify-center py-2">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={loadMoreHistory}
-                            disabled={loadingMore}
-                            className="text-muted-foreground text-xs h-6"
-                        >
-                            {loadingMore ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <ArrowUp className="w-3 h-3 mr-1" />}
-                            Charger plus anciens
-                        </Button>
-                    </div>
-                )}
-                {messages.filter((message, index, self) =>
-                    self.findIndex(m => m.id === message.id) === index
-                ).map((message) => (
-                    <DiscussionMessageBubble
-                        key={stableMessageKeysRef.current.get(message.id) ?? message.id}
-                        message={message}
-                        displayCreatedAt={stableMessageTimestampsRef.current.get(message.id)}
-                        isOwn={message.senderId === currentUser?.id}
-                        canEdit={canEditOrDelete(message)}
-                        currentUser={currentUser ?? null}
-                        otherUser={otherUser ?? null}
-                        privateKey={privateKey}
-                        editingMessageId={editingMessageId}
-                        editContent={editContent}
-                        onEditContentChange={setEditContent}
-                        onEditOpen={(content) => {
-                            setEditingMessageId(message.id);
-                            setEditContent(content);
-                        }}
-                        onEditSave={() => handleEditMessage(message.id)}
-                        onEditCancel={() => { setEditingMessageId(null); setEditContent(''); }}
-                        onDelete={() => handleDeleteMessage(message.id)}
-                        onRetry={failedMessagePayloads.has(message.id) ? () => handleRetryMessage(message.id) : undefined}
-                        isFailed={failedMessagePayloads.has(message.id)}
-                        isBlurred={blurredMessageIds.has(message.id)}
-                    />
-                ))}
-                {typingCount > 0 && (
-                    <div className="flex justify-start items-center gap-1.5 py-0.5 animate-pulse">
-                        <span className="flex gap-0.5">
-                            <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
-                            <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
-                            <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
-                        </span>
-                        <span className="text-[11px] text-muted-foreground/70">
-                            {otherUser?.name || otherUser?.email || 'Quelqu\'un'}
-                        </span>
-                    </div>
-                )}
-                <div ref={messagesEndRef} />
+                    {/* Load More Button */}
+                    {hasMore && (
+                        <div className="flex justify-center py-2">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={loadMoreHistory}
+                                disabled={loadingMore}
+                                className="text-muted-foreground text-xs h-6"
+                            >
+                                {loadingMore ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <ArrowUp className="w-3 h-3 mr-1" />}
+                                Charger plus anciens
+                            </Button>
+                        </div>
+                    )}
+                    {uniqueMessages.map((message) => (
+                        <DiscussionMessageBubble
+                            key={stableMessageKeysRef.current.get(message.id) ?? message.id}
+                            message={message}
+                            displayCreatedAt={stableMessageTimestampsRef.current.get(message.id)}
+                            isOwn={message.senderId === currentUser?.id}
+                            canEdit={canEditOrDelete(message)}
+                            currentUser={currentUser ?? null}
+                            otherUser={otherUser ?? null}
+                            privateKey={privateKey}
+                            isEditing={editingMessageId === message.id}
+                            editContent={editContent}
+                            onEditContentChange={setEditContent}
+                            onEditOpen={(content) => handleEditOpen(message.id, content)}
+                            onEditSave={() => handleEditMessage(message.id)}
+                            onEditCancel={handleEditCancel}
+                            onDelete={() => handleDeleteMessage(message.id)}
+                            onRetry={failedMessagePayloads.has(message.id) ? () => handleRetryMessage(message.id) : undefined}
+                            isFailed={failedMessagePayloads.has(message.id)}
+                            isBlurred={blurredMessageIds.has(message.id)}
+                        />
+                    ))}
+                    {typingCount > 0 && (
+                        <div className="flex justify-start items-center gap-1.5 py-0.5 animate-pulse">
+                            <span className="flex gap-0.5">
+                                <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                                <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                                <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                            </span>
+                            <span className="text-[11px] text-muted-foreground/70">
+                                {otherUser?.name || otherUser?.email || 'Quelqu\'un'}
+                            </span>
+                        </div>
+                    )}
+                    <div ref={messagesEndRef} />
                 </ScreenshotBlocker>
             </div>
 
             {/* Input */}
             <div className="fixed bottom-16 left-0 right-0 md:static md:bottom-auto md:w-full bg-background border-t border-border p-4 z-[60]">
-                {selectedFiles.length > 0 && (
-                    <div className="mb-3 flex gap-2 flex-wrap">
-                        {selectedFiles.map((file, idx) => (
-                            <div key={idx} className="bg-muted rounded px-3 py-2 flex items-center gap-2 text-sm border border-border">
-                                {file.type.startsWith('image/') ? (
-                                    <ImageIcon className="w-4 h-4 text-muted-foreground" />
-                                ) : (
-                                    <FileText className="w-4 h-4 text-muted-foreground" />
-                                )}
-                                <span className="max-w-[150px] truncate text-foreground">{file.name}</span>
-                                <button onClick={() => removeFile(idx)} className="text-destructive hover:text-red-300">x</button>
-                            </div>
-                        ))}
-                    </div>
-                )}
+
 
                 <div className="flex items-center gap-2">
                     <input

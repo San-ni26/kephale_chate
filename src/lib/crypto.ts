@@ -43,12 +43,6 @@ export const encryptMessage = (
     const msgUint = new TextEncoder().encode(plainText);
 
     const encrypted = nacl.box(msgUint, nonce, pubKeyUint, privKeyUint);
-    console.log('Encrypted:', encrypted);
-
-    console.log('Nonce:', nonce);
-    console.log('Message:', msgUint);
-    console.log('Public Key:', pubKeyUint);
-    console.log('Private Key:', privKeyUint);
 
     const fullMessage = new Uint8Array(nonce.length + encrypted.length);
     fullMessage.set(nonce);

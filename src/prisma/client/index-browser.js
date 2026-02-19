@@ -415,6 +415,7 @@ exports.Prisma.GroupScalarFieldEnum = {
   lockCodeHash: 'lockCodeHash',
   lockSetByUserId: 'lockSetByUserId',
   lockedAt: 'lockedAt',
+  hideOldMessagesByUserId: 'hideOldMessagesByUserId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

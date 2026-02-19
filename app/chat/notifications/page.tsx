@@ -515,11 +515,10 @@ export default function FeedPage() {
                                     <div className="absolute inset-0 bg-muted/40" />
                                     <div className="absolute inset-0 flex items-center justify-center pt-2">
                                         <Avatar
-                                            className={`h-12 w-12 ring-2 ring-background shrink-0 ${
-                                                page.unreadCount > 0
-                                                    ? "ring-green-500 ring-offset-2 ring-offset-background"
-                                                    : "ring-border"
-                                            }`}
+                                            className={`h-12 w-12 ring-2 ring-background shrink-0 ${page.unreadCount > 0
+                                                ? "ring-green-500 ring-offset-2 ring-offset-background"
+                                                : "ring-border"
+                                                }`}
                                         >
                                             <AvatarImage src={page.avatarUrl ?? undefined} className="object-cover" />
                                             <AvatarFallback className="bg-primary/10 text-primary text-sm">
@@ -538,7 +537,7 @@ export default function FeedPage() {
             )}
 
             {/* Fil */}
-            <div className="px-3 py-4 space-y-4 pb-20">
+            <div className=" py-4 space-y-4 pb-20 w-90">
                 {feedLoading && !searchOpen && (
                     <div className="space-y-4">
                         {[1, 2, 3].map((i) => (

@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { User, MessageSquarePlus, Lock, Trash2, Crown } from 'lucide-react';
+import { Button } from '@/src/components/ui/button';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
 import { fetchWithAuth } from '@/src/lib/auth-client';
@@ -98,6 +99,18 @@ export default function ChatListPage() {
     const conversations: Conversation[] = conversationsData?.conversations || [];
     const currentUserId = profileData?.profile?.id;
     const isLoading = (!profileData && !profileError) || (!conversationsData && !conversationsError);
+    const hasConversationsError = !!conversationsError;
+
+    if (hasConversationsError && !isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-full min-h-[200px] p-6 text-center">
+                <p className="text-muted-foreground mb-4">Impossible de charger les discussions.</p>
+                <Button variant="outline" onClick={() => mutateConversations()}>
+                    Réessayer
+                </Button>
+            </div>
+        );
+    }
 
     if (isLoading) {
         return (
@@ -135,9 +148,9 @@ export default function ChatListPage() {
     const directConversations = conversations.filter(c => c.isDirect);
 
     return (
-        <div className="h-full w-full flex flex-col">
+        <div className="h-full min-h-0 w-full flex flex-col">
             {/* Mobile View: Conversation List (WhatsApp style) */}
-            <div className="md:hidden p-4 pt-4 pb-20 max-w-2xl  h-full flex flex-col overflow-y-auto">
+            <div className="md:hidden p-4 pt-4 pb-20 max-w-2xl h-full min-h-0 flex flex-col overflow-y-auto">
                 <h2 className="text-2xl font-bold mb-4 px-1 text-foreground">Discussions</h2>
 
                 {directConversations.length === 0 ? (

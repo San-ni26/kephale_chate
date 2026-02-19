@@ -7,6 +7,7 @@ import { CallStatusChecker } from "@/src/components/chat/CallStatusChecker";
 import { ConversationSidebar } from "@/src/components/chat/ConversationSidebar";
 import { FeedSearchProvider } from "@/src/contexts/FeedSearchContext";
 import { FinancesProvider } from "@/src/contexts/FinancesContext";
+import { DiscussionBlurProvider } from "@/src/contexts/DiscussionBlurContext";
 
 export default function ChatLayout({
     children,
@@ -16,32 +17,34 @@ export default function ChatLayout({
     return (
         <FinancesProvider>
             <FeedSearchProvider>
-                <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-                    {/* Top Bar : visible sur mobile et desktop */}
-                    <TopNav />
+                <DiscussionBlurProvider>
+                    <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
+                        {/* Top Bar : visible sur mobile et desktop */}
+                        <TopNav />
 
-                    <div className="flex-1 flex overflow-hidden">
-                        {/* Desktop Sidebar (Conversation List) */}
-                        <div className="hidden md:flex h-full flex-col shrink-0">
-                            <ConversationSidebar />
+                        <div className="flex-1 flex overflow-hidden min-h-0">
+                            {/* Desktop Sidebar (Conversation List) */}
+                            <aside className="hidden md:flex h-full flex-col shrink-0 min-h-0">
+                                <ConversationSidebar />
+                            </aside>
+
+                            {/* Main Content Area */}
+                            <main className="flex-1 flex flex-col relative min-h-0 min-w-0 w-full overflow-y-auto overflow-x-hidden">
+                                {children}
+                            </main>
                         </div>
 
-                        {/* Main Content Area */}
-                        <main className="flex-1 flex flex-col relative min-h-0 w-full overflow-y-auto overflow-x-hidden">
-                            {children}
-                        </main>
-                    </div>
+                        {/* Mobile Bottom Nav */}
+                        <div className="md:hidden">
+                            <BottomNav />
+                        </div>
 
-                    {/* Mobile Bottom Nav */}
-                    <div className="md:hidden">
-                        <BottomNav />
+                        <PWAInstaller />
+                        <NotificationPermissionModal />
+                        <PresenceHeartbeat />
+                        <CallStatusChecker />
                     </div>
-
-                    <PWAInstaller />
-                    <NotificationPermissionModal />
-                    <PresenceHeartbeat />
-                    <CallStatusChecker />
-                </div>
+                </DiscussionBlurProvider>
             </FeedSearchProvider>
         </FinancesProvider>
     );

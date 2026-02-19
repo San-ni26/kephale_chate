@@ -170,8 +170,11 @@ export function useWebSocket(
             }
         });
 
-        channel.bind('pusher:subscription_error', (err: any) => {
-            console.error('[Pusher] Conversation subscription error:', conversationId, err);
+        channel.bind('pusher:subscription_error', (err: unknown) => {
+            const msg = err instanceof Error ? err.message : String(err);
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('[Pusher] Impossible de rejoindre la conversation (vérifier /api/pusher/auth):', conversationId, msg);
+            }
         });
 
         // Message events

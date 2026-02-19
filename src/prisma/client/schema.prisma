@@ -565,22 +565,23 @@ model DepartmentMember {
 }
 
 model Group {
-  id                   String                       @id @default(cuid())
-  name                 String?
-  isDirect             Boolean                      @default(false)
-  deptId               String?
-  collaborationGroupId String?
-  lockCodeHash         String?                      @db.VarChar(255)
-  lockSetByUserId      String?
-  lockedAt             DateTime?
-  createdAt            DateTime                     @default(now())
-  updatedAt            DateTime                     @updatedAt
-  department           Department?                  @relation(fields: [deptId], references: [id], map: "Group_deptId_fk")
-  collaborationGroup   CollaborationGroup?          @relation("CollaborationGroupConversations", fields: [collaborationGroupId], references: [id], onDelete: Cascade)
-  members              GroupMember[]
-  messages             Message[]
-  documents            GroupDocument[]
-  deletionRequest      ConversationDeletionRequest?
+  id                      String                       @id @default(cuid())
+  name                    String?
+  isDirect                Boolean                      @default(false)
+  deptId                  String?
+  collaborationGroupId    String?
+  lockCodeHash            String?                      @db.VarChar(255)
+  lockSetByUserId         String?
+  lockedAt                DateTime?
+  hideOldMessagesByUserId String? // Pro uniquement : n'afficher que les messages de cet utilisateur (effet des deux côtés)
+  createdAt               DateTime                     @default(now())
+  updatedAt               DateTime                     @updatedAt
+  department              Department?                  @relation(fields: [deptId], references: [id], map: "Group_deptId_fk")
+  collaborationGroup      CollaborationGroup?          @relation("CollaborationGroupConversations", fields: [collaborationGroupId], references: [id], onDelete: Cascade)
+  members                 GroupMember[]
+  messages                Message[]
+  documents               GroupDocument[]
+  deletionRequest         ConversationDeletionRequest?
 
   @@index([deptId], map: "Group_deptId_idx")
   @@index([collaborationGroupId])

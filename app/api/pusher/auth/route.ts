@@ -22,7 +22,17 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Missing socket_id or channel_name' }, { status: 400 });
         }
 
-        const pusher = getPusher();
+        let pusher;
+        try {
+            pusher = getPusher();
+        } catch (pusherErr: unknown) {
+            const msg = pusherErr instanceof Error ? pusherErr.message : 'Pusher non configuré';
+            console.error('Pusher auth - config error:', msg);
+            return NextResponse.json(
+                { error: 'Service de messagerie temporairement indisponible' },
+                { status: 503 }
+            );
+        }
 
         // For presence channels, include user info
         if (channelName.startsWith('presence-')) {
@@ -63,9 +73,16 @@ export async function POST(request: NextRequest) {
 
         const authResponse = pusher.authorizeChannel(socketId, channelName);
         return NextResponse.json(authResponse);
-
     } catch (error) {
-        console.error('Pusher auth error:', error);
-        return NextResponse.json({ error: 'Erreur d\'authentification' }, { status: 500 });
+        const errMsg = error instanceof Error ? error.message : 'Erreur inconnue';
+        const errStack = error instanceof Error ? error.stack : undefined;
+        console.error('Pusher auth error:', errMsg, errStack);
+        return NextResponse.json(
+            {
+                error: 'Erreur d\'authentification',
+                ...(process.env.NODE_ENV === 'development' && { detail: errMsg }),
+            },
+            { status: 500 }
+        );
     }
 }
