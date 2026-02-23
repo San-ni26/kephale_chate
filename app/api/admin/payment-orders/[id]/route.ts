@@ -9,6 +9,7 @@ import { requireAdmin, AuthenticatedRequest } from '@/src/middleware/auth';
 import { generateOrganizationCode } from '@/src/lib/otp';
 import { getSubscriptionLimits, calculateSubscriptionEndDate } from '@/src/lib/subscription';
 import { calculateUserProEndDate } from '@/src/lib/user-pro';
+import { getExpiresAt } from '@/src/lib/discussion-rights';
 import type { SubscriptionPlan } from '@/src/prisma/client';
 
 export async function PATCH(
@@ -99,6 +100,57 @@ export async function PATCH(
             });
 
             return NextResponse.json({ message: 'Compte Pro activé avec succès' });
+        }
+
+        // === DISCUSSION_RIGHTS : achat des droits d'une discussion ===
+        if (order.type === 'DISCUSSION_RIGHTS' && order.groupId) {
+            const duration = order.plan as 'THREE_MONTHS' | 'SIX_MONTHS' | 'TWELVE_MONTHS';
+            const expiresAt = getExpiresAt(duration);
+
+            const group = await prisma.group.findUnique({
+                where: { id: order.groupId },
+                include: { members: true },
+            });
+            const otherMember = group?.members.find((m) => m.userId !== order.userId);
+
+            if (!group || !otherMember) {
+                return NextResponse.json(
+                    { error: 'Discussion ou membre introuvable' },
+                    { status: 400 }
+                );
+            }
+
+            await prisma.$transaction(async (tx) => {
+                await tx.discussionRightPurchase.upsert({
+                    where: { groupId: order.groupId! },
+                    create: {
+                        groupId: order.groupId!,
+                        buyerId: order.userId,
+                        sellerId: otherMember.userId,
+                        duration,
+                        expiresAt,
+                    },
+                    update: {
+                        buyerId: order.userId,
+                        sellerId: otherMember.userId,
+                        duration,
+                        expiresAt,
+                        purchasedAt: new Date(),
+                        isActive: true,
+                    },
+                });
+
+                await tx.paymentOrder.update({
+                    where: { id },
+                    data: {
+                        status: 'APPROVED',
+                        approvedBy: user!.userId,
+                        approvedAt: new Date(),
+                    },
+                });
+            });
+
+            return NextResponse.json({ message: 'Droits de discussion activés avec succès' });
         }
 
         const plan = order.plan as SubscriptionPlan;

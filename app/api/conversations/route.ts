@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
         }
 
-        // Get all groups where user is a member, with unread counts
+        // Get all groups where user is a member, with unread counts and rights
         const conversations = await prisma.group.findMany({
             where: {
                 members: {
@@ -26,6 +26,9 @@ export async function GET(request: NextRequest) {
                 },
             },
             include: {
+                rightPurchase: {
+                    select: { buyerId: true, expiresAt: true },
+                },
                 members: {
                     include: {
                         user: {
@@ -111,10 +114,65 @@ export async function GET(request: NextRequest) {
                     },
                 }));
 
+                const currentPro = proUserIds.has(user.userId);
+                const otherMember = conv.members.find(m => m.userId !== user.userId);
+                const otherPro = otherMember ? proUserIds.has(otherMember.userId) : false;
+                const isDirectTwo = conv.isDirect && conv.members.length === 2;
+                const activeRights = conv.rightPurchase && new Date() < conv.rightPurchase.expiresAt;
+                const canPurchaseRights =
+                    isDirectTwo &&
+                    currentPro &&
+                    otherPro &&
+                    !activeRights;
+                const canDelete = !(otherPro && !currentPro);
+
+                let pendingRightsPayment: { id: string; plan: string; createdAt: string } | null = null;
+                let pendingRightsOrder: { id: string; plan: string; amountFcfa: number; createdAt: string } | null = null;
+                if (canPurchaseRights) {
+                    const [pendingPay, pendingOrd] = await Promise.all([
+                        prisma.pendingSubscriptionPayment.findFirst({
+                            where: {
+                                userId: user.userId,
+                                type: 'DISCUSSION_RIGHTS',
+                                groupId: conv.id,
+                            },
+                            select: { id: true, plan: true, createdAt: true },
+                        }),
+                        prisma.paymentOrder.findFirst({
+                            where: {
+                                userId: user.userId,
+                                type: 'DISCUSSION_RIGHTS',
+                                groupId: conv.id,
+                                status: 'PENDING',
+                            },
+                            select: { id: true, plan: true, amountFcfa: true, createdAt: true },
+                        }),
+                    ]);
+                    if (pendingPay) {
+                        pendingRightsPayment = {
+                            id: pendingPay.id,
+                            plan: pendingPay.plan,
+                            createdAt: pendingPay.createdAt.toISOString(),
+                        };
+                    }
+                    if (pendingOrd) {
+                        pendingRightsOrder = {
+                            id: pendingOrd.id,
+                            plan: pendingOrd.plan,
+                            amountFcfa: pendingOrd.amountFcfa,
+                            createdAt: pendingOrd.createdAt.toISOString(),
+                        };
+                    }
+                }
+
                 return {
                     ...conv,
                     members: membersWithPresence,
                     unreadCount,
+                    canPurchaseRights,
+                    canDelete,
+                    pendingRightsPayment,
+                    pendingRightsOrder,
                 };
             })
         );

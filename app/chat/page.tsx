@@ -5,14 +5,12 @@ import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { User, MessageSquarePlus, Lock, Trash2, Crown } from 'lucide-react';
+import { User, MessageSquarePlus, Lock, Crown } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
-import { fetchWithAuth } from '@/src/lib/auth-client';
-import { toast } from 'sonner';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
-import { DeleteConversationDialog } from '@/src/components/chat/DeleteConversationDialog';
+import { ConversationActionsMenu } from '@/src/components/chat/ConversationActionsMenu';
 
 interface Conversation {
     id: string;
@@ -20,6 +18,10 @@ interface Conversation {
     isDirect: boolean;
     updatedAt: string;
     unreadCount: number;
+    canPurchaseRights?: boolean;
+    canDelete?: boolean;
+    pendingRightsPayment?: { id: string; plan: string; createdAt: string } | null;
+    pendingRightsOrder?: { id: string; plan: string; amountFcfa: number; createdAt: string } | null;
     department?: {
         name: string;
     };
@@ -49,38 +51,6 @@ export default function ChatListPage() {
     });
 
     const { userChannel, isConnected } = useWebSocket();
-    const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
-    const [deleteLoading, setDeleteLoading] = useState(false);
-
-    function openDeleteDialog(e: React.MouseEvent, conversationId: string) {
-        e.preventDefault();
-        e.stopPropagation();
-        setConversationToDelete(conversationId);
-    }
-
-    async function confirmDeleteConversation() {
-        if (!conversationToDelete) return;
-        setDeleteLoading(true);
-        try {
-            const res = await fetchWithAuth(`/api/conversations/${conversationToDelete}`, { method: 'DELETE' });
-            const data = await res.json().catch(() => ({}));
-            if (res.ok) {
-                if (data.requestSent) {
-                    toast.success('Demande de suppression envoyée. L\'autre utilisateur doit accepter.');
-                } else {
-                    toast.success('Discussion supprimée');
-                }
-                setConversationToDelete(null);
-                mutateConversations();
-            } else {
-                toast.error(data.error || 'Impossible de supprimer');
-            }
-        } catch {
-            toast.error('Erreur réseau');
-        } finally {
-            setDeleteLoading(false);
-        }
-    }
 
     // Refresh when new notification arrives
     useEffect(() => {
@@ -202,19 +172,17 @@ export default function ChatListPage() {
                                                     <span className={`text-xs ${unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
                                                         {lastMessage ? formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr }) : ''}
                                                     </span>
-                                                    {!(
-                                                        otherMember?.isPro &&
-                                                        !chat.members.find(m => m.user.id === currentUserId)?.user?.isPro
-                                                    ) && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={(e) => openDeleteDialog(e, chat.id)}
-                                                            className="p-1.5 rounded-full hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
-                                                            title="Supprimer la discussion"
-                                                            aria-label="Supprimer la discussion"
-                                                        >
-                                                            <Trash2 className="w-4 h-4" />
-                                                        </button>
+                                                    {(chat.canDelete || chat.canPurchaseRights) && (
+                                                        <ConversationActionsMenu
+                                                            conversationId={chat.id}
+                                                            canDelete={chat.canDelete ?? false}
+                                                            canPurchaseRights={chat.canPurchaseRights ?? false}
+                                                            onDeleteSuccess={() => mutateConversations()}
+                                                            onPurchaseSuccess={() => mutateConversations()}
+                                                            pendingRightsPayment={chat.pendingRightsPayment}
+                                                            pendingRightsOrder={chat.pendingRightsOrder}
+                                                            className="p-1.5 shrink-0"
+                                                        />
                                                     )}
                                                 </div>
                                             </div>
@@ -244,13 +212,6 @@ export default function ChatListPage() {
                     </div>
                 )}
             </div>
-
-            <DeleteConversationDialog
-                open={conversationToDelete !== null}
-                onOpenChange={(open) => !open && setConversationToDelete(null)}
-                onConfirm={confirmDeleteConversation}
-                loading={deleteLoading}
-            />
 
             {/* Desktop View: Placeholder */}
             <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-muted/20 text-center p-8 h-full">

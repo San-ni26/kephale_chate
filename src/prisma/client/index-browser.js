@@ -406,6 +406,17 @@ exports.Prisma.DepartmentMemberScalarFieldEnum = {
   encryptedDeptKey: 'encryptedDeptKey'
 };
 
+exports.Prisma.DiscussionRightPurchaseScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  buyerId: 'buyerId',
+  sellerId: 'sellerId',
+  duration: 'duration',
+  purchasedAt: 'purchasedAt',
+  expiresAt: 'expiresAt',
+  isActive: 'isActive'
+};
+
 exports.Prisma.GroupScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -415,7 +426,7 @@ exports.Prisma.GroupScalarFieldEnum = {
   lockCodeHash: 'lockCodeHash',
   lockSetByUserId: 'lockSetByUserId',
   lockedAt: 'lockedAt',
-  hideOldMessagesByUserId: 'hideOldMessagesByUserId',
+  hiddenByUserId: 'hiddenByUserId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -530,6 +541,7 @@ exports.Prisma.PendingSubscriptionPaymentScalarFieldEnum = {
   address: 'address',
   requestId: 'requestId',
   orgId: 'orgId',
+  groupId: 'groupId',
   type: 'type',
   createdAt: 'createdAt'
 };
@@ -543,6 +555,7 @@ exports.Prisma.PaymentOrderScalarFieldEnum = {
   address: 'address',
   requestId: 'requestId',
   orgId: 'orgId',
+  groupId: 'groupId',
   type: 'type',
   amountFcfa: 'amountFcfa',
   status: 'status',
@@ -911,6 +924,12 @@ exports.DecisionVoteType = exports.$Enums.DecisionVoteType = {
   ABSTAIN: 'ABSTAIN'
 };
 
+exports.DiscussionRightDuration = exports.$Enums.DiscussionRightDuration = {
+  THREE_MONTHS: 'THREE_MONTHS',
+  SIX_MONTHS: 'SIX_MONTHS',
+  TWELVE_MONTHS: 'TWELVE_MONTHS'
+};
+
 exports.RequestStatus = exports.$Enums.RequestStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
@@ -1002,6 +1021,7 @@ exports.Prisma.ModelName = {
   TeamDecision: 'TeamDecision',
   DecisionVote: 'DecisionVote',
   DepartmentMember: 'DepartmentMember',
+  DiscussionRightPurchase: 'DiscussionRightPurchase',
   Group: 'Group',
   ConversationDeletionRequest: 'ConversationDeletionRequest',
   GroupDocument: 'GroupDocument',

@@ -3,6 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { generateOrganizationCode } from '@/src/lib/otp';
 import { getSubscriptionLimits, calculateSubscriptionEndDate } from '@/src/lib/subscription';
 import { calculateUserProEndDate } from '@/src/lib/user-pro';
+import { getExpiresAt } from '@/src/lib/discussion-rights';
 import type { SubscriptionPlan } from '@/src/prisma/client';
 
 /**
@@ -123,6 +124,53 @@ export async function POST(request: NextRequest) {
                 userId: pending.userId,
                 plan: pending.plan,
             });
+
+            return new NextResponse(null, { status: 200 });
+        }
+
+        // === DISCUSSION_RIGHTS : achat des droits d'une discussion ===
+        if (pending.type === 'DISCUSSION_RIGHTS' && pending.groupId) {
+            const duration = pending.plan as 'THREE_MONTHS' | 'SIX_MONTHS' | 'TWELVE_MONTHS';
+            const expiresAt = getExpiresAt(duration);
+
+            const group = await prisma.group.findUnique({
+                where: { id: pending.groupId },
+                include: { members: true },
+            });
+            const otherMember = group?.members.find((m) => m.userId !== pending.userId);
+
+            if (group && otherMember) {
+                await prisma.$transaction(async (tx) => {
+                    await tx.discussionRightPurchase.upsert({
+                        where: { groupId: pending.groupId! },
+                        create: {
+                            groupId: pending.groupId!,
+                            buyerId: pending.userId,
+                            sellerId: otherMember.userId,
+                            duration,
+                            expiresAt,
+                        },
+                        update: {
+                            buyerId: pending.userId,
+                            sellerId: otherMember.userId,
+                            duration,
+                            expiresAt,
+                            purchasedAt: new Date(),
+                            isActive: true,
+                        },
+                    });
+                    await tx.pendingSubscriptionPayment.delete({
+                        where: { id: pending.id },
+                    });
+                });
+
+                console.log('CinetPay: Droits de discussion achetés après paiement', {
+                    transaction_id: cpmTransId,
+                    groupId: pending.groupId,
+                    userId: pending.userId,
+                    duration,
+                });
+            }
 
             return new NextResponse(null, { status: 200 });
         }

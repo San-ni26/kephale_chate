@@ -134,6 +134,11 @@ export type DecisionVote = $Result.DefaultSelection<Prisma.$DecisionVotePayload>
  */
 export type DepartmentMember = $Result.DefaultSelection<Prisma.$DepartmentMemberPayload>
 /**
+ * Model DiscussionRightPurchase
+ * 
+ */
+export type DiscussionRightPurchase = $Result.DefaultSelection<Prisma.$DiscussionRightPurchasePayload>
+/**
  * Model Group
  * 
  */
@@ -384,6 +389,15 @@ export const DecisionVoteType: {
 export type DecisionVoteType = (typeof DecisionVoteType)[keyof typeof DecisionVoteType]
 
 
+export const DiscussionRightDuration: {
+  THREE_MONTHS: 'THREE_MONTHS',
+  SIX_MONTHS: 'SIX_MONTHS',
+  TWELVE_MONTHS: 'TWELVE_MONTHS'
+};
+
+export type DiscussionRightDuration = (typeof DiscussionRightDuration)[keyof typeof DiscussionRightDuration]
+
+
 export const NoteTextSize: {
   SMALL: 'SMALL',
   NORMAL: 'NORMAL',
@@ -562,6 +576,10 @@ export const EditorialStatus: typeof $Enums.EditorialStatus
 export type DecisionVoteType = $Enums.DecisionVoteType
 
 export const DecisionVoteType: typeof $Enums.DecisionVoteType
+
+export type DiscussionRightDuration = $Enums.DiscussionRightDuration
+
+export const DiscussionRightDuration: typeof $Enums.DiscussionRightDuration
 
 export type NoteTextSize = $Enums.NoteTextSize
 
@@ -983,6 +1001,16 @@ export class PrismaClient<
     * ```
     */
   get departmentMember(): Prisma.DepartmentMemberDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.discussionRightPurchase`: Exposes CRUD operations for the **DiscussionRightPurchase** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DiscussionRightPurchases
+    * const discussionRightPurchases = await prisma.discussionRightPurchase.findMany()
+    * ```
+    */
+  get discussionRightPurchase(): Prisma.DiscussionRightPurchaseDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.group`: Exposes CRUD operations for the **Group** model.
@@ -1811,6 +1839,7 @@ export namespace Prisma {
     TeamDecision: 'TeamDecision',
     DecisionVote: 'DecisionVote',
     DepartmentMember: 'DepartmentMember',
+    DiscussionRightPurchase: 'DiscussionRightPurchase',
     Group: 'Group',
     ConversationDeletionRequest: 'ConversationDeletionRequest',
     GroupDocument: 'GroupDocument',
@@ -1863,7 +1892,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationCollaboration" | "collaborationGroup" | "collaborationGroupMember" | "collaborationTask" | "collaborationDocument" | "collaborationNote" | "collaborationEditorialItem" | "departmentEditorialItem" | "organizationMember" | "department" | "departmentNote" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "group" | "conversationDeletionRequest" | "groupDocument" | "groupNote" | "groupNoteShare" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userProSubscription" | "userProSettings" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
+      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationCollaboration" | "collaborationGroup" | "collaborationGroupMember" | "collaborationTask" | "collaborationDocument" | "collaborationNote" | "collaborationEditorialItem" | "departmentEditorialItem" | "organizationMember" | "department" | "departmentNote" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "discussionRightPurchase" | "group" | "conversationDeletionRequest" | "groupDocument" | "groupNote" | "groupNoteShare" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userProSubscription" | "userProSettings" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3640,6 +3669,80 @@ export namespace Prisma {
           count: {
             args: Prisma.DepartmentMemberCountArgs<ExtArgs>
             result: $Utils.Optional<DepartmentMemberCountAggregateOutputType> | number
+          }
+        }
+      }
+      DiscussionRightPurchase: {
+        payload: Prisma.$DiscussionRightPurchasePayload<ExtArgs>
+        fields: Prisma.DiscussionRightPurchaseFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DiscussionRightPurchaseFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DiscussionRightPurchaseFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload>
+          }
+          findFirst: {
+            args: Prisma.DiscussionRightPurchaseFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DiscussionRightPurchaseFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload>
+          }
+          findMany: {
+            args: Prisma.DiscussionRightPurchaseFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload>[]
+          }
+          create: {
+            args: Prisma.DiscussionRightPurchaseCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload>
+          }
+          createMany: {
+            args: Prisma.DiscussionRightPurchaseCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DiscussionRightPurchaseCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload>[]
+          }
+          delete: {
+            args: Prisma.DiscussionRightPurchaseDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload>
+          }
+          update: {
+            args: Prisma.DiscussionRightPurchaseUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload>
+          }
+          deleteMany: {
+            args: Prisma.DiscussionRightPurchaseDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DiscussionRightPurchaseUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DiscussionRightPurchaseUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload>[]
+          }
+          upsert: {
+            args: Prisma.DiscussionRightPurchaseUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscussionRightPurchasePayload>
+          }
+          aggregate: {
+            args: Prisma.DiscussionRightPurchaseAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDiscussionRightPurchase>
+          }
+          groupBy: {
+            args: Prisma.DiscussionRightPurchaseGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DiscussionRightPurchaseGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DiscussionRightPurchaseCountArgs<ExtArgs>
+            result: $Utils.Optional<DiscussionRightPurchaseCountAggregateOutputType> | number
           }
         }
       }
@@ -6513,6 +6616,7 @@ export namespace Prisma {
     teamDecision?: TeamDecisionOmit
     decisionVote?: DecisionVoteOmit
     departmentMember?: DepartmentMemberOmit
+    discussionRightPurchase?: DiscussionRightPurchaseOmit
     group?: GroupOmit
     conversationDeletionRequest?: ConversationDeletionRequestOmit
     groupDocument?: GroupDocumentOmit
@@ -6656,6 +6760,8 @@ export namespace Prisma {
     monthlyStatements: number
     financialEntries: number
     deletionRequestsInitiated: number
+    discussionRightsBought: number
+    discussionRightsSold: number
     followers: number
     following: number
     uploadedDepartmentDocuments: number
@@ -6701,6 +6807,8 @@ export namespace Prisma {
     monthlyStatements?: boolean | UserCountOutputTypeCountMonthlyStatementsArgs
     financialEntries?: boolean | UserCountOutputTypeCountFinancialEntriesArgs
     deletionRequestsInitiated?: boolean | UserCountOutputTypeCountDeletionRequestsInitiatedArgs
+    discussionRightsBought?: boolean | UserCountOutputTypeCountDiscussionRightsBoughtArgs
+    discussionRightsSold?: boolean | UserCountOutputTypeCountDiscussionRightsSoldArgs
     followers?: boolean | UserCountOutputTypeCountFollowersArgs
     following?: boolean | UserCountOutputTypeCountFollowingArgs
     uploadedDepartmentDocuments?: boolean | UserCountOutputTypeCountUploadedDepartmentDocumentsArgs
@@ -6910,6 +7018,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountDeletionRequestsInitiatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ConversationDeletionRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDiscussionRightsBoughtArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DiscussionRightPurchaseWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDiscussionRightsSoldArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DiscussionRightPurchaseWhereInput
   }
 
   /**
@@ -8195,6 +8317,8 @@ export namespace Prisma {
     monthlyStatements?: boolean | User$monthlyStatementsArgs<ExtArgs>
     financialEntries?: boolean | User$financialEntriesArgs<ExtArgs>
     deletionRequestsInitiated?: boolean | User$deletionRequestsInitiatedArgs<ExtArgs>
+    discussionRightsBought?: boolean | User$discussionRightsBoughtArgs<ExtArgs>
+    discussionRightsSold?: boolean | User$discussionRightsSoldArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
     uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
@@ -8327,6 +8451,8 @@ export namespace Prisma {
     monthlyStatements?: boolean | User$monthlyStatementsArgs<ExtArgs>
     financialEntries?: boolean | User$financialEntriesArgs<ExtArgs>
     deletionRequestsInitiated?: boolean | User$deletionRequestsInitiatedArgs<ExtArgs>
+    discussionRightsBought?: boolean | User$discussionRightsBoughtArgs<ExtArgs>
+    discussionRightsSold?: boolean | User$discussionRightsSoldArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
     uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
@@ -8381,6 +8507,8 @@ export namespace Prisma {
       monthlyStatements: Prisma.$UserMonthlyStatementPayload<ExtArgs>[]
       financialEntries: Prisma.$UserFinancialEntryPayload<ExtArgs>[]
       deletionRequestsInitiated: Prisma.$ConversationDeletionRequestPayload<ExtArgs>[]
+      discussionRightsBought: Prisma.$DiscussionRightPurchasePayload<ExtArgs>[]
+      discussionRightsSold: Prisma.$DiscussionRightPurchasePayload<ExtArgs>[]
       followers: Prisma.$FollowPayload<ExtArgs>[]
       following: Prisma.$FollowPayload<ExtArgs>[]
       uploadedDepartmentDocuments: Prisma.$DepartmentDocumentPayload<ExtArgs>[]
@@ -8847,6 +8975,8 @@ export namespace Prisma {
     monthlyStatements<T extends User$monthlyStatementsArgs<ExtArgs> = {}>(args?: Subset<T, User$monthlyStatementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMonthlyStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     financialEntries<T extends User$financialEntriesArgs<ExtArgs> = {}>(args?: Subset<T, User$financialEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserFinancialEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     deletionRequestsInitiated<T extends User$deletionRequestsInitiatedArgs<ExtArgs> = {}>(args?: Subset<T, User$deletionRequestsInitiatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationDeletionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    discussionRightsBought<T extends User$discussionRightsBoughtArgs<ExtArgs> = {}>(args?: Subset<T, User$discussionRightsBoughtArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    discussionRightsSold<T extends User$discussionRightsSoldArgs<ExtArgs> = {}>(args?: Subset<T, User$discussionRightsSoldArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     followers<T extends User$followersArgs<ExtArgs> = {}>(args?: Subset<T, User$followersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     following<T extends User$followingArgs<ExtArgs> = {}>(args?: Subset<T, User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     uploadedDepartmentDocuments<T extends User$uploadedDepartmentDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$uploadedDepartmentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -10001,6 +10131,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ConversationDeletionRequestScalarFieldEnum | ConversationDeletionRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.discussionRightsBought
+   */
+  export type User$discussionRightsBoughtArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    where?: DiscussionRightPurchaseWhereInput
+    orderBy?: DiscussionRightPurchaseOrderByWithRelationInput | DiscussionRightPurchaseOrderByWithRelationInput[]
+    cursor?: DiscussionRightPurchaseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DiscussionRightPurchaseScalarFieldEnum | DiscussionRightPurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * User.discussionRightsSold
+   */
+  export type User$discussionRightsSoldArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    where?: DiscussionRightPurchaseWhereInput
+    orderBy?: DiscussionRightPurchaseOrderByWithRelationInput | DiscussionRightPurchaseOrderByWithRelationInput[]
+    cursor?: DiscussionRightPurchaseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DiscussionRightPurchaseScalarFieldEnum | DiscussionRightPurchaseScalarFieldEnum[]
   }
 
   /**
@@ -37017,6 +37195,1119 @@ export namespace Prisma {
 
 
   /**
+   * Model DiscussionRightPurchase
+   */
+
+  export type AggregateDiscussionRightPurchase = {
+    _count: DiscussionRightPurchaseCountAggregateOutputType | null
+    _min: DiscussionRightPurchaseMinAggregateOutputType | null
+    _max: DiscussionRightPurchaseMaxAggregateOutputType | null
+  }
+
+  export type DiscussionRightPurchaseMinAggregateOutputType = {
+    id: string | null
+    groupId: string | null
+    buyerId: string | null
+    sellerId: string | null
+    duration: $Enums.DiscussionRightDuration | null
+    purchasedAt: Date | null
+    expiresAt: Date | null
+    isActive: boolean | null
+  }
+
+  export type DiscussionRightPurchaseMaxAggregateOutputType = {
+    id: string | null
+    groupId: string | null
+    buyerId: string | null
+    sellerId: string | null
+    duration: $Enums.DiscussionRightDuration | null
+    purchasedAt: Date | null
+    expiresAt: Date | null
+    isActive: boolean | null
+  }
+
+  export type DiscussionRightPurchaseCountAggregateOutputType = {
+    id: number
+    groupId: number
+    buyerId: number
+    sellerId: number
+    duration: number
+    purchasedAt: number
+    expiresAt: number
+    isActive: number
+    _all: number
+  }
+
+
+  export type DiscussionRightPurchaseMinAggregateInputType = {
+    id?: true
+    groupId?: true
+    buyerId?: true
+    sellerId?: true
+    duration?: true
+    purchasedAt?: true
+    expiresAt?: true
+    isActive?: true
+  }
+
+  export type DiscussionRightPurchaseMaxAggregateInputType = {
+    id?: true
+    groupId?: true
+    buyerId?: true
+    sellerId?: true
+    duration?: true
+    purchasedAt?: true
+    expiresAt?: true
+    isActive?: true
+  }
+
+  export type DiscussionRightPurchaseCountAggregateInputType = {
+    id?: true
+    groupId?: true
+    buyerId?: true
+    sellerId?: true
+    duration?: true
+    purchasedAt?: true
+    expiresAt?: true
+    isActive?: true
+    _all?: true
+  }
+
+  export type DiscussionRightPurchaseAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DiscussionRightPurchase to aggregate.
+     */
+    where?: DiscussionRightPurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DiscussionRightPurchases to fetch.
+     */
+    orderBy?: DiscussionRightPurchaseOrderByWithRelationInput | DiscussionRightPurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DiscussionRightPurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DiscussionRightPurchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DiscussionRightPurchases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DiscussionRightPurchases
+    **/
+    _count?: true | DiscussionRightPurchaseCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DiscussionRightPurchaseMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DiscussionRightPurchaseMaxAggregateInputType
+  }
+
+  export type GetDiscussionRightPurchaseAggregateType<T extends DiscussionRightPurchaseAggregateArgs> = {
+        [P in keyof T & keyof AggregateDiscussionRightPurchase]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDiscussionRightPurchase[P]>
+      : GetScalarType<T[P], AggregateDiscussionRightPurchase[P]>
+  }
+
+
+
+
+  export type DiscussionRightPurchaseGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DiscussionRightPurchaseWhereInput
+    orderBy?: DiscussionRightPurchaseOrderByWithAggregationInput | DiscussionRightPurchaseOrderByWithAggregationInput[]
+    by: DiscussionRightPurchaseScalarFieldEnum[] | DiscussionRightPurchaseScalarFieldEnum
+    having?: DiscussionRightPurchaseScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DiscussionRightPurchaseCountAggregateInputType | true
+    _min?: DiscussionRightPurchaseMinAggregateInputType
+    _max?: DiscussionRightPurchaseMaxAggregateInputType
+  }
+
+  export type DiscussionRightPurchaseGroupByOutputType = {
+    id: string
+    groupId: string
+    buyerId: string
+    sellerId: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt: Date
+    expiresAt: Date
+    isActive: boolean
+    _count: DiscussionRightPurchaseCountAggregateOutputType | null
+    _min: DiscussionRightPurchaseMinAggregateOutputType | null
+    _max: DiscussionRightPurchaseMaxAggregateOutputType | null
+  }
+
+  type GetDiscussionRightPurchaseGroupByPayload<T extends DiscussionRightPurchaseGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DiscussionRightPurchaseGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DiscussionRightPurchaseGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DiscussionRightPurchaseGroupByOutputType[P]>
+            : GetScalarType<T[P], DiscussionRightPurchaseGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DiscussionRightPurchaseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    groupId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    duration?: boolean
+    purchasedAt?: boolean
+    expiresAt?: boolean
+    isActive?: boolean
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["discussionRightPurchase"]>
+
+  export type DiscussionRightPurchaseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    groupId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    duration?: boolean
+    purchasedAt?: boolean
+    expiresAt?: boolean
+    isActive?: boolean
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["discussionRightPurchase"]>
+
+  export type DiscussionRightPurchaseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    groupId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    duration?: boolean
+    purchasedAt?: boolean
+    expiresAt?: boolean
+    isActive?: boolean
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["discussionRightPurchase"]>
+
+  export type DiscussionRightPurchaseSelectScalar = {
+    id?: boolean
+    groupId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    duration?: boolean
+    purchasedAt?: boolean
+    expiresAt?: boolean
+    isActive?: boolean
+  }
+
+  export type DiscussionRightPurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "groupId" | "buyerId" | "sellerId" | "duration" | "purchasedAt" | "expiresAt" | "isActive", ExtArgs["result"]["discussionRightPurchase"]>
+  export type DiscussionRightPurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DiscussionRightPurchaseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DiscussionRightPurchaseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    group?: boolean | GroupDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $DiscussionRightPurchasePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DiscussionRightPurchase"
+    objects: {
+      group: Prisma.$GroupPayload<ExtArgs>
+      buyer: Prisma.$UserPayload<ExtArgs>
+      seller: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      groupId: string
+      buyerId: string
+      sellerId: string
+      duration: $Enums.DiscussionRightDuration
+      purchasedAt: Date
+      expiresAt: Date
+      isActive: boolean
+    }, ExtArgs["result"]["discussionRightPurchase"]>
+    composites: {}
+  }
+
+  type DiscussionRightPurchaseGetPayload<S extends boolean | null | undefined | DiscussionRightPurchaseDefaultArgs> = $Result.GetResult<Prisma.$DiscussionRightPurchasePayload, S>
+
+  type DiscussionRightPurchaseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DiscussionRightPurchaseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DiscussionRightPurchaseCountAggregateInputType | true
+    }
+
+  export interface DiscussionRightPurchaseDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DiscussionRightPurchase'], meta: { name: 'DiscussionRightPurchase' } }
+    /**
+     * Find zero or one DiscussionRightPurchase that matches the filter.
+     * @param {DiscussionRightPurchaseFindUniqueArgs} args - Arguments to find a DiscussionRightPurchase
+     * @example
+     * // Get one DiscussionRightPurchase
+     * const discussionRightPurchase = await prisma.discussionRightPurchase.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DiscussionRightPurchaseFindUniqueArgs>(args: SelectSubset<T, DiscussionRightPurchaseFindUniqueArgs<ExtArgs>>): Prisma__DiscussionRightPurchaseClient<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DiscussionRightPurchase that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DiscussionRightPurchaseFindUniqueOrThrowArgs} args - Arguments to find a DiscussionRightPurchase
+     * @example
+     * // Get one DiscussionRightPurchase
+     * const discussionRightPurchase = await prisma.discussionRightPurchase.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DiscussionRightPurchaseFindUniqueOrThrowArgs>(args: SelectSubset<T, DiscussionRightPurchaseFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DiscussionRightPurchaseClient<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DiscussionRightPurchase that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscussionRightPurchaseFindFirstArgs} args - Arguments to find a DiscussionRightPurchase
+     * @example
+     * // Get one DiscussionRightPurchase
+     * const discussionRightPurchase = await prisma.discussionRightPurchase.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DiscussionRightPurchaseFindFirstArgs>(args?: SelectSubset<T, DiscussionRightPurchaseFindFirstArgs<ExtArgs>>): Prisma__DiscussionRightPurchaseClient<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DiscussionRightPurchase that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscussionRightPurchaseFindFirstOrThrowArgs} args - Arguments to find a DiscussionRightPurchase
+     * @example
+     * // Get one DiscussionRightPurchase
+     * const discussionRightPurchase = await prisma.discussionRightPurchase.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DiscussionRightPurchaseFindFirstOrThrowArgs>(args?: SelectSubset<T, DiscussionRightPurchaseFindFirstOrThrowArgs<ExtArgs>>): Prisma__DiscussionRightPurchaseClient<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DiscussionRightPurchases that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscussionRightPurchaseFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DiscussionRightPurchases
+     * const discussionRightPurchases = await prisma.discussionRightPurchase.findMany()
+     * 
+     * // Get first 10 DiscussionRightPurchases
+     * const discussionRightPurchases = await prisma.discussionRightPurchase.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const discussionRightPurchaseWithIdOnly = await prisma.discussionRightPurchase.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DiscussionRightPurchaseFindManyArgs>(args?: SelectSubset<T, DiscussionRightPurchaseFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DiscussionRightPurchase.
+     * @param {DiscussionRightPurchaseCreateArgs} args - Arguments to create a DiscussionRightPurchase.
+     * @example
+     * // Create one DiscussionRightPurchase
+     * const DiscussionRightPurchase = await prisma.discussionRightPurchase.create({
+     *   data: {
+     *     // ... data to create a DiscussionRightPurchase
+     *   }
+     * })
+     * 
+     */
+    create<T extends DiscussionRightPurchaseCreateArgs>(args: SelectSubset<T, DiscussionRightPurchaseCreateArgs<ExtArgs>>): Prisma__DiscussionRightPurchaseClient<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DiscussionRightPurchases.
+     * @param {DiscussionRightPurchaseCreateManyArgs} args - Arguments to create many DiscussionRightPurchases.
+     * @example
+     * // Create many DiscussionRightPurchases
+     * const discussionRightPurchase = await prisma.discussionRightPurchase.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DiscussionRightPurchaseCreateManyArgs>(args?: SelectSubset<T, DiscussionRightPurchaseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DiscussionRightPurchases and returns the data saved in the database.
+     * @param {DiscussionRightPurchaseCreateManyAndReturnArgs} args - Arguments to create many DiscussionRightPurchases.
+     * @example
+     * // Create many DiscussionRightPurchases
+     * const discussionRightPurchase = await prisma.discussionRightPurchase.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DiscussionRightPurchases and only return the `id`
+     * const discussionRightPurchaseWithIdOnly = await prisma.discussionRightPurchase.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DiscussionRightPurchaseCreateManyAndReturnArgs>(args?: SelectSubset<T, DiscussionRightPurchaseCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DiscussionRightPurchase.
+     * @param {DiscussionRightPurchaseDeleteArgs} args - Arguments to delete one DiscussionRightPurchase.
+     * @example
+     * // Delete one DiscussionRightPurchase
+     * const DiscussionRightPurchase = await prisma.discussionRightPurchase.delete({
+     *   where: {
+     *     // ... filter to delete one DiscussionRightPurchase
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DiscussionRightPurchaseDeleteArgs>(args: SelectSubset<T, DiscussionRightPurchaseDeleteArgs<ExtArgs>>): Prisma__DiscussionRightPurchaseClient<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DiscussionRightPurchase.
+     * @param {DiscussionRightPurchaseUpdateArgs} args - Arguments to update one DiscussionRightPurchase.
+     * @example
+     * // Update one DiscussionRightPurchase
+     * const discussionRightPurchase = await prisma.discussionRightPurchase.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DiscussionRightPurchaseUpdateArgs>(args: SelectSubset<T, DiscussionRightPurchaseUpdateArgs<ExtArgs>>): Prisma__DiscussionRightPurchaseClient<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DiscussionRightPurchases.
+     * @param {DiscussionRightPurchaseDeleteManyArgs} args - Arguments to filter DiscussionRightPurchases to delete.
+     * @example
+     * // Delete a few DiscussionRightPurchases
+     * const { count } = await prisma.discussionRightPurchase.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DiscussionRightPurchaseDeleteManyArgs>(args?: SelectSubset<T, DiscussionRightPurchaseDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DiscussionRightPurchases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscussionRightPurchaseUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DiscussionRightPurchases
+     * const discussionRightPurchase = await prisma.discussionRightPurchase.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DiscussionRightPurchaseUpdateManyArgs>(args: SelectSubset<T, DiscussionRightPurchaseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DiscussionRightPurchases and returns the data updated in the database.
+     * @param {DiscussionRightPurchaseUpdateManyAndReturnArgs} args - Arguments to update many DiscussionRightPurchases.
+     * @example
+     * // Update many DiscussionRightPurchases
+     * const discussionRightPurchase = await prisma.discussionRightPurchase.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DiscussionRightPurchases and only return the `id`
+     * const discussionRightPurchaseWithIdOnly = await prisma.discussionRightPurchase.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DiscussionRightPurchaseUpdateManyAndReturnArgs>(args: SelectSubset<T, DiscussionRightPurchaseUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DiscussionRightPurchase.
+     * @param {DiscussionRightPurchaseUpsertArgs} args - Arguments to update or create a DiscussionRightPurchase.
+     * @example
+     * // Update or create a DiscussionRightPurchase
+     * const discussionRightPurchase = await prisma.discussionRightPurchase.upsert({
+     *   create: {
+     *     // ... data to create a DiscussionRightPurchase
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DiscussionRightPurchase we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DiscussionRightPurchaseUpsertArgs>(args: SelectSubset<T, DiscussionRightPurchaseUpsertArgs<ExtArgs>>): Prisma__DiscussionRightPurchaseClient<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DiscussionRightPurchases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscussionRightPurchaseCountArgs} args - Arguments to filter DiscussionRightPurchases to count.
+     * @example
+     * // Count the number of DiscussionRightPurchases
+     * const count = await prisma.discussionRightPurchase.count({
+     *   where: {
+     *     // ... the filter for the DiscussionRightPurchases we want to count
+     *   }
+     * })
+    **/
+    count<T extends DiscussionRightPurchaseCountArgs>(
+      args?: Subset<T, DiscussionRightPurchaseCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DiscussionRightPurchaseCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DiscussionRightPurchase.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscussionRightPurchaseAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DiscussionRightPurchaseAggregateArgs>(args: Subset<T, DiscussionRightPurchaseAggregateArgs>): Prisma.PrismaPromise<GetDiscussionRightPurchaseAggregateType<T>>
+
+    /**
+     * Group by DiscussionRightPurchase.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscussionRightPurchaseGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DiscussionRightPurchaseGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DiscussionRightPurchaseGroupByArgs['orderBy'] }
+        : { orderBy?: DiscussionRightPurchaseGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DiscussionRightPurchaseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDiscussionRightPurchaseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DiscussionRightPurchase model
+   */
+  readonly fields: DiscussionRightPurchaseFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DiscussionRightPurchase.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DiscussionRightPurchaseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    group<T extends GroupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GroupDefaultArgs<ExtArgs>>): Prisma__GroupClient<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    buyer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    seller<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DiscussionRightPurchase model
+   */
+  interface DiscussionRightPurchaseFieldRefs {
+    readonly id: FieldRef<"DiscussionRightPurchase", 'String'>
+    readonly groupId: FieldRef<"DiscussionRightPurchase", 'String'>
+    readonly buyerId: FieldRef<"DiscussionRightPurchase", 'String'>
+    readonly sellerId: FieldRef<"DiscussionRightPurchase", 'String'>
+    readonly duration: FieldRef<"DiscussionRightPurchase", 'DiscussionRightDuration'>
+    readonly purchasedAt: FieldRef<"DiscussionRightPurchase", 'DateTime'>
+    readonly expiresAt: FieldRef<"DiscussionRightPurchase", 'DateTime'>
+    readonly isActive: FieldRef<"DiscussionRightPurchase", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DiscussionRightPurchase findUnique
+   */
+  export type DiscussionRightPurchaseFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which DiscussionRightPurchase to fetch.
+     */
+    where: DiscussionRightPurchaseWhereUniqueInput
+  }
+
+  /**
+   * DiscussionRightPurchase findUniqueOrThrow
+   */
+  export type DiscussionRightPurchaseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which DiscussionRightPurchase to fetch.
+     */
+    where: DiscussionRightPurchaseWhereUniqueInput
+  }
+
+  /**
+   * DiscussionRightPurchase findFirst
+   */
+  export type DiscussionRightPurchaseFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which DiscussionRightPurchase to fetch.
+     */
+    where?: DiscussionRightPurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DiscussionRightPurchases to fetch.
+     */
+    orderBy?: DiscussionRightPurchaseOrderByWithRelationInput | DiscussionRightPurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DiscussionRightPurchases.
+     */
+    cursor?: DiscussionRightPurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DiscussionRightPurchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DiscussionRightPurchases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DiscussionRightPurchases.
+     */
+    distinct?: DiscussionRightPurchaseScalarFieldEnum | DiscussionRightPurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * DiscussionRightPurchase findFirstOrThrow
+   */
+  export type DiscussionRightPurchaseFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which DiscussionRightPurchase to fetch.
+     */
+    where?: DiscussionRightPurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DiscussionRightPurchases to fetch.
+     */
+    orderBy?: DiscussionRightPurchaseOrderByWithRelationInput | DiscussionRightPurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DiscussionRightPurchases.
+     */
+    cursor?: DiscussionRightPurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DiscussionRightPurchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DiscussionRightPurchases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DiscussionRightPurchases.
+     */
+    distinct?: DiscussionRightPurchaseScalarFieldEnum | DiscussionRightPurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * DiscussionRightPurchase findMany
+   */
+  export type DiscussionRightPurchaseFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter, which DiscussionRightPurchases to fetch.
+     */
+    where?: DiscussionRightPurchaseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DiscussionRightPurchases to fetch.
+     */
+    orderBy?: DiscussionRightPurchaseOrderByWithRelationInput | DiscussionRightPurchaseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DiscussionRightPurchases.
+     */
+    cursor?: DiscussionRightPurchaseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DiscussionRightPurchases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DiscussionRightPurchases.
+     */
+    skip?: number
+    distinct?: DiscussionRightPurchaseScalarFieldEnum | DiscussionRightPurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * DiscussionRightPurchase create
+   */
+  export type DiscussionRightPurchaseCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DiscussionRightPurchase.
+     */
+    data: XOR<DiscussionRightPurchaseCreateInput, DiscussionRightPurchaseUncheckedCreateInput>
+  }
+
+  /**
+   * DiscussionRightPurchase createMany
+   */
+  export type DiscussionRightPurchaseCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DiscussionRightPurchases.
+     */
+    data: DiscussionRightPurchaseCreateManyInput | DiscussionRightPurchaseCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DiscussionRightPurchase createManyAndReturn
+   */
+  export type DiscussionRightPurchaseCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * The data used to create many DiscussionRightPurchases.
+     */
+    data: DiscussionRightPurchaseCreateManyInput | DiscussionRightPurchaseCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DiscussionRightPurchase update
+   */
+  export type DiscussionRightPurchaseUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DiscussionRightPurchase.
+     */
+    data: XOR<DiscussionRightPurchaseUpdateInput, DiscussionRightPurchaseUncheckedUpdateInput>
+    /**
+     * Choose, which DiscussionRightPurchase to update.
+     */
+    where: DiscussionRightPurchaseWhereUniqueInput
+  }
+
+  /**
+   * DiscussionRightPurchase updateMany
+   */
+  export type DiscussionRightPurchaseUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DiscussionRightPurchases.
+     */
+    data: XOR<DiscussionRightPurchaseUpdateManyMutationInput, DiscussionRightPurchaseUncheckedUpdateManyInput>
+    /**
+     * Filter which DiscussionRightPurchases to update
+     */
+    where?: DiscussionRightPurchaseWhereInput
+    /**
+     * Limit how many DiscussionRightPurchases to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DiscussionRightPurchase updateManyAndReturn
+   */
+  export type DiscussionRightPurchaseUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * The data used to update DiscussionRightPurchases.
+     */
+    data: XOR<DiscussionRightPurchaseUpdateManyMutationInput, DiscussionRightPurchaseUncheckedUpdateManyInput>
+    /**
+     * Filter which DiscussionRightPurchases to update
+     */
+    where?: DiscussionRightPurchaseWhereInput
+    /**
+     * Limit how many DiscussionRightPurchases to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DiscussionRightPurchase upsert
+   */
+  export type DiscussionRightPurchaseUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DiscussionRightPurchase to update in case it exists.
+     */
+    where: DiscussionRightPurchaseWhereUniqueInput
+    /**
+     * In case the DiscussionRightPurchase found by the `where` argument doesn't exist, create a new DiscussionRightPurchase with this data.
+     */
+    create: XOR<DiscussionRightPurchaseCreateInput, DiscussionRightPurchaseUncheckedCreateInput>
+    /**
+     * In case the DiscussionRightPurchase was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DiscussionRightPurchaseUpdateInput, DiscussionRightPurchaseUncheckedUpdateInput>
+  }
+
+  /**
+   * DiscussionRightPurchase delete
+   */
+  export type DiscussionRightPurchaseDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    /**
+     * Filter which DiscussionRightPurchase to delete.
+     */
+    where: DiscussionRightPurchaseWhereUniqueInput
+  }
+
+  /**
+   * DiscussionRightPurchase deleteMany
+   */
+  export type DiscussionRightPurchaseDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DiscussionRightPurchases to delete
+     */
+    where?: DiscussionRightPurchaseWhereInput
+    /**
+     * Limit how many DiscussionRightPurchases to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DiscussionRightPurchase without action
+   */
+  export type DiscussionRightPurchaseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Group
    */
 
@@ -37035,7 +38326,7 @@ export namespace Prisma {
     lockCodeHash: string | null
     lockSetByUserId: string | null
     lockedAt: Date | null
-    hideOldMessagesByUserId: string | null
+    hiddenByUserId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -37049,7 +38340,7 @@ export namespace Prisma {
     lockCodeHash: string | null
     lockSetByUserId: string | null
     lockedAt: Date | null
-    hideOldMessagesByUserId: string | null
+    hiddenByUserId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -37063,7 +38354,7 @@ export namespace Prisma {
     lockCodeHash: number
     lockSetByUserId: number
     lockedAt: number
-    hideOldMessagesByUserId: number
+    hiddenByUserId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -37079,7 +38370,7 @@ export namespace Prisma {
     lockCodeHash?: true
     lockSetByUserId?: true
     lockedAt?: true
-    hideOldMessagesByUserId?: true
+    hiddenByUserId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -37093,7 +38384,7 @@ export namespace Prisma {
     lockCodeHash?: true
     lockSetByUserId?: true
     lockedAt?: true
-    hideOldMessagesByUserId?: true
+    hiddenByUserId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -37107,7 +38398,7 @@ export namespace Prisma {
     lockCodeHash?: true
     lockSetByUserId?: true
     lockedAt?: true
-    hideOldMessagesByUserId?: true
+    hiddenByUserId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -37194,7 +38485,7 @@ export namespace Prisma {
     lockCodeHash: string | null
     lockSetByUserId: string | null
     lockedAt: Date | null
-    hideOldMessagesByUserId: string | null
+    hiddenByUserId: string | null
     createdAt: Date
     updatedAt: Date
     _count: GroupCountAggregateOutputType | null
@@ -37225,7 +38516,7 @@ export namespace Prisma {
     lockCodeHash?: boolean
     lockSetByUserId?: boolean
     lockedAt?: boolean
-    hideOldMessagesByUserId?: boolean
+    hiddenByUserId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     department?: boolean | Group$departmentArgs<ExtArgs>
@@ -37234,6 +38525,7 @@ export namespace Prisma {
     messages?: boolean | Group$messagesArgs<ExtArgs>
     documents?: boolean | Group$documentsArgs<ExtArgs>
     deletionRequest?: boolean | Group$deletionRequestArgs<ExtArgs>
+    rightPurchase?: boolean | Group$rightPurchaseArgs<ExtArgs>
     _count?: boolean | GroupCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["group"]>
 
@@ -37246,7 +38538,7 @@ export namespace Prisma {
     lockCodeHash?: boolean
     lockSetByUserId?: boolean
     lockedAt?: boolean
-    hideOldMessagesByUserId?: boolean
+    hiddenByUserId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     department?: boolean | Group$departmentArgs<ExtArgs>
@@ -37262,7 +38554,7 @@ export namespace Prisma {
     lockCodeHash?: boolean
     lockSetByUserId?: boolean
     lockedAt?: boolean
-    hideOldMessagesByUserId?: boolean
+    hiddenByUserId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     department?: boolean | Group$departmentArgs<ExtArgs>
@@ -37278,12 +38570,12 @@ export namespace Prisma {
     lockCodeHash?: boolean
     lockSetByUserId?: boolean
     lockedAt?: boolean
-    hideOldMessagesByUserId?: boolean
+    hiddenByUserId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type GroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "isDirect" | "deptId" | "collaborationGroupId" | "lockCodeHash" | "lockSetByUserId" | "lockedAt" | "hideOldMessagesByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["group"]>
+  export type GroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "isDirect" | "deptId" | "collaborationGroupId" | "lockCodeHash" | "lockSetByUserId" | "lockedAt" | "hiddenByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["group"]>
   export type GroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     department?: boolean | Group$departmentArgs<ExtArgs>
     collaborationGroup?: boolean | Group$collaborationGroupArgs<ExtArgs>
@@ -37291,6 +38583,7 @@ export namespace Prisma {
     messages?: boolean | Group$messagesArgs<ExtArgs>
     documents?: boolean | Group$documentsArgs<ExtArgs>
     deletionRequest?: boolean | Group$deletionRequestArgs<ExtArgs>
+    rightPurchase?: boolean | Group$rightPurchaseArgs<ExtArgs>
     _count?: boolean | GroupCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type GroupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -37311,6 +38604,7 @@ export namespace Prisma {
       messages: Prisma.$MessagePayload<ExtArgs>[]
       documents: Prisma.$GroupDocumentPayload<ExtArgs>[]
       deletionRequest: Prisma.$ConversationDeletionRequestPayload<ExtArgs> | null
+      rightPurchase: Prisma.$DiscussionRightPurchasePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -37321,7 +38615,7 @@ export namespace Prisma {
       lockCodeHash: string | null
       lockSetByUserId: string | null
       lockedAt: Date | null
-      hideOldMessagesByUserId: string | null
+      hiddenByUserId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["group"]>
@@ -37724,6 +39018,7 @@ export namespace Prisma {
     messages<T extends Group$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Group$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     documents<T extends Group$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Group$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     deletionRequest<T extends Group$deletionRequestArgs<ExtArgs> = {}>(args?: Subset<T, Group$deletionRequestArgs<ExtArgs>>): Prisma__ConversationDeletionRequestClient<$Result.GetResult<Prisma.$ConversationDeletionRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    rightPurchase<T extends Group$rightPurchaseArgs<ExtArgs> = {}>(args?: Subset<T, Group$rightPurchaseArgs<ExtArgs>>): Prisma__DiscussionRightPurchaseClient<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -37761,7 +39056,7 @@ export namespace Prisma {
     readonly lockCodeHash: FieldRef<"Group", 'String'>
     readonly lockSetByUserId: FieldRef<"Group", 'String'>
     readonly lockedAt: FieldRef<"Group", 'DateTime'>
-    readonly hideOldMessagesByUserId: FieldRef<"Group", 'String'>
+    readonly hiddenByUserId: FieldRef<"Group", 'String'>
     readonly createdAt: FieldRef<"Group", 'DateTime'>
     readonly updatedAt: FieldRef<"Group", 'DateTime'>
   }
@@ -38286,6 +39581,25 @@ export namespace Prisma {
      */
     include?: ConversationDeletionRequestInclude<ExtArgs> | null
     where?: ConversationDeletionRequestWhereInput
+  }
+
+  /**
+   * Group.rightPurchase
+   */
+  export type Group$rightPurchaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DiscussionRightPurchase
+     */
+    select?: DiscussionRightPurchaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DiscussionRightPurchase
+     */
+    omit?: DiscussionRightPurchaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiscussionRightPurchaseInclude<ExtArgs> | null
+    where?: DiscussionRightPurchaseWhereInput
   }
 
   /**
@@ -50271,6 +51585,7 @@ export namespace Prisma {
     address: string | null
     requestId: string | null
     orgId: string | null
+    groupId: string | null
     type: string | null
     createdAt: Date | null
   }
@@ -50285,6 +51600,7 @@ export namespace Prisma {
     address: string | null
     requestId: string | null
     orgId: string | null
+    groupId: string | null
     type: string | null
     createdAt: Date | null
   }
@@ -50299,6 +51615,7 @@ export namespace Prisma {
     address: number
     requestId: number
     orgId: number
+    groupId: number
     type: number
     createdAt: number
     _all: number
@@ -50315,6 +51632,7 @@ export namespace Prisma {
     address?: true
     requestId?: true
     orgId?: true
+    groupId?: true
     type?: true
     createdAt?: true
   }
@@ -50329,6 +51647,7 @@ export namespace Prisma {
     address?: true
     requestId?: true
     orgId?: true
+    groupId?: true
     type?: true
     createdAt?: true
   }
@@ -50343,6 +51662,7 @@ export namespace Prisma {
     address?: true
     requestId?: true
     orgId?: true
+    groupId?: true
     type?: true
     createdAt?: true
     _all?: true
@@ -50430,6 +51750,7 @@ export namespace Prisma {
     address: string | null
     requestId: string | null
     orgId: string | null
+    groupId: string | null
     type: string
     createdAt: Date
     _count: PendingSubscriptionPaymentCountAggregateOutputType | null
@@ -50461,6 +51782,7 @@ export namespace Prisma {
     address?: boolean
     requestId?: boolean
     orgId?: boolean
+    groupId?: boolean
     type?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["pendingSubscriptionPayment"]>
@@ -50475,6 +51797,7 @@ export namespace Prisma {
     address?: boolean
     requestId?: boolean
     orgId?: boolean
+    groupId?: boolean
     type?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["pendingSubscriptionPayment"]>
@@ -50489,6 +51812,7 @@ export namespace Prisma {
     address?: boolean
     requestId?: boolean
     orgId?: boolean
+    groupId?: boolean
     type?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["pendingSubscriptionPayment"]>
@@ -50503,11 +51827,12 @@ export namespace Prisma {
     address?: boolean
     requestId?: boolean
     orgId?: boolean
+    groupId?: boolean
     type?: boolean
     createdAt?: boolean
   }
 
-  export type PendingSubscriptionPaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "transactionId" | "userId" | "plan" | "name" | "logo" | "address" | "requestId" | "orgId" | "type" | "createdAt", ExtArgs["result"]["pendingSubscriptionPayment"]>
+  export type PendingSubscriptionPaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "transactionId" | "userId" | "plan" | "name" | "logo" | "address" | "requestId" | "orgId" | "groupId" | "type" | "createdAt", ExtArgs["result"]["pendingSubscriptionPayment"]>
 
   export type $PendingSubscriptionPaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PendingSubscriptionPayment"
@@ -50522,6 +51847,7 @@ export namespace Prisma {
       address: string | null
       requestId: string | null
       orgId: string | null
+      groupId: string | null
       type: string
       createdAt: Date
     }, ExtArgs["result"]["pendingSubscriptionPayment"]>
@@ -50956,6 +52282,7 @@ export namespace Prisma {
     readonly address: FieldRef<"PendingSubscriptionPayment", 'String'>
     readonly requestId: FieldRef<"PendingSubscriptionPayment", 'String'>
     readonly orgId: FieldRef<"PendingSubscriptionPayment", 'String'>
+    readonly groupId: FieldRef<"PendingSubscriptionPayment", 'String'>
     readonly type: FieldRef<"PendingSubscriptionPayment", 'String'>
     readonly createdAt: FieldRef<"PendingSubscriptionPayment", 'DateTime'>
   }
@@ -51353,6 +52680,7 @@ export namespace Prisma {
     address: string | null
     requestId: string | null
     orgId: string | null
+    groupId: string | null
     type: string | null
     amountFcfa: number | null
     status: $Enums.PaymentOrderStatus | null
@@ -51372,6 +52700,7 @@ export namespace Prisma {
     address: string | null
     requestId: string | null
     orgId: string | null
+    groupId: string | null
     type: string | null
     amountFcfa: number | null
     status: $Enums.PaymentOrderStatus | null
@@ -51391,6 +52720,7 @@ export namespace Prisma {
     address: number
     requestId: number
     orgId: number
+    groupId: number
     type: number
     amountFcfa: number
     status: number
@@ -51420,6 +52750,7 @@ export namespace Prisma {
     address?: true
     requestId?: true
     orgId?: true
+    groupId?: true
     type?: true
     amountFcfa?: true
     status?: true
@@ -51439,6 +52770,7 @@ export namespace Prisma {
     address?: true
     requestId?: true
     orgId?: true
+    groupId?: true
     type?: true
     amountFcfa?: true
     status?: true
@@ -51458,6 +52790,7 @@ export namespace Prisma {
     address?: true
     requestId?: true
     orgId?: true
+    groupId?: true
     type?: true
     amountFcfa?: true
     status?: true
@@ -51564,6 +52897,7 @@ export namespace Prisma {
     address: string | null
     requestId: string | null
     orgId: string | null
+    groupId: string | null
     type: string
     amountFcfa: number
     status: $Enums.PaymentOrderStatus
@@ -51602,6 +52936,7 @@ export namespace Prisma {
     address?: boolean
     requestId?: boolean
     orgId?: boolean
+    groupId?: boolean
     type?: boolean
     amountFcfa?: boolean
     status?: boolean
@@ -51621,6 +52956,7 @@ export namespace Prisma {
     address?: boolean
     requestId?: boolean
     orgId?: boolean
+    groupId?: boolean
     type?: boolean
     amountFcfa?: boolean
     status?: boolean
@@ -51640,6 +52976,7 @@ export namespace Prisma {
     address?: boolean
     requestId?: boolean
     orgId?: boolean
+    groupId?: boolean
     type?: boolean
     amountFcfa?: boolean
     status?: boolean
@@ -51659,6 +52996,7 @@ export namespace Prisma {
     address?: boolean
     requestId?: boolean
     orgId?: boolean
+    groupId?: boolean
     type?: boolean
     amountFcfa?: boolean
     status?: boolean
@@ -51669,7 +53007,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type PaymentOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "plan" | "name" | "logo" | "address" | "requestId" | "orgId" | "type" | "amountFcfa" | "status" | "approvedBy" | "approvedAt" | "rejectedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentOrder"]>
+  export type PaymentOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "plan" | "name" | "logo" | "address" | "requestId" | "orgId" | "groupId" | "type" | "amountFcfa" | "status" | "approvedBy" | "approvedAt" | "rejectedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentOrder"]>
 
   export type $PaymentOrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PaymentOrder"
@@ -51683,6 +53021,7 @@ export namespace Prisma {
       address: string | null
       requestId: string | null
       orgId: string | null
+      groupId: string | null
       type: string
       amountFcfa: number
       status: $Enums.PaymentOrderStatus
@@ -52122,6 +53461,7 @@ export namespace Prisma {
     readonly address: FieldRef<"PaymentOrder", 'String'>
     readonly requestId: FieldRef<"PaymentOrder", 'String'>
     readonly orgId: FieldRef<"PaymentOrder", 'String'>
+    readonly groupId: FieldRef<"PaymentOrder", 'String'>
     readonly type: FieldRef<"PaymentOrder", 'String'>
     readonly amountFcfa: FieldRef<"PaymentOrder", 'Int'>
     readonly status: FieldRef<"PaymentOrder", 'PaymentOrderStatus'>
@@ -78705,6 +80045,20 @@ export namespace Prisma {
   export type DepartmentMemberScalarFieldEnum = (typeof DepartmentMemberScalarFieldEnum)[keyof typeof DepartmentMemberScalarFieldEnum]
 
 
+  export const DiscussionRightPurchaseScalarFieldEnum: {
+    id: 'id',
+    groupId: 'groupId',
+    buyerId: 'buyerId',
+    sellerId: 'sellerId',
+    duration: 'duration',
+    purchasedAt: 'purchasedAt',
+    expiresAt: 'expiresAt',
+    isActive: 'isActive'
+  };
+
+  export type DiscussionRightPurchaseScalarFieldEnum = (typeof DiscussionRightPurchaseScalarFieldEnum)[keyof typeof DiscussionRightPurchaseScalarFieldEnum]
+
+
   export const GroupScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -78714,7 +80068,7 @@ export namespace Prisma {
     lockCodeHash: 'lockCodeHash',
     lockSetByUserId: 'lockSetByUserId',
     lockedAt: 'lockedAt',
-    hideOldMessagesByUserId: 'hideOldMessagesByUserId',
+    hiddenByUserId: 'hiddenByUserId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -78865,6 +80219,7 @@ export namespace Prisma {
     address: 'address',
     requestId: 'requestId',
     orgId: 'orgId',
+    groupId: 'groupId',
     type: 'type',
     createdAt: 'createdAt'
   };
@@ -78881,6 +80236,7 @@ export namespace Prisma {
     address: 'address',
     requestId: 'requestId',
     orgId: 'orgId',
+    groupId: 'groupId',
     type: 'type',
     amountFcfa: 'amountFcfa',
     status: 'status',
@@ -79508,6 +80864,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'DiscussionRightDuration'
+   */
+  export type EnumDiscussionRightDurationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscussionRightDuration'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiscussionRightDuration[]'
+   */
+  export type ListEnumDiscussionRightDurationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscussionRightDuration[]'>
+    
+
+
+  /**
    * Reference to a field of type 'RequestStatus'
    */
   export type EnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestStatus'>
@@ -79708,6 +81078,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementListRelationFilter
     financialEntries?: UserFinancialEntryListRelationFilter
     deletionRequestsInitiated?: ConversationDeletionRequestListRelationFilter
+    discussionRightsBought?: DiscussionRightPurchaseListRelationFilter
+    discussionRightsSold?: DiscussionRightPurchaseListRelationFilter
     followers?: FollowListRelationFilter
     following?: FollowListRelationFilter
     uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
@@ -79781,6 +81153,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementOrderByRelationAggregateInput
     financialEntries?: UserFinancialEntryOrderByRelationAggregateInput
     deletionRequestsInitiated?: ConversationDeletionRequestOrderByRelationAggregateInput
+    discussionRightsBought?: DiscussionRightPurchaseOrderByRelationAggregateInput
+    discussionRightsSold?: DiscussionRightPurchaseOrderByRelationAggregateInput
     followers?: FollowOrderByRelationAggregateInput
     following?: FollowOrderByRelationAggregateInput
     uploadedDepartmentDocuments?: DepartmentDocumentOrderByRelationAggregateInput
@@ -79857,6 +81231,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementListRelationFilter
     financialEntries?: UserFinancialEntryListRelationFilter
     deletionRequestsInitiated?: ConversationDeletionRequestListRelationFilter
+    discussionRightsBought?: DiscussionRightPurchaseListRelationFilter
+    discussionRightsSold?: DiscussionRightPurchaseListRelationFilter
     followers?: FollowListRelationFilter
     following?: FollowListRelationFilter
     uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
@@ -81749,6 +83125,82 @@ export namespace Prisma {
     encryptedDeptKey?: StringWithAggregatesFilter<"DepartmentMember"> | string
   }
 
+  export type DiscussionRightPurchaseWhereInput = {
+    AND?: DiscussionRightPurchaseWhereInput | DiscussionRightPurchaseWhereInput[]
+    OR?: DiscussionRightPurchaseWhereInput[]
+    NOT?: DiscussionRightPurchaseWhereInput | DiscussionRightPurchaseWhereInput[]
+    id?: StringFilter<"DiscussionRightPurchase"> | string
+    groupId?: StringFilter<"DiscussionRightPurchase"> | string
+    buyerId?: StringFilter<"DiscussionRightPurchase"> | string
+    sellerId?: StringFilter<"DiscussionRightPurchase"> | string
+    duration?: EnumDiscussionRightDurationFilter<"DiscussionRightPurchase"> | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFilter<"DiscussionRightPurchase"> | Date | string
+    expiresAt?: DateTimeFilter<"DiscussionRightPurchase"> | Date | string
+    isActive?: BoolFilter<"DiscussionRightPurchase"> | boolean
+    group?: XOR<GroupScalarRelationFilter, GroupWhereInput>
+    buyer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    seller?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type DiscussionRightPurchaseOrderByWithRelationInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    duration?: SortOrder
+    purchasedAt?: SortOrder
+    expiresAt?: SortOrder
+    isActive?: SortOrder
+    group?: GroupOrderByWithRelationInput
+    buyer?: UserOrderByWithRelationInput
+    seller?: UserOrderByWithRelationInput
+  }
+
+  export type DiscussionRightPurchaseWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    groupId?: string
+    AND?: DiscussionRightPurchaseWhereInput | DiscussionRightPurchaseWhereInput[]
+    OR?: DiscussionRightPurchaseWhereInput[]
+    NOT?: DiscussionRightPurchaseWhereInput | DiscussionRightPurchaseWhereInput[]
+    buyerId?: StringFilter<"DiscussionRightPurchase"> | string
+    sellerId?: StringFilter<"DiscussionRightPurchase"> | string
+    duration?: EnumDiscussionRightDurationFilter<"DiscussionRightPurchase"> | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFilter<"DiscussionRightPurchase"> | Date | string
+    expiresAt?: DateTimeFilter<"DiscussionRightPurchase"> | Date | string
+    isActive?: BoolFilter<"DiscussionRightPurchase"> | boolean
+    group?: XOR<GroupScalarRelationFilter, GroupWhereInput>
+    buyer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    seller?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "groupId">
+
+  export type DiscussionRightPurchaseOrderByWithAggregationInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    duration?: SortOrder
+    purchasedAt?: SortOrder
+    expiresAt?: SortOrder
+    isActive?: SortOrder
+    _count?: DiscussionRightPurchaseCountOrderByAggregateInput
+    _max?: DiscussionRightPurchaseMaxOrderByAggregateInput
+    _min?: DiscussionRightPurchaseMinOrderByAggregateInput
+  }
+
+  export type DiscussionRightPurchaseScalarWhereWithAggregatesInput = {
+    AND?: DiscussionRightPurchaseScalarWhereWithAggregatesInput | DiscussionRightPurchaseScalarWhereWithAggregatesInput[]
+    OR?: DiscussionRightPurchaseScalarWhereWithAggregatesInput[]
+    NOT?: DiscussionRightPurchaseScalarWhereWithAggregatesInput | DiscussionRightPurchaseScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DiscussionRightPurchase"> | string
+    groupId?: StringWithAggregatesFilter<"DiscussionRightPurchase"> | string
+    buyerId?: StringWithAggregatesFilter<"DiscussionRightPurchase"> | string
+    sellerId?: StringWithAggregatesFilter<"DiscussionRightPurchase"> | string
+    duration?: EnumDiscussionRightDurationWithAggregatesFilter<"DiscussionRightPurchase"> | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeWithAggregatesFilter<"DiscussionRightPurchase"> | Date | string
+    expiresAt?: DateTimeWithAggregatesFilter<"DiscussionRightPurchase"> | Date | string
+    isActive?: BoolWithAggregatesFilter<"DiscussionRightPurchase"> | boolean
+  }
+
   export type GroupWhereInput = {
     AND?: GroupWhereInput | GroupWhereInput[]
     OR?: GroupWhereInput[]
@@ -81761,7 +83213,7 @@ export namespace Prisma {
     lockCodeHash?: StringNullableFilter<"Group"> | string | null
     lockSetByUserId?: StringNullableFilter<"Group"> | string | null
     lockedAt?: DateTimeNullableFilter<"Group"> | Date | string | null
-    hideOldMessagesByUserId?: StringNullableFilter<"Group"> | string | null
+    hiddenByUserId?: StringNullableFilter<"Group"> | string | null
     createdAt?: DateTimeFilter<"Group"> | Date | string
     updatedAt?: DateTimeFilter<"Group"> | Date | string
     department?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
@@ -81770,6 +83222,7 @@ export namespace Prisma {
     messages?: MessageListRelationFilter
     documents?: GroupDocumentListRelationFilter
     deletionRequest?: XOR<ConversationDeletionRequestNullableScalarRelationFilter, ConversationDeletionRequestWhereInput> | null
+    rightPurchase?: XOR<DiscussionRightPurchaseNullableScalarRelationFilter, DiscussionRightPurchaseWhereInput> | null
   }
 
   export type GroupOrderByWithRelationInput = {
@@ -81781,7 +83234,7 @@ export namespace Prisma {
     lockCodeHash?: SortOrderInput | SortOrder
     lockSetByUserId?: SortOrderInput | SortOrder
     lockedAt?: SortOrderInput | SortOrder
-    hideOldMessagesByUserId?: SortOrderInput | SortOrder
+    hiddenByUserId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     department?: DepartmentOrderByWithRelationInput
@@ -81790,6 +83243,7 @@ export namespace Prisma {
     messages?: MessageOrderByRelationAggregateInput
     documents?: GroupDocumentOrderByRelationAggregateInput
     deletionRequest?: ConversationDeletionRequestOrderByWithRelationInput
+    rightPurchase?: DiscussionRightPurchaseOrderByWithRelationInput
   }
 
   export type GroupWhereUniqueInput = Prisma.AtLeast<{
@@ -81804,7 +83258,7 @@ export namespace Prisma {
     lockCodeHash?: StringNullableFilter<"Group"> | string | null
     lockSetByUserId?: StringNullableFilter<"Group"> | string | null
     lockedAt?: DateTimeNullableFilter<"Group"> | Date | string | null
-    hideOldMessagesByUserId?: StringNullableFilter<"Group"> | string | null
+    hiddenByUserId?: StringNullableFilter<"Group"> | string | null
     createdAt?: DateTimeFilter<"Group"> | Date | string
     updatedAt?: DateTimeFilter<"Group"> | Date | string
     department?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
@@ -81813,6 +83267,7 @@ export namespace Prisma {
     messages?: MessageListRelationFilter
     documents?: GroupDocumentListRelationFilter
     deletionRequest?: XOR<ConversationDeletionRequestNullableScalarRelationFilter, ConversationDeletionRequestWhereInput> | null
+    rightPurchase?: XOR<DiscussionRightPurchaseNullableScalarRelationFilter, DiscussionRightPurchaseWhereInput> | null
   }, "id">
 
   export type GroupOrderByWithAggregationInput = {
@@ -81824,7 +83279,7 @@ export namespace Prisma {
     lockCodeHash?: SortOrderInput | SortOrder
     lockSetByUserId?: SortOrderInput | SortOrder
     lockedAt?: SortOrderInput | SortOrder
-    hideOldMessagesByUserId?: SortOrderInput | SortOrder
+    hiddenByUserId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: GroupCountOrderByAggregateInput
@@ -81844,7 +83299,7 @@ export namespace Prisma {
     lockCodeHash?: StringNullableWithAggregatesFilter<"Group"> | string | null
     lockSetByUserId?: StringNullableWithAggregatesFilter<"Group"> | string | null
     lockedAt?: DateTimeNullableWithAggregatesFilter<"Group"> | Date | string | null
-    hideOldMessagesByUserId?: StringNullableWithAggregatesFilter<"Group"> | string | null
+    hiddenByUserId?: StringNullableWithAggregatesFilter<"Group"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Group"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Group"> | Date | string
   }
@@ -82556,6 +84011,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
     requestId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
     orgId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    groupId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
     type?: StringFilter<"PendingSubscriptionPayment"> | string
     createdAt?: DateTimeFilter<"PendingSubscriptionPayment"> | Date | string
   }
@@ -82570,6 +84026,7 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
     orgId?: SortOrderInput | SortOrder
+    groupId?: SortOrderInput | SortOrder
     type?: SortOrder
     createdAt?: SortOrder
   }
@@ -82587,6 +84044,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
     requestId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
     orgId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
+    groupId?: StringNullableFilter<"PendingSubscriptionPayment"> | string | null
     type?: StringFilter<"PendingSubscriptionPayment"> | string
     createdAt?: DateTimeFilter<"PendingSubscriptionPayment"> | Date | string
   }, "id" | "transactionId">
@@ -82601,6 +84059,7 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
     orgId?: SortOrderInput | SortOrder
+    groupId?: SortOrderInput | SortOrder
     type?: SortOrder
     createdAt?: SortOrder
     _count?: PendingSubscriptionPaymentCountOrderByAggregateInput
@@ -82621,6 +84080,7 @@ export namespace Prisma {
     address?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
     requestId?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
     orgId?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
+    groupId?: StringNullableWithAggregatesFilter<"PendingSubscriptionPayment"> | string | null
     type?: StringWithAggregatesFilter<"PendingSubscriptionPayment"> | string
     createdAt?: DateTimeWithAggregatesFilter<"PendingSubscriptionPayment"> | Date | string
   }
@@ -82637,6 +84097,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"PaymentOrder"> | string | null
     requestId?: StringNullableFilter<"PaymentOrder"> | string | null
     orgId?: StringNullableFilter<"PaymentOrder"> | string | null
+    groupId?: StringNullableFilter<"PaymentOrder"> | string | null
     type?: StringFilter<"PaymentOrder"> | string
     amountFcfa?: IntFilter<"PaymentOrder"> | number
     status?: EnumPaymentOrderStatusFilter<"PaymentOrder"> | $Enums.PaymentOrderStatus
@@ -82656,6 +84117,7 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
     orgId?: SortOrderInput | SortOrder
+    groupId?: SortOrderInput | SortOrder
     type?: SortOrder
     amountFcfa?: SortOrder
     status?: SortOrder
@@ -82678,6 +84140,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"PaymentOrder"> | string | null
     requestId?: StringNullableFilter<"PaymentOrder"> | string | null
     orgId?: StringNullableFilter<"PaymentOrder"> | string | null
+    groupId?: StringNullableFilter<"PaymentOrder"> | string | null
     type?: StringFilter<"PaymentOrder"> | string
     amountFcfa?: IntFilter<"PaymentOrder"> | number
     status?: EnumPaymentOrderStatusFilter<"PaymentOrder"> | $Enums.PaymentOrderStatus
@@ -82697,6 +84160,7 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
     orgId?: SortOrderInput | SortOrder
+    groupId?: SortOrderInput | SortOrder
     type?: SortOrder
     amountFcfa?: SortOrder
     status?: SortOrder
@@ -82724,6 +84188,7 @@ export namespace Prisma {
     address?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
     requestId?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
     orgId?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
+    groupId?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
     type?: StringWithAggregatesFilter<"PaymentOrder"> | string
     amountFcfa?: IntWithAggregatesFilter<"PaymentOrder"> | number
     status?: EnumPaymentOrderStatusWithAggregatesFilter<"PaymentOrder"> | $Enums.PaymentOrderStatus
@@ -84445,6 +85910,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -84518,6 +85985,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -84591,6 +86060,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -84664,6 +86135,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -86647,6 +88120,80 @@ export namespace Prisma {
     encryptedDeptKey?: StringFieldUpdateOperationsInput | string
   }
 
+  export type DiscussionRightPurchaseCreateInput = {
+    id?: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
+    group: GroupCreateNestedOneWithoutRightPurchaseInput
+    buyer: UserCreateNestedOneWithoutDiscussionRightsBoughtInput
+    seller: UserCreateNestedOneWithoutDiscussionRightsSoldInput
+  }
+
+  export type DiscussionRightPurchaseUncheckedCreateInput = {
+    id?: string
+    groupId: string
+    buyerId: string
+    sellerId: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
+  }
+
+  export type DiscussionRightPurchaseUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    group?: GroupUpdateOneRequiredWithoutRightPurchaseNestedInput
+    buyer?: UserUpdateOneRequiredWithoutDiscussionRightsBoughtNestedInput
+    seller?: UserUpdateOneRequiredWithoutDiscussionRightsSoldNestedInput
+  }
+
+  export type DiscussionRightPurchaseUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type DiscussionRightPurchaseCreateManyInput = {
+    id?: string
+    groupId: string
+    buyerId: string
+    sellerId: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
+  }
+
+  export type DiscussionRightPurchaseUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type DiscussionRightPurchaseUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+  }
+
   export type GroupCreateInput = {
     id?: string
     name?: string | null
@@ -86654,7 +88201,7 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutConversationsInput
@@ -86663,6 +88210,7 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseCreateNestedOneWithoutGroupInput
   }
 
   export type GroupUncheckedCreateInput = {
@@ -86674,13 +88222,14 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
     messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestUncheckedCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedCreateNestedOneWithoutGroupInput
   }
 
   export type GroupUpdateInput = {
@@ -86690,7 +88239,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutConversationsNestedInput
@@ -86699,6 +88248,7 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateInput = {
@@ -86710,13 +88260,14 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
     messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUncheckedUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupCreateManyInput = {
@@ -86728,7 +88279,7 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -86740,7 +88291,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -86754,7 +88305,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -87470,6 +89021,7 @@ export namespace Prisma {
     address?: string | null
     requestId?: string | null
     orgId?: string | null
+    groupId?: string | null
     type?: string
     createdAt?: Date | string
   }
@@ -87484,6 +89036,7 @@ export namespace Prisma {
     address?: string | null
     requestId?: string | null
     orgId?: string | null
+    groupId?: string | null
     type?: string
     createdAt?: Date | string
   }
@@ -87498,6 +89051,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -87512,6 +89066,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -87526,6 +89081,7 @@ export namespace Prisma {
     address?: string | null
     requestId?: string | null
     orgId?: string | null
+    groupId?: string | null
     type?: string
     createdAt?: Date | string
   }
@@ -87540,6 +89096,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -87554,6 +89111,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -87567,6 +89125,7 @@ export namespace Prisma {
     address?: string | null
     requestId?: string | null
     orgId?: string | null
+    groupId?: string | null
     type?: string
     amountFcfa: number
     status?: $Enums.PaymentOrderStatus
@@ -87586,6 +89145,7 @@ export namespace Prisma {
     address?: string | null
     requestId?: string | null
     orgId?: string | null
+    groupId?: string | null
     type?: string
     amountFcfa: number
     status?: $Enums.PaymentOrderStatus
@@ -87605,6 +89165,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     amountFcfa?: IntFieldUpdateOperationsInput | number
     status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
@@ -87624,6 +89185,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     amountFcfa?: IntFieldUpdateOperationsInput | number
     status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
@@ -87643,6 +89205,7 @@ export namespace Prisma {
     address?: string | null
     requestId?: string | null
     orgId?: string | null
+    groupId?: string | null
     type?: string
     amountFcfa: number
     status?: $Enums.PaymentOrderStatus
@@ -87662,6 +89225,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     amountFcfa?: IntFieldUpdateOperationsInput | number
     status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
@@ -87681,6 +89245,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     orgId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
     amountFcfa?: IntFieldUpdateOperationsInput | number
     status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
@@ -89682,6 +91247,12 @@ export namespace Prisma {
     none?: ConversationDeletionRequestWhereInput
   }
 
+  export type DiscussionRightPurchaseListRelationFilter = {
+    every?: DiscussionRightPurchaseWhereInput
+    some?: DiscussionRightPurchaseWhereInput
+    none?: DiscussionRightPurchaseWhereInput
+  }
+
   export type FollowListRelationFilter = {
     every?: FollowWhereInput
     some?: FollowWhereInput
@@ -89856,6 +91427,10 @@ export namespace Prisma {
   }
 
   export type ConversationDeletionRequestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DiscussionRightPurchaseOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -91412,6 +92987,61 @@ export namespace Prisma {
     encryptedDeptKey?: SortOrder
   }
 
+  export type EnumDiscussionRightDurationFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscussionRightDuration | EnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscussionRightDuration[] | ListEnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscussionRightDuration[] | ListEnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscussionRightDurationFilter<$PrismaModel> | $Enums.DiscussionRightDuration
+  }
+
+  export type GroupScalarRelationFilter = {
+    is?: GroupWhereInput
+    isNot?: GroupWhereInput
+  }
+
+  export type DiscussionRightPurchaseCountOrderByAggregateInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    duration?: SortOrder
+    purchasedAt?: SortOrder
+    expiresAt?: SortOrder
+    isActive?: SortOrder
+  }
+
+  export type DiscussionRightPurchaseMaxOrderByAggregateInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    duration?: SortOrder
+    purchasedAt?: SortOrder
+    expiresAt?: SortOrder
+    isActive?: SortOrder
+  }
+
+  export type DiscussionRightPurchaseMinOrderByAggregateInput = {
+    id?: SortOrder
+    groupId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    duration?: SortOrder
+    purchasedAt?: SortOrder
+    expiresAt?: SortOrder
+    isActive?: SortOrder
+  }
+
+  export type EnumDiscussionRightDurationWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscussionRightDuration | EnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscussionRightDuration[] | ListEnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscussionRightDuration[] | ListEnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscussionRightDurationWithAggregatesFilter<$PrismaModel> | $Enums.DiscussionRightDuration
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiscussionRightDurationFilter<$PrismaModel>
+    _max?: NestedEnumDiscussionRightDurationFilter<$PrismaModel>
+  }
+
   export type DepartmentNullableScalarRelationFilter = {
     is?: DepartmentWhereInput | null
     isNot?: DepartmentWhereInput | null
@@ -91433,6 +93063,11 @@ export namespace Prisma {
     isNot?: ConversationDeletionRequestWhereInput | null
   }
 
+  export type DiscussionRightPurchaseNullableScalarRelationFilter = {
+    is?: DiscussionRightPurchaseWhereInput | null
+    isNot?: DiscussionRightPurchaseWhereInput | null
+  }
+
   export type GroupDocumentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -91446,7 +93081,7 @@ export namespace Prisma {
     lockCodeHash?: SortOrder
     lockSetByUserId?: SortOrder
     lockedAt?: SortOrder
-    hideOldMessagesByUserId?: SortOrder
+    hiddenByUserId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -91460,7 +93095,7 @@ export namespace Prisma {
     lockCodeHash?: SortOrder
     lockSetByUserId?: SortOrder
     lockedAt?: SortOrder
-    hideOldMessagesByUserId?: SortOrder
+    hiddenByUserId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -91474,14 +93109,9 @@ export namespace Prisma {
     lockCodeHash?: SortOrder
     lockSetByUserId?: SortOrder
     lockedAt?: SortOrder
-    hideOldMessagesByUserId?: SortOrder
+    hiddenByUserId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type GroupScalarRelationFilter = {
-    is?: GroupWhereInput
-    isNot?: GroupWhereInput
   }
 
   export type ConversationDeletionRequestCountOrderByAggregateInput = {
@@ -91874,6 +93504,7 @@ export namespace Prisma {
     address?: SortOrder
     requestId?: SortOrder
     orgId?: SortOrder
+    groupId?: SortOrder
     type?: SortOrder
     createdAt?: SortOrder
   }
@@ -91888,6 +93519,7 @@ export namespace Prisma {
     address?: SortOrder
     requestId?: SortOrder
     orgId?: SortOrder
+    groupId?: SortOrder
     type?: SortOrder
     createdAt?: SortOrder
   }
@@ -91902,6 +93534,7 @@ export namespace Prisma {
     address?: SortOrder
     requestId?: SortOrder
     orgId?: SortOrder
+    groupId?: SortOrder
     type?: SortOrder
     createdAt?: SortOrder
   }
@@ -91922,6 +93555,7 @@ export namespace Prisma {
     address?: SortOrder
     requestId?: SortOrder
     orgId?: SortOrder
+    groupId?: SortOrder
     type?: SortOrder
     amountFcfa?: SortOrder
     status?: SortOrder
@@ -91945,6 +93579,7 @@ export namespace Prisma {
     address?: SortOrder
     requestId?: SortOrder
     orgId?: SortOrder
+    groupId?: SortOrder
     type?: SortOrder
     amountFcfa?: SortOrder
     status?: SortOrder
@@ -91964,6 +93599,7 @@ export namespace Prisma {
     address?: SortOrder
     requestId?: SortOrder
     orgId?: SortOrder
+    groupId?: SortOrder
     type?: SortOrder
     amountFcfa?: SortOrder
     status?: SortOrder
@@ -93258,6 +94894,20 @@ export namespace Prisma {
     connect?: ConversationDeletionRequestWhereUniqueInput | ConversationDeletionRequestWhereUniqueInput[]
   }
 
+  export type DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutBuyerInput, DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput> | DiscussionRightPurchaseCreateWithoutBuyerInput[] | DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutBuyerInput | DiscussionRightPurchaseCreateOrConnectWithoutBuyerInput[]
+    createMany?: DiscussionRightPurchaseCreateManyBuyerInputEnvelope
+    connect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+  }
+
+  export type DiscussionRightPurchaseCreateNestedManyWithoutSellerInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutSellerInput, DiscussionRightPurchaseUncheckedCreateWithoutSellerInput> | DiscussionRightPurchaseCreateWithoutSellerInput[] | DiscussionRightPurchaseUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutSellerInput | DiscussionRightPurchaseCreateOrConnectWithoutSellerInput[]
+    createMany?: DiscussionRightPurchaseCreateManySellerInputEnvelope
+    connect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+  }
+
   export type FollowCreateNestedManyWithoutFollowingInput = {
     create?: XOR<FollowCreateWithoutFollowingInput, FollowUncheckedCreateWithoutFollowingInput> | FollowCreateWithoutFollowingInput[] | FollowUncheckedCreateWithoutFollowingInput[]
     connectOrCreate?: FollowCreateOrConnectWithoutFollowingInput | FollowCreateOrConnectWithoutFollowingInput[]
@@ -93574,6 +95224,20 @@ export namespace Prisma {
     connectOrCreate?: ConversationDeletionRequestCreateOrConnectWithoutRequesterInput | ConversationDeletionRequestCreateOrConnectWithoutRequesterInput[]
     createMany?: ConversationDeletionRequestCreateManyRequesterInputEnvelope
     connect?: ConversationDeletionRequestWhereUniqueInput | ConversationDeletionRequestWhereUniqueInput[]
+  }
+
+  export type DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutBuyerInput, DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput> | DiscussionRightPurchaseCreateWithoutBuyerInput[] | DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutBuyerInput | DiscussionRightPurchaseCreateOrConnectWithoutBuyerInput[]
+    createMany?: DiscussionRightPurchaseCreateManyBuyerInputEnvelope
+    connect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+  }
+
+  export type DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutSellerInput, DiscussionRightPurchaseUncheckedCreateWithoutSellerInput> | DiscussionRightPurchaseCreateWithoutSellerInput[] | DiscussionRightPurchaseUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutSellerInput | DiscussionRightPurchaseCreateOrConnectWithoutSellerInput[]
+    createMany?: DiscussionRightPurchaseCreateManySellerInputEnvelope
+    connect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
   }
 
   export type FollowUncheckedCreateNestedManyWithoutFollowingInput = {
@@ -94114,6 +95778,34 @@ export namespace Prisma {
     update?: ConversationDeletionRequestUpdateWithWhereUniqueWithoutRequesterInput | ConversationDeletionRequestUpdateWithWhereUniqueWithoutRequesterInput[]
     updateMany?: ConversationDeletionRequestUpdateManyWithWhereWithoutRequesterInput | ConversationDeletionRequestUpdateManyWithWhereWithoutRequesterInput[]
     deleteMany?: ConversationDeletionRequestScalarWhereInput | ConversationDeletionRequestScalarWhereInput[]
+  }
+
+  export type DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutBuyerInput, DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput> | DiscussionRightPurchaseCreateWithoutBuyerInput[] | DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutBuyerInput | DiscussionRightPurchaseCreateOrConnectWithoutBuyerInput[]
+    upsert?: DiscussionRightPurchaseUpsertWithWhereUniqueWithoutBuyerInput | DiscussionRightPurchaseUpsertWithWhereUniqueWithoutBuyerInput[]
+    createMany?: DiscussionRightPurchaseCreateManyBuyerInputEnvelope
+    set?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    disconnect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    delete?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    connect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    update?: DiscussionRightPurchaseUpdateWithWhereUniqueWithoutBuyerInput | DiscussionRightPurchaseUpdateWithWhereUniqueWithoutBuyerInput[]
+    updateMany?: DiscussionRightPurchaseUpdateManyWithWhereWithoutBuyerInput | DiscussionRightPurchaseUpdateManyWithWhereWithoutBuyerInput[]
+    deleteMany?: DiscussionRightPurchaseScalarWhereInput | DiscussionRightPurchaseScalarWhereInput[]
+  }
+
+  export type DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutSellerInput, DiscussionRightPurchaseUncheckedCreateWithoutSellerInput> | DiscussionRightPurchaseCreateWithoutSellerInput[] | DiscussionRightPurchaseUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutSellerInput | DiscussionRightPurchaseCreateOrConnectWithoutSellerInput[]
+    upsert?: DiscussionRightPurchaseUpsertWithWhereUniqueWithoutSellerInput | DiscussionRightPurchaseUpsertWithWhereUniqueWithoutSellerInput[]
+    createMany?: DiscussionRightPurchaseCreateManySellerInputEnvelope
+    set?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    disconnect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    delete?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    connect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    update?: DiscussionRightPurchaseUpdateWithWhereUniqueWithoutSellerInput | DiscussionRightPurchaseUpdateWithWhereUniqueWithoutSellerInput[]
+    updateMany?: DiscussionRightPurchaseUpdateManyWithWhereWithoutSellerInput | DiscussionRightPurchaseUpdateManyWithWhereWithoutSellerInput[]
+    deleteMany?: DiscussionRightPurchaseScalarWhereInput | DiscussionRightPurchaseScalarWhereInput[]
   }
 
   export type FollowUpdateManyWithoutFollowingNestedInput = {
@@ -94742,6 +96434,34 @@ export namespace Prisma {
     update?: ConversationDeletionRequestUpdateWithWhereUniqueWithoutRequesterInput | ConversationDeletionRequestUpdateWithWhereUniqueWithoutRequesterInput[]
     updateMany?: ConversationDeletionRequestUpdateManyWithWhereWithoutRequesterInput | ConversationDeletionRequestUpdateManyWithWhereWithoutRequesterInput[]
     deleteMany?: ConversationDeletionRequestScalarWhereInput | ConversationDeletionRequestScalarWhereInput[]
+  }
+
+  export type DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutBuyerInput, DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput> | DiscussionRightPurchaseCreateWithoutBuyerInput[] | DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutBuyerInput | DiscussionRightPurchaseCreateOrConnectWithoutBuyerInput[]
+    upsert?: DiscussionRightPurchaseUpsertWithWhereUniqueWithoutBuyerInput | DiscussionRightPurchaseUpsertWithWhereUniqueWithoutBuyerInput[]
+    createMany?: DiscussionRightPurchaseCreateManyBuyerInputEnvelope
+    set?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    disconnect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    delete?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    connect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    update?: DiscussionRightPurchaseUpdateWithWhereUniqueWithoutBuyerInput | DiscussionRightPurchaseUpdateWithWhereUniqueWithoutBuyerInput[]
+    updateMany?: DiscussionRightPurchaseUpdateManyWithWhereWithoutBuyerInput | DiscussionRightPurchaseUpdateManyWithWhereWithoutBuyerInput[]
+    deleteMany?: DiscussionRightPurchaseScalarWhereInput | DiscussionRightPurchaseScalarWhereInput[]
+  }
+
+  export type DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutSellerInput, DiscussionRightPurchaseUncheckedCreateWithoutSellerInput> | DiscussionRightPurchaseCreateWithoutSellerInput[] | DiscussionRightPurchaseUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutSellerInput | DiscussionRightPurchaseCreateOrConnectWithoutSellerInput[]
+    upsert?: DiscussionRightPurchaseUpsertWithWhereUniqueWithoutSellerInput | DiscussionRightPurchaseUpsertWithWhereUniqueWithoutSellerInput[]
+    createMany?: DiscussionRightPurchaseCreateManySellerInputEnvelope
+    set?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    disconnect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    delete?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    connect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+    update?: DiscussionRightPurchaseUpdateWithWhereUniqueWithoutSellerInput | DiscussionRightPurchaseUpdateWithWhereUniqueWithoutSellerInput[]
+    updateMany?: DiscussionRightPurchaseUpdateManyWithWhereWithoutSellerInput | DiscussionRightPurchaseUpdateManyWithWhereWithoutSellerInput[]
+    deleteMany?: DiscussionRightPurchaseScalarWhereInput | DiscussionRightPurchaseScalarWhereInput[]
   }
 
   export type FollowUncheckedUpdateManyWithoutFollowingNestedInput = {
@@ -96890,6 +98610,52 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDeptMembershipsInput, UserUpdateWithoutDeptMembershipsInput>, UserUncheckedUpdateWithoutDeptMembershipsInput>
   }
 
+  export type GroupCreateNestedOneWithoutRightPurchaseInput = {
+    create?: XOR<GroupCreateWithoutRightPurchaseInput, GroupUncheckedCreateWithoutRightPurchaseInput>
+    connectOrCreate?: GroupCreateOrConnectWithoutRightPurchaseInput
+    connect?: GroupWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutDiscussionRightsBoughtInput = {
+    create?: XOR<UserCreateWithoutDiscussionRightsBoughtInput, UserUncheckedCreateWithoutDiscussionRightsBoughtInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDiscussionRightsBoughtInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutDiscussionRightsSoldInput = {
+    create?: XOR<UserCreateWithoutDiscussionRightsSoldInput, UserUncheckedCreateWithoutDiscussionRightsSoldInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDiscussionRightsSoldInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumDiscussionRightDurationFieldUpdateOperationsInput = {
+    set?: $Enums.DiscussionRightDuration
+  }
+
+  export type GroupUpdateOneRequiredWithoutRightPurchaseNestedInput = {
+    create?: XOR<GroupCreateWithoutRightPurchaseInput, GroupUncheckedCreateWithoutRightPurchaseInput>
+    connectOrCreate?: GroupCreateOrConnectWithoutRightPurchaseInput
+    upsert?: GroupUpsertWithoutRightPurchaseInput
+    connect?: GroupWhereUniqueInput
+    update?: XOR<XOR<GroupUpdateToOneWithWhereWithoutRightPurchaseInput, GroupUpdateWithoutRightPurchaseInput>, GroupUncheckedUpdateWithoutRightPurchaseInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutDiscussionRightsBoughtNestedInput = {
+    create?: XOR<UserCreateWithoutDiscussionRightsBoughtInput, UserUncheckedCreateWithoutDiscussionRightsBoughtInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDiscussionRightsBoughtInput
+    upsert?: UserUpsertWithoutDiscussionRightsBoughtInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDiscussionRightsBoughtInput, UserUpdateWithoutDiscussionRightsBoughtInput>, UserUncheckedUpdateWithoutDiscussionRightsBoughtInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutDiscussionRightsSoldNestedInput = {
+    create?: XOR<UserCreateWithoutDiscussionRightsSoldInput, UserUncheckedCreateWithoutDiscussionRightsSoldInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDiscussionRightsSoldInput
+    upsert?: UserUpsertWithoutDiscussionRightsSoldInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDiscussionRightsSoldInput, UserUpdateWithoutDiscussionRightsSoldInput>, UserUncheckedUpdateWithoutDiscussionRightsSoldInput>
+  }
+
   export type DepartmentCreateNestedOneWithoutConversationsInput = {
     create?: XOR<DepartmentCreateWithoutConversationsInput, DepartmentUncheckedCreateWithoutConversationsInput>
     connectOrCreate?: DepartmentCreateOrConnectWithoutConversationsInput
@@ -96929,6 +98695,12 @@ export namespace Prisma {
     connect?: ConversationDeletionRequestWhereUniqueInput
   }
 
+  export type DiscussionRightPurchaseCreateNestedOneWithoutGroupInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutGroupInput, DiscussionRightPurchaseUncheckedCreateWithoutGroupInput>
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutGroupInput
+    connect?: DiscussionRightPurchaseWhereUniqueInput
+  }
+
   export type GroupMemberUncheckedCreateNestedManyWithoutGroupInput = {
     create?: XOR<GroupMemberCreateWithoutGroupInput, GroupMemberUncheckedCreateWithoutGroupInput> | GroupMemberCreateWithoutGroupInput[] | GroupMemberUncheckedCreateWithoutGroupInput[]
     connectOrCreate?: GroupMemberCreateOrConnectWithoutGroupInput | GroupMemberCreateOrConnectWithoutGroupInput[]
@@ -96954,6 +98726,12 @@ export namespace Prisma {
     create?: XOR<ConversationDeletionRequestCreateWithoutGroupInput, ConversationDeletionRequestUncheckedCreateWithoutGroupInput>
     connectOrCreate?: ConversationDeletionRequestCreateOrConnectWithoutGroupInput
     connect?: ConversationDeletionRequestWhereUniqueInput
+  }
+
+  export type DiscussionRightPurchaseUncheckedCreateNestedOneWithoutGroupInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutGroupInput, DiscussionRightPurchaseUncheckedCreateWithoutGroupInput>
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutGroupInput
+    connect?: DiscussionRightPurchaseWhereUniqueInput
   }
 
   export type DepartmentUpdateOneWithoutConversationsNestedInput = {
@@ -97028,6 +98806,16 @@ export namespace Prisma {
     update?: XOR<XOR<ConversationDeletionRequestUpdateToOneWithWhereWithoutGroupInput, ConversationDeletionRequestUpdateWithoutGroupInput>, ConversationDeletionRequestUncheckedUpdateWithoutGroupInput>
   }
 
+  export type DiscussionRightPurchaseUpdateOneWithoutGroupNestedInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutGroupInput, DiscussionRightPurchaseUncheckedCreateWithoutGroupInput>
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutGroupInput
+    upsert?: DiscussionRightPurchaseUpsertWithoutGroupInput
+    disconnect?: DiscussionRightPurchaseWhereInput | boolean
+    delete?: DiscussionRightPurchaseWhereInput | boolean
+    connect?: DiscussionRightPurchaseWhereUniqueInput
+    update?: XOR<XOR<DiscussionRightPurchaseUpdateToOneWithWhereWithoutGroupInput, DiscussionRightPurchaseUpdateWithoutGroupInput>, DiscussionRightPurchaseUncheckedUpdateWithoutGroupInput>
+  }
+
   export type GroupMemberUncheckedUpdateManyWithoutGroupNestedInput = {
     create?: XOR<GroupMemberCreateWithoutGroupInput, GroupMemberUncheckedCreateWithoutGroupInput> | GroupMemberCreateWithoutGroupInput[] | GroupMemberUncheckedCreateWithoutGroupInput[]
     connectOrCreate?: GroupMemberCreateOrConnectWithoutGroupInput | GroupMemberCreateOrConnectWithoutGroupInput[]
@@ -97078,6 +98866,16 @@ export namespace Prisma {
     delete?: ConversationDeletionRequestWhereInput | boolean
     connect?: ConversationDeletionRequestWhereUniqueInput
     update?: XOR<XOR<ConversationDeletionRequestUpdateToOneWithWhereWithoutGroupInput, ConversationDeletionRequestUpdateWithoutGroupInput>, ConversationDeletionRequestUncheckedUpdateWithoutGroupInput>
+  }
+
+  export type DiscussionRightPurchaseUncheckedUpdateOneWithoutGroupNestedInput = {
+    create?: XOR<DiscussionRightPurchaseCreateWithoutGroupInput, DiscussionRightPurchaseUncheckedCreateWithoutGroupInput>
+    connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutGroupInput
+    upsert?: DiscussionRightPurchaseUpsertWithoutGroupInput
+    disconnect?: DiscussionRightPurchaseWhereInput | boolean
+    delete?: DiscussionRightPurchaseWhereInput | boolean
+    connect?: DiscussionRightPurchaseWhereUniqueInput
+    update?: XOR<XOR<DiscussionRightPurchaseUpdateToOneWithWhereWithoutGroupInput, DiscussionRightPurchaseUpdateWithoutGroupInput>, DiscussionRightPurchaseUncheckedUpdateWithoutGroupInput>
   }
 
   export type GroupCreateNestedOneWithoutDeletionRequestInput = {
@@ -98897,6 +100695,23 @@ export namespace Prisma {
     _max?: NestedEnumDecisionVoteTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumDiscussionRightDurationFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscussionRightDuration | EnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscussionRightDuration[] | ListEnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscussionRightDuration[] | ListEnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscussionRightDurationFilter<$PrismaModel> | $Enums.DiscussionRightDuration
+  }
+
+  export type NestedEnumDiscussionRightDurationWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscussionRightDuration | EnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscussionRightDuration[] | ListEnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscussionRightDuration[] | ListEnumDiscussionRightDurationFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscussionRightDurationWithAggregatesFilter<$PrismaModel> | $Enums.DiscussionRightDuration
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiscussionRightDurationFilter<$PrismaModel>
+    _max?: NestedEnumDiscussionRightDurationFilter<$PrismaModel>
+  }
+
   export type NestedEnumRequestStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.RequestStatus | EnumRequestStatusFieldRefInput<$PrismaModel>
     in?: $Enums.RequestStatus[] | ListEnumRequestStatusFieldRefInput<$PrismaModel>
@@ -99968,6 +101783,66 @@ export namespace Prisma {
 
   export type ConversationDeletionRequestCreateManyRequesterInputEnvelope = {
     data: ConversationDeletionRequestCreateManyRequesterInput | ConversationDeletionRequestCreateManyRequesterInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DiscussionRightPurchaseCreateWithoutBuyerInput = {
+    id?: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
+    group: GroupCreateNestedOneWithoutRightPurchaseInput
+    seller: UserCreateNestedOneWithoutDiscussionRightsSoldInput
+  }
+
+  export type DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput = {
+    id?: string
+    groupId: string
+    sellerId: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
+  }
+
+  export type DiscussionRightPurchaseCreateOrConnectWithoutBuyerInput = {
+    where: DiscussionRightPurchaseWhereUniqueInput
+    create: XOR<DiscussionRightPurchaseCreateWithoutBuyerInput, DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput>
+  }
+
+  export type DiscussionRightPurchaseCreateManyBuyerInputEnvelope = {
+    data: DiscussionRightPurchaseCreateManyBuyerInput | DiscussionRightPurchaseCreateManyBuyerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DiscussionRightPurchaseCreateWithoutSellerInput = {
+    id?: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
+    group: GroupCreateNestedOneWithoutRightPurchaseInput
+    buyer: UserCreateNestedOneWithoutDiscussionRightsBoughtInput
+  }
+
+  export type DiscussionRightPurchaseUncheckedCreateWithoutSellerInput = {
+    id?: string
+    groupId: string
+    buyerId: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
+  }
+
+  export type DiscussionRightPurchaseCreateOrConnectWithoutSellerInput = {
+    where: DiscussionRightPurchaseWhereUniqueInput
+    create: XOR<DiscussionRightPurchaseCreateWithoutSellerInput, DiscussionRightPurchaseUncheckedCreateWithoutSellerInput>
+  }
+
+  export type DiscussionRightPurchaseCreateManySellerInputEnvelope = {
+    data: DiscussionRightPurchaseCreateManySellerInput | DiscussionRightPurchaseCreateManySellerInput[]
     skipDuplicates?: boolean
   }
 
@@ -101377,6 +103252,52 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ConversationDeletionRequest"> | Date | string
   }
 
+  export type DiscussionRightPurchaseUpsertWithWhereUniqueWithoutBuyerInput = {
+    where: DiscussionRightPurchaseWhereUniqueInput
+    update: XOR<DiscussionRightPurchaseUpdateWithoutBuyerInput, DiscussionRightPurchaseUncheckedUpdateWithoutBuyerInput>
+    create: XOR<DiscussionRightPurchaseCreateWithoutBuyerInput, DiscussionRightPurchaseUncheckedCreateWithoutBuyerInput>
+  }
+
+  export type DiscussionRightPurchaseUpdateWithWhereUniqueWithoutBuyerInput = {
+    where: DiscussionRightPurchaseWhereUniqueInput
+    data: XOR<DiscussionRightPurchaseUpdateWithoutBuyerInput, DiscussionRightPurchaseUncheckedUpdateWithoutBuyerInput>
+  }
+
+  export type DiscussionRightPurchaseUpdateManyWithWhereWithoutBuyerInput = {
+    where: DiscussionRightPurchaseScalarWhereInput
+    data: XOR<DiscussionRightPurchaseUpdateManyMutationInput, DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerInput>
+  }
+
+  export type DiscussionRightPurchaseScalarWhereInput = {
+    AND?: DiscussionRightPurchaseScalarWhereInput | DiscussionRightPurchaseScalarWhereInput[]
+    OR?: DiscussionRightPurchaseScalarWhereInput[]
+    NOT?: DiscussionRightPurchaseScalarWhereInput | DiscussionRightPurchaseScalarWhereInput[]
+    id?: StringFilter<"DiscussionRightPurchase"> | string
+    groupId?: StringFilter<"DiscussionRightPurchase"> | string
+    buyerId?: StringFilter<"DiscussionRightPurchase"> | string
+    sellerId?: StringFilter<"DiscussionRightPurchase"> | string
+    duration?: EnumDiscussionRightDurationFilter<"DiscussionRightPurchase"> | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFilter<"DiscussionRightPurchase"> | Date | string
+    expiresAt?: DateTimeFilter<"DiscussionRightPurchase"> | Date | string
+    isActive?: BoolFilter<"DiscussionRightPurchase"> | boolean
+  }
+
+  export type DiscussionRightPurchaseUpsertWithWhereUniqueWithoutSellerInput = {
+    where: DiscussionRightPurchaseWhereUniqueInput
+    update: XOR<DiscussionRightPurchaseUpdateWithoutSellerInput, DiscussionRightPurchaseUncheckedUpdateWithoutSellerInput>
+    create: XOR<DiscussionRightPurchaseCreateWithoutSellerInput, DiscussionRightPurchaseUncheckedCreateWithoutSellerInput>
+  }
+
+  export type DiscussionRightPurchaseUpdateWithWhereUniqueWithoutSellerInput = {
+    where: DiscussionRightPurchaseWhereUniqueInput
+    data: XOR<DiscussionRightPurchaseUpdateWithoutSellerInput, DiscussionRightPurchaseUncheckedUpdateWithoutSellerInput>
+  }
+
+  export type DiscussionRightPurchaseUpdateManyWithWhereWithoutSellerInput = {
+    where: DiscussionRightPurchaseScalarWhereInput
+    data: XOR<DiscussionRightPurchaseUpdateManyMutationInput, DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerInput>
+  }
+
   export type FollowUpsertWithWhereUniqueWithoutFollowingInput = {
     where: FollowWhereUniqueInput
     update: XOR<FollowUpdateWithoutFollowingInput, FollowUncheckedUpdateWithoutFollowingInput>
@@ -101863,6 +103784,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -101935,6 +103858,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -102047,6 +103972,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -102119,6 +104046,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -102299,6 +104228,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
@@ -102371,6 +104302,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
@@ -102448,6 +104381,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
@@ -102520,6 +104455,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
@@ -102608,6 +104545,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
@@ -102680,6 +104619,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -102763,6 +104704,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
@@ -102835,6 +104778,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -103566,6 +105511,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -103638,6 +105585,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -103693,7 +105642,7 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutConversationsInput
@@ -103701,6 +105650,7 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseCreateNestedOneWithoutGroupInput
   }
 
   export type GroupUncheckedCreateWithoutCollaborationGroupInput = {
@@ -103711,13 +105661,14 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
     messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestUncheckedCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedCreateNestedOneWithoutGroupInput
   }
 
   export type GroupCreateOrConnectWithoutCollaborationGroupInput = {
@@ -103971,6 +105922,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -104043,6 +105996,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -104104,7 +106059,7 @@ export namespace Prisma {
     lockCodeHash?: StringNullableFilter<"Group"> | string | null
     lockSetByUserId?: StringNullableFilter<"Group"> | string | null
     lockedAt?: DateTimeNullableFilter<"Group"> | Date | string | null
-    hideOldMessagesByUserId?: StringNullableFilter<"Group"> | string | null
+    hiddenByUserId?: StringNullableFilter<"Group"> | string | null
     createdAt?: DateTimeFilter<"Group"> | Date | string
     updatedAt?: DateTimeFilter<"Group"> | Date | string
   }
@@ -104263,6 +106218,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -104335,6 +106292,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -104505,6 +106464,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -104577,6 +106538,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -104731,6 +106694,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -104803,6 +106768,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -104880,6 +106847,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -104952,6 +106921,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -105081,6 +107052,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -105153,6 +107126,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -105236,6 +107211,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -105308,6 +107285,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -105415,6 +107394,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -105487,6 +107468,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -105616,6 +107599,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -105688,6 +107673,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -105795,6 +107782,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -105867,6 +107856,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -105996,6 +107987,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -106068,6 +108061,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -106175,6 +108170,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -106247,6 +108244,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -106324,6 +108323,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -106396,6 +108397,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -106525,6 +108528,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -106597,6 +108602,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -106680,6 +108687,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -106752,6 +108761,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -106871,6 +108882,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -106943,6 +108956,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -107020,6 +109035,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -107092,6 +109109,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -107233,6 +109252,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -107305,6 +109326,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -107388,6 +109411,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -107460,6 +109485,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -107572,6 +109599,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -107644,6 +109673,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -107779,6 +109810,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -107851,6 +109884,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -107964,6 +109999,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -108036,6 +110073,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -108088,7 +110127,7 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     collaborationGroup?: CollaborationGroupCreateNestedOneWithoutConversationsInput
@@ -108096,6 +110135,7 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseCreateNestedOneWithoutGroupInput
   }
 
   export type GroupUncheckedCreateWithoutDepartmentInput = {
@@ -108106,13 +110146,14 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
     messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestUncheckedCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedCreateNestedOneWithoutGroupInput
   }
 
   export type GroupCreateOrConnectWithoutDepartmentInput = {
@@ -108571,6 +110612,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -108643,6 +110686,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -108981,6 +111026,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -109053,6 +111100,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -109194,6 +111243,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -109266,6 +111317,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -109385,6 +111438,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
@@ -109457,6 +111512,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
@@ -109598,6 +111655,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
@@ -109670,6 +111729,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -109888,6 +111949,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -109960,6 +112023,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -110101,6 +112166,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -110173,6 +112240,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -110292,6 +112361,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -110364,6 +112435,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -110529,6 +112602,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -110601,6 +112676,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -110716,6 +112793,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -110788,6 +112867,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -110909,6 +112990,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -110981,6 +113064,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -111100,6 +113185,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -111172,6 +113259,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -111337,6 +113426,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -111409,6 +113500,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -111526,6 +113619,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -111598,6 +113693,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -111721,6 +113818,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -111793,6 +113892,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -111912,6 +114013,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -111984,6 +114087,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -112125,6 +114230,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -112197,6 +114304,720 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
+    collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    headedCollaborationGroups?: CollaborationGroupUncheckedUpdateManyWithoutHeadNestedInput
+    createdCollaborationTasks?: CollaborationTaskUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedCollaborationTasks?: CollaborationTaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    uploadedCollaborationDocs?: CollaborationDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    collaborationNotes?: CollaborationNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    createdEditorialItems?: CollaborationEditorialItemUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedEditorialItems?: CollaborationEditorialItemUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  }
+
+  export type GroupCreateWithoutRightPurchaseInput = {
+    id?: string
+    name?: string | null
+    isDirect?: boolean
+    lockCodeHash?: string | null
+    lockSetByUserId?: string | null
+    lockedAt?: Date | string | null
+    hiddenByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department?: DepartmentCreateNestedOneWithoutConversationsInput
+    collaborationGroup?: CollaborationGroupCreateNestedOneWithoutConversationsInput
+    members?: GroupMemberCreateNestedManyWithoutGroupInput
+    messages?: MessageCreateNestedManyWithoutGroupInput
+    documents?: GroupDocumentCreateNestedManyWithoutGroupInput
+    deletionRequest?: ConversationDeletionRequestCreateNestedOneWithoutGroupInput
+  }
+
+  export type GroupUncheckedCreateWithoutRightPurchaseInput = {
+    id?: string
+    name?: string | null
+    isDirect?: boolean
+    deptId?: string | null
+    collaborationGroupId?: string | null
+    lockCodeHash?: string | null
+    lockSetByUserId?: string | null
+    lockedAt?: Date | string | null
+    hiddenByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
+    messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
+    documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
+    deletionRequest?: ConversationDeletionRequestUncheckedCreateNestedOneWithoutGroupInput
+  }
+
+  export type GroupCreateOrConnectWithoutRightPurchaseInput = {
+    where: GroupWhereUniqueInput
+    create: XOR<GroupCreateWithoutRightPurchaseInput, GroupUncheckedCreateWithoutRightPurchaseInput>
+  }
+
+  export type UserCreateWithoutDiscussionRightsBoughtInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    proSubscription?: UserProSubscriptionCreateNestedOneWithoutUserInput
+    proSettings?: UserProSettingsCreateNestedOneWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
+    collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutUserInput
+    headedCollaborationGroups?: CollaborationGroupCreateNestedManyWithoutHeadInput
+    createdCollaborationTasks?: CollaborationTaskCreateNestedManyWithoutCreatorInput
+    assignedCollaborationTasks?: CollaborationTaskCreateNestedManyWithoutAssigneeInput
+    uploadedCollaborationDocs?: CollaborationDocumentCreateNestedManyWithoutUploaderInput
+    collaborationNotes?: CollaborationNoteCreateNestedManyWithoutCreatorInput
+    createdEditorialItems?: CollaborationEditorialItemCreateNestedManyWithoutCreatorInput
+    assignedEditorialItems?: CollaborationEditorialItemCreateNestedManyWithoutAssigneeInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemCreateNestedManyWithoutCreatorInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemCreateNestedManyWithoutAssigneeInput
+  }
+
+  export type UserUncheckedCreateWithoutDiscussionRightsBoughtInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    proSubscription?: UserProSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    proSettings?: UserProSettingsUncheckedCreateNestedOneWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
+    collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutUserInput
+    headedCollaborationGroups?: CollaborationGroupUncheckedCreateNestedManyWithoutHeadInput
+    createdCollaborationTasks?: CollaborationTaskUncheckedCreateNestedManyWithoutCreatorInput
+    assignedCollaborationTasks?: CollaborationTaskUncheckedCreateNestedManyWithoutAssigneeInput
+    uploadedCollaborationDocs?: CollaborationDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    collaborationNotes?: CollaborationNoteUncheckedCreateNestedManyWithoutCreatorInput
+    createdEditorialItems?: CollaborationEditorialItemUncheckedCreateNestedManyWithoutCreatorInput
+    assignedEditorialItems?: CollaborationEditorialItemUncheckedCreateNestedManyWithoutAssigneeInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemUncheckedCreateNestedManyWithoutCreatorInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemUncheckedCreateNestedManyWithoutAssigneeInput
+  }
+
+  export type UserCreateOrConnectWithoutDiscussionRightsBoughtInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDiscussionRightsBoughtInput, UserUncheckedCreateWithoutDiscussionRightsBoughtInput>
+  }
+
+  export type UserCreateWithoutDiscussionRightsSoldInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    proSubscription?: UserProSubscriptionCreateNestedOneWithoutUserInput
+    proSettings?: UserProSettingsCreateNestedOneWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
+    collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutUserInput
+    headedCollaborationGroups?: CollaborationGroupCreateNestedManyWithoutHeadInput
+    createdCollaborationTasks?: CollaborationTaskCreateNestedManyWithoutCreatorInput
+    assignedCollaborationTasks?: CollaborationTaskCreateNestedManyWithoutAssigneeInput
+    uploadedCollaborationDocs?: CollaborationDocumentCreateNestedManyWithoutUploaderInput
+    collaborationNotes?: CollaborationNoteCreateNestedManyWithoutCreatorInput
+    createdEditorialItems?: CollaborationEditorialItemCreateNestedManyWithoutCreatorInput
+    assignedEditorialItems?: CollaborationEditorialItemCreateNestedManyWithoutAssigneeInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemCreateNestedManyWithoutCreatorInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemCreateNestedManyWithoutAssigneeInput
+  }
+
+  export type UserUncheckedCreateWithoutDiscussionRightsSoldInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    proSubscription?: UserProSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    proSettings?: UserProSettingsUncheckedCreateNestedOneWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
+    collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutUserInput
+    headedCollaborationGroups?: CollaborationGroupUncheckedCreateNestedManyWithoutHeadInput
+    createdCollaborationTasks?: CollaborationTaskUncheckedCreateNestedManyWithoutCreatorInput
+    assignedCollaborationTasks?: CollaborationTaskUncheckedCreateNestedManyWithoutAssigneeInput
+    uploadedCollaborationDocs?: CollaborationDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    collaborationNotes?: CollaborationNoteUncheckedCreateNestedManyWithoutCreatorInput
+    createdEditorialItems?: CollaborationEditorialItemUncheckedCreateNestedManyWithoutCreatorInput
+    assignedEditorialItems?: CollaborationEditorialItemUncheckedCreateNestedManyWithoutAssigneeInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemUncheckedCreateNestedManyWithoutCreatorInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemUncheckedCreateNestedManyWithoutAssigneeInput
+  }
+
+  export type UserCreateOrConnectWithoutDiscussionRightsSoldInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDiscussionRightsSoldInput, UserUncheckedCreateWithoutDiscussionRightsSoldInput>
+  }
+
+  export type GroupUpsertWithoutRightPurchaseInput = {
+    update: XOR<GroupUpdateWithoutRightPurchaseInput, GroupUncheckedUpdateWithoutRightPurchaseInput>
+    create: XOR<GroupCreateWithoutRightPurchaseInput, GroupUncheckedCreateWithoutRightPurchaseInput>
+    where?: GroupWhereInput
+  }
+
+  export type GroupUpdateToOneWithWhereWithoutRightPurchaseInput = {
+    where?: GroupWhereInput
+    data: XOR<GroupUpdateWithoutRightPurchaseInput, GroupUncheckedUpdateWithoutRightPurchaseInput>
+  }
+
+  export type GroupUpdateWithoutRightPurchaseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    isDirect?: BoolFieldUpdateOperationsInput | boolean
+    lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
+    lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneWithoutConversationsNestedInput
+    collaborationGroup?: CollaborationGroupUpdateOneWithoutConversationsNestedInput
+    members?: GroupMemberUpdateManyWithoutGroupNestedInput
+    messages?: MessageUpdateManyWithoutGroupNestedInput
+    documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
+    deletionRequest?: ConversationDeletionRequestUpdateOneWithoutGroupNestedInput
+  }
+
+  export type GroupUncheckedUpdateWithoutRightPurchaseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    isDirect?: BoolFieldUpdateOperationsInput | boolean
+    deptId?: NullableStringFieldUpdateOperationsInput | string | null
+    collaborationGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
+    lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
+    documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
+    deletionRequest?: ConversationDeletionRequestUncheckedUpdateOneWithoutGroupNestedInput
+  }
+
+  export type UserUpsertWithoutDiscussionRightsBoughtInput = {
+    update: XOR<UserUpdateWithoutDiscussionRightsBoughtInput, UserUncheckedUpdateWithoutDiscussionRightsBoughtInput>
+    create: XOR<UserCreateWithoutDiscussionRightsBoughtInput, UserUncheckedCreateWithoutDiscussionRightsBoughtInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDiscussionRightsBoughtInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDiscussionRightsBoughtInput, UserUncheckedUpdateWithoutDiscussionRightsBoughtInput>
+  }
+
+  export type UserUpdateWithoutDiscussionRightsBoughtInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    proSubscription?: UserProSubscriptionUpdateOneWithoutUserNestedInput
+    proSettings?: UserProSettingsUpdateOneWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
+    collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutUserNestedInput
+    headedCollaborationGroups?: CollaborationGroupUpdateManyWithoutHeadNestedInput
+    createdCollaborationTasks?: CollaborationTaskUpdateManyWithoutCreatorNestedInput
+    assignedCollaborationTasks?: CollaborationTaskUpdateManyWithoutAssigneeNestedInput
+    uploadedCollaborationDocs?: CollaborationDocumentUpdateManyWithoutUploaderNestedInput
+    collaborationNotes?: CollaborationNoteUpdateManyWithoutCreatorNestedInput
+    createdEditorialItems?: CollaborationEditorialItemUpdateManyWithoutCreatorNestedInput
+    assignedEditorialItems?: CollaborationEditorialItemUpdateManyWithoutAssigneeNestedInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemUpdateManyWithoutCreatorNestedInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemUpdateManyWithoutAssigneeNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDiscussionRightsBoughtInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    proSubscription?: UserProSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    proSettings?: UserProSettingsUncheckedUpdateOneWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
+    collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    headedCollaborationGroups?: CollaborationGroupUncheckedUpdateManyWithoutHeadNestedInput
+    createdCollaborationTasks?: CollaborationTaskUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedCollaborationTasks?: CollaborationTaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    uploadedCollaborationDocs?: CollaborationDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    collaborationNotes?: CollaborationNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    createdEditorialItems?: CollaborationEditorialItemUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedEditorialItems?: CollaborationEditorialItemUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  }
+
+  export type UserUpsertWithoutDiscussionRightsSoldInput = {
+    update: XOR<UserUpdateWithoutDiscussionRightsSoldInput, UserUncheckedUpdateWithoutDiscussionRightsSoldInput>
+    create: XOR<UserCreateWithoutDiscussionRightsSoldInput, UserUncheckedCreateWithoutDiscussionRightsSoldInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDiscussionRightsSoldInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDiscussionRightsSoldInput, UserUncheckedUpdateWithoutDiscussionRightsSoldInput>
+  }
+
+  export type UserUpdateWithoutDiscussionRightsSoldInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    proSubscription?: UserProSubscriptionUpdateOneWithoutUserNestedInput
+    proSettings?: UserProSettingsUpdateOneWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
+    collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutUserNestedInput
+    headedCollaborationGroups?: CollaborationGroupUpdateManyWithoutHeadNestedInput
+    createdCollaborationTasks?: CollaborationTaskUpdateManyWithoutCreatorNestedInput
+    assignedCollaborationTasks?: CollaborationTaskUpdateManyWithoutAssigneeNestedInput
+    uploadedCollaborationDocs?: CollaborationDocumentUpdateManyWithoutUploaderNestedInput
+    collaborationNotes?: CollaborationNoteUpdateManyWithoutCreatorNestedInput
+    createdEditorialItems?: CollaborationEditorialItemUpdateManyWithoutCreatorNestedInput
+    assignedEditorialItems?: CollaborationEditorialItemUpdateManyWithoutAssigneeNestedInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemUpdateManyWithoutCreatorNestedInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemUpdateManyWithoutAssigneeNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDiscussionRightsSoldInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    proSubscription?: UserProSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    proSettings?: UserProSettingsUncheckedUpdateOneWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -112394,6 +115215,31 @@ export namespace Prisma {
     create: XOR<ConversationDeletionRequestCreateWithoutGroupInput, ConversationDeletionRequestUncheckedCreateWithoutGroupInput>
   }
 
+  export type DiscussionRightPurchaseCreateWithoutGroupInput = {
+    id?: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
+    buyer: UserCreateNestedOneWithoutDiscussionRightsBoughtInput
+    seller: UserCreateNestedOneWithoutDiscussionRightsSoldInput
+  }
+
+  export type DiscussionRightPurchaseUncheckedCreateWithoutGroupInput = {
+    id?: string
+    buyerId: string
+    sellerId: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
+  }
+
+  export type DiscussionRightPurchaseCreateOrConnectWithoutGroupInput = {
+    where: DiscussionRightPurchaseWhereUniqueInput
+    create: XOR<DiscussionRightPurchaseCreateWithoutGroupInput, DiscussionRightPurchaseUncheckedCreateWithoutGroupInput>
+  }
+
   export type DepartmentUpsertWithoutConversationsInput = {
     update: XOR<DepartmentUpdateWithoutConversationsInput, DepartmentUncheckedUpdateWithoutConversationsInput>
     create: XOR<DepartmentCreateWithoutConversationsInput, DepartmentUncheckedCreateWithoutConversationsInput>
@@ -112570,6 +115416,37 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DiscussionRightPurchaseUpsertWithoutGroupInput = {
+    update: XOR<DiscussionRightPurchaseUpdateWithoutGroupInput, DiscussionRightPurchaseUncheckedUpdateWithoutGroupInput>
+    create: XOR<DiscussionRightPurchaseCreateWithoutGroupInput, DiscussionRightPurchaseUncheckedCreateWithoutGroupInput>
+    where?: DiscussionRightPurchaseWhereInput
+  }
+
+  export type DiscussionRightPurchaseUpdateToOneWithWhereWithoutGroupInput = {
+    where?: DiscussionRightPurchaseWhereInput
+    data: XOR<DiscussionRightPurchaseUpdateWithoutGroupInput, DiscussionRightPurchaseUncheckedUpdateWithoutGroupInput>
+  }
+
+  export type DiscussionRightPurchaseUpdateWithoutGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    buyer?: UserUpdateOneRequiredWithoutDiscussionRightsBoughtNestedInput
+    seller?: UserUpdateOneRequiredWithoutDiscussionRightsSoldNestedInput
+  }
+
+  export type DiscussionRightPurchaseUncheckedUpdateWithoutGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+  }
+
   export type GroupCreateWithoutDeletionRequestInput = {
     id?: string
     name?: string | null
@@ -112577,7 +115454,7 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutConversationsInput
@@ -112585,6 +115462,7 @@ export namespace Prisma {
     members?: GroupMemberCreateNestedManyWithoutGroupInput
     messages?: MessageCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentCreateNestedManyWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseCreateNestedOneWithoutGroupInput
   }
 
   export type GroupUncheckedCreateWithoutDeletionRequestInput = {
@@ -112596,12 +115474,13 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
     messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedCreateNestedOneWithoutGroupInput
   }
 
   export type GroupCreateOrConnectWithoutDeletionRequestInput = {
@@ -112663,6 +115542,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -112735,6 +115616,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -112776,7 +115659,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutConversationsNestedInput
@@ -112784,6 +115667,7 @@ export namespace Prisma {
     members?: GroupMemberUpdateManyWithoutGroupNestedInput
     messages?: MessageUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateWithoutDeletionRequestInput = {
@@ -112795,12 +115679,13 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
     messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedUpdateOneWithoutGroupNestedInput
   }
 
   export type UserUpsertWithoutDeletionRequestsInitiatedInput = {
@@ -112868,6 +115753,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -112940,6 +115827,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -112965,7 +115854,7 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutConversationsInput
@@ -112973,6 +115862,7 @@ export namespace Prisma {
     members?: GroupMemberCreateNestedManyWithoutGroupInput
     messages?: MessageCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseCreateNestedOneWithoutGroupInput
   }
 
   export type GroupUncheckedCreateWithoutDocumentsInput = {
@@ -112984,12 +115874,13 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
     messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestUncheckedCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedCreateNestedOneWithoutGroupInput
   }
 
   export type GroupCreateOrConnectWithoutDocumentsInput = {
@@ -113049,7 +115940,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutConversationsNestedInput
@@ -113057,6 +115948,7 @@ export namespace Prisma {
     members?: GroupMemberUpdateManyWithoutGroupNestedInput
     messages?: MessageUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateWithoutDocumentsInput = {
@@ -113068,12 +115960,13 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
     messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUncheckedUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupNoteUpsertWithWhereUniqueWithoutDocumentInput = {
@@ -113168,6 +116061,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -113240,6 +116135,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -113379,6 +116276,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -113451,6 +116350,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -113568,6 +116469,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -113640,6 +116543,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -113763,6 +116668,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -113835,6 +116742,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -113859,7 +116768,7 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutConversationsInput
@@ -113867,6 +116776,7 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseCreateNestedOneWithoutGroupInput
   }
 
   export type GroupUncheckedCreateWithoutMembersInput = {
@@ -113878,12 +116788,13 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     messages?: MessageUncheckedCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestUncheckedCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedCreateNestedOneWithoutGroupInput
   }
 
   export type GroupCreateOrConnectWithoutMembersInput = {
@@ -113945,6 +116856,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -114017,6 +116930,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -114058,7 +116973,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutConversationsNestedInput
@@ -114066,6 +116981,7 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateWithoutMembersInput = {
@@ -114077,12 +116993,13 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUncheckedUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedUpdateOneWithoutGroupNestedInput
   }
 
   export type UserUpsertWithoutGroupMembershipsInput = {
@@ -114150,6 +117067,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -114222,6 +117141,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -114273,7 +117194,7 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutConversationsInput
@@ -114281,6 +117202,7 @@ export namespace Prisma {
     members?: GroupMemberCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseCreateNestedOneWithoutGroupInput
   }
 
   export type GroupUncheckedCreateWithoutMessagesInput = {
@@ -114292,12 +117214,13 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: GroupMemberUncheckedCreateNestedManyWithoutGroupInput
     documents?: GroupDocumentUncheckedCreateNestedManyWithoutGroupInput
     deletionRequest?: ConversationDeletionRequestUncheckedCreateNestedOneWithoutGroupInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedCreateNestedOneWithoutGroupInput
   }
 
   export type GroupCreateOrConnectWithoutMessagesInput = {
@@ -114359,6 +117282,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -114431,6 +117356,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -114500,7 +117427,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutConversationsNestedInput
@@ -114508,6 +117435,7 @@ export namespace Prisma {
     members?: GroupMemberUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateWithoutMessagesInput = {
@@ -114519,12 +117447,13 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUncheckedUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedUpdateOneWithoutGroupNestedInput
   }
 
   export type UserUpsertWithoutSentMessagesInput = {
@@ -114592,6 +117521,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -114664,6 +117595,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -114792,6 +117725,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -114864,6 +117799,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -114952,6 +117889,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -115024,6 +117963,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -115096,6 +118037,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -115168,6 +118111,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -115278,6 +118223,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -115350,6 +118297,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -116029,6 +118978,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -116101,6 +119052,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -116227,6 +119180,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -116299,6 +119254,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -116609,6 +119566,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -116681,6 +119640,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -116808,6 +119769,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -116880,6 +119843,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -116985,6 +119950,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -117057,6 +120024,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -117239,6 +120208,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -117311,6 +120282,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -117430,6 +120403,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -117502,6 +120477,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -117623,6 +120600,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -117695,6 +120674,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -117853,6 +120834,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -117925,6 +120908,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -118002,6 +120987,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -118074,6 +121061,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -118275,6 +121264,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -118347,6 +121338,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -118430,6 +121423,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -118502,6 +121497,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -118660,6 +121657,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -118732,6 +121731,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -118897,6 +121898,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -118969,6 +121972,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -119240,6 +122245,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -119312,6 +122319,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -119453,6 +122462,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -119525,6 +122536,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -119597,6 +122610,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -119669,6 +122684,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -119757,6 +122774,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -119829,6 +122848,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -119901,6 +122922,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -119973,6 +122996,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -120061,6 +123086,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -120133,6 +123160,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -120205,6 +123234,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -120277,6 +123308,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -120365,6 +123398,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -120437,6 +123472,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -120509,6 +123546,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -120581,6 +123620,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -120669,6 +123710,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -120741,6 +123784,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -120813,6 +123858,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -120885,6 +123932,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -121003,6 +124052,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -121075,6 +124126,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -121177,6 +124230,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -121249,6 +124304,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -121337,6 +124394,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -121409,6 +124468,8 @@ export namespace Prisma {
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -121481,6 +124542,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -121553,6 +124616,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -121641,6 +124706,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -121713,6 +124780,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -121785,6 +124854,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
     monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -121857,6 +124928,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
     monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -121945,6 +125018,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
     monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -122017,6 +125092,8 @@ export namespace Prisma {
     financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
     monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -122352,6 +125429,26 @@ export namespace Prisma {
     id?: string
     groupId: string
     createdAt?: Date | string
+  }
+
+  export type DiscussionRightPurchaseCreateManyBuyerInput = {
+    id?: string
+    groupId: string
+    sellerId: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
+  }
+
+  export type DiscussionRightPurchaseCreateManySellerInput = {
+    id?: string
+    groupId: string
+    buyerId: string
+    duration: $Enums.DiscussionRightDuration
+    purchasedAt?: Date | string
+    expiresAt: Date | string
+    isActive?: boolean
   }
 
   export type FollowCreateManyFollowingInput = {
@@ -123336,6 +126433,66 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DiscussionRightPurchaseUpdateWithoutBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    group?: GroupUpdateOneRequiredWithoutRightPurchaseNestedInput
+    seller?: UserUpdateOneRequiredWithoutDiscussionRightsSoldNestedInput
+  }
+
+  export type DiscussionRightPurchaseUncheckedUpdateWithoutBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type DiscussionRightPurchaseUpdateWithoutSellerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    group?: GroupUpdateOneRequiredWithoutRightPurchaseNestedInput
+    buyer?: UserUpdateOneRequiredWithoutDiscussionRightsBoughtNestedInput
+  }
+
+  export type DiscussionRightPurchaseUncheckedUpdateWithoutSellerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    groupId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    duration?: EnumDiscussionRightDurationFieldUpdateOperationsInput | $Enums.DiscussionRightDuration
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+  }
+
   export type FollowUpdateWithoutFollowingInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -124249,7 +127406,7 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -124336,7 +127493,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutConversationsNestedInput
@@ -124344,6 +127501,7 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateWithoutCollaborationGroupInput = {
@@ -124354,13 +127512,14 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
     messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUncheckedUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateManyWithoutCollaborationGroupInput = {
@@ -124371,7 +127530,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -124543,7 +127702,7 @@ export namespace Prisma {
     lockCodeHash?: string | null
     lockSetByUserId?: string | null
     lockedAt?: Date | string | null
-    hideOldMessagesByUserId?: string | null
+    hiddenByUserId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -124686,7 +127845,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     collaborationGroup?: CollaborationGroupUpdateOneWithoutConversationsNestedInput
@@ -124694,6 +127853,7 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateWithoutDepartmentInput = {
@@ -124704,13 +127864,14 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput
     messages?: MessageUncheckedUpdateManyWithoutGroupNestedInput
     documents?: GroupDocumentUncheckedUpdateManyWithoutGroupNestedInput
     deletionRequest?: ConversationDeletionRequestUncheckedUpdateOneWithoutGroupNestedInput
+    rightPurchase?: DiscussionRightPurchaseUncheckedUpdateOneWithoutGroupNestedInput
   }
 
   export type GroupUncheckedUpdateManyWithoutDepartmentInput = {
@@ -124721,7 +127882,7 @@ export namespace Prisma {
     lockCodeHash?: NullableStringFieldUpdateOperationsInput | string | null
     lockSetByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    hideOldMessagesByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    hiddenByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

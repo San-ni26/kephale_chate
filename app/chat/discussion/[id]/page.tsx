@@ -89,6 +89,17 @@ interface Conversation {
     isLocked?: boolean;
     currentUserIsPro?: boolean;
     lockSetByUserId?: string | null;
+    canCurrentUserControl?: boolean;
+    hiddenByUserId?: string | null;
+    rightsOwnerId?: string | null;
+    rightsPurchase?: {
+        buyerId: string;
+        sellerId: string;
+        expiresAt: string;
+        duration: string;
+    } | null;
+    isMessagesHiddenForCurrentUser?: boolean;
+    canPurchaseRights?: boolean;
 }
 
 const fetcher = async (url: string) => {
@@ -315,10 +326,11 @@ export default function DiscussionPage() {
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
 
     const { messages, setMessages, loading, hasMore, setHasMore } = useInitialMessages(conversationId);
-    const blurredMessageIds = useMemo(
-        () => (shouldApplyBlur ? new Set(messages.filter(m => Date.now() - new Date(m.createdAt).getTime() > BLUR_THRESHOLD_MS).map(m => m.id)) : new Set<string>()),
-        [messages, shouldApplyBlur]
-    );
+    const blurredMessageIds = useMemo(() => {
+        const shouldBlurOldMessages = conversation?.isMessagesHiddenForCurrentUser || shouldApplyBlur;
+        if (!shouldBlurOldMessages) return new Set<string>();
+        return new Set(messages.filter(m => Date.now() - new Date(m.createdAt).getTime() > BLUR_THRESHOLD_MS).map(m => m.id));
+    }, [messages, shouldApplyBlur, conversation?.isMessagesHiddenForCurrentUser]);
 
     const uniqueMessages = useMemo(() => {
         const seen = new Set<string>();
@@ -1141,6 +1153,10 @@ export default function DiscussionPage() {
     // Écouter les clics depuis la TopNav (icône cadenas / appel) - après définition des variables
     useEffect(() => {
         const onLockClick = () => {
+            if (!conversation?.canCurrentUserControl) {
+                toast.error('Les droits de cette discussion ont été achetés par l\'autre utilisateur.');
+                return;
+            }
             if (!lockState.userIsPro) {
                 toast.error('Compte Pro requis pour verrouiller la discussion');
                 return;
@@ -1148,8 +1164,18 @@ export default function DiscussionPage() {
             if (lockState.isLocked) return; // Menu géré par TopNav
             setShowLockDialog(true);
         };
-        const onLockDisable = () => setShowDisableLockDialog(true);
+        const onLockDisable = () => {
+            if (!conversation?.canCurrentUserControl) {
+                toast.error('Les droits de cette discussion ont été achetés par l\'autre utilisateur.');
+                return;
+            }
+            setShowDisableLockDialog(true);
+        };
         const onLockChangeCode = () => {
+            if (!conversation?.canCurrentUserControl) {
+                toast.error('Les droits de cette discussion ont été achetés par l\'autre utilisateur.');
+                return;
+            }
             if (!isUnlockedSession && lockState.canManageLock) {
                 toast.error('Déverrouillez d\'abord la discussion pour modifier le code');
                 return;
@@ -1173,7 +1199,7 @@ export default function DiscussionPage() {
             window.removeEventListener('discussion-lock-change-code', onLockChangeCode);
             window.removeEventListener('discussion-call-click', onCallClick);
         };
-    }, [conversationId, otherUser, lockState.userIsPro, lockState.isLocked, lockState.canManageLock, isUnlockedSession, callContext]);
+    }, [conversationId, otherUser, conversation?.canCurrentUserControl, lockState.userIsPro, lockState.isLocked, lockState.canManageLock, isUnlockedSession, callContext]);
 
     if (loading) {
         return (

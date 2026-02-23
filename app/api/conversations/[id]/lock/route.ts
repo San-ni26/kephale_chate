@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { isUserProActive } from '@/src/lib/user-pro';
+import { canUserControlDiscussion } from '@/src/lib/discussion-rights';
 import { sendDiscussionLockCodeEmail } from '@/src/lib/email';
 import bcrypt from 'bcryptjs';
 
@@ -67,6 +68,17 @@ export async function POST(
             );
         }
 
+        const canControl = await canUserControlDiscussion(id, user.userId);
+        if (!canControl) {
+            return NextResponse.json(
+                {
+                    error:
+                        "Vous n'avez pas les droits pour verrouiller cette discussion. Les droits ont été achetés par l'autre utilisateur.",
+                },
+                { status: 403 }
+            );
+        }
+
         const lockCodeHash = await bcrypt.hash(code, 10);
 
         await prisma.group.update({
@@ -79,8 +91,16 @@ export async function POST(
         });
 
         // Envoyer le code par email à l'autre utilisateur s'il est Pro
+        // Ne PAS envoyer au seller si les droits ont été achetés (il n'a plus accès au code)
+        const rightPurchase = await prisma.discussionRightPurchase.findUnique({
+            where: { groupId: id },
+        });
         const otherMember = group.members.find((m) => m.userId !== user.userId);
-        if (otherMember) {
+        const isActivePurchase = rightPurchase && new Date() < rightPurchase.expiresAt;
+        const otherIsSeller = otherMember && isActivePurchase && rightPurchase.sellerId === otherMember.userId;
+        const shouldSendEmail = otherMember && !otherIsSeller;
+
+        if (shouldSendEmail) {
             const [otherUser, setterUser] = await Promise.all([
                 prisma.user.findUnique({
                     where: { id: otherMember.userId },

@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { isUserProActive } from '@/src/lib/user-pro';
+import { canUserControlDiscussion } from '@/src/lib/discussion-rights';
 import { sendDiscussionLockCodeEmail } from '@/src/lib/email';
 import bcrypt from 'bcryptjs';
 
@@ -76,20 +77,13 @@ export async function POST(
             );
         }
 
-        const memberIds = group.members.map((m) => m.userId);
-        const proSubs = await prisma.userProSubscription.findMany({
-            where: { userId: { in: memberIds }, isActive: true },
-            select: { userId: true, endDate: true },
-        });
-        const proUserIds = new Set(
-            proSubs.filter((s) => isUserProActive(s.endDate)).map((s) => s.userId)
-        );
-        const bothPro = proUserIds.has(user.userId) && memberIds.every((mid) => proUserIds.has(mid));
-        const isSetter = group.lockSetByUserId === user.userId;
-
-        if (!isSetter && !bothPro) {
+        const canControl = await canUserControlDiscussion(id, user.userId);
+        if (!canControl) {
             return NextResponse.json(
-                { error: 'Seul l\'utilisateur qui a créé le code ou les deux membres Pro peuvent modifier le code' },
+                {
+                    error:
+                        "Vous n'avez pas les droits pour modifier le code. Les droits ont été achetés par l'autre utilisateur.",
+                },
                 { status: 403 }
             );
         }
@@ -106,11 +100,19 @@ export async function POST(
         });
 
         // Envoyer le nouveau code par email à l'autre utilisateur Pro
+        // Ne PAS envoyer au seller si les droits ont été achetés
+        const rightPurchase = await prisma.discussionRightPurchase.findUnique({
+            where: { groupId: id },
+        });
         const otherMember = group.members.find((m) => m.userId !== user.userId);
-        if (otherMember) {
+        const isActivePurchase = rightPurchase && new Date() < rightPurchase.expiresAt;
+        const otherIsSeller = otherMember && isActivePurchase && rightPurchase.sellerId === otherMember.userId;
+        const shouldSendEmail = otherMember && !otherIsSeller;
+
+        if (shouldSendEmail) {
             const [otherUser, setterUser] = await Promise.all([
                 prisma.user.findUnique({
-                    where: { id: otherMember.userId },
+                    where: { id: otherMember!.userId },
                     select: { email: true, name: true },
                 }),
                 prisma.user.findUnique({
@@ -119,7 +121,7 @@ export async function POST(
                 }),
             ]);
             const otherProSub = await prisma.userProSubscription.findFirst({
-                where: { userId: otherMember.userId, isActive: true },
+                where: { userId: otherMember!.userId, isActive: true },
             });
             if (otherUser?.email && otherProSub && isUserProActive(otherProSub.endDate)) {
                 await sendDiscussionLockCodeEmail(

@@ -1,13 +1,12 @@
 /**
- * POST: Désactiver le verrouillage (supprimer le code)
- * Autorisé : l'utilisateur qui a créé le code OU les deux si les deux sont Pro
+ * POST: Afficher la discussion (annuler le masquage)
+ * Seul celui qui a masqué peut afficher à nouveau.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
-import { isUserProActive } from '@/src/lib/user-pro';
-import { canUserControlDiscussion } from '@/src/lib/discussion-rights';
+import { canUserHideDiscussion } from '@/src/lib/discussion-rights';
 
 export async function POST(
     request: NextRequest,
@@ -23,15 +22,15 @@ export async function POST(
             return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
         }
 
-        const { id } = await params;
+        const { id: groupId } = await params;
 
         const group = await prisma.group.findUnique({
-            where: { id },
+            where: { id: groupId },
             include: { members: true },
         });
 
         if (!group) {
-            return NextResponse.json({ error: 'Conversation non trouvée' }, { status: 404 });
+            return NextResponse.json({ error: 'Discussion non trouvée' }, { status: 404 });
         }
 
         const isMember = group.members.some((m) => m.userId === user.userId);
@@ -39,38 +38,41 @@ export async function POST(
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
-        if (!group.lockCodeHash) {
+        if (!group.hiddenByUserId) {
             return NextResponse.json(
-                { error: 'Cette discussion n\'est pas verrouillée' },
+                { error: 'Cette discussion n\'est pas masquée' },
                 { status: 400 }
             );
         }
 
-        const canControl = await canUserControlDiscussion(id, user.userId);
-        if (!canControl) {
+        // Seul celui qui a le contrôle (et a masqué) peut afficher
+        const canControl = await canUserHideDiscussion(groupId, user.userId);
+        if (!canControl || group.hiddenByUserId !== user.userId) {
             return NextResponse.json(
                 {
                     error:
-                        "Vous n'avez pas les droits pour désactiver le verrouillage. Les droits ont été achetés par l'autre utilisateur.",
+                        "Seul l'utilisateur qui a masqué la discussion peut l'afficher à nouveau.",
                 },
                 { status: 403 }
             );
         }
 
         await prisma.group.update({
-            where: { id },
-            data: {
-                lockCodeHash: null,
-                lockSetByUserId: null,
-                lockedAt: null,
-            },
+            where: { id: groupId },
+            data: { hiddenByUserId: null },
         });
 
-        return NextResponse.json({ success: true }, { status: 200 });
-    } catch (error) {
-        console.error('Disable lock error:', error);
         return NextResponse.json(
-            { error: 'Erreur lors de la désactivation' },
+            {
+                success: true,
+                message: 'Discussion affichée. Les messages sont à nouveau visibles.',
+            },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error('Unhide discussion error:', error);
+        return NextResponse.json(
+            { error: "Erreur lors de l'affichage" },
             { status: 500 }
         );
     }

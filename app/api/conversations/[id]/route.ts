@@ -4,6 +4,7 @@ import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { getOnlineUserIds } from '@/src/lib/presence';
 import { getUsersInCall } from '@/src/lib/call-redis';
 import { isUserProActive } from '@/src/lib/user-pro';
+import { canUserControlDiscussion } from '@/src/lib/discussion-rights';
 
 export async function GET(
     request: NextRequest,
@@ -21,7 +22,7 @@ export async function GET(
 
         const conversationId = params.id;
 
-        // Get conversation with members and pending deletion request (Pro/Pro)
+        // Get conversation with members, deletion request, and rights purchase
         const conversation = await prisma.group.findUnique({
             where: { id: conversationId },
             include: {
@@ -53,6 +54,14 @@ export async function GET(
                         },
                     },
                 },
+                rightPurchase: {
+                    select: {
+                        buyerId: true,
+                        sellerId: true,
+                        expiresAt: true,
+                        duration: true,
+                    },
+                },
             },
         });
 
@@ -72,7 +81,7 @@ export async function GET(
             );
         }
 
-        // Merger presence Redis (en ligne) + statut appel (en appel) + currentUserIsPro
+        // Merger presence Redis (en ligne) + statut appel (en appel) + currentUserIsPro + droits
         const memberIds = conversation.members.map(m => m.user.id);
         const proSub = await prisma.userProSubscription.findFirst({
             where: { userId: user.userId, isActive: true },
@@ -81,7 +90,72 @@ export async function GET(
         const currentUserIsPro = !!proSub && isUserProActive(proSub.endDate);
         const isLocked = !!conversation.lockCodeHash;
         const lockSetByUserId = conversation.lockSetByUserId ?? null;
-        const { lockCodeHash: _omit, ...conversationSafe } = conversation;
+        const hiddenByUserId = conversation.hiddenByUserId ?? null;
+        const canCurrentUserControl = await canUserControlDiscussion(conversationId, user.userId);
+        const rightsPurchase = conversation.rightPurchase ?? null;
+        const rightsOwnerId =
+            rightsPurchase && new Date() < rightsPurchase.expiresAt
+                ? rightsPurchase.buyerId
+                : null;
+        const isMessagesHiddenForCurrentUser =
+            !!hiddenByUserId && hiddenByUserId !== user.userId;
+        const memberIdsForPro = conversation.members.map(m => m.user.id);
+
+        let pendingRightsPayment: { id: string; plan: string; createdAt: string } | null = null;
+        let pendingRightsOrder: { id: string; plan: string; amountFcfa: number; createdAt: string } | null = null;
+        let canPurchaseRights = false;
+        if (memberIdsForPro.length >= 2) {
+            const proSubsForMembers = await prisma.userProSubscription.findMany({
+                where: { userId: { in: memberIdsForPro }, isActive: true },
+                select: { userId: true, endDate: true },
+            });
+            const proUserIdsForMembers = new Set(
+                proSubsForMembers.filter(s => isUserProActive(s.endDate)).map(s => s.userId)
+            );
+            const bothPro = memberIdsForPro.every(id => proUserIdsForMembers.has(id));
+            canPurchaseRights =
+                bothPro &&
+                conversation.isDirect &&
+                !rightsOwnerId;
+
+            if (canPurchaseRights) {
+                const [pendingPay, pendingOrd] = await Promise.all([
+                    prisma.pendingSubscriptionPayment.findFirst({
+                        where: {
+                            userId: user.userId,
+                            type: 'DISCUSSION_RIGHTS',
+                            groupId: conversationId,
+                        },
+                        select: { id: true, plan: true, createdAt: true },
+                    }),
+                    prisma.paymentOrder.findFirst({
+                        where: {
+                            userId: user.userId,
+                            type: 'DISCUSSION_RIGHTS',
+                            groupId: conversationId,
+                            status: 'PENDING',
+                        },
+                        select: { id: true, plan: true, amountFcfa: true, createdAt: true },
+                    }),
+                ]);
+                if (pendingPay) {
+                    pendingRightsPayment = {
+                        id: pendingPay.id,
+                        plan: pendingPay.plan,
+                        createdAt: pendingPay.createdAt.toISOString(),
+                    };
+                }
+                if (pendingOrd) {
+                    pendingRightsOrder = {
+                        id: pendingOrd.id,
+                        plan: pendingOrd.plan,
+                        amountFcfa: pendingOrd.amountFcfa,
+                        createdAt: pendingOrd.createdAt.toISOString(),
+                    };
+                }
+            }
+        }
+        const { lockCodeHash: _omit, rightPurchase: _rp, ...conversationSafe } = conversation;
 
         if (conversation.members.length > 0) {
             const [presenceMap, callMap] = await Promise.all([
@@ -103,6 +177,21 @@ export async function GET(
                     isLocked,
                     currentUserIsPro,
                     lockSetByUserId,
+                    hiddenByUserId,
+                    canCurrentUserControl,
+                    rightsOwnerId,
+                    rightsPurchase: rightsPurchase
+                        ? {
+                              buyerId: rightsPurchase.buyerId,
+                              sellerId: rightsPurchase.sellerId,
+                              expiresAt: rightsPurchase.expiresAt,
+                              duration: rightsPurchase.duration,
+                          }
+                        : null,
+                    isMessagesHiddenForCurrentUser,
+                    canPurchaseRights,
+                    pendingRightsPayment,
+                    pendingRightsOrder,
                 },
             }, { status: 200 });
         }
@@ -113,6 +202,21 @@ export async function GET(
                 isLocked,
                 currentUserIsPro,
                 lockSetByUserId,
+                hiddenByUserId,
+                canCurrentUserControl,
+                rightsOwnerId,
+                rightsPurchase: rightsPurchase
+                    ? {
+                          buyerId: rightsPurchase.buyerId,
+                          sellerId: rightsPurchase.sellerId,
+                          expiresAt: rightsPurchase.expiresAt,
+                          duration: rightsPurchase.duration,
+                      }
+                    : null,
+                isMessagesHiddenForCurrentUser,
+                canPurchaseRights,
+                pendingRightsPayment,
+                pendingRightsOrder,
             },
         }, { status: 200 });
 
@@ -152,7 +256,7 @@ export async function DELETE(
 
         const group = await prisma.group.findUnique({
             where: { id: conversationId },
-            include: { members: true },
+            include: { members: true, rightPurchase: true },
         });
 
         if (!group) {
@@ -172,6 +276,7 @@ export async function DELETE(
 
         // Règle Pro : un utilisateur Standard ne peut pas supprimer si l'autre est Pro
         // Pro/Pro : les deux doivent accepter → créer une requête de suppression
+        // Si droits achetés : seul le buyer peut supprimer (ou initier la demande)
         if (group.isDirect && group.members.length === 2) {
             const memberIds = group.members.map(m => m.userId);
             const proSubs = await prisma.userProSubscription.findMany({
@@ -192,7 +297,16 @@ export async function DELETE(
                 );
             }
 
-            // Pro/Pro : créer une requête de suppression au lieu de supprimer directement
+            // Si droits achetés : le buyer peut supprimer directement sans accord ; le non-buyer peut seulement demander (le buyer doit accepter)
+            const rightPurchase = group.rightPurchase;
+            const isActivePurchase = rightPurchase && new Date() < rightPurchase.expiresAt;
+            const currentUserIsBuyer = isActivePurchase && rightPurchase.buyerId === user.userId;
+            if (currentUserIsBuyer) {
+                await prisma.group.delete({ where: { id: conversationId } });
+                return NextResponse.json({ success: true }, { status: 200 });
+            }
+
+            // Pro/Pro : créer une requête de suppression (les deux doivent accepter)
             if (currentUserIsPro && otherUserIsPro) {
                 const existingRequest = await prisma.conversationDeletionRequest.findUnique({
                     where: { groupId: conversationId },

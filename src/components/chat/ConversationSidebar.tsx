@@ -6,16 +6,14 @@ import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { User, Search, MessageSquarePlus, Building2, NotepadText, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet, Trash2, Crown } from 'lucide-react';
+import { User, Search, MessageSquarePlus, Building2, NotepadText, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet, Crown } from 'lucide-react';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
-import { fetchWithAuth } from '@/src/lib/auth-client';
-import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/src/components/ui/input';
 import { Button } from '@/src/components/ui/button';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
-import { DeleteConversationDialog } from '@/src/components/chat/DeleteConversationDialog';
+import { ConversationActionsMenu } from '@/src/components/chat/ConversationActionsMenu';
 
 interface Conversation {
     id: string;
@@ -23,6 +21,10 @@ interface Conversation {
     isDirect: boolean;
     updatedAt: string;
     unreadCount: number;
+    canPurchaseRights?: boolean;
+    canDelete?: boolean;
+    pendingRightsPayment?: { id: string; plan: string; createdAt: string } | null;
+    pendingRightsOrder?: { id: string; plan: string; amountFcfa: number; createdAt: string } | null;
     members: {
         user: {
             id: string;
@@ -51,8 +53,6 @@ export function ConversationSidebar() {
     });
     const [searchQuery, setSearchQuery] = useState('');
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
-    const [deleteLoading, setDeleteLoading] = useState(false);
 
     const conversations: Conversation[] = conversationsData?.conversations || [];
     const currentUserId = profileData?.profile?.id;
@@ -100,39 +100,6 @@ export function ConversationSidebar() {
 
     function getOtherMember(chat: Conversation) {
         return chat.members.find(m => m.user.id !== currentUserId)?.user;
-    }
-
-    function openDeleteDialog(e: React.MouseEvent, conversationId: string) {
-        e.preventDefault();
-        e.stopPropagation();
-        setConversationToDelete(conversationId);
-    }
-
-    async function confirmDeleteConversation() {
-        if (!conversationToDelete) return;
-        setDeleteLoading(true);
-        try {
-            const res = await fetchWithAuth(`/api/conversations/${conversationToDelete}`, { method: 'DELETE' });
-            const data = await res.json().catch(() => ({}));
-            if (res.ok) {
-                if (data.requestSent) {
-                    toast.success('Demande de suppression envoyée. L\'autre utilisateur doit accepter.');
-                } else {
-                    toast.success('Discussion supprimée');
-                }
-                setConversationToDelete(null);
-                mutateConversations();
-                if (!data.requestSent && pathname === `/chat/discussion/${conversationToDelete}`) {
-                    router.push('/chat');
-                }
-            } else {
-                toast.error(data.error || 'Impossible de supprimer');
-            }
-        } catch {
-            toast.error('Erreur réseau');
-        } finally {
-            setDeleteLoading(false);
-        }
     }
 
     return (
@@ -250,19 +217,22 @@ export function ConversationSidebar() {
                                                                 {formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr })}
                                                             </span>
                                                         )}
-                                                        {!(
-                                                            otherMember?.isPro &&
-                                                            !chat.members.find(m => m.user.id === currentUserId)?.user?.isPro
-                                                        ) && (
-                                                            <button
-                                                                type="button"
-                                                                onClick={(e) => openDeleteDialog(e, chat.id)}
-                                                                className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-opacity"
-                                                                title="Supprimer la discussion"
-                                                                aria-label="Supprimer la discussion"
-                                                            >
-                                                                <Trash2 className="w-3.5 h-3.5" />
-                                                            </button>
+                                                        {(chat.canDelete || chat.canPurchaseRights) && (
+                                                            <ConversationActionsMenu
+                                                                conversationId={chat.id}
+                                                                canDelete={chat.canDelete ?? false}
+                                                                canPurchaseRights={chat.canPurchaseRights ?? false}
+                                                                onDeleteSuccess={() => {
+                                                                    mutateConversations();
+                                                                    if (pathname === `/chat/discussion/${chat.id}`) {
+                                                                        router.push('/chat');
+                                                                    }
+                                                                }}
+                                                                onPurchaseSuccess={() => mutateConversations()}
+                                                                pendingRightsPayment={chat.pendingRightsPayment}
+                                                                pendingRightsOrder={chat.pendingRightsOrder}
+                                                                className="shrink-0"
+                                                            />
                                                         )}
                                                     </div>
                                                 </div>
@@ -293,13 +263,6 @@ export function ConversationSidebar() {
                     </div>
                 )}
             </div>
-
-            <DeleteConversationDialog
-                open={conversationToDelete !== null}
-                onOpenChange={(open) => !open && setConversationToDelete(null)}
-                onConfirm={confirmDeleteConversation}
-                loading={deleteLoading}
-            />
 
             {/* Desktop Navigation */}
             <div className="p-2 border-t border-border bg-muted/20">

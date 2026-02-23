@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, LockOpen, FileText, NotepadText, Phone, KeyRound, ShieldOff, Eye, EyeOff } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, LockOpen, FileText, NotepadText, Phone, KeyRound, ShieldOff, Eye, EyeOff, MoreVertical, Crown } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
@@ -21,6 +21,8 @@ import {
 } from '@/src/components/ui/dropdown-menu';
 import OrganizationRequestDialog from '@/src/components/organizations/OrganizationRequestDialog';
 import { useDiscussionBlurState } from '@/src/contexts/DiscussionBlurContext';
+import { DiscussionHideToggle } from '@/src/components/chat/DiscussionHideToggle';
+import { PurchaseRightsDialog } from '@/src/components/chat/PurchaseRightsDialog';
 import useSWR from 'swr';
 
 const fetcher = (url: string) => fetchWithAuth(url).then((r) => (r.ok ? r.json() : null));
@@ -46,6 +48,7 @@ export function TopNav() {
     const [searchEmail, setSearchEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [showOrgRequestDialog, setShowOrgRequestDialog] = useState(false);
+    const [showPurchaseRightsDialog, setShowPurchaseRightsDialog] = useState(false);
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
 
@@ -56,7 +59,7 @@ export function TopNav() {
     const isChatListPage = pathname === '/chat';
     const discussionMatch = pathname?.match(/^\/chat\/discussion\/([^/]+)\/?$/);
     const discussionId = discussionMatch?.[1];
-    const { data: discussionData } = useSWR(
+    const { data: discussionData, mutate: mutateDiscussion } = useSWR(
         discussionId ? `/api/conversations/${discussionId}` : null,
         fetcher
     );
@@ -661,7 +664,7 @@ export function TopNav() {
                             ) : null;
                         })()}
                     </div>
-                    {/* Icône flou (œil) + cadenas + appel : visible pour toutes les discussions (directes ou non) */}
+                    {/* Icône flou (œil) + masquer + cadenas + appel : visible pour toutes les discussions (directes ou non) */}
                     <div className="flex items-center gap-1 shrink-0">
                         {discussionBlurState?.showBlurToggle && (
                             <Button
@@ -681,7 +684,15 @@ export function TopNav() {
                                 )}
                             </Button>
                         )}
-                        {discussion?.isLocked && discussion?.currentUserIsPro ? (
+                        {discussion?.canCurrentUserControl && discussion?.members?.length === 2 && (
+                            <DiscussionHideToggle
+                                discussionId={discussionId!}
+                                hiddenByUserId={discussion?.hiddenByUserId}
+                                currentUserId={user?.id}
+                                onSuccess={() => mutateDiscussion()}
+                            />
+                        )}
+                        {discussion?.isLocked && discussion?.canCurrentUserControl ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button
@@ -708,11 +719,12 @@ export function TopNav() {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => window.dispatchEvent(new CustomEvent('discussion-lock-click'))}
-                                title={discussion?.currentUserIsPro ? 'Verrouiller la discussion' : 'Verrouiller (Compte Pro requis)'}
+                                disabled={!discussion?.canCurrentUserControl}
+                                onClick={() => discussion?.canCurrentUserControl && window.dispatchEvent(new CustomEvent('discussion-lock-click'))}
+                                title={discussion?.canCurrentUserControl ? 'Verrouiller la discussion' : discussion?.currentUserIsPro ? 'Verrouiller (droits achetés par l\'autre)' : 'Verrouiller (Compte Pro requis)'}
                                 className="hover:bg-primary/10"
                             >
-                                <Lock className={cn("w-5 h-5", discussion?.currentUserIsPro ? "text-muted-foreground hover:text-primary" : "text-muted-foreground/60")} />
+                                <Lock className={cn("w-5 h-5", discussion?.canCurrentUserControl ? "text-muted-foreground hover:text-primary" : "text-muted-foreground/60")} />
                             </Button>
                         )}
                         <Button
@@ -724,6 +736,27 @@ export function TopNav() {
                         >
                             <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
                         </Button>
+                        {discussion?.canPurchaseRights && (
+                            <>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => setShowPurchaseRightsDialog(true)}
+                                    title="Acheter les droits de la discussion"
+                                    className="hover:bg-primary/10"
+                                >
+                                    <Crown className="w-5 h-5 text-amber-500" />
+                                </Button>
+                                <PurchaseRightsDialog
+                                    open={showPurchaseRightsDialog}
+                                    onOpenChange={setShowPurchaseRightsDialog}
+                                    discussionId={discussionId!}
+                                    onSuccess={() => mutateDiscussion()}
+                                    pendingRightsPayment={discussion?.pendingRightsPayment}
+                                    pendingRightsOrder={discussion?.pendingRightsOrder}
+                                />
+                            </>
+                        )}
                     </div>
                 </>
             ) : isChatListPage ? (

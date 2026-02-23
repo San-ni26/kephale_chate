@@ -208,19 +208,43 @@ export function ProAccountSection() {
                     </>
                 ) : hasPendingRequest ? (
                     <>
-                        <div className="flex items-center gap-2 p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                            <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0" />
-                            <div>
-                                <p className="font-medium text-foreground">Demande en attente</p>
-                                <p className="text-xs text-muted-foreground">
-                                    {status.pendingOrder ? (
-                                        <>Votre demande d&apos;abonnement Pro ({status.pendingOrder.amountFcfa.toLocaleString('fr-FR')} FCFA) est en cours de traitement par un administrateur.</>
-                                    ) : (
-                                        <>Votre paiement Compte Pro est en cours. Complétez le paiement ou réessayez plus tard.</>
-                                    )}
-                                    {' '}Vous ne pouvez pas envoyer une nouvelle demande tant que celle-ci n&apos;est pas traitée.
-                                </p>
+                        <div className="flex flex-col gap-3 p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                            <div className="flex items-center gap-2">
+                                <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0" />
+                                <div>
+                                    <p className="font-medium text-foreground">Demande en attente</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        {status.pendingOrder ? (
+                                            <>Votre demande d&apos;abonnement Pro ({status.pendingOrder.amountFcfa.toLocaleString('fr-FR')} FCFA) est en cours de traitement par un administrateur.</>
+                                        ) : (
+                                            <>Votre paiement Compte Pro est en cours. Complétez le paiement ou réessayez plus tard.</>
+                                        )}
+                                        {status.pendingOrder && ' Vous ne pouvez pas envoyer une nouvelle demande tant que celle-ci n\'est pas traitée.'}
+                                    </p>
+                                </div>
                             </div>
+                            {status.pendingPayment && (
+                                <div className="space-y-1">
+                                    <Button
+                                        size="sm"
+                                        onClick={() => handleSubscribe(status.pendingPayment!.plan as UserProPlan)}
+                                        disabled={!!subscribing}
+                                        className="bg-primary text-primary-foreground hover:bg-primary/90"
+                                    >
+                                        {subscribing ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <>
+                                                <CreditCard className="mr-2 h-4 w-4" />
+                                                Compléter le paiement
+                                            </>
+                                        )}
+                                    </Button>
+                                    <p className="text-xs text-muted-foreground">
+                                        Cliquez pour obtenir un nouveau lien et être redirigé vers la page de paiement. Réessayez si le lien précédent a expiré.
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     </>
                 ) : (
