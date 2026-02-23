@@ -1192,9 +1192,10 @@ export default function DiscussionPage() {
                 setShowChangeCodeDialog(true);
             }
         };
-        const onCallClick = () => {
+        const onCallClick = (e: Event) => {
             if (otherUser && conversationId) {
-                callContext?.startCall(conversationId, otherUser.id, otherUser.name || otherUser.email || 'Utilisateur');
+                const callType = (e as CustomEvent<{ callType?: 'video' | 'audio' }>)?.detail?.callType ?? 'video';
+                callContext?.startCall(conversationId, otherUser.id, otherUser.name || otherUser.email || 'Utilisateur', callType);
             }
         };
         window.addEventListener('discussion-lock-click', onLockClick);

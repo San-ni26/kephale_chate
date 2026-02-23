@@ -17,6 +17,8 @@ import {
     Mic,
     MicOff,
     Volume2,
+    Video,
+    VideoOff,
     Clock,
     ChevronUp,
 } from 'lucide-react';
@@ -41,7 +43,11 @@ export function GlobalCallOverlay() {
         isIncomingCall,
         incomingCallData,
         activeCall,
+        callType,
+        localStream,
+        remoteStream,
         isMuted,
+        isVideoOn,
         isSpeakerOn,
         callDuration,
         connectionQuality,
@@ -49,8 +55,12 @@ export function GlobalCallOverlay() {
         rejectCall,
         endCall,
         toggleMute,
+        toggleVideoCamera,
         toggleSpeaker,
+        setRemoteVideoRef,
     } = ctx;
+
+    const isVideoCall = activeCall?.callType === 'video' || (isIncomingCall && incomingCallData?.isVideo !== false);
 
     const showOverlay = callStatus !== 'idle' && (activeCall || isIncomingCall);
     if (!showOverlay) return null;
@@ -85,7 +95,9 @@ export function GlobalCallOverlay() {
                     <AvatarFallback className="bg-white/20 text-white">{displayName[0]}</AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-white">Appel avec {displayName}</p>
+                    <p className="truncate font-medium text-white">
+                        {callType === 'video' ? 'Appel video avec' : 'Appel avec'} {displayName}
+                    </p>
                     <p className="flex items-center gap-1 text-xs text-white/80">
                         <Clock className="h-3 w-3" />
                         {formatDuration(callDuration)}
@@ -135,161 +147,272 @@ export function GlobalCallOverlay() {
                         <PhoneOff className="h-4 w-4" />
                     </Button>
                 </div>
+                {/* Vidéo cachée pour lecture audio en mode compact (appel vidéo uniquement) */}
+                {remoteStream && isVideoCall && (
+                    <video
+                        ref={(el) => {
+                            setRemoteVideoRef(el);
+                            if (el) {
+                                el.srcObject = remoteStream;
+                                el.play().catch(() => {});
+                            }
+                        }}
+                        autoPlay
+                        playsInline
+                        muted={false}
+                        className="hidden"
+                    />
+                )}
             </div>
         );
     }
 
-    // Mode plein écran (appel en cours ou entrant)
-    return (
-        <div className="fixed inset-0 z-[100] bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center flex-col">
-            {/* Animated circles */}
-            <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-                {callStatus === 'connected' && (
-                    <>
-                        <div
-                            className="absolute w-64 h-64 rounded-full border border-white/5 animate-ping"
-                            style={{ animationDuration: '3s' }}
-                        />
-                        <div
-                            className="absolute w-48 h-48 rounded-full border border-white/10 animate-ping"
-                            style={{ animationDuration: '2s' }}
-                        />
-                    </>
-                )}
-                {(callStatus === 'dialing' || callStatus === 'ringing' || callStatus === 'connecting') && (
-                    <>
-                        <div className="absolute w-40 h-40 rounded-full bg-primary/10 animate-pulse" />
-                        <div
-                            className="absolute w-56 h-56 rounded-full bg-primary/5 animate-pulse"
-                            style={{ animationDelay: '0.5s' }}
-                        />
-                    </>
-                )}
-            </div>
+    // Mode plein écran : appel connecté (vidéo ou audio) ou entrant (avatar + boutons)
+    const isVideoCallConnected = callStatus === 'connected' && isVideoCall;
 
-            <div className="relative z-10 flex flex-col items-center">
-                <div
-                    className={cn(
-                        'relative mb-6',
-                        callStatus === 'ringing' && 'animate-bounce'
-                    )}
-                >
-                    <div
-                        className={cn(
-                            'bg-white/10 p-1 rounded-full',
-                            callStatus === 'connected' ? 'ring-4 ring-green-500/30' : 'ring-4 ring-white/10'
+    return (
+        <div className="fixed inset-0 z-[100] bg-black flex flex-col overflow-hidden">
+            {/* Zone vidéo principale - appel vidéo connecté */}
+            {isVideoCallConnected ? (
+                <>
+                    {/* Vidéo distante - plein écran (ou avatar si caméra coupée) */}
+                    <div className="absolute inset-0">
+                        {remoteStream && (
+                            <video
+                                ref={(el) => {
+                                    setRemoteVideoRef(el);
+                                    if (el) {
+                                        el.srcObject = remoteStream;
+                                        el.play().catch(() => {});
+                                    }
+                                }}
+                                autoPlay
+                                playsInline
+                                muted={false}
+                                className={cn(
+                                    'w-full h-full',
+                                    remoteStream.getVideoTracks().length > 0 ? 'object-cover' : 'hidden'
+                                )}
+                            />
                         )}
-                    >
-                        <Avatar className="w-28 h-28 border-2 border-white/20">
+                        {(!remoteStream || remoteStream.getVideoTracks().length === 0) && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-950">
+                                <Avatar className="w-32 h-32 border-4 border-white/20">
+                                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
+                                    <AvatarFallback className="text-4xl bg-primary/30 text-white">
+                                        {displayName[0]}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Vidéo locale - PiP coin bas-droit (style WhatsApp) */}
+                    {localStream && (
+                        <div className="absolute bottom-24 right-4 w-28 h-36 md:w-36 md:h-48 rounded-xl overflow-hidden border-2 border-white/30 shadow-2xl bg-black">
+                            {isVideoOn ? (
+                                <video
+                                    ref={(el) => {
+                                        if (el && localStream) {
+                                            el.srcObject = localStream;
+                                            el.muted = true;
+                                            el.play().catch(() => {});
+                                        }
+                                    }}
+                                    autoPlay
+                                    playsInline
+                                    muted
+                                    className="w-full h-full object-cover scale-x-[-1]"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-gray-800">
+                                    <VideoOff className="w-10 h-10 text-white/50" />
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Barre d'info en haut */}
+                    <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
+                        <div className="flex items-center gap-3">
+                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                            <span className="font-medium text-white drop-shadow-lg">{displayName}</span>
+                            {connectionQuality && (
+                                <span
+                                    className={cn(
+                                        'text-xs px-2 py-0.5 rounded-full',
+                                        connectionQuality === 'good' && 'bg-green-500/40 text-green-100',
+                                        connectionQuality === 'fair' && 'bg-amber-500/40 text-amber-100',
+                                        connectionQuality === 'poor' && 'bg-red-500/40 text-red-100'
+                                    )}
+                                >
+                                    {connectionQuality === 'good' && 'Bonne connexion'}
+                                    {connectionQuality === 'fair' && 'Moyenne'}
+                                    {connectionQuality === 'poor' && 'Instable'}
+                                </span>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-1.5 text-white/90">
+                            <Clock className="w-4 h-4" />
+                            <span className="font-mono text-sm">{formatDuration(callDuration)}</span>
+                        </div>
+                    </div>
+                </>
+            ) : callStatus === 'connected' && !isVideoCall ? (
+                /* Appel audio connecté - avatar + lecture audio */
+                <>
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+                        <Avatar className="w-32 h-32 border-4 border-white/20">
                             <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
-                            <AvatarFallback className="text-3xl bg-primary/20 text-white">
+                            <AvatarFallback className="text-4xl bg-primary/30 text-white">
                                 {displayName[0]}
                             </AvatarFallback>
                         </Avatar>
                     </div>
-                    {callStatus === 'connected' && (
-                        <span className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-gray-800 rounded-full" />
+                    <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
+                        <div className="flex items-center gap-3">
+                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                            <span className="font-medium text-white drop-shadow-lg">{displayName}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-white/90">
+                            <Clock className="w-4 h-4" />
+                            <span className="font-mono text-sm">{formatDuration(callDuration)}</span>
+                        </div>
+                    </div>
+                    {/* Lecture audio distante (élément caché) */}
+                    {remoteStream && (
+                        <video
+                            ref={(el) => {
+                                setRemoteVideoRef(el);
+                                if (el) {
+                                    el.srcObject = remoteStream;
+                                    el.play().catch(() => {});
+                                }
+                            }}
+                            autoPlay
+                            playsInline
+                            muted={false}
+                            className="hidden"
+                        />
                     )}
-                </div>
-
-                <h3 className="text-2xl font-bold text-white mb-1 drop-shadow-lg">{displayName}</h3>
-
-                <p className="text-white/80 mb-2 text-sm drop-shadow">
-                    {isIncomingCall && 'Appel vocal entrant...'}
-                    {callStatus === 'dialing' && 'Appel en cours...'}
-                    {callStatus === 'connecting' && 'Connexion en cours...'}
-                    {callStatus === 'connected' && 'Appel vocal'}
-                </p>
-
-                {callStatus === 'connected' && connectionQuality && (
-                    <div
-                        className={cn(
-                            'text-xs px-2 py-0.5 rounded-full mb-2',
-                            connectionQuality === 'good' && 'bg-green-500/30 text-green-200',
-                            connectionQuality === 'fair' && 'bg-amber-500/30 text-amber-200',
-                            connectionQuality === 'poor' && 'bg-red-500/30 text-red-200'
+                </>
+            ) : (
+                /* État entrant / composition / connexion - avatar + animations */
+                <>
+                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+                        {(callStatus === 'dialing' || callStatus === 'ringing' || callStatus === 'connecting') && (
+                            <>
+                                <div className="absolute w-40 h-40 rounded-full bg-primary/10 animate-pulse" />
+                                <div
+                                    className="absolute w-56 h-56 rounded-full bg-primary/5 animate-pulse"
+                                    style={{ animationDelay: '0.5s' }}
+                                />
+                            </>
                         )}
-                    >
-                        {connectionQuality === 'good' && 'Bonne connexion'}
-                        {connectionQuality === 'fair' && 'Connexion moyenne'}
-                        {connectionQuality === 'poor' && 'Connexion instable'}
                     </div>
-                )}
-
-                {callStatus === 'connected' && (
-                    <div className="flex items-center gap-1.5 text-white/80 mb-8">
-                        <Clock className="w-4 h-4" />
-                        <span className="text-lg font-mono">{formatDuration(callDuration)}</span>
+                    <div className={cn('relative z-10 flex flex-col items-center', isIncomingCall && 'animate-bounce')}>
+                        <div className={cn('bg-white/10 p-1 rounded-full', 'ring-4 ring-white/10')}>
+                            <Avatar className="w-28 h-28 border-2 border-white/20">
+                                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
+                                <AvatarFallback className="text-3xl bg-primary/20 text-white">
+                                    {displayName[0]}
+                                </AvatarFallback>
+                            </Avatar>
+                        </div>
+                        <h3 className="text-2xl font-bold text-white mt-6 mb-1 drop-shadow-lg">{displayName}</h3>
+                        <p className="text-white/80 mb-8 text-sm drop-shadow">
+                            {isIncomingCall && (isVideoCall ? 'Appel video entrant...' : 'Appel audio entrant...')}
+                            {callStatus === 'dialing' && 'Appel en cours...'}
+                            {callStatus === 'connecting' && 'Connexion en cours...'}
+                        </p>
                     </div>
-                )}
+                </>
+            )}
 
-                {callStatus !== 'connected' && <div className="mb-8" />}
-
-                <div className="flex items-center gap-4 flex-wrap justify-center">
-                    {isIncomingCall ? (
-                        <>
-                            <div className="flex flex-col items-center gap-2">
-                                <Button
-                                    size="lg"
-                                    className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
-                                    onClick={rejectCall}
-                                >
-                                    <PhoneOff className="w-7 h-7 text-white" />
-                                </Button>
-                                <span className="text-white/60 text-xs">Refuser</span>
-                            </div>
-                            <div className="flex flex-col items-center gap-2">
-                                <Button
-                                    size="lg"
-                                    className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/30 animate-pulse"
-                                    onClick={answerCall}
-                                >
-                                    <PhoneIncoming className="w-7 h-7 text-white" />
-                                </Button>
-                                <span className="text-white/60 text-xs">Repondre</span>
-                            </div>
-                        </>
-                    ) : (
-                        <>
+            {/* Barre de contrôles en bas */}
+            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-4 pb-8 pt-4 bg-gradient-to-t from-black/80 to-transparent">
+                {isIncomingCall ? (
+                    <>
+                        <div className="flex flex-col items-center gap-2">
+                            <Button
+                                size="lg"
+                                className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
+                                onClick={rejectCall}
+                            >
+                                <PhoneOff className="w-7 h-7 text-white" />
+                            </Button>
+                            <span className="text-white/60 text-xs">Refuser</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-2">
+                            <Button
+                                size="lg"
+                                className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/30 animate-pulse"
+                                onClick={answerCall}
+                            >
+                                <PhoneIncoming className="w-7 h-7 text-white" />
+                            </Button>
+                            <span className="text-white/60 text-xs">Repondre</span>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="flex flex-col items-center gap-2">
+                            <Button
+                                size="lg"
+                                className={cn(
+                                    'rounded-full w-14 h-14 shadow-lg',
+                                    isMuted ? 'bg-red-500/50 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                )}
+                                onClick={toggleMute}
+                                aria-label={isMuted ? 'Activer le micro' : 'Couper le micro'}
+                            >
+                                {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+                            </Button>
+                            <span className="text-white/60 text-xs">{isMuted ? 'Micro coupé' : 'Micro'}</span>
+                        </div>
+                        {isVideoCall && (
                             <div className="flex flex-col items-center gap-2">
                                 <Button
                                     size="lg"
                                     className={cn(
                                         'rounded-full w-14 h-14 shadow-lg',
-                                        isMuted ? 'bg-white/20 text-white' : 'bg-white/10 text-white hover:bg-white/20'
+                                        !isVideoOn ? 'bg-red-500/50 text-white' : 'bg-white/20 text-white hover:bg-white/30'
                                     )}
-                                    onClick={toggleMute}
+                                    onClick={toggleVideoCamera}
+                                    aria-label={isVideoOn ? 'Couper la camera' : 'Activer la camera'}
                                 >
-                                    {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+                                    {isVideoOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
                                 </Button>
-                                <span className="text-white/60 text-xs">{isMuted ? 'Unmute' : 'Mute'}</span>
+                                <span className="text-white/60 text-xs">{isVideoOn ? 'Camera' : 'Camera coupée'}</span>
                             </div>
-                            <div className="flex flex-col items-center gap-2">
-                                <Button
-                                    size="lg"
-                                    className={cn(
-                                        'rounded-full w-14 h-14 shadow-lg',
-                                        isSpeakerOn ? 'bg-primary/40 text-white' : 'bg-white/10 text-white hover:bg-white/20'
-                                    )}
-                                    onClick={toggleSpeaker}
-                                >
-                                    <Volume2 className="w-6 h-6" />
-                                </Button>
-                                <span className="text-white/60 text-xs">Haut-parleur</span>
-                            </div>
-                            <div className="flex flex-col items-center gap-2">
-                                <Button
-                                    size="lg"
-                                    className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
-                                    onClick={endCall}
-                                >
-                                    <PhoneOff className="w-7 h-7 text-white" />
-                                </Button>
-                                <span className="text-white/60 text-xs">Raccrocher</span>
-                            </div>
-                        </>
-                    )}
-                </div>
+                        )}
+                        <div className="flex flex-col items-center gap-2">
+                            <Button
+                                size="lg"
+                                className={cn(
+                                    'rounded-full w-14 h-14 shadow-lg',
+                                    isSpeakerOn ? 'bg-primary/50 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                )}
+                                onClick={toggleSpeaker}
+                                aria-label="Haut-parleur"
+                            >
+                                <Volume2 className="w-6 h-6" />
+                            </Button>
+                            <span className="text-white/60 text-xs">Haut-parleur</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-2">
+                            <Button
+                                size="lg"
+                                className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
+                                onClick={endCall}
+                                aria-label="Raccrocher"
+                            >
+                                <PhoneOff className="w-7 h-7 text-white" />
+                            </Button>
+                            <span className="text-white/60 text-xs">Raccrocher</span>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

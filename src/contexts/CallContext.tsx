@@ -1,8 +1,9 @@
 'use client';
 
 /**
- * Contexte global pour les appels vocaux.
+ * Contexte global pour les appels vidéo (audio + vidéo).
  * La logique WebRTC vit ici pour que l'appel continue même quand on quitte la page de discussion.
+ * Optimisé pour mobile et desktop (contraintes adaptatives, caméra avant sur mobile).
  */
 
 import {
@@ -17,6 +18,17 @@ import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { fetchWithAuth } from '@/src/lib/auth-client';
 import { toast } from 'sonner';
 import { startRingtone, stopRingtone } from '@/src/lib/ringtone';
+
+/** Contraintes vidéo adaptatives : 720p desktop, 480p mobile, caméra avant par défaut */
+const getVideoConstraints = (): MediaTrackConstraints => {
+    const isMobile = typeof window !== 'undefined' && /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    return {
+        width: { ideal: isMobile ? 640 : 1280 },
+        height: { ideal: isMobile ? 480 : 720 },
+        frameRate: { ideal: 24, max: 30 },
+        facingMode: isMobile ? 'user' : 'user',
+    };
+};
 
 const ICE_SERVERS: RTCIceServer[] = [
     { urls: 'stun:stun.l.google.com:19302' },
@@ -48,17 +60,21 @@ export type CallStatus =
     | 'connected'
     | 'ended';
 
+export type CallType = 'video' | 'audio';
+
 export interface IncomingCallData {
     callerId: string;
     callerName?: string;
     offer: RTCSessionDescriptionInit;
     conversationId: string;
+    isVideo?: boolean;
 }
 
 export interface ActiveCallInfo {
     conversationId: string;
     otherUserId: string;
     otherUserName: string;
+    callType: CallType;
 }
 
 interface CallContextValue {
@@ -70,24 +86,28 @@ interface CallContextValue {
     isIncomingCall: boolean;
     incomingCallData: IncomingCallData | null;
     activeCall: ActiveCallInfo | null;
+    callType: CallType;
     localStream: MediaStream | null;
     remoteStream: MediaStream | null;
     isMuted: boolean;
+    isVideoOn: boolean;
     isSpeakerOn: boolean;
     callDuration: number;
     connectionQuality: 'good' | 'fair' | 'poor' | null;
 
     // Actions
-    startCall: (conversationId: string, otherUserId: string, otherUserName: string) => Promise<void>;
+    startCall: (conversationId: string, otherUserId: string, otherUserName: string, callType?: CallType) => Promise<void>;
     answerCall: () => Promise<void>;
     answerCallWithData: (data: IncomingCallData) => Promise<void>;
     rejectCall: () => void;
     endCall: () => void;
     toggleMute: () => void;
+    toggleVideoCamera: () => void;
     toggleSpeaker: () => void;
 
     // Pour les appels entrants (sessionStorage, etc.)
     setIncomingCallData: (data: IncomingCallData | null) => void;
+    setRemoteVideoRef: (el: HTMLVideoElement | null) => void;
 
     // Pré-chauffage micro
     prewarmMedia: () => void;
@@ -101,9 +121,11 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     const [isIncomingCall, setIsIncomingCall] = useState(false);
     const [incomingCallData, setIncomingCallDataState] = useState<IncomingCallData | null>(null);
     const [activeCall, setActiveCall] = useState<ActiveCallInfo | null>(null);
+    const [callType, setCallType] = useState<CallType>('video');
     const [localStream, setLocalStream] = useState<MediaStream | null>(null);
     const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
     const [isMuted, setIsMuted] = useState(false);
+    const [isVideoOn, setIsVideoOn] = useState(true);
     const [isSpeakerOn, setIsSpeakerOn] = useState(false);
     const [callDuration, setCallDuration] = useState(0);
     const [connectionQuality, setConnectionQuality] = useState<'good' | 'fair' | 'poor' | null>(null);
@@ -113,7 +135,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     const iceCandidateBufferRef = useRef<RTCIceCandidate[]>([]);
     const callTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const callTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const remoteAudioRef = useRef<HTMLAudioElement | null>(null);
+    const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
     const activeCallNotificationRef = useRef<Notification | null>(null);
     const activeCallRef = useRef(activeCall);
     activeCallRef.current = activeCall;
@@ -160,6 +182,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         stopRingtone();
         setLocalStream(null);
         setActiveCall(null);
+        setCallType('video');
         setIsIncomingCall(false);
         setIsInCall(false);
         setCallStatus('idle');
@@ -167,6 +190,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         setRemoteStream(null);
         setCallDuration(0);
         setIsMuted(false);
+        setIsVideoOn(true);
         setIsSpeakerOn(false);
         setConnectionQuality(null);
     }, []);
@@ -207,7 +231,10 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
             pc.ontrack = (event) => {
                 const stream = event.streams[0];
                 setRemoteStream(stream);
-                if (remoteAudioRef.current) remoteAudioRef.current.srcObject = stream;
+                if (remoteVideoRef.current) {
+                    remoteVideoRef.current.srcObject = stream;
+                    remoteVideoRef.current.play().catch(() => {});
+                }
             };
 
             pc.oniceconnectionstatechange = () => {
@@ -243,9 +270,10 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     const dialingRef = useRef(false);
 
     const startCall = useCallback(
-        async (conversationId: string, otherUserId: string, otherUserName: string) => {
+        async (conversationId: string, otherUserId: string, otherUserName: string, type: CallType = 'video') => {
             setIsInCall(true);
-            setActiveCall({ conversationId, otherUserId, otherUserName });
+            setCallType(type);
+            setActiveCall({ conversationId, otherUserId, otherUserName, callType: type });
             setCallStatus('dialing');
             dialingRef.current = true;
 
@@ -258,9 +286,11 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
             }, 45000);
 
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({
+                const mediaConstraints: MediaStreamConstraints = {
                     audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-                });
+                    ...(type === 'video' && { video: getVideoConstraints() }),
+                };
+                const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
                 setLocalStream(stream);
 
                 const pc = initializePeerConnection(otherUserId);
@@ -274,10 +304,11 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                     recipientId: otherUserId,
                     offer,
                     conversationId,
+                    isVideo: type === 'video',
                 });
             } catch (err) {
                 console.error('[Call] Start error:', err);
-                toast.error("Impossible d'acceder au microphone");
+                toast.error("Impossible d'acceder a la camera ou au microphone");
                 cleanupCall();
             }
         },
@@ -291,18 +322,23 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         stopRingtone();
         setIsIncomingCall(false);
         setIsInCall(true);
+        const isVideo = data.isVideo !== false;
+        setCallType(isVideo ? 'video' : 'audio');
         setActiveCall({
             conversationId: data.conversationId,
             otherUserId: data.callerId,
             otherUserName: data.callerName || 'Utilisateur',
+            callType: isVideo ? 'video' : 'audio',
         });
         setCallStatus('connecting');
         setIncomingCallDataState(null);
 
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
+            const mediaConstraints: MediaStreamConstraints = {
                 audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-            });
+                ...(isVideo && { video: getVideoConstraints() }),
+            };
+            const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
             setLocalStream(stream);
 
             const pc = initializePeerConnection(data.callerId);
@@ -341,18 +377,23 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
             stopRingtone();
             setIsIncomingCall(false);
             setIsInCall(true);
+            const isVideo = data.isVideo !== false;
+            setCallType(isVideo ? 'video' : 'audio');
             setActiveCall({
                 conversationId: data.conversationId,
                 otherUserId: data.callerId,
                 otherUserName: data.callerName || 'Utilisateur',
+                callType: isVideo ? 'video' : 'audio',
             });
             setCallStatus('connecting');
             setIncomingCallDataState(null);
 
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({
+                const mediaConstraints: MediaStreamConstraints = {
                     audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-                });
+                    ...(isVideo && { video: getVideoConstraints() }),
+                };
+                const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
                 setLocalStream(stream);
 
                 const pc = initializePeerConnection(data.callerId);
@@ -401,12 +442,22 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
+    const toggleVideoCamera = useCallback(() => {
+        if (localStreamRef.current) {
+            const videoTracks = localStreamRef.current.getVideoTracks();
+            videoTracks.forEach((track) => {
+                track.enabled = !track.enabled;
+            });
+            setIsVideoOn((prev) => !prev);
+        }
+    }, []);
+
     const toggleSpeaker = useCallback(async () => {
-        const audio = remoteAudioRef.current;
-        if (!audio || typeof (audio as HTMLAudioElement & { setSinkId?: (id: string) => Promise<void> }).setSinkId !== 'function') return;
+        const video = remoteVideoRef.current;
+        if (!video || typeof (video as HTMLVideoElement & { setSinkId?: (id: string) => Promise<void> }).setSinkId !== 'function') return;
         try {
             if (isSpeakerOn) {
-                await (audio as HTMLAudioElement & { setSinkId: (id: string) => Promise<void> }).setSinkId('');
+                await (video as HTMLVideoElement & { setSinkId: (id: string) => Promise<void> }).setSinkId('');
             } else {
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 const outputs = devices.filter((d) => d.kind === 'audiooutput');
@@ -417,7 +468,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                             d.label.toLowerCase().includes('haut-parleur')
                     ) || outputs[0];
                 if (speaker?.deviceId) {
-                    await (audio as HTMLAudioElement & { setSinkId: (id: string) => Promise<void> }).setSinkId(speaker.deviceId);
+                    await (video as HTMLVideoElement & { setSinkId: (id: string) => Promise<void> }).setSinkId(speaker.deviceId);
                 }
             }
             setIsSpeakerOn((prev) => !prev);
@@ -437,9 +488,20 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
+    const setRemoteVideoRef = useCallback((el: HTMLVideoElement | null) => {
+        remoteVideoRef.current = el;
+        if (el && remoteStream) {
+            el.srcObject = remoteStream;
+            el.play().catch(() => {});
+        }
+    }, [remoteStream]);
+
     const prewarmMedia = useCallback(async () => {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'user' },
+                audio: true,
+            });
             stream.getTracks().forEach((t) => t.stop());
         } catch {
             // Ignore
@@ -455,7 +517,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if (!userChannel || !isConnected) return;
 
-        const handleIncomingCall = (data: { callerId: string; callerName?: string; offer: any; conversationId: string }) => {
+        const handleIncomingCall = (data: { callerId: string; callerName?: string; offer: any; conversationId: string; isVideo?: boolean }) => {
             if (activeCallRef.current) {
                 emitCallSignal('call:reject', { callerId: data.callerId });
                 return;
@@ -531,12 +593,12 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         };
     }, [userChannel, isConnected, emitCallSignal, startCallTimer, cleanupCall]);
 
-    // Auto-play remote audio
+    // Auto-play remote video/audio
     useEffect(() => {
-        const audio = remoteAudioRef.current;
-        if (!audio || !remoteStream) return;
-        audio.srcObject = remoteStream;
-        audio.play().catch(() => {});
+        const video = remoteVideoRef.current;
+        if (!video || !remoteStream) return;
+        video.srcObject = remoteStream;
+        video.play().catch(() => {});
     }, [remoteStream]);
 
     // Sync SW / visibility
@@ -600,9 +662,11 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         isIncomingCall,
         incomingCallData,
         activeCall,
+        callType,
         localStream,
         remoteStream,
         isMuted,
+        isVideoOn,
         isSpeakerOn,
         callDuration,
         connectionQuality,
@@ -612,28 +676,14 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         rejectCall,
         endCall,
         toggleMute,
+        toggleVideoCamera,
         toggleSpeaker,
         setIncomingCallData,
+        setRemoteVideoRef,
         prewarmMedia,
     };
 
-    return (
-        <CallContext.Provider value={value}>
-            {children}
-            {/* Référence audio pour le flux distant - doit rester montée */}
-            {(activeCall || remoteStream) && (
-                <audio
-                    ref={(el) => {
-                        remoteAudioRef.current = el;
-                        if (el && remoteStream) el.srcObject = remoteStream;
-                    }}
-                    autoPlay
-                    playsInline
-                    className="hidden"
-                />
-            )}
-        </CallContext.Provider>
-    );
+    return <CallContext.Provider value={value}>{children}</CallContext.Provider>;
 }
 
 export function useCallContext() {

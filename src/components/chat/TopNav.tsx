@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, LockOpen, FileText, NotepadText, Phone, KeyRound, ShieldOff, Eye, EyeOff, MoreVertical, Crown } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, LockOpen, FileText, NotepadText, Phone, Video, KeyRound, ShieldOff, Eye, EyeOff, MoreVertical, Crown, Archive, ArchiveRestore } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
@@ -21,7 +21,6 @@ import {
 } from '@/src/components/ui/dropdown-menu';
 import OrganizationRequestDialog from '@/src/components/organizations/OrganizationRequestDialog';
 import { useDiscussionBlurState } from '@/src/contexts/DiscussionBlurContext';
-import { DiscussionHideToggle } from '@/src/components/chat/DiscussionHideToggle';
 import { PurchaseRightsDialog } from '@/src/components/chat/PurchaseRightsDialog';
 import useSWR from 'swr';
 
@@ -49,6 +48,7 @@ export function TopNav() {
     const [loading, setLoading] = useState(false);
     const [showOrgRequestDialog, setShowOrgRequestDialog] = useState(false);
     const [showPurchaseRightsDialog, setShowPurchaseRightsDialog] = useState(false);
+    const [hideToggleLoading, setHideToggleLoading] = useState(false);
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
 
@@ -664,34 +664,8 @@ export function TopNav() {
                             ) : null;
                         })()}
                     </div>
-                    {/* Icône flou (œil) + masquer + cadenas + appel : visible pour toutes les discussions (directes ou non) */}
+                    {/* Cadenas + appel + menu trois points (flou, masquer, achat) */}
                     <div className="flex items-center gap-1 shrink-0">
-                        {discussionBlurState?.showBlurToggle && (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={discussionBlurState.onToggle}
-                                title={discussionBlurState.blurEnabled ? 'Afficher les anciens messages' : 'Flouter les anciens messages'}
-                                className={cn(
-                                    'hover:bg-primary/10',
-                                    discussionBlurState.blurEnabled ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-                                )}
-                            >
-                                {discussionBlurState.blurEnabled ? (
-                                    <Eye className="w-5 h-5" />
-                                ) : (
-                                    <EyeOff className="w-5 h-5" />
-                                )}
-                            </Button>
-                        )}
-                        {discussion?.canCurrentUserControl && discussion?.members?.length === 2 && (
-                            <DiscussionHideToggle
-                                discussionId={discussionId!}
-                                hiddenByUserId={discussion?.hiddenByUserId}
-                                currentUserId={user?.id}
-                                onSuccess={() => mutateDiscussion()}
-                            />
-                        )}
                         {discussion?.isLocked && discussion?.canCurrentUserControl ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -730,33 +704,91 @@ export function TopNav() {
                         <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => window.dispatchEvent(new CustomEvent('discussion-call-click'))}
-                            title="Appel vocal"
+                            onClick={() => window.dispatchEvent(new CustomEvent('discussion-call-click', { detail: { callType: 'video' } }))}
+                            title="Appel video"
+                            className="hover:bg-primary/10"
+                        >
+                            <Video className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => window.dispatchEvent(new CustomEvent('discussion-call-click', { detail: { callType: 'audio' } }))}
+                            title="Appel audio"
                             className="hover:bg-primary/10"
                         >
                             <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
                         </Button>
-                        {discussion?.canPurchaseRights && (
-                            <>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setShowPurchaseRightsDialog(true)}
-                                    title="Acheter les droits de la discussion"
-                                    className="hover:bg-primary/10"
-                                >
-                                    <Crown className="w-5 h-5 text-amber-500" />
-                                </Button>
-                                <PurchaseRightsDialog
-                                    open={showPurchaseRightsDialog}
-                                    onOpenChange={setShowPurchaseRightsDialog}
-                                    discussionId={discussionId!}
-                                    onSuccess={() => mutateDiscussion()}
-                                    pendingRightsPayment={discussion?.pendingRightsPayment}
-                                    pendingRightsOrder={discussion?.pendingRightsOrder}
-                                />
-                            </>
+                        {(discussionBlurState?.showBlurToggle || (discussion?.canCurrentUserControl && discussion?.members?.length === 2) || discussion?.canPurchaseRights) && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        title="Plus d'options"
+                                        className="hover:bg-primary/10"
+                                    >
+                                        <MoreVertical className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    {discussionBlurState?.showBlurToggle && (
+                                        <DropdownMenuItem onClick={discussionBlurState.onToggle}>
+                                            {discussionBlurState.blurEnabled ? (
+                                                <><EyeOff className="w-4 h-4 mr-2" /> Afficher les anciens messages</>
+                                            ) : (
+                                                <><Eye className="w-4 h-4 mr-2" /> Flouter les anciens messages</>
+                                            )}
+                                        </DropdownMenuItem>
+                                    )}
+                                    {discussion?.canCurrentUserControl && discussion?.members?.length === 2 && (
+                                        <DropdownMenuItem
+                                            disabled={hideToggleLoading}
+                                            onClick={async () => {
+                                                if (!discussionId || hideToggleLoading) return;
+                                                setHideToggleLoading(true);
+                                                try {
+                                                    const isHiddenByMe = discussion.hiddenByUserId === user?.id;
+                                                    const endpoint = isHiddenByMe ? 'unhide' : 'hide';
+                                                    const res = await fetchWithAuth(`/api/conversations/${discussionId}/${endpoint}`, { method: 'POST' });
+                                                    const data = await res.json().catch(() => ({}));
+                                                    if (res.ok) {
+                                                        toast.success(data.message || (isHiddenByMe ? 'Discussion affichée' : 'Discussion masquée'));
+                                                        mutateDiscussion();
+                                                    } else {
+                                                        toast.error(data.error || 'Erreur');
+                                                    }
+                                                } catch {
+                                                    toast.error('Erreur réseau');
+                                                } finally {
+                                                    setHideToggleLoading(false);
+                                                }
+                                            }}
+                                        >
+                                            {discussion.hiddenByUserId === user?.id ? (
+                                                <><ArchiveRestore className="w-4 h-4 mr-2" /> Afficher la discussion pour l'autre</>
+                                            ) : (
+                                                <><Archive className="w-4 h-4 mr-2" /> Masquer la discussion pour l'autre</>
+                                            )}
+                                        </DropdownMenuItem>
+                                    )}
+                                    {discussion?.canPurchaseRights && (
+                                        <DropdownMenuItem onClick={() => setShowPurchaseRightsDialog(true)}>
+                                            <Crown className="w-4 h-4 mr-2 text-amber-500" />
+                                            Acheter les droits de la discussion
+                                        </DropdownMenuItem>
+                                    )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         )}
+                        <PurchaseRightsDialog
+                            open={showPurchaseRightsDialog}
+                            onOpenChange={setShowPurchaseRightsDialog}
+                            discussionId={discussionId!}
+                            onSuccess={() => mutateDiscussion()}
+                            pendingRightsPayment={discussion?.pendingRightsPayment}
+                            pendingRightsOrder={discussion?.pendingRightsOrder}
+                        />
                     </div>
                 </>
             ) : isChatListPage ? (

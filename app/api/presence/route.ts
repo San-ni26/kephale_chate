@@ -45,7 +45,8 @@ export async function POST(request: NextRequest) {
             pendingCall.callerId,
             pendingCall.callerName,
             pendingCall.offer,
-            pendingCall.conversationId
+            pendingCall.conversationId,
+            pendingCall.isVideo !== false
         ).catch((err) => console.error('[Presence] Pending call delivery failed:', err));
     }
 

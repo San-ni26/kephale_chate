@@ -284,7 +284,8 @@ export async function notifyIncomingCall(
     callerId: string,
     callerName: string,
     offer: any,
-    conversationId: string
+    conversationId: string,
+    isVideo: boolean = true
 ) {
     if (process.env.NODE_ENV === 'development') {
         console.log(`[Call] Notifying ${recipientId} of incoming call from ${callerName}`);
@@ -305,6 +306,7 @@ export async function notifyIncomingCall(
             callerName,
             offer,
             conversationId,
+            isVideo,
         });
         if (process.env.NODE_ENV === 'development') console.log('[Call] Pusher call:incoming sent');
     } catch (err) {
@@ -323,7 +325,7 @@ export async function notifyIncomingCall(
 
         if (subscriptions.length > 0) {
             const payload = JSON.stringify({
-                title: `Appel de ${callerName}`,
+                title: isVideo ? `Appel video de ${callerName}` : `Appel de ${callerName}`,
                 body: 'Appuyez pour repondre',
                 icon: '/icons/icon-192x192.png',
                 url: `/chat/discussion/${conversationId}`,

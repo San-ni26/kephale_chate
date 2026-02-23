@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
         switch (event) {
             case 'call:invite': {
-                const { recipientId, offer, conversationId } = body;
+                const { recipientId, offer, conversationId, isVideo } = body;
                 if (!recipientId || !offer || !conversationId) {
                     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
                 }
@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
                     callerName,
                     offer,
                     conversationId,
+                    isVideo: isVideo !== false,
                 };
 
                 // Stocker appel en attente (Redis) pour destinataire offline
@@ -69,7 +70,7 @@ export async function POST(request: NextRequest) {
                 await setUserInCall(user.userId, conversationId, recipientId);
 
                 // Send via Pusher + Web Push
-                await notifyIncomingCall(recipientId, user.userId, callerName, offer, conversationId);
+                await notifyIncomingCall(recipientId, user.userId, callerName, offer, conversationId, pendingData.isVideo);
 
                 return NextResponse.json({ success: true });
             }
