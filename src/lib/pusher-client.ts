@@ -48,9 +48,11 @@ export function getPusherClient(): PusherClient | null {
             channelAuthorization: {
                 transport: 'ajax',
                 endpoint: '/api/pusher/auth',
-                headersProvider: () => ({
-                    Authorization: `Bearer ${getToken() || ''}`,
-                }),
+                headersProvider: () => {
+                    const token = getToken();
+                    // Ne pas envoyer "Bearer " vide : laisser le middleware utiliser le cookie
+                    return token ? { Authorization: `Bearer ${token}` } : {};
+                },
             },
         });
     } catch (err) {
@@ -91,7 +93,14 @@ export function acquireUserChannel(): Channel | null {
     });
 
     userChannelInstance.bind('pusher:subscription_error', (err: any) => {
-        console.error('[Pusher] User channel subscription error:', err);
+        const status = err?.status;
+        const is401 = status === 401;
+        if (process.env.NODE_ENV === 'development' && !is401) {
+            console.error('[Pusher] User channel subscription error:', err);
+        }
+        if (is401 && process.env.NODE_ENV === 'development') {
+            console.warn('[Pusher] Auth 401 - vérifiez que vous êtes connecté (token/cookie valide)');
+        }
     });
 
     return userChannelInstance;

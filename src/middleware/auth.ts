@@ -18,8 +18,8 @@ export async function authenticate(request: NextRequest): Promise<NextResponse |
     const authHeader = request.headers.get('authorization');
     let token = extractTokenFromHeader(authHeader);
 
-    // If not in header, try to get from cookie
-    if (!token) {
+    // Traiter "Bearer " vide comme absence de token (fallback cookie)
+    if (!token || token.trim() === '') {
         token = request.cookies.get('auth-token')?.value || null;
     }
 

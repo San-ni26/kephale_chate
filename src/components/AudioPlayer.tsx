@@ -62,7 +62,10 @@ export function AudioPlayer({ src, onPlay }: AudioPlayerProps) {
         if (isPlaying) {
             audio.pause();
         } else {
-            audio.play();
+            audio.play().catch((e: unknown) => {
+                if (e instanceof DOMException && e.name === 'NotAllowedError') return;
+                console.warn('[Audio] play failed:', e);
+            });
             onPlay?.();
         }
         setIsPlaying(!isPlaying);

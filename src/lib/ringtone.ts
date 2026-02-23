@@ -18,9 +18,17 @@ const VOLUME = 0.25;
 function getAudioContext(): AudioContext | null {
     if (typeof window === 'undefined') return null;
     if (!audioContext) {
-        audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+        try {
+            audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+        } catch {
+            return null;
+        }
     }
     return audioContext;
+}
+
+function isNotAllowedError(e: unknown): boolean {
+    return e instanceof DOMException && e.name === 'NotAllowedError';
 }
 
 function playNote(freq: number, startTime: number, duration: number, ctx: AudioContext): void {
@@ -39,33 +47,45 @@ function playNote(freq: number, startTime: number, duration: number, ctx: AudioC
 }
 
 async function playRingCycle(): Promise<void> {
-    const ctx = getAudioContext();
-    if (!ctx) return;
+    try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
 
-    const now = ctx.currentTime;
-    MELODY.forEach((freq, i) => {
-        const startTime = now + i * (NOTE_DURATION + NOTE_GAP) / 1000;
-        playNote(freq, startTime, NOTE_DURATION, ctx);
-    });
+        if (ctx.state === 'suspended') {
+            await ctx.resume();
+        }
+        if (ctx.state === 'closed') return;
 
-    const totalDuration = MELODY.length * (NOTE_DURATION + NOTE_GAP);
-    await new Promise((r) => setTimeout(r, totalDuration));
+        const now = ctx.currentTime;
+        MELODY.forEach((freq, i) => {
+            const startTime = now + i * (NOTE_DURATION + NOTE_GAP) / 1000;
+            playNote(freq, startTime, NOTE_DURATION, ctx);
+        });
+
+        const totalDuration = MELODY.length * (NOTE_DURATION + NOTE_GAP);
+        await new Promise((r) => setTimeout(r, totalDuration));
+    } catch (e) {
+        if (isNotAllowedError(e)) return; // Politique autoplay : ignorer silencieusement
+        throw e;
+    }
 }
 
 export function startRingtone(): void {
     if (isPlaying) return;
     if (typeof window === 'undefined') return;
 
-    const ctx = getAudioContext();
-    if (ctx?.state === 'suspended') {
-        ctx.resume().catch(() => {});
-    }
-
     isPlaying = true;
 
     const ring = async () => {
         if (!isPlaying) return;
-        await playRingCycle();
+        try {
+            await playRingCycle();
+        } catch (e) {
+            if (isNotAllowedError(e)) {
+                isPlaying = false;
+                return; // Politique autoplay : pas de sonnerie sans interaction utilisateur
+            }
+        }
         if (!isPlaying) return;
         intervalId = setTimeout(ring, CYCLE_PAUSE);
     };
@@ -73,12 +93,16 @@ export function startRingtone(): void {
     ring();
 
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        const vibratePattern = [200, 80, 200, 80, 200];
-        const doVibrate = () => {
-            if (isPlaying) navigator.vibrate(vibratePattern);
-        };
-        doVibrate();
-        vibrationIntervalId = setInterval(doVibrate, 1800);
+        try {
+            const vibratePattern = [200, 80, 200, 80, 200];
+            const doVibrate = () => {
+                if (isPlaying) navigator.vibrate(vibratePattern);
+            };
+            doVibrate();
+            vibrationIntervalId = setInterval(doVibrate, 1800);
+        } catch {
+            // Vibration non autorisée
+        }
     }
 }
 

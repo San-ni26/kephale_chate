@@ -9,6 +9,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { useCallContext } from '@/src/contexts/CallContext';
+import { safePlay } from '@/src/lib/safe-media-play';
 import { cn } from '@/src/lib/utils';
 import {
     Phone,
@@ -154,7 +155,7 @@ export function GlobalCallOverlay() {
                             setRemoteVideoRef(el);
                             if (el) {
                                 el.srcObject = remoteStream;
-                                el.play().catch(() => {});
+                                safePlay(el);
                             }
                         }}
                         autoPlay
@@ -183,7 +184,7 @@ export function GlobalCallOverlay() {
                                     setRemoteVideoRef(el);
                                     if (el) {
                                         el.srcObject = remoteStream;
-                                        el.play().catch(() => {});
+                                        safePlay(el);
                                     }
                                 }}
                                 autoPlay
@@ -216,7 +217,7 @@ export function GlobalCallOverlay() {
                                         if (el && localStream) {
                                             el.srcObject = localStream;
                                             el.muted = true;
-                                            el.play().catch(() => {});
+                                            safePlay(el);
                                         }
                                     }}
                                     autoPlay
@@ -286,7 +287,7 @@ export function GlobalCallOverlay() {
                                 setRemoteVideoRef(el);
                                 if (el) {
                                     el.srcObject = remoteStream;
-                                    el.play().catch(() => {});
+                                    safePlay(el);
                                 }
                             }}
                             autoPlay

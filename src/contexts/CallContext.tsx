@@ -18,17 +18,35 @@ import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { fetchWithAuth } from '@/src/lib/auth-client';
 import { toast } from 'sonner';
 import { startRingtone, stopRingtone } from '@/src/lib/ringtone';
+import { safePlay } from '@/src/lib/safe-media-play';
+import { processAudioStream, combineProcessedAudioWithVideo } from '@/src/lib/audio-processor';
 
-/** Contraintes vidéo adaptatives : 720p desktop, 480p mobile, caméra avant par défaut */
+/** Contraintes vidéo adaptatives : 480p mobile, 720p desktop, débit limité pour fluidité */
 const getVideoConstraints = (): MediaTrackConstraints => {
     const isMobile = typeof window !== 'undefined' && /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
     return {
         width: { ideal: isMobile ? 640 : 1280 },
         height: { ideal: isMobile ? 480 : 720 },
-        frameRate: { ideal: 24, max: 30 },
+        frameRate: { ideal: 20, max: 24 },
         facingMode: isMobile ? 'user' : 'user',
     };
 };
+
+/** Applique un débit max à la vidéo pour réduire coupures et décalage (mobile: 400, desktop: 600 kbps) */
+async function applyVideoBitrateLimit(pc: RTCPeerConnection): Promise<void> {
+    const isMobile = typeof window !== 'undefined' && /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const maxKbps = isMobile ? 400 : 600;
+    try {
+        const sender = pc.getSenders().find((s) => s.track?.kind === 'video');
+        if (!sender) return;
+        const params = sender.getParameters();
+        if (!params.encodings?.length) params.encodings = [{}];
+        params.encodings[0].maxBitrate = maxKbps * 1000;
+        await sender.setParameters(params);
+    } catch (e) {
+        if (process.env.NODE_ENV === 'development') console.warn('[Call] setParameters:', e);
+    }
+}
 
 const ICE_SERVERS: RTCIceServer[] = [
     { urls: 'stun:stun.l.google.com:19302' },
@@ -137,6 +155,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     const callTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
     const activeCallNotificationRef = useRef<Notification | null>(null);
+    const audioProcessorDisconnectRef = useRef<(() => void) | null>(null);
     const activeCallRef = useRef(activeCall);
     activeCallRef.current = activeCall;
 
@@ -159,6 +178,8 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const cleanupCall = useCallback(() => {
+        audioProcessorDisconnectRef.current?.();
+        audioProcessorDisconnectRef.current = null;
         if (localStreamRef.current) {
             localStreamRef.current.getTracks().forEach((t) => t.stop());
         }
@@ -233,7 +254,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                 setRemoteStream(stream);
                 if (remoteVideoRef.current) {
                     remoteVideoRef.current.srcObject = stream;
-                    remoteVideoRef.current.play().catch(() => {});
+                    safePlay(remoteVideoRef.current);
                 }
             };
 
@@ -291,10 +312,16 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                     ...(type === 'video' && { video: getVideoConstraints() }),
                 };
                 const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
-                setLocalStream(stream);
+                const processor = processAudioStream(stream);
+                const streamToUse = processor
+                    ? combineProcessedAudioWithVideo(processor.stream, stream)
+                    : stream;
+                audioProcessorDisconnectRef.current = processor?.disconnect ?? null;
+                setLocalStream(streamToUse);
 
                 const pc = initializePeerConnection(otherUserId);
-                stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+                streamToUse.getTracks().forEach((track) => pc.addTrack(track, streamToUse));
+                if (type === 'video') await applyVideoBitrateLimit(pc);
 
                 setCallStatus('connecting');
                 const offer = await pc.createOffer({ iceRestart: false });
@@ -339,10 +366,16 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                 ...(isVideo && { video: getVideoConstraints() }),
             };
             const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
-            setLocalStream(stream);
+            const processor = processAudioStream(stream);
+            const streamToUse = processor
+                ? combineProcessedAudioWithVideo(processor.stream, stream)
+                : stream;
+            audioProcessorDisconnectRef.current = processor?.disconnect ?? null;
+            setLocalStream(streamToUse);
 
             const pc = initializePeerConnection(data.callerId);
-            stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+            streamToUse.getTracks().forEach((track) => pc.addTrack(track, streamToUse));
+            if (isVideo) await applyVideoBitrateLimit(pc);
 
             await pc.setRemoteDescription(new RTCSessionDescription(data.offer as RTCSessionDescriptionInit));
             await addBufferedIceCandidates();
@@ -394,10 +427,16 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                     ...(isVideo && { video: getVideoConstraints() }),
                 };
                 const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
-                setLocalStream(stream);
+                const processor = processAudioStream(stream);
+                const streamToUse = processor
+                    ? combineProcessedAudioWithVideo(processor.stream, stream)
+                    : stream;
+                audioProcessorDisconnectRef.current = processor?.disconnect ?? null;
+                setLocalStream(streamToUse);
 
                 const pc = initializePeerConnection(data.callerId);
-                stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+                streamToUse.getTracks().forEach((track) => pc.addTrack(track, streamToUse));
+                if (isVideo) await applyVideoBitrateLimit(pc);
 
                 await pc.setRemoteDescription(new RTCSessionDescription(data.offer as RTCSessionDescriptionInit));
                 await addBufferedIceCandidates();
@@ -492,7 +531,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         remoteVideoRef.current = el;
         if (el && remoteStream) {
             el.srcObject = remoteStream;
-            el.play().catch(() => {});
+            safePlay(el);
         }
     }, [remoteStream]);
 
@@ -598,7 +637,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         const video = remoteVideoRef.current;
         if (!video || !remoteStream) return;
         video.srcObject = remoteStream;
-        video.play().catch(() => {});
+        safePlay(video);
     }, [remoteStream]);
 
     // Sync SW / visibility

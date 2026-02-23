@@ -175,10 +175,21 @@ export async function getCurrentPushEndpoint(): Promise<string | null> {
 /**
  * Re-synchronise l'abonnement push avec le serveur sans redemander la permission.
  * À appeler au retour sur l'app (ex: visibilitychange) pour garder les notifications actives quand l'app est fermée.
+ * Si le serveur n'a plus d'abonnements (ex: VapidPkHashMismatch), force une réinscription avec les clés actuelles.
  */
 export async function syncPushSubscriptionIfGranted(): Promise<boolean> {
     if (typeof window === 'undefined' || !canAskPushPermission()) return false;
     if (Notification.permission !== 'granted') return false;
-    const result = await registerPushSubscription();
+    let forceResubscribe = false;
+    try {
+        const res = await fetchWithAuth('/api/push/status', { credentials: 'include' });
+        if (res.ok) {
+            const data = await res.json();
+            if (data.subscriptionCount === 0) forceResubscribe = true;
+        }
+    } catch {
+        // Ignorer, on tente sans forceResubscribe
+    }
+    const result = await registerPushSubscription(forceResubscribe);
     return result.ok;
 }

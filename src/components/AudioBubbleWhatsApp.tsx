@@ -56,7 +56,10 @@ export function AudioBubbleWhatsApp({ src, isOwn = true, className }: AudioBubbl
         if (isPlaying) {
             audio.pause();
         } else {
-            audio.play();
+            audio.play().catch((e: unknown) => {
+                if (e instanceof DOMException && e.name === 'NotAllowedError') return;
+                console.warn('[Audio] play failed:', e);
+            });
         }
         setIsPlaying(!isPlaying);
     };
