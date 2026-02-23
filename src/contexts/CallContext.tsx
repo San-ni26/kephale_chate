@@ -21,27 +21,30 @@ import { startRingtone, stopRingtone } from '@/src/lib/ringtone';
 import { safePlay } from '@/src/lib/safe-media-play';
 import { processAudioStream, combineProcessedAudioWithVideo } from '@/src/lib/audio-processor';
 
-/** Contraintes vidéo adaptatives : 480p mobile, 720p desktop, débit limité pour fluidité */
+/** Contraintes vidéo : 480p pour fluidité (moins de coupures), cadence stable */
 const getVideoConstraints = (): MediaTrackConstraints => {
     const isMobile = typeof window !== 'undefined' && /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
     return {
-        width: { ideal: isMobile ? 640 : 1280 },
-        height: { ideal: isMobile ? 480 : 720 },
-        frameRate: { ideal: 20, max: 24 },
+        width: { ideal: 640 },
+        height: { ideal: 480 },
+        frameRate: { ideal: 24, max: 24 },
         facingMode: isMobile ? 'user' : 'user',
     };
 };
 
-/** Applique un débit max à la vidéo pour réduire coupures et décalage (mobile: 400, desktop: 600 kbps) */
+/** Optimise la vidéo : priorité fluidité (maintain-framerate), débit adapté, priorité haute */
 async function applyVideoBitrateLimit(pc: RTCPeerConnection): Promise<void> {
     const isMobile = typeof window !== 'undefined' && /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const maxKbps = isMobile ? 400 : 600;
+    const maxKbps = isMobile ? 600 : 1000;
     try {
         const sender = pc.getSenders().find((s) => s.track?.kind === 'video');
         if (!sender) return;
         const params = sender.getParameters();
         if (!params.encodings?.length) params.encodings = [{}];
         params.encodings[0].maxBitrate = maxKbps * 1000;
+        params.encodings[0].maxFramerate = 24;
+        params.encodings[0].priority = 'high';
+        (params as RTCRtpParameters & { degradationPreference?: string }).degradationPreference = 'maintain-framerate';
         await sender.setParameters(params);
     } catch (e) {
         if (process.env.NODE_ENV === 'development') console.warn('[Call] setParameters:', e);
