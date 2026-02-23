@@ -80,6 +80,9 @@ export async function POST(request: NextRequest) {
                     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
                 }
 
+                // Supprimer l'appel en attente (répondant = user connecté) pour éviter réapplication
+                await clearPendingCall(user.userId);
+
                 // Marquer les deux comme en appel (Redis)
                 const convId = conversationId || '';
                 await setUserInCall(user.userId, convId, callerId);

@@ -4,27 +4,24 @@ import { useEffect, useRef } from 'react';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { toast } from 'sonner';
 import { usePathname, useRouter } from 'next/navigation';
-import { fetchWithAuth, getToken, isProtectedPath } from '@/src/lib/auth-client';
+import { getToken, isProtectedPath } from '@/src/lib/auth-client';
 import { registerPushSubscription, syncPushSubscriptionIfGranted } from '@/src/lib/register-push-client';
-import { useCallContext } from '@/src/contexts/CallContext';
 
-const PENDING_CALL_KEY = 'pendingIncomingCall';
-
+/**
+ * Écoute les notifications (messages, etc.) via Pusher.
+ * Les appels entrants sont gérés uniquement par CallContext + GlobalCallOverlay
+ * pour éviter doublons et conflits - l'utilisateur peut répondre depuis n'importe quelle page.
+ */
 export function NotificationListener() {
     const pathname = usePathname();
     const router = useRouter();
     const { userChannel, isConnected } = useWebSocket();
     const pushRegistered = useRef(false);
-    const callContext = useCallContext();
 
     const pathnameRef = useRef(pathname);
     const routerRef = useRef(router);
-    const isInCallRef = useRef(false);
     pathnameRef.current = pathname;
     routerRef.current = router;
-    isInCallRef.current = callContext?.isInCall ?? false;
-    const hasIncomingCallInContextRef = useRef(false);
-    hasIncomingCallInContextRef.current = !!(callContext?.incomingCallData ?? callContext?.isIncomingCall);
 
     // Listen for in-app notifications via Pusher
     useEffect(() => {
@@ -164,78 +161,15 @@ export function NotificationListener() {
             }
         };
 
-        const handleIncomingCall = (data: {
-            callerId: string;
-            callerName?: string;
-            offer: any;
-            conversationId: string;
-        }) => {
-            if (isInCallRef.current) return;
-            if (hasIncomingCallInContextRef.current) return; // GlobalCallOverlay affiche deja l'appel entrant
-            const currentPath = pathnameRef.current;
-            if (currentPath?.includes(`/chat/discussion/${data.conversationId}`)) return;
-
-            const callerDisplay = data.callerName || 'Quelqu\'un';
-
-            const rejectCall = async () => {
-                try {
-                    await fetchWithAuth('/api/call/signal', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ event: 'call:reject', callerId: data.callerId }),
-                    });
-                    sessionStorage.removeItem(PENDING_CALL_KEY);
-                } catch (e) {
-                    console.error('[Call] Reject failed:', e);
-                }
-            };
-
-            const answerCall = () => {
-                try {
-                    sessionStorage.setItem(PENDING_CALL_KEY, JSON.stringify(data));
-                    routerRef.current.push(`/chat/discussion/${data.conversationId}`);
-                } catch (e) {
-                    console.error('[Call] Navigate failed:', e);
-                }
-            };
-
-            toast(`Appel de ${callerDisplay}`, {
-                description: 'Cliquez pour repondre ou raccrocher',
-                action: {
-                    label: 'Repondre',
-                    onClick: answerCall,
-                },
-                cancel: {
-                    label: 'Raccrocher',
-                    onClick: rejectCall,
-                },
-                duration: 30000,
-            });
-
-            // Native notification for call
-            if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-                try {
-                    new Notification(`Appel de ${callerDisplay}`, {
-                        body: 'Appuyez pour repondre',
-                        icon: '/icons/icon-192x192.png',
-                        tag: 'call-' + data.conversationId,
-                        requireInteraction: true,
-                    });
-                } catch (e) { }
-            }
-        };
-
         userChannel.bind('notification:new', handleNewNotification);
-        userChannel.bind('call:incoming', handleIncomingCall);
         if (process.env.NODE_ENV === 'development') {
-            console.log('[Notification] Écoute Pusher active (notification:new, call:incoming)');
+            console.log('[Notification] Écoute Pusher active (notification:new)');
         }
 
         return () => {
             userChannel.unbind('notification:new', handleNewNotification);
-            userChannel.unbind('call:incoming', handleIncomingCall);
         };
-    }, [userChannel, isConnected, callContext]);
+    }, [userChannel, isConnected]);
 
     // Enregistrement Web Push initial (uniquement si utilisateur authentifié)
     useEffect(() => {

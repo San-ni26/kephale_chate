@@ -429,6 +429,7 @@ export default function DiscussionPage() {
     isCallActiveRef.current = callContext?.activeCall !== null;
 
     // --- Check call status on mount : redirection si appel ailleurs, ou appliquer appel en attente ---
+    // Ne jamais interrompre un appel actif - si on est déjà en appel pour cette conversation, on skip
     useEffect(() => {
         if (!conversationId) return;
 
@@ -437,19 +438,25 @@ export default function DiscussionPage() {
         };
 
         const checkCallStatus = async (claim = true) => {
+            // Ne pas exécuter si on est déjà en appel actif pour cette conversation
+            if (isCallActiveRef.current && callContext?.activeCall?.conversationId === conversationId) return;
+
             try {
                 const res = await fetchWithAuth(`/api/call/status?claim=${claim ? '1' : '0'}`);
                 if (!res.ok) return;
                 const { activeCall, pendingCall } = await res.json();
 
+                // Rediriger vers l'appel actif si on est sur une autre conversation
                 if (activeCall && activeCall.conversationId !== conversationId) {
                     router.push(`/chat/discussion/${activeCall.conversationId}`);
                     return;
                 }
+                // Rediriger vers l'appel en attente si on est sur une autre conversation
                 if (pendingCall && pendingCall.conversationId !== conversationId) {
                     router.push(`/chat/discussion/${pendingCall.conversationId}`);
                     return;
                 }
+                // Appliquer l'appel en attente pour cette conversation
                 if (pendingCall && pendingCall.conversationId === conversationId) {
                     const shouldAutoAnswer = searchParams?.get('answer') === '1';
                     if (shouldAutoAnswer && callContext?.answerCallWithData) {
@@ -464,6 +471,7 @@ export default function DiscussionPage() {
                 // Ignorer
             }
 
+            // Fallback : sessionStorage (ex: ouverture depuis push notification)
             const stored = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('pendingIncomingCall');
             if (stored) {
                 try {
