@@ -7,6 +7,8 @@ import { AES, enc } from 'crypto-js';
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
 const STORAGE_ENCRYPTION_KEY = process.env.NEXT_PUBLIC_STORAGE_KEY || 'mango-secure-storage-key-v1';
+// Clé legacy pour rétrocompatibilité après renommage Kephale → Mango
+const LEGACY_ENCRYPTION_KEY = 'kephale-secure-storage-key-v1';
 
 const encryptData = (data: string): string => {
     try {
@@ -17,15 +19,20 @@ const encryptData = (data: string): string => {
     }
 };
 
+/** Déchiffre en essayant la clé actuelle puis la clé legacy (Kephale → Mango) */
 const decryptData = (ciphertext: string): string | null => {
-    try {
-        const bytes = AES.decrypt(ciphertext, STORAGE_ENCRYPTION_KEY);
-        const originalText = bytes.toString(enc.Utf8);
-        return originalText || null;
-    } catch (e) {
-        // Fallback for backward compatibility or error: return null or ignore
-        return null;
-    }
+    const tryDecrypt = (key: string): string | null => {
+        try {
+            const bytes = AES.decrypt(ciphertext, key);
+            const originalText = bytes.toString(enc.Utf8);
+            return originalText || null;
+        } catch {
+            return null;
+        }
+    };
+    const result = tryDecrypt(STORAGE_ENCRYPTION_KEY);
+    if (result) return result;
+    return tryDecrypt(LEGACY_ENCRYPTION_KEY);
 };
 
 export interface AuthUser {
