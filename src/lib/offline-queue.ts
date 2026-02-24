@@ -6,7 +6,7 @@
  * Compatible avec Background Sync API (SW) pour envoi automatique.
  */
 
-const DB_NAME = 'kephale-offline-queue';
+const DB_NAME = 'mango-offline-queue';
 const DB_VERSION = 1;
 const STORE_NAME = 'messages';
 
@@ -118,7 +118,7 @@ export async function incrementRetry(id: string): Promise<void> {
     });
 }
 
-const SYNC_TAG = 'kephale-send-messages';
+const SYNC_TAG = 'mango-send-messages';
 
 /** Enregistre un sync pour Background Sync API (quand supporté) */
 export async function registerBackgroundSync(): Promise<boolean> {

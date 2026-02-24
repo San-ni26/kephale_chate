@@ -2,7 +2,7 @@
 
 ## 📋 Résumé de l'analyse
 
-Votre application **Chat Kephale** est une PWA de messagerie avec :
+Votre application **Chat Mango** est une PWA de messagerie avec :
 - Next.js 16, SWR, Pusher (temps réel), Prisma
 - Service Worker custom pour les push notifications
 - Auth JWT + localStorage chiffré
@@ -144,7 +144,7 @@ Pour les messages envoyés hors ligne :
 ## Cache API ✅ IMPLÉMENTÉ
 
 - **GET /api/*** : network-first, cache fallback (5 min) pour consultation hors ligne
-- Cache stocké dans `kephale-v1-api` (vidé au logout)
+- Cache stocké dans `mango-v1-api` (vidé au logout)
 
 ---
 

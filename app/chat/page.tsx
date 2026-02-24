@@ -219,10 +219,10 @@ export default function ChatListPage() {
                     <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                         <MessageSquarePlus className="w-10 h-10 text-primary" />
                     </div>
-                    <h2 className="text-2xl font-bold text-foreground mb-3">Kephale Chat Web</h2>
+                    <h2 className="text-2xl font-bold text-foreground mb-3">Mango Chat Web</h2>
                     <p className="text-muted-foreground mb-8">
                         Envoyez et recevez des messages sans garder votre telephone connecte.
-                        Utilisez Kephale sur plusieurs appareils en meme temps.
+                        Utilisez Mango sur plusieurs appareils en meme temps.
                     </p>
                     <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground/70">
                         <Lock className="w-3 h-3" />

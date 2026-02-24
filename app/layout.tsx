@@ -25,13 +25,13 @@ const geistMono = Geist_Mono({
 */
 
 export const metadata: Metadata = {
-  title: "Kephale Chat",
+  title: "Mango Chat",
   description: "Application de messagerie sécurisée et chiffrée",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Kephale Chat",
+    title: "Mango Chat",
   },
   formatDetection: {
     telephone: false,
@@ -64,10 +64,10 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="application-name" content="Kephale Chat" />
+        <meta name="application-name" content="Mango Chat" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Kephale" />
+        <meta name="apple-mobile-web-app-title" content="Mango" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className="antialiased" suppressHydrationWarning>

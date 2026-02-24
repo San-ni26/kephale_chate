@@ -108,7 +108,7 @@ export default function LandingPage() {
 
             {/* Footer */}
             <footer className="mt-auto py-8 text-center text-muted-foreground border-t border-border">
-                <p>&copy; 2026 Kephale Secure. Tous droits réservés.</p>
+                <p>&copy; 2026 Mango Secure. Tous droits réservés.</p>
             </footer>
         </div>
     );

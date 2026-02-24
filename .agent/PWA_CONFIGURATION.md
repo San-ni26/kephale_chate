@@ -2,7 +2,7 @@
 
 ## 📱 Progressive Web App (PWA)
 
-L'application Chat Kephale est maintenant une PWA complète avec support hors ligne.
+L'application Chat Mango est maintenant une PWA complète avec support hors ligne.
 
 ### ✅ Fonctionnalités Implémentées
 
@@ -152,9 +152,9 @@ withPWA({
 
 #### Caches Utilisés
 
-1. **kephale-chat-v1**: Cache principal (app shell)
-2. **kephale-runtime-v1**: Cache runtime (API, pages)
-3. **kephale-images-v1**: Cache images
+1. **mango-chat-v1**: Cache principal (app shell)
+2. **mango-runtime-v1**: Cache runtime (API, pages)
+3. **mango-images-v1**: Cache images
 
 ### 📊 Performances
 

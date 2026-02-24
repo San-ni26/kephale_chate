@@ -1,6 +1,6 @@
 # Déploiement sur Vercel : Guide Complet
 
-Ce guide vous explique comment déployer votre application **Kephale Chat** sur Vercel et les considérations importantes concernant les WebSockets et les notifications.
+Ce guide vous explique comment déployer votre application **Mango Chat** sur Vercel et les considérations importantes concernant les WebSockets et les notifications.
 
 ## 1. Pré-requis
 
@@ -17,7 +17,7 @@ Ce guide vous explique comment déployer votre application **Kephale Chat** sur 
 | Variable | Description |
 | :--- | :--- |
 | `DATABASE_URL` | L'URL de connexion à votre base de données PostgreSQL (ex: `postgres://...`). |
-| `NEXT_PUBLIC_APP_URL` | L'URL de votre application en production (ex: `https://chat-kephale.vercel.app`). |
+| `NEXT_PUBLIC_APP_URL` | L'URL de votre application en production (ex: `https://chat-mango.vercel.app`). |
 | `VAPID_PRIVATE_KEY` | Votre clé privée VAPID pour les notifications Push. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Votre clé publique VAPID. |
 | `VAPID_SUBJECT` | L'email de contact pour les notifications (ex: `mailto:admin@votre-domaine.com`). |

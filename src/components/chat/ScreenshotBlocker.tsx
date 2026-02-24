@@ -25,7 +25,7 @@ export function ScreenshotBlocker({
 
     return (
         <div
-            className={`kephale-anti-screenshot ${className}`}
+            className={`mango-anti-screenshot ${className}`}
             style={{
                 // Préfixes vendor pour compatibilité multi-navigateurs
                 WebkitUserSelect: 'none',

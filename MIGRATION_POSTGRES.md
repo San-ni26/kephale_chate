@@ -17,7 +17,7 @@ brew install postgresql@15
 brew services start postgresql@15
 
 # Créer une base de données
-createdb kephale_chat
+createdb mango_chat
 ```
 
 ### Option B : Utiliser un service cloud (Recommandé)
@@ -31,7 +31,7 @@ Choisissez l'une de ces options :
 
 ### Pour PostgreSQL local :
 ```env
-DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/kephale_chat"
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/mango_chat"
 ```
 
 ### Pour Supabase (exemple) :
@@ -55,7 +55,7 @@ brew install pgloader
 # 3. Créer un fichier de configuration pgloader.load :
 # LOAD DATABASE
 #      FROM mysql://root:PASSWORD@switchback.proxy.rlwy.net:31795/railway
-#      INTO postgresql://USER:PASSWORD@localhost:5432/kephale_chat
+#      INTO postgresql://USER:PASSWORD@localhost:5432/mango_chat
 # WITH include drop, create tables, create indexes, reset sequences
 # SET maintenance_work_mem to '128MB', work_mem to '12MB';
 ```

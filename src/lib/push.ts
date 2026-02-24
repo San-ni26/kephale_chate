@@ -5,7 +5,7 @@ const VAPID_SET =
 
 if (VAPID_SET) {
     webpush.setVapidDetails(
-        process.env.VAPID_SUBJECT || 'mailto:admin@chatkephale.com',
+        process.env.VAPID_SUBJECT || 'mailto:admin@chatmango.com',
         process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
         process.env.VAPID_PRIVATE_KEY!
     );

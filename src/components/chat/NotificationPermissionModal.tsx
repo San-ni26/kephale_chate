@@ -18,7 +18,7 @@ import {
 } from '@/src/lib/register-push-client';
 import { toast } from 'sonner';
 
-const MODAL_DISMISSED_KEY = 'kephale-push-modal-dismissed';
+const MODAL_DISMISSED_KEY = 'mango-push-modal-dismissed';
 const DISMISS_DURATION_MS = 24 * 60 * 60 * 1000; // 24 heures
 
 export function NotificationPermissionModal() {

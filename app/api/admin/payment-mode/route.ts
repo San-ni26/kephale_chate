@@ -1,5 +1,5 @@
 /**
- * API mode de paiement (admin Kephale)
+ * API mode de paiement (admin Mango)
  * GET: Récupérer le mode actif (CINETPAY | MANUAL)
  * PATCH: Changer le mode (ADMIN ou SUPER_ADMIN)
  */

@@ -6,7 +6,7 @@ import { AES, enc } from 'crypto-js';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
-const STORAGE_ENCRYPTION_KEY = process.env.NEXT_PUBLIC_STORAGE_KEY || 'kephale-secure-storage-key-v1';
+const STORAGE_ENCRYPTION_KEY = process.env.NEXT_PUBLIC_STORAGE_KEY || 'mango-secure-storage-key-v1';
 
 const encryptData = (data: string): string => {
     try {

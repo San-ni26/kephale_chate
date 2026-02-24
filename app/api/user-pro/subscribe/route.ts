@@ -210,7 +210,7 @@ export async function POST(request: NextRequest) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'User-Agent': 'Kephale-App/1.0',
+                'User-Agent': 'Mango-App/1.0',
             },
             body: JSON.stringify(payload),
         });

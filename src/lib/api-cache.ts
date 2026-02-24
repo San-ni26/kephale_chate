@@ -6,7 +6,7 @@
  * Sur revalidation SWR, on fetch pour avoir des données fraîches.
  */
 
-const API_CACHE_NAME = 'kephale-v1-api';
+const API_CACHE_NAME = 'mango-v1-api';
 
 const cacheServedKeys = new Set<string>();
 

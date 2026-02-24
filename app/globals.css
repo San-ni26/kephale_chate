@@ -130,9 +130,9 @@
 }
 
 /* Anti-capture discussions Pro : empêche sélection, copie, drag images */
-.kephale-anti-screenshot img,
-.kephale-anti-screenshot video,
-.kephale-anti-screenshot canvas {
+.mango-anti-screenshot img,
+.mango-anti-screenshot video,
+.mango-anti-screenshot canvas {
   -webkit-user-drag: none;
   -moz-user-drag: none;
   -ms-user-drag: none;

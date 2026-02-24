@@ -58,7 +58,7 @@ export default function EventCreationDialog({
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string>('');
 
-    // Envoi des invitations par email (système Chat Kephale, au nom de l'organisation)
+    // Envoi des invitations par email (système Chat Mango, au nom de l'organisation)
     const [sendInvitationsByEmail, setSendInvitationsByEmail] = useState(false);
     const [inviteTarget, setInviteTarget] = useState<'all' | 'department' | 'selected'>('all');
     const [selectedDepartmentId, setSelectedDepartmentId] = useState<string>('');
@@ -306,7 +306,7 @@ export default function EventCreationDialog({
                         />
                     </div>
 
-                    {/* Envoi des invitations par email (système Chat Kephale, au nom de l'organisation) */}
+                    {/* Envoi des invitations par email (système Chat Mango, au nom de l'organisation) */}
                     <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-4">
                         <div className="flex items-center gap-2">
                             <input
@@ -416,7 +416,7 @@ export default function EventCreationDialog({
                                             )}
                                         </div>
                                         <p className="text-xs text-muted-foreground">
-                                            Les emails sont envoyés par Chat Kephale, au nom de votre organisation.
+                                            Les emails sont envoyés par Chat Mango, au nom de votre organisation.
                                         </p>
                                     </>
                                 )}

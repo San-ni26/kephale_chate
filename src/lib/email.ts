@@ -19,7 +19,7 @@ export async function sendOTPEmail(email: string, otpCode: string, name?: string
     const mailOptions = {
       from: process.env.SMTP_FROM,
       to: email,
-      subject: 'Code de vérification - Chat Kephale',
+      subject: 'Code de vérification - Chat Mango',
       html: `
         <!DOCTYPE html>
         <html>
@@ -38,7 +38,7 @@ export async function sendOTPEmail(email: string, otpCode: string, name?: string
         <body>
           <div class="container">
             <div class="header">
-              <h1>🔐 Chat Kephale</h1>
+              <h1>🔐 Chat Mango</h1>
             </div>
             <div class="content">
               <h2 style="color: #1e293b; margin-top: 0;">Bonjour ${name || 'Utilisateur'},</h2>
@@ -51,7 +51,7 @@ export async function sendOTPEmail(email: string, otpCode: string, name?: string
               </div>
             </div>
             <div class="footer">
-              <p>&copy; 2024 Chat Kephale - Application de messagerie sécurisée</p>
+              <p>&copy; 2024 Chat Mango - Application de messagerie sécurisée</p>
             </div>
           </div>
         </body>
@@ -85,7 +85,7 @@ export async function sendPasswordResetOTPEmail(email: string, otpCode: string, 
     const mailOptions = {
       from: process.env.SMTP_FROM,
       to: email,
-      subject: 'Réinitialisation de mot de passe - Chat Kephale',
+      subject: 'Réinitialisation de mot de passe - Chat Mango',
       html: `
         <!DOCTYPE html>
         <html>
@@ -117,7 +117,7 @@ export async function sendPasswordResetOTPEmail(email: string, otpCode: string, 
               </div>
             </div>
             <div class="footer">
-              <p>&copy; 2024 Chat Kephale - Application de messagerie sécurisée</p>
+              <p>&copy; 2024 Chat Mango - Application de messagerie sécurisée</p>
             </div>
           </div>
         </body>
@@ -147,7 +147,7 @@ export async function sendWelcomeEmail(email: string, name: string): Promise<boo
     const mailOptions = {
       from: process.env.SMTP_FROM,
       to: email,
-      subject: 'Bienvenue sur Chat Kephale',
+      subject: 'Bienvenue sur Chat Mango',
       html: `
         <!DOCTYPE html>
         <html>
@@ -165,7 +165,7 @@ export async function sendWelcomeEmail(email: string, name: string): Promise<boo
         <body>
           <div class="container">
             <div class="header">
-              <h1 style="margin: 0; font-size: 28px;">🎉 Bienvenue sur Chat Kephale !</h1>
+              <h1 style="margin: 0; font-size: 28px;">🎉 Bienvenue sur Chat Mango !</h1>
             </div>
             <div class="content">
               <h2 style="color: #1e293b;">Bonjour ${name},</h2>
@@ -184,7 +184,7 @@ export async function sendWelcomeEmail(email: string, name: string): Promise<boo
               </div>
             </div>
             <div class="footer">
-              <p>&copy; 2024 Chat Kephale - Application de messagerie sécurisée</p>
+              <p>&copy; 2024 Chat Mango - Application de messagerie sécurisée</p>
             </div>
           </div>
         </body>
@@ -246,7 +246,7 @@ export async function sendInvoiceEmail(
             <div class="container">
               <div class="header">
                 <h1 style="margin: 0; font-size: 24px;">Reçu de Paiement</h1>
-                <p style="opacity: 0.8; margin: 5px 0 0;">Chat Kephale Invitations</p>
+                <p style="opacity: 0.8; margin: 5px 0 0;">Chat Mango Invitations</p>
               </div>
               <div class="content">
                 <h2 style="margin-top: 0;">Bonjour ${name},</h2>
@@ -286,7 +286,7 @@ export async function sendInvoiceEmail(
                 <p>Votre invitation est maintenant active et prête à être partagée !</p>
               </div>
               <div class="footer">
-                <p>&copy; 2024 Chat Kephale - Facture générée automatiquement</p>
+                <p>&copy; 2024 Chat Mango - Facture générée automatiquement</p>
               </div>
             </div>
           </body>
@@ -303,8 +303,8 @@ export async function sendInvoiceEmail(
 }
 
 /**
- * Send event invitation email (sent from Chat Kephale, on behalf of the organization)
- * L'email est envoyé depuis le système Chat Kephale (SMTP_FROM), pas depuis l'email de l'organisation.
+ * Send event invitation email (sent from Chat Mango, on behalf of the organization)
+ * L'email est envoyé depuis le système Chat Mango (SMTP_FROM), pas depuis l'email de l'organisation.
  * Le contenu précise que l'invitation est envoyée au nom de l'organisation.
  */
 export async function sendEventInvitationEmail(
@@ -372,12 +372,12 @@ export async function sendEventInvitationEmail(
         <body>
           <div class="container">
             <div class="header">
-              <h1>📅 Chat Kephale – Invitation à un événement</h1>
+              <h1>📅 Chat Mango – Invitation à un événement</h1>
               <span class="badge">Envoyé au nom de ${organizationName}</span>
             </div>
             <div class="content">
               <h2>Bonjour ${recipientName || 'Utilisateur'},</h2>
-              <p>L'organisation <strong>${organizationName}</strong> vous invite à l'événement suivant via Chat Kephale.</p>
+              <p>L'organisation <strong>${organizationName}</strong> vous invite à l'événement suivant via Chat Mango.</p>
               
               <div class="card">
                 <div class="card-row">
@@ -411,7 +411,7 @@ export async function sendEventInvitationEmail(
               <p style="font-size: 13px; color: #64748b;">Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br><a href="${invitationLink}" style="color: #3b82f6; word-break: break-all;">${invitationLink}</a></p>
             </div>
             <div class="footer">
-              <p>Cet email a été envoyé par Chat Kephale au nom de l'organisation. &copy; Chat Kephale</p>
+              <p>Cet email a été envoyé par Chat Mango au nom de l'organisation. &copy; Chat Mango</p>
             </div>
           </div>
         </body>
@@ -443,7 +443,7 @@ export async function sendUnreachablePhoneNotificationEmail(
     const mailOptions = {
       from: process.env.SMTP_FROM,
       to: email,
-      subject: 'Votre numéro est injoignable - Chat Kephale',
+      subject: 'Votre numéro est injoignable - Chat Mango',
       html: `
         <!DOCTYPE html>
         <html>
@@ -462,7 +462,7 @@ export async function sendUnreachablePhoneNotificationEmail(
         <body>
           <div class="container">
             <div class="header">
-              <h1>📞 Chat Kephale</h1>
+              <h1>📞 Chat Mango</h1>
             </div>
             <div class="content">
               <h2 style="color: #1e293b; margin-top: 0;">Bonjour ${name || 'Utilisateur'},</h2>
@@ -476,7 +476,7 @@ export async function sendUnreachablePhoneNotificationEmail(
               </div>
             </div>
             <div class="footer">
-              <p>&copy; 2024 Chat Kephale - Application de messagerie sécurisée</p>
+              <p>&copy; 2024 Chat Mango - Application de messagerie sécurisée</p>
             </div>
           </div>
         </body>
@@ -509,7 +509,7 @@ export async function sendDiscussionLockCodeEmail(
     const mailOptions = {
       from: process.env.SMTP_FROM,
       to: email,
-      subject: isNewCode ? 'Code de discussion modifié - Chat Kephale' : 'Code de verrouillage - Chat Kephale',
+      subject: isNewCode ? 'Code de discussion modifié - Chat Mango' : 'Code de verrouillage - Chat Mango',
       html: `
         <!DOCTYPE html>
         <html>
@@ -528,7 +528,7 @@ export async function sendDiscussionLockCodeEmail(
         <body>
           <div class="container">
             <div class="header">
-              <h1>🔐 Chat Kephale</h1>
+              <h1>🔐 Chat Mango</h1>
             </div>
             <div class="content">
               <h2 style="color: #1e293b; margin-top: 0;">Bonjour ${name || 'Utilisateur'},</h2>
@@ -545,7 +545,7 @@ export async function sendDiscussionLockCodeEmail(
               </div>
             </div>
             <div class="footer">
-              <p>&copy; 2024 Chat Kephale - Application de messagerie sécurisée</p>
+              <p>&copy; 2024 Chat Mango - Application de messagerie sécurisée</p>
             </div>
           </div>
         </body>

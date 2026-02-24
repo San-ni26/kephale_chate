@@ -10,7 +10,7 @@ import { fetchWithAuth } from '@/src/lib/auth-client';
 import { fetcher } from '@/src/lib/fetcher';
 import { toast } from 'sonner';
 
-const BANNER_DISMISSED_KEY = 'kephale-push-banner-dismissed';
+const BANNER_DISMISSED_KEY = 'mango-push-banner-dismissed';
 
 type PushStatus = { vapidConfigured: boolean; subscriptionCount: number; message?: string } | null;
 

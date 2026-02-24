@@ -1,11 +1,11 @@
 /**
- * Service Worker for Chat Kephale
+ * Service Worker for Chat Mango
  * Handles: Push notifications (messages + calls), notification clicks,
  * precache des pages critiques, fetch handler pour mode hors ligne.
  * Push notifications work on all platforms including Vercel.
  */
 
-var CACHE_VERSION = 'kephale-v1';
+var CACHE_VERSION = 'mango-v1';
 var PRECACHE_URLS = ['/', '/login', '/register', '/chat', '/offline', '/manifest.json', '/icons/icon-192x192.png', '/icons/icon-512x512.png'];
 
 // ============ PUSH NOTIFICATION HANDLER ============
@@ -17,7 +17,7 @@ self.addEventListener('push', function (event) {
     if (event.data) {
         try {
             var parsed = event.data.json();
-            data = parsed && typeof parsed === 'object' ? parsed : { title: 'Kephale', body: 'Nouveau message' };
+            data = parsed && typeof parsed === 'object' ? parsed : { title: 'Mango', body: 'Nouveau message' };
         } catch (e) {
             console.error('[SW] Failed to parse push data:', e);
             data = {
@@ -26,7 +26,7 @@ self.addEventListener('push', function (event) {
             };
         }
     } else {
-        data = { title: 'Kephale', body: 'Nouveau message' };
+        data = { title: 'Mango', body: 'Nouveau message' };
     }
 
     console.log('[SW] Push data parsed:', data.title, data.type);
@@ -267,7 +267,7 @@ self.addEventListener('fetch', function (event) {
 });
 
 // ============ BACKGROUND SYNC (file messages hors ligne) ============
-var DB_NAME = 'kephale-offline-queue';
+var DB_NAME = 'mango-offline-queue';
 var STORE_NAME = 'messages';
 
 function swOpenDB() {
@@ -324,7 +324,7 @@ function swProcessQueue() {
 }
 
 self.addEventListener('sync', function (event) {
-    if (event.tag === 'kephale-send-messages') {
+    if (event.tag === 'mango-send-messages') {
         event.waitUntil(swProcessQueue());
     }
 });

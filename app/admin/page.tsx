@@ -590,7 +590,7 @@ export default function AdminDashboard() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4">
                         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white shrink-0">
-                            Tableau de Bord Kephale
+                            Tableau de Bord Mango
                         </h1>
                         <div className="flex items-center gap-1 sm:gap-2">
                             {navItems.map((item) => (

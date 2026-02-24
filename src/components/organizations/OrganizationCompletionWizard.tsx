@@ -294,7 +294,7 @@ export default function OrganizationCompletionWizard({
                                 <Clock className="w-8 h-8 text-amber-500 animate-pulse" />
                                 <div>
                                     <p className="font-semibold text-foreground">Ordre en cours de traitement</p>
-                                    <p className="text-sm text-muted-foreground">L&apos;administrateur Kephale validera votre ordre. Vous serez notifié dès que l&apos;organisation sera créée.</p>
+                                    <p className="text-sm text-muted-foreground">L&apos;administrateur Mango validera votre ordre. Vous serez notifié dès que l&apos;organisation sera créée.</p>
                                 </div>
                             </div>
                         </div>
@@ -360,7 +360,7 @@ export default function OrganizationCompletionWizard({
                                         </p>
                                         {paymentMode === 'MANUAL' && (
                                             <p className="text-xs text-muted-foreground">
-                                                Un ordre sera créé. L&apos;admin Kephale validera et créera l&apos;organisation.
+                                                Un ordre sera créé. L&apos;admin Mango validera et créera l&apos;organisation.
                                             </p>
                                         )}
                                     </div>

@@ -1,4 +1,4 @@
-# Chat Kephale - Application de Messagerie Sécurisée
+# Chat Mango - Application de Messagerie Sécurisée
 
 ![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black.svg)
@@ -6,7 +6,7 @@
 
 ## 📖 Description
 
-**Chat Kephale** est une application de messagerie professionnelle avec chiffrement de bout en bout (E2E), conçue pour les organisations exigeantes en matière de sécurité et de confidentialité.
+**Chat Mango** est une application de messagerie professionnelle avec chiffrement de bout en bout (E2E), conçue pour les organisations exigeantes en matière de sécurité et de confidentialité.
 
 ### ✨ Fonctionnalités Principales
 
@@ -35,8 +35,8 @@
 
 1. **Cloner le repository**
 ```bash
-git clone https://github.com/votre-username/chat-kephale.git
-cd chat-kephale
+git clone https://github.com/votre-username/chat-mango.git
+cd chat-mango
 ```
 
 2. **Installer les dépendances**
@@ -86,7 +86,7 @@ L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
 ### Structure du Projet
 
 ```
-chat-kephale/
+chat-mango/
 ├── app/                    # Next.js App Router
 │   ├── (auth)/            # Routes d'authentification
 │   ├── api/               # API Routes
@@ -241,10 +241,10 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ## 👨‍💻 Auteur
 
-**Kephale Team**
+**Mango Team**
 
-- Website: [chatkephale.com](https://chatkephale.com)
-- Email: contact@chatkephale.com
+- Website: [chatmango.com](https://chatmango.com)
+- Email: contact@chatmango.com
 
 ---
 
@@ -259,4 +259,4 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 ---
 
 **⚠️ Note de Sécurité**: Cette application gère des données sensibles. Assurez-vous de suivre les meilleures pratiques de sécurité en production et de maintenir toutes les dépendances à jour.
-# chate_kephale
+# chat_mango
