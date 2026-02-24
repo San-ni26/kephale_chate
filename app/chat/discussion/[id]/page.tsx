@@ -279,12 +279,19 @@ export default function DiscussionPage() {
     const searchParams = useSearchParams();
     const conversationId = params?.id as string;
 
-    const { data: conversationData, mutate: mutateConversation } = useSWR(
+    const { data: conversationData, error: conversationError, mutate: mutateConversation } = useSWR(
         conversationId ? `/api/conversations/${conversationId}` : null,
         fetcher,
         { refreshInterval: 15000, dedupingInterval: 5000 }
     );
     const conversation: Conversation | null = conversationData?.conversation || null;
+
+    // Rediriger vers /chat si la discussion a été supprimée (404)
+    useEffect(() => {
+        if (conversationError && conversationId) {
+            window.location.href = '/chat';
+        }
+    }, [conversationError, conversationId]);
     const lockState = useDiscussionLockState(conversation);
 
     const isDirectTwoPerson = !!(conversation?.isDirect && conversation?.members?.length === 2);
@@ -1028,7 +1035,7 @@ export default function DiscussionPage() {
             const res = await fetchWithAuth(`/api/conversations/${conversationId}/accept-deletion`, { method: 'POST' });
             if (res.ok) {
                 toast.success('Discussion supprimée');
-                router.push('/chat');
+                window.location.href = '/chat';
             } else {
                 const data = await res.json().catch(() => ({}));
                 toast.error(data.error || 'Erreur');

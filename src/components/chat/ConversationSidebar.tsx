@@ -173,11 +173,17 @@ export function ConversationSidebar() {
                             const otherMember = getOtherMember(chat);
 
                             return (
-                                <Link href={`/chat/discussion/${chat.id}`} key={chat.id}>
-                                    <div className={`flex items-center p-3 rounded-lg transition-colors cursor-pointer group ${isActive
+                                <div
+                                    key={chat.id}
+                                    className={`flex items-center p-3 rounded-lg transition-colors cursor-pointer group ${isActive
                                         ? 'bg-primary/10 hover:bg-primary/15'
                                         : 'hover:bg-muted/50'
-                                        } ${isCollapsed ? 'justify-center' : ''}`}>
+                                        } ${isCollapsed ? 'justify-center' : ''}`}
+                                    onClick={() => router.push(`/chat/discussion/${chat.id}`)}
+                                    role="button"
+                                    tabIndex={0}
+                                    onKeyDown={(e) => e.key === 'Enter' && router.push(`/chat/discussion/${chat.id}`)}
+                                >
 
                                         <div className="relative flex-shrink-0">
                                             <Avatar className={`border border-border ${isCollapsed ? 'h-10 w-10' : 'h-12 w-12'}`}>
@@ -211,7 +217,7 @@ export function ConversationSidebar() {
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <div className="flex items-center gap-1 shrink-0 ml-2">
+                                                    <div className="flex items-center gap-1 shrink-0 ml-2" onClick={(e) => e.stopPropagation()}>
                                                         {lastMessage && (
                                                             <span className={`text-[10px] ${unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
                                                                 {formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr })}
@@ -222,12 +228,7 @@ export function ConversationSidebar() {
                                                                 conversationId={chat.id}
                                                                 canDelete={chat.canDelete ?? false}
                                                                 canPurchaseRights={chat.canPurchaseRights ?? false}
-                                                                onDeleteSuccess={() => {
-                                                                    mutateConversations();
-                                                                    if (pathname === `/chat/discussion/${chat.id}`) {
-                                                                        router.push('/chat');
-                                                                    }
-                                                                }}
+                                                                onDeleteSuccess={() => mutateConversations()}
                                                                 onPurchaseSuccess={() => mutateConversations()}
                                                                 pendingRightsPayment={chat.pendingRightsPayment}
                                                                 pendingRightsOrder={chat.pendingRightsOrder}
@@ -256,8 +257,7 @@ export function ConversationSidebar() {
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
-                                </Link>
+                                </div>
                             );
                         })}
                     </div>

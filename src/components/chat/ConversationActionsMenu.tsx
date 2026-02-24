@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -50,6 +51,7 @@ export function ConversationActionsMenu({
     className = '',
     size = 'icon',
 }: ConversationActionsMenuProps) {
+    const pathname = usePathname();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [purchaseDialogOpen, setPurchaseDialogOpen] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
@@ -66,6 +68,12 @@ export function ConversationActionsMenu({
                     toast.success("Demande de suppression envoyée. L'autre utilisateur doit accepter.");
                 } else {
                     toast.success('Discussion supprimée');
+                    // Redirection immédiate et garantie vers /chat quand on affichait cette discussion
+                    const normalizedPath = pathname?.replace(/\/$/, '') ?? '';
+                    if (normalizedPath === `/chat/discussion/${conversationId}`) {
+                        window.location.href = '/chat';
+                        return;
+                    }
                 }
                 setDeleteDialogOpen(false);
                 onDeleteSuccess?.();
@@ -87,7 +95,7 @@ export function ConversationActionsMenu({
                         variant="ghost"
                         size={size}
                         className={`p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors ${className}`}
-                        onClick={(e) => e.preventDefault()}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         title="Options"
                         aria-label="Options de la discussion"
                     >

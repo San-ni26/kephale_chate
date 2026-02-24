@@ -41,10 +41,9 @@ export function NotificationListener() {
             type?: string;
         }) => {
             const currentPath = pathnameRef.current;
-            const isTabFocused = typeof document !== 'undefined' && document.hasFocus();
 
-            // Ne pas notifier si l'utilisateur est dans la conversation ET que l'onglet est actif
-            const shouldSkip = (inConversation: boolean) => inConversation && isTabFocused;
+            // Ne pas notifier si l'utilisateur est déjà dans la conversation (onglet ouvert)
+            const shouldSkip = (inConversation: boolean) => inConversation;
 
             // Groupe de collaboration : ne pas notifier si l'utilisateur est déjà dans ce chat (et onglet actif)
             if (data.type === 'collaboration_message' || (data.orgId && data.collabId && data.groupId && !data.deptId)) {
