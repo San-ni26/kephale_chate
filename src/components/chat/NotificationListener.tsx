@@ -180,7 +180,7 @@ export function NotificationListener() {
             const result = await registerPushSubscription();
             if (result.ok) pushRegistered.current = true;
         };
-        const timeout = setTimeout(run, 1500);
+        const timeout = setTimeout(run, 500);
         return () => clearTimeout(timeout);
     }, [pathname]);
 

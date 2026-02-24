@@ -64,29 +64,31 @@ self.addEventListener('push', function (event) {
             ]
     };
 
-    // Messages : ne pas afficher si l'utilisateur a déjà la conversation ouverte et focalisée.
-    // Appels : ne pas afficher si l'app est ouverte et focalisée (Pusher gere en temps reel).
-    // Quand l'app est fermée (clientList vide), on affiche toujours.
+    // App fermée (aucune fenêtre) : TOUJOURS afficher la notification
+    // App ouverte : ne pas afficher si l'utilisateur a déjà la conversation ouverte et focalisée
     event.waitUntil(
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
-            if (clientList.length > 0) {
-                var hasFocused = clientList.some(function (c) { return c.focused; });
-                if (hasFocused) {
-                    if (isCall) {
-                        console.log('[SW] App ouverte et focalisee, skip notification appel (Pusher gere)');
-                        return Promise.resolve();
-                    }
-                    if (data.url) {
-                        for (var i = 0; i < clientList.length; i++) {
-                            if (clientList[i].focused && clientList[i].url && clientList[i].url.indexOf(data.url) !== -1) {
-                                console.log('[SW] User is viewing conversation, skip notification');
-                                return Promise.resolve();
-                            }
+            if (clientList.length === 0) {
+                console.log('[SW] App fermee, affichage notification');
+                return self.registration.showNotification(data.title || 'Chat', options).catch(function (err) {
+                    console.warn('[SW] showNotification failed:', err);
+                });
+            }
+            var hasFocused = clientList.some(function (c) { return c.focused; });
+            if (hasFocused) {
+                if (isCall) {
+                    console.log('[SW] App ouverte et focalisee, skip notification appel (Pusher gere)');
+                    return Promise.resolve();
+                }
+                if (data.url) {
+                    for (var i = 0; i < clientList.length; i++) {
+                        if (clientList[i].focused && clientList[i].url && clientList[i].url.indexOf(data.url) !== -1) {
+                            console.log('[SW] User is viewing conversation, skip notification');
+                            return Promise.resolve();
                         }
                     }
                 }
             }
-
             console.log('[SW] Showing notification:', data.title || 'Chat');
             return self.registration.showNotification(data.title || 'Chat', options).catch(function (err) {
                 console.warn('[SW] showNotification failed:', err);
