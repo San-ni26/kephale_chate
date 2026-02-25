@@ -1,10 +1,17 @@
 'use client';
 
 /**
- * Overlay d'appel global - affiché sur toutes les pages quand un appel est actif ou entrant.
- * Permet de continuer l'appel même en quittant la page de discussion.
+ * Overlay d'appel global - optimisé pour éviter les saccades vidéo.
+ * 
+ * PRINCIPE CLÉ ANTI-SACCADE :
+ * - Les éléments <video> sont isolés dans des sous-composants mémoïsés (RemoteVideo, LocalVideo).
+ * - srcObject n'est jamais réassigné (comparaison avant assignation).
+ * - Jamais de inline ref callbacks qui appellent safePlay() à chaque render.
+ * - Le timer (callDuration) et les stats (connectionQuality) ne recréent PAS les vidéos.
+ * - CSS `will-change: transform` + `contain: strict` pour accélération GPU.
  */
 
+import { useRef, useEffect, memo, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
@@ -12,7 +19,6 @@ import { useCallContext } from '@/src/contexts/CallContext';
 import { safePlay } from '@/src/lib/safe-media-play';
 import { cn } from '@/src/lib/utils';
 import {
-    Phone,
     PhoneOff,
     PhoneIncoming,
     Mic,
@@ -22,15 +28,140 @@ import {
     VideoOff,
     Clock,
     ChevronUp,
+    Wifi,
+    WifiOff,
+    RefreshCw,
 } from 'lucide-react';
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
 function formatDuration(seconds: number) {
-    const m = Math.floor(seconds / 60)
-        .toString()
-        .padStart(2, '0');
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
 }
+
+// ─── RemoteVideo — JAMAIS re-rendu si stream identique ────────────────────────
+
+interface RemoteVideoProps {
+    stream: MediaStream;
+    className?: string;
+    hidden?: boolean;
+    onRef?: (el: HTMLVideoElement | null) => void;
+}
+
+const RemoteVideo = memo(function RemoteVideo({ stream, className, hidden, onRef }: RemoteVideoProps) {
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    // Attacher le stream via effect — jamais dans le render inline
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        // NE ré-assigner srcObject QUE si le stream a changé
+        if (video.srcObject !== stream) {
+            video.srcObject = stream;
+        }
+        // Forcer play uniquement si la vidéo est en pause
+        if (video.paused) {
+            safePlay(video);
+        }
+
+        return () => {
+            // Nettoyage : ne pas détacher srcObject ici (évite le flash noir)
+        };
+    }, [stream]);
+
+    // Callback ref stable pour exposer le <video> au CallContext
+    const stableRef = useCallback((el: HTMLVideoElement | null) => {
+        (videoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
+        onRef?.(el);
+        if (el && stream) {
+            if (el.srcObject !== stream) el.srcObject = stream;
+            if (el.paused) safePlay(el);
+        }
+    }, [stream, onRef]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    return (
+        <video
+            ref={stableRef}
+            autoPlay
+            playsInline
+            muted={false}
+            className={cn(className, hidden && 'hidden')}
+            style={{ willChange: 'transform', contain: 'strict' }}
+        />
+    );
+});
+
+// ─── LocalVideo — Vidéo locale (PiP) mémoïsée ─────────────────────────────────
+
+interface LocalVideoProps {
+    stream: MediaStream;
+    className?: string;
+}
+
+const LocalVideo = memo(function LocalVideo({ stream, className }: LocalVideoProps) {
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (video.srcObject !== stream) {
+            video.srcObject = stream;
+            video.muted = true;
+        }
+        if (video.paused) safePlay(video);
+    }, [stream]);
+
+    return (
+        <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className={className}
+            style={{ willChange: 'transform', contain: 'strict' }}
+        />
+    );
+});
+
+// ─── Indicateur de qualité — mémoïsé (ne contient pas de vidéo) ───────────────
+
+interface QualityBadgeProps {
+    quality: string;
+    isReconnecting: boolean;
+}
+
+const QualityBadge = memo(function QualityBadge({ quality, isReconnecting }: QualityBadgeProps) {
+    if (isReconnecting) {
+        return (
+            <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/50 text-amber-100 animate-pulse flex items-center gap-1">
+                <RefreshCw className="w-3 h-3 animate-spin" />
+                Reconnexion...
+            </span>
+        );
+    }
+    if (!quality) return null;
+
+    const config = {
+        excellent: { bg: 'bg-emerald-500/40 text-emerald-100', label: 'Excellente', icon: <Wifi className="w-3 h-3" /> },
+        good: { bg: 'bg-green-500/40 text-green-100', label: 'Bonne', icon: <Wifi className="w-3 h-3" /> },
+        fair: { bg: 'bg-amber-500/40 text-amber-100', label: 'Moyenne', icon: <Wifi className="w-3 h-3" /> },
+        poor: { bg: 'bg-red-500/40 text-red-100', label: 'Instable', icon: <WifiOff className="w-3 h-3" /> },
+    }[quality];
+
+    if (!config) return null;
+
+    return (
+        <span className={cn('text-xs px-2 py-0.5 rounded-full flex items-center gap-1', config.bg)}>
+            {config.icon}
+            {config.label}
+        </span>
+    );
+});
+
+// ─── GlobalCallOverlay ────────────────────────────────────────────────────────
 
 export function GlobalCallOverlay() {
     const pathname = usePathname();
@@ -66,6 +197,8 @@ export function GlobalCallOverlay() {
     const showOverlay = callStatus !== 'idle' && (activeCall || isIncomingCall);
     if (!showOverlay) return null;
 
+    const isReconnecting = callStatus === 'reconnecting';
+
     const displayName = isIncomingCall
         ? incomingCallData?.callerName || 'Utilisateur'
         : activeCall?.otherUserName || 'Utilisateur';
@@ -77,11 +210,10 @@ export function GlobalCallOverlay() {
     const compactMode = !isOnDiscussionPage && callStatus === 'connected';
 
     const handleRejoin = () => {
-        if (activeCall) {
-            router.push(`/chat/discussion/${activeCall.conversationId}`);
-        }
+        if (activeCall) router.push(`/chat/discussion/${activeCall.conversationId}`);
     };
 
+    // ── Mode compact ────────────────────────────────────────────────────────────
     if (compactMode) {
         return (
             <div
@@ -97,7 +229,7 @@ export function GlobalCallOverlay() {
                 </Avatar>
                 <div className="min-w-0 flex-1">
                     <p className="truncate font-medium text-white">
-                        {callType === 'video' ? 'Appel video avec' : 'Appel avec'} {displayName}
+                        {callType === 'video' ? 'Appel vidéo avec' : 'Appel avec'} {displayName}
                     </p>
                     <p className="flex items-center gap-1 text-xs text-white/80">
                         <Clock className="h-3 w-3" />
@@ -108,10 +240,7 @@ export function GlobalCallOverlay() {
                     <Button
                         size="sm"
                         variant="ghost"
-                        className={cn(
-                            'h-8 w-8 p-0 text-white/80 hover:bg-white/20',
-                            isMuted && 'bg-white/20'
-                        )}
+                        className={cn('h-8 w-8 p-0 text-white/80 hover:bg-white/20', isMuted && 'bg-white/20')}
                         onClick={toggleMute}
                         aria-label={isMuted ? 'Activer le micro' : 'Couper le micro'}
                     >
@@ -120,10 +249,7 @@ export function GlobalCallOverlay() {
                     <Button
                         size="sm"
                         variant="ghost"
-                        className={cn(
-                            'h-8 w-8 p-0 text-white/80 hover:bg-white/20',
-                            isSpeakerOn && 'bg-white/20'
-                        )}
+                        className={cn('h-8 w-8 p-0 text-white/80 hover:bg-white/20', isSpeakerOn && 'bg-white/20')}
                         onClick={toggleSpeaker}
                         aria-label="Haut-parleur"
                     >
@@ -148,55 +274,49 @@ export function GlobalCallOverlay() {
                         <PhoneOff className="h-4 w-4" />
                     </Button>
                 </div>
-                {/* Vidéo cachée pour lecture audio en mode compact (appel vidéo uniquement) */}
+                {/* Audio distant en mode compact — RemoteVideo mémoïsé évite les re-renders */}
                 {remoteStream && isVideoCall && (
-                    <video
-                        ref={(el) => {
-                            setRemoteVideoRef(el);
-                            if (el) {
-                                el.srcObject = remoteStream;
-                                safePlay(el);
-                            }
-                        }}
-                        autoPlay
-                        playsInline
-                        muted={false}
-                        className="hidden"
-                    />
+                    <RemoteVideo stream={remoteStream} hidden onRef={setRemoteVideoRef} />
                 )}
             </div>
         );
     }
 
-    // Mode plein écran : appel connecté (vidéo ou audio) ou entrant (avatar + boutons)
-    const isVideoCallConnected = callStatus === 'connected' && isVideoCall;
+    // ── Mode plein écran ────────────────────────────────────────────────────────
+    const isVideoCallConnected = (callStatus === 'connected' || isReconnecting) && isVideoCall;
 
     return (
         <div className="fixed inset-0 z-[100] bg-black flex flex-col overflow-hidden">
-            {/* Zone vidéo principale - appel vidéo connecté */}
+
+            {/* ── Vidéo connectée (plein écran) ────────────────────────────────── */}
             {isVideoCallConnected ? (
                 <>
-                    {/* Vidéo distante - plein écran (ou avatar si caméra coupée) */}
+                    {/* Vidéo distante — plein écran, jamais interrompue par les re-renders */}
                     <div className="absolute inset-0">
-                        {remoteStream && (
-                            <video
-                                ref={(el) => {
-                                    setRemoteVideoRef(el);
-                                    if (el) {
-                                        el.srcObject = remoteStream;
-                                        safePlay(el);
-                                    }
-                                }}
-                                autoPlay
-                                playsInline
-                                muted={false}
-                                className={cn(
-                                    'w-full h-full',
-                                    remoteStream.getVideoTracks().length > 0 ? 'object-cover' : 'hidden'
+                        {remoteStream ? (
+                            <>
+                                <RemoteVideo
+                                    stream={remoteStream}
+                                    onRef={setRemoteVideoRef}
+                                    className={cn(
+                                        'w-full h-full object-cover',
+                                        remoteStream.getVideoTracks().length === 0 && 'hidden'
+                                    )}
+                                />
+                                {/* Avatar si caméra distante coupée */}
+                                {remoteStream.getVideoTracks().length === 0 && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-950">
+                                        <Avatar className="w-32 h-32 border-4 border-white/20">
+                                            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
+                                            <AvatarFallback className="text-4xl bg-primary/30 text-white">
+                                                {displayName[0]}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                    </div>
                                 )}
-                            />
-                        )}
-                        {(!remoteStream || remoteStream.getVideoTracks().length === 0) && (
+                            </>
+                        ) : (
+                            /* Pas encore de flux distant */
                             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-950">
                                 <Avatar className="w-32 h-32 border-4 border-white/20">
                                     <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
@@ -208,21 +328,12 @@ export function GlobalCallOverlay() {
                         )}
                     </div>
 
-                    {/* Vidéo locale - PiP coin bas-droit (style WhatsApp) */}
+                    {/* Vidéo locale — PiP coin bas-droit (style WhatsApp), mémoïsée */}
                     {localStream && (
-                        <div className="absolute bottom-24 right-4 w-28 h-36 md:w-36 md:h-48 rounded-xl overflow-hidden border-2 border-white/30 shadow-2xl bg-black">
+                        <div className="absolute bottom-24 right-4 w-28 h-36 md:w-36 md:h-48 rounded-xl overflow-hidden border-2 border-white/30 shadow-2xl bg-black z-10">
                             {isVideoOn ? (
-                                <video
-                                    ref={(el) => {
-                                        if (el && localStream) {
-                                            el.srcObject = localStream;
-                                            el.muted = true;
-                                            safePlay(el);
-                                        }
-                                    }}
-                                    autoPlay
-                                    playsInline
-                                    muted
+                                <LocalVideo
+                                    stream={localStream}
                                     className="w-full h-full object-cover scale-x-[-1]"
                                 />
                             ) : (
@@ -233,25 +344,16 @@ export function GlobalCallOverlay() {
                         </div>
                     )}
 
-                    {/* Barre d'info en haut */}
-                    <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
+                    {/* Barre info haut — isolée, ne touche PAS aux vidéos */}
+                    <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 bg-gradient-to-b from-black/70 to-transparent z-10 pointer-events-none">
                         <div className="flex items-center gap-3">
-                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                            <span className="font-medium text-white drop-shadow-lg">{displayName}</span>
-                            {connectionQuality && (
-                                <span
-                                    className={cn(
-                                        'text-xs px-2 py-0.5 rounded-full',
-                                        connectionQuality === 'good' && 'bg-green-500/40 text-green-100',
-                                        connectionQuality === 'fair' && 'bg-amber-500/40 text-amber-100',
-                                        connectionQuality === 'poor' && 'bg-red-500/40 text-red-100'
-                                    )}
-                                >
-                                    {connectionQuality === 'good' && 'Bonne connexion'}
-                                    {connectionQuality === 'fair' && 'Moyenne'}
-                                    {connectionQuality === 'poor' && 'Instable'}
-                                </span>
+                            {isReconnecting ? (
+                                <RefreshCw className="w-3 h-3 text-amber-400 animate-spin" />
+                            ) : (
+                                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                             )}
+                            <span className="font-semibold text-white drop-shadow-lg">{displayName}</span>
+                            <QualityBadge quality={connectionQuality ?? ''} isReconnecting={isReconnecting} />
                         </div>
                         <div className="flex items-center gap-1.5 text-white/90">
                             <Clock className="w-4 h-4" />
@@ -260,59 +362,51 @@ export function GlobalCallOverlay() {
                     </div>
                 </>
             ) : callStatus === 'connected' && !isVideoCall ? (
-                /* Appel audio connecté - avatar + lecture audio */
+                /* ── Appel audio connecté ── */
                 <>
                     <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
-                        <Avatar className="w-32 h-32 border-4 border-white/20">
+                        <Avatar className="w-32 h-32 border-4 border-white/20 ring-4 ring-white/5">
                             <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
                             <AvatarFallback className="text-4xl bg-primary/30 text-white">
                                 {displayName[0]}
                             </AvatarFallback>
                         </Avatar>
                     </div>
-                    <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
+                    <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent z-10 pointer-events-none">
                         <div className="flex items-center gap-3">
-                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                            <span className="font-medium text-white drop-shadow-lg">{displayName}</span>
+                            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                            <span className="font-semibold text-white drop-shadow-lg">{displayName}</span>
                         </div>
                         <div className="flex items-center gap-1.5 text-white/90">
                             <Clock className="w-4 h-4" />
                             <span className="font-mono text-sm">{formatDuration(callDuration)}</span>
                         </div>
                     </div>
-                    {/* Lecture audio distante (élément caché) */}
+                    {/* Audio distant (élément caché, mémoïsé) */}
                     {remoteStream && (
-                        <video
-                            ref={(el) => {
-                                setRemoteVideoRef(el);
-                                if (el) {
-                                    el.srcObject = remoteStream;
-                                    safePlay(el);
-                                }
-                            }}
-                            autoPlay
-                            playsInline
-                            muted={false}
-                            className="hidden"
-                        />
+                        <RemoteVideo stream={remoteStream} hidden onRef={setRemoteVideoRef} />
                     )}
                 </>
             ) : (
-                /* État entrant / composition / connexion - avatar + animations */
+                /* ── État entrant / composition / connexion ── */
                 <>
                     <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
                         {(callStatus === 'dialing' || callStatus === 'ringing' || callStatus === 'connecting') && (
                             <>
-                                <div className="absolute w-40 h-40 rounded-full bg-primary/10 animate-pulse" />
+                                <div className="absolute w-44 h-44 rounded-full bg-primary/10 animate-pulse" />
                                 <div
-                                    className="absolute w-56 h-56 rounded-full bg-primary/5 animate-pulse"
+                                    className="absolute w-64 h-64 rounded-full bg-primary/5 animate-pulse"
                                     style={{ animationDelay: '0.5s' }}
+                                />
+                                <div
+                                    className="absolute w-80 h-80 rounded-full bg-primary/3 animate-pulse"
+                                    style={{ animationDelay: '1s' }}
                                 />
                             </>
                         )}
                     </div>
-                    <div className={cn('relative z-10 flex flex-col items-center', isIncomingCall && 'animate-bounce')}>
-                        <div className={cn('bg-white/10 p-1 rounded-full', 'ring-4 ring-white/10')}>
+                    <div className={cn('relative z-10 flex flex-col items-center mt-24', isIncomingCall && 'animate-bounce-gentle')}>
+                        <div className="bg-white/10 p-1.5 rounded-full ring-4 ring-white/10 mb-6">
                             <Avatar className="w-28 h-28 border-2 border-white/20">
                                 <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
                                 <AvatarFallback className="text-3xl bg-primary/20 text-white">
@@ -320,9 +414,9 @@ export function GlobalCallOverlay() {
                                 </AvatarFallback>
                             </Avatar>
                         </div>
-                        <h3 className="text-2xl font-bold text-white mt-6 mb-1 drop-shadow-lg">{displayName}</h3>
-                        <p className="text-white/80 mb-8 text-sm drop-shadow">
-                            {isIncomingCall && (isVideoCall ? 'Appel video entrant...' : 'Appel audio entrant...')}
+                        <h3 className="text-2xl font-bold text-white mb-1 drop-shadow-lg">{displayName}</h3>
+                        <p className="text-white/70 mb-8 text-sm drop-shadow">
+                            {isIncomingCall && (isVideoCall ? '📹 Appel vidéo entrant...' : '📞 Appel audio entrant...')}
                             {callStatus === 'dialing' && 'Appel en cours...'}
                             {callStatus === 'connecting' && 'Connexion en cours...'}
                         </p>
@@ -330,14 +424,14 @@ export function GlobalCallOverlay() {
                 </>
             )}
 
-            {/* Barre de contrôles en bas */}
-            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-4 pb-8 pt-4 bg-gradient-to-t from-black/80 to-transparent">
+            {/* ── Barre de contrôles (identique dans tous les états) ────────────── */}
+            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-5 pb-10 pt-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-20">
                 {isIncomingCall ? (
                     <>
                         <div className="flex flex-col items-center gap-2">
                             <Button
                                 size="lg"
-                                className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
+                                className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30 transition-transform active:scale-95"
                                 onClick={rejectCall}
                             >
                                 <PhoneOff className="w-7 h-7 text-white" />
@@ -347,64 +441,71 @@ export function GlobalCallOverlay() {
                         <div className="flex flex-col items-center gap-2">
                             <Button
                                 size="lg"
-                                className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/30 animate-pulse"
+                                className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/30 animate-pulse transition-transform active:scale-95"
                                 onClick={answerCall}
                             >
                                 <PhoneIncoming className="w-7 h-7 text-white" />
                             </Button>
-                            <span className="text-white/60 text-xs">Repondre</span>
+                            <span className="text-white/60 text-xs">Répondre</span>
                         </div>
                     </>
                 ) : (
                     <>
+                        {/* Micro */}
                         <div className="flex flex-col items-center gap-2">
                             <Button
                                 size="lg"
                                 className={cn(
-                                    'rounded-full w-14 h-14 shadow-lg',
-                                    isMuted ? 'bg-red-500/50 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                    'rounded-full w-14 h-14 shadow-lg transition-all active:scale-95',
+                                    isMuted ? 'bg-red-500/80 text-white' : 'bg-white/20 text-white hover:bg-white/30'
                                 )}
                                 onClick={toggleMute}
                                 aria-label={isMuted ? 'Activer le micro' : 'Couper le micro'}
                             >
                                 {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
                             </Button>
-                            <span className="text-white/60 text-xs">{isMuted ? 'Micro coupé' : 'Micro'}</span>
+                            <span className="text-white/60 text-xs">{isMuted ? 'Micro off' : 'Micro'}</span>
                         </div>
+
+                        {/* Caméra (appel vidéo uniquement) */}
                         {isVideoCall && (
                             <div className="flex flex-col items-center gap-2">
                                 <Button
                                     size="lg"
                                     className={cn(
-                                        'rounded-full w-14 h-14 shadow-lg',
-                                        !isVideoOn ? 'bg-red-500/50 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                        'rounded-full w-14 h-14 shadow-lg transition-all active:scale-95',
+                                        !isVideoOn ? 'bg-red-500/80 text-white' : 'bg-white/20 text-white hover:bg-white/30'
                                     )}
                                     onClick={toggleVideoCamera}
-                                    aria-label={isVideoOn ? 'Couper la camera' : 'Activer la camera'}
+                                    aria-label={isVideoOn ? 'Couper la caméra' : 'Activer la caméra'}
                                 >
                                     {isVideoOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
                                 </Button>
-                                <span className="text-white/60 text-xs">{isVideoOn ? 'Camera' : 'Camera coupée'}</span>
+                                <span className="text-white/60 text-xs">{isVideoOn ? 'Caméra' : 'Cam. off'}</span>
                             </div>
                         )}
+
+                        {/* Haut-parleur */}
                         <div className="flex flex-col items-center gap-2">
                             <Button
                                 size="lg"
                                 className={cn(
-                                    'rounded-full w-14 h-14 shadow-lg',
-                                    isSpeakerOn ? 'bg-primary/50 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                    'rounded-full w-14 h-14 shadow-lg transition-all active:scale-95',
+                                    isSpeakerOn ? 'bg-primary/60 text-white' : 'bg-white/20 text-white hover:bg-white/30'
                                 )}
                                 onClick={toggleSpeaker}
                                 aria-label="Haut-parleur"
                             >
                                 <Volume2 className="w-6 h-6" />
                             </Button>
-                            <span className="text-white/60 text-xs">Haut-parleur</span>
+                            <span className="text-white/60 text-xs">HP</span>
                         </div>
+
+                        {/* Raccrocher */}
                         <div className="flex flex-col items-center gap-2">
                             <Button
                                 size="lg"
-                                className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
+                                className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30 transition-transform active:scale-95"
                                 onClick={endCall}
                                 aria-label="Raccrocher"
                             >

@@ -151,6 +151,20 @@ export async function POST(request: NextRequest) {
                 return NextResponse.json({ success: true });
             }
 
+            case 'call:ice-restart': {
+                const { targetUserId, offer } = body;
+                if (!targetUserId || !offer) {
+                    return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+                }
+
+                await emitToUser(targetUserId, 'call:ice-restart', {
+                    offer,
+                    senderId: user.userId,
+                });
+
+                return NextResponse.json({ success: true });
+            }
+
             default:
                 return NextResponse.json({ error: `Unknown event: ${event}` }, { status: 400 });
         }
