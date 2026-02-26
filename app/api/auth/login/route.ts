@@ -6,6 +6,7 @@ import { generateDeviceFingerprint, compareDevices, parseDeviceInfo } from '@/sr
 import { generateToken } from '@/src/lib/jwt';
 import { checkRateLimitAsync, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
 import { getClientIP } from '@/src/lib/geolocation-server';
+import { hashForSearch, decryptPII } from '@/src/lib/server-crypto';
 
 const loginSchema = z.object({
     email: z.string().email('Email invalide'),
@@ -36,10 +37,21 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const validatedData = loginSchema.parse(body);
 
-        // Find user by email
-        const user = await prisma.user.findUnique({
-            where: { email: validatedData.email },
+        // Find user by email — Stratégie double :
+        // 1) Recherche par emailHash (HMAC) si le compte a été créé avec le système v2
+        // 2) Fallback par email en clair pour les comptes legacy
+        const emailHash = hashForSearch(validatedData.email);
+
+        let user = await prisma.user.findFirst({
+            where: { emailHash },
         });
+
+        // Fallback: cherche par email en clair (comptes créés avant le chiffrement)
+        if (!user) {
+            user = await prisma.user.findUnique({
+                where: { email: validatedData.email },
+            });
+        }
 
         if (!user) {
             return NextResponse.json(
@@ -115,10 +127,15 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        // Déchiffrer l'email et le téléphone pour la réponse
+        const plaintextEmail = decryptPII(user.email) || user.email;
+        // phone stocke directement la valeur chiffrée AES-256-GCM (ou en clair pour les legacy)
+        const plaintextPhone = user.phone ? (decryptPII(user.phone) || user.phone) : null;
+
         // Generate JWT token
         const token = generateToken({
             userId: user.id,
-            email: user.email,
+            email: plaintextEmail,
             name: user.name || undefined,
             role: user.role,
         });
@@ -129,9 +146,9 @@ export async function POST(request: NextRequest) {
                 token,
                 user: {
                     id: user.id,
-                    email: user.email,
+                    email: plaintextEmail,
                     name: user.name,
-                    phone: user.phone,
+                    phone: plaintextPhone,
                     role: user.role,
                     publicKey: user.publicKey,
                     encryptedPrivateKey: user.encryptedPrivateKey,

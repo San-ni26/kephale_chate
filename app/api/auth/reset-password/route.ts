@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { verifyOTP } from '@/src/lib/otp';
 import { checkRateLimitAsync, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
 import { getClientIP } from '@/src/lib/geolocation-server';
+import { hashForSearch } from '@/src/lib/server-crypto';
 
 const resetPasswordSchema = z
     .object({
@@ -40,9 +41,13 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const validatedData = resetPasswordSchema.parse(body);
 
-        const user = await prisma.user.findUnique({
-            where: { email: validatedData.email },
-        });
+        // Recherche par emailHash (HMAC) — comptes chiffrés
+        // Fallback : email en clair — comptes legacy
+        const emailHash = hashForSearch(validatedData.email);
+        let user = await prisma.user.findFirst({ where: { emailHash } });
+        if (!user) {
+            user = await prisma.user.findUnique({ where: { email: validatedData.email } });
+        }
 
         if (!user) {
             return NextResponse.json(

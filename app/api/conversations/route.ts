@@ -4,6 +4,7 @@ import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { getOnlineUserIds } from '@/src/lib/presence';
 import { getUsersInCall } from '@/src/lib/call-redis';
 import { isUserProActive } from '@/src/lib/user-pro';
+import { hashForSearch, decryptPII } from '@/src/lib/server-crypto';
 
 // GET: Get all conversations for the authenticated user
 export async function GET(request: NextRequest) {
@@ -177,7 +178,19 @@ export async function GET(request: NextRequest) {
             })
         );
 
-        return NextResponse.json({ conversations: conversationsWithUnread }, { status: 200 });
+        // Déchiffrer les emails des membres dans chaque conversation
+        const conversationsWithUnreadAndDecryptedEmails = conversationsWithUnread.map(conv => ({
+            ...conv,
+            members: conv.members.map(m => ({
+                ...m,
+                user: {
+                    ...m.user,
+                    email: decryptPII(m.user.email) || m.user.email,
+                },
+            })),
+        }));
+
+        return NextResponse.json({ conversations: conversationsWithUnreadAndDecryptedEmails }, { status: 200 });
 
     } catch (error) {
         console.error('Get conversations error:', error);
@@ -216,9 +229,12 @@ export async function POST(request: NextRequest) {
                 where: { id: participantId },
             });
         } else {
-            otherUser = await prisma.user.findUnique({
-                where: { email: otherUserEmail },
-            });
+            // Lookup par HMAC (chiffré) puis fallback en clair (legacy)
+            const emailHash = hashForSearch(otherUserEmail);
+            otherUser = await prisma.user.findFirst({ where: { emailHash } });
+            if (!otherUser) {
+                otherUser = await prisma.user.findUnique({ where: { email: otherUserEmail } });
+            }
         }
 
         if (!otherUser) {
@@ -296,10 +312,22 @@ export async function POST(request: NextRequest) {
             },
         });
 
+        // Déchiffrer les emails dans la réponse POST
+        const conversationDecrypted = {
+            ...conversation,
+            members: conversation.members.map(m => ({
+                ...m,
+                user: {
+                    ...m.user,
+                    email: decryptPII(m.user.email) || m.user.email,
+                },
+            })),
+        };
+
         return NextResponse.json(
             {
                 message: 'Conversation créée avec succès',
-                conversation,
+                conversation: conversationDecrypted,
             },
             { status: 201 }
         );

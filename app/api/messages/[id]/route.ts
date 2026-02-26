@@ -3,6 +3,55 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { emitToConversation } from '@/src/lib/pusher-server';
 
+// GET: Récupérer un message complet (avec pièces jointes) par son ID
+// Utilisé quand Pusher envoie un payload allégé sans les données des pièces jointes
+export async function GET(
+    request: NextRequest,
+    props: { params: Promise<{ id: string }> }
+) {
+    const params = await props.params;
+    try {
+        const authError = await authenticate(request);
+        if (authError) return authError;
+
+        const user = (request as AuthenticatedRequest).user;
+        if (!user) {
+            return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+        }
+
+        const message = await prisma.message.findUnique({
+            where: { id: params.id },
+            include: {
+                sender: {
+                    select: { id: true, name: true, email: true, publicKey: true },
+                },
+                attachments: true,
+            },
+        });
+
+        if (!message) {
+            return NextResponse.json({ error: 'Message non trouvé' }, { status: 404 });
+        }
+
+        // Vérifier que l'utilisateur est membre de la conversation
+        const membership = await prisma.groupMember.findFirst({
+            where: { groupId: message.groupId, userId: user.userId },
+        });
+        if (!membership) {
+            return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
+        }
+
+        return NextResponse.json({ message }, { status: 200 });
+
+    } catch (error) {
+        console.error('Get message error:', error);
+        return NextResponse.json(
+            { error: 'Erreur lors de la récupération du message' },
+            { status: 500 }
+        );
+    }
+}
+
 // PATCH: Edit a message
 export async function PATCH(
     request: NextRequest,

@@ -10,10 +10,11 @@ datasource db {
 model User {
   id                        String                        @id @default(cuid())
   email                     String                        @unique
+  emailHash                 String?                       @db.VarChar(64) // HMAC-SHA256 pour recherche rapide
   name                      String?
   avatarUrl                 String?                       @db.Text
   password                  String
-  phone                     String?
+  phone                     String?                       @db.Text // AES-256-GCM chiffré (decryptPII pour lire)
   publicKey                 String                        @db.Text
   encryptedPrivateKey       String                        @db.Text
   otpCode                   String?
@@ -62,8 +63,8 @@ model User {
   monthlyStatements         UserMonthlyStatement[]
   financialEntries          UserFinancialEntry[]
   deletionRequestsInitiated ConversationDeletionRequest[] @relation("DeletionRequestRequester")
-  discussionRightsBought     DiscussionRightPurchase[]   @relation("DiscussionRightBuyer")
-  discussionRightsSold       DiscussionRightPurchase[]   @relation("DiscussionRightSeller")
+  discussionRightsBought    DiscussionRightPurchase[]     @relation("DiscussionRightBuyer")
+  discussionRightsSold      DiscussionRightPurchase[]     @relation("DiscussionRightSeller")
 
   followers                        Follow[]                     @relation("UserFollowers")
   following                        Follow[]                     @relation("UserFollowing")
@@ -83,6 +84,7 @@ model User {
   assignedDepartmentEditorialItems DepartmentEditorialItem[]    @relation("DepartmentEditorialItemAssignee")
 
   @@index([email])
+  @@index([emailHash])
   @@index([isOnline])
   @@index([allowedCountry])
 }
@@ -576,14 +578,14 @@ enum DiscussionRightDuration {
 // Achat des droits d'une discussion par un compte Pro
 // Le buyer obtient le contrôle total (lock, masquer, supprimer)
 model DiscussionRightPurchase {
-  id             String                   @id @default(cuid())
-  groupId        String
-  buyerId        String
-  sellerId       String
-  duration       DiscussionRightDuration
-  purchasedAt    DateTime                 @default(now())
-  expiresAt      DateTime
-  isActive       Boolean                  @default(true)
+  id          String                  @id @default(cuid())
+  groupId     String
+  buyerId     String
+  sellerId    String
+  duration    DiscussionRightDuration
+  purchasedAt DateTime                @default(now())
+  expiresAt   DateTime
+  isActive    Boolean                 @default(true)
 
   group  Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
   buyer  User  @relation("DiscussionRightBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
@@ -605,7 +607,7 @@ model Group {
   lockCodeHash         String?                      @db.VarChar(255)
   lockSetByUserId      String?
   lockedAt             DateTime?
-  hiddenByUserId      String?
+  hiddenByUserId       String?
   createdAt            DateTime                     @default(now())
   updatedAt            DateTime                     @updatedAt
   department           Department?                  @relation(fields: [deptId], references: [id], map: "Group_deptId_fk")

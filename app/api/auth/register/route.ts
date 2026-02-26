@@ -9,6 +9,7 @@ import { generateKeyPair, encryptPrivateKey } from '@/src/lib/crypto';
 import { generateOTP, generateOTPExpiry } from '@/src/lib/otp';
 import { sendOTPEmail } from '@/src/lib/email';
 import { checkRateLimitAsync, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
+import { encryptPII, hashForSearch } from '@/src/lib/server-crypto';
 
 const registerSchema = z.object({
     name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
@@ -126,11 +127,18 @@ export async function POST(request: NextRequest) {
         // Create user
         console.log('Attempting to create user in database...');
         try {
+            // Chiffrement des données personnelles (email + téléphone)
+            const emailHash = hashForSearch(validatedData.email);
+            const encryptedEmail = encryptPII(validatedData.email);
+            // Le téléphone est chiffré directement dans le champ phone (AES-256-GCM)
+            const encryptedPhone = validatedData.phone ? encryptPII(validatedData.phone) : null;
+
             const user = await prisma.user.create({
                 data: {
                     name: validatedData.name,
-                    email: validatedData.email,
-                    phone: validatedData.phone,
+                    email: encryptedEmail,    // Email chiffré (AES-256-GCM)
+                    emailHash,               // HMAC-SHA256 pour les recherches
+                    phone: encryptedPhone,   // Téléphone chiffré (AES-256-GCM) — jamais en clair
                     password: hashedPassword,
                     publicKey: keyPair.publicKey,
                     encryptedPrivateKey: encryptedPrivKey,
@@ -165,7 +173,7 @@ export async function POST(request: NextRequest) {
                 {
                     message: 'Inscription réussie ! Un code de vérification a été envoyé à votre email.',
                     userId: user.id,
-                    email: user.email,
+                    email: validatedData.email, // Email en clair pour la page de vérification OTP
                 },
                 {
                     status: 201,

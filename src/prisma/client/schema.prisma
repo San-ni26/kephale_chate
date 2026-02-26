@@ -10,10 +10,11 @@ datasource db {
 model User {
   id                        String                        @id @default(cuid())
   email                     String                        @unique
+  emailHash                 String?                       @db.VarChar(64) // HMAC-SHA256 pour recherche rapide
   name                      String?
   avatarUrl                 String?                       @db.Text
   password                  String
-  phone                     String?
+  phone                     String?                       @db.Text // AES-256-GCM chiffré (decryptPII pour lire)
   publicKey                 String                        @db.Text
   encryptedPrivateKey       String                        @db.Text
   otpCode                   String?
@@ -83,6 +84,7 @@ model User {
   assignedDepartmentEditorialItems DepartmentEditorialItem[]    @relation("DepartmentEditorialItemAssignee")
 
   @@index([email])
+  @@index([emailHash])
   @@index([isOnline])
   @@index([allowedCountry])
 }

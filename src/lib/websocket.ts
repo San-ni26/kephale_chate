@@ -25,18 +25,55 @@ export { emitToUser, emitToConversation };
  *    c. Send Web Push notification (works when app is closed/background!)
  */
 export async function notifyNewMessage(message: any, conversationId: string) {
-    // 1. Broadcast to the conversation channel via Pusher
+    // 1. Broadcast LÉGER à la conversation via Pusher (limite 10KB)
+    // On n'envoie PAS les données des pièces jointes (base64 chiffré = plusieurs Ko/Mo).
+    // Le client reçoit un signal et fetch le message complet depuis l'API si besoin.
     try {
-        await emitToConversation(conversationId, 'message:new', {
+        const attachmentsMeta = (message.attachments ?? []).map((a: any) => ({
+            filename: a.filename,
+            type: a.type,
+            // 'data' volontairement omis — trop lourd pour Pusher (limite 10 240 bytes)
+        }));
+
+        // Payload Pusher allégé : métadonnées uniquement
+        const pusherPayload = {
             conversationId,
-            message,
-        });
+            message: {
+                id: message.id,
+                content: message.content, // déjà chiffré (court)
+                senderId: message.senderId,
+                sender: message.sender
+                    ? { id: message.sender.id, name: message.sender.name, publicKey: message.sender.publicKey }
+                    : null,
+                createdAt: message.createdAt instanceof Date
+                    ? message.createdAt.toISOString()
+                    : message.createdAt,
+                updatedAt: message.updatedAt instanceof Date
+                    ? message.updatedAt.toISOString()
+                    : message.updatedAt,
+                isEdited: message.isEdited ?? false,
+                replyTo: message.replyTo ?? null,
+                // Signaler la présence de pièces jointes sans les données
+                hasAttachments: attachmentsMeta.length > 0,
+                attachmentsMeta, // noms + types seulement
+            },
+        };
+
+        // Vérification taille préventive (Pusher max 10 240 bytes)
+        const payloadSize = Buffer.byteLength(JSON.stringify(pusherPayload), 'utf8');
+        if (payloadSize > 9500) {
+            // Si le payload est encore trop lourd (message chiffré très long), tronquer
+            pusherPayload.message.content = pusherPayload.message.content?.substring(0, 500) ?? '';
+        }
+
+        await emitToConversation(conversationId, 'message:new', pusherPayload);
         if (process.env.NODE_ENV === 'development') {
-            console.log('[Notify] Broadcast message:new to conversation:', conversationId);
+            console.log(`[Notify] Broadcast message:new (${payloadSize} bytes) to conversation:`, conversationId);
         }
     } catch (err) {
         console.error('[Notify] Error broadcasting message via Pusher:', err);
     }
+
 
     // 2. Get all group members except sender
     let groupMembers;
@@ -143,7 +180,7 @@ export async function notifyNewMessage(message: any, conversationId: string) {
                         if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
                             await prisma.pushSubscription.delete({
                                 where: { endpoint: sub.endpoint }
-                            }).catch(() => {});
+                            }).catch(() => { });
                         }
                     }
                 }));
@@ -261,7 +298,7 @@ export async function notifyCollaborationGroupNewMessage(
                         if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
                             await prisma.pushSubscription.delete({
                                 where: { endpoint: sub.endpoint }
-                            }).catch(() => {});
+                            }).catch(() => { });
                         }
                         throw err;
                     }
@@ -350,7 +387,7 @@ export async function notifyIncomingCall(
                     if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
                         await prisma.pushSubscription.delete({
                             where: { endpoint: sub.endpoint }
-                        }).catch(() => {});
+                        }).catch(() => { });
                         if (err.statusCode === 400 && process.env.NODE_ENV === 'development') {
                             console.warn('[Call] Abonnement supprime (VapidPkHashMismatch). L\'utilisateur doit re-activer les notifications.');
                         }

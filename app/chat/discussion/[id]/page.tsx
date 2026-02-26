@@ -29,7 +29,8 @@ import {
     DialogTitle,
     DialogFooter,
 } from '@/src/components/ui/dialog';
-import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
+import { encryptMessage, decryptMessage, decryptPrivateKey, decryptPrivateKeyAsync } from '@/src/lib/crypto';
+
 import { EncryptedAttachment } from './EncryptedAttachment';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { useInitialMessages } from '@/src/hooks/useInitialMessages';
@@ -204,15 +205,29 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
 
                         {message.attachments && message.attachments.length > 0 && (
                             <div className={cn(decryptedContent?.trim() ? 'mt-2' : '', 'space-y-2', isBlurred && 'blur-md select-none pointer-events-none opacity-70')}>
-                                {message.attachments.map((att, idx) => (
-                                    <EncryptedAttachment
-                                        key={idx}
-                                        attachment={att}
-                                        isOwnMessage={isOwn}
-                                    />
-                                ))}
+                                {message.attachments.map((att, idx) => {
+                                    // La clé publique nécessaire = celle de l'expéditeur du message
+                                    // Si c'est MON message → chiffré avec [ma clé privée + clé publique de l'autre]
+                                    //   → pour déchiffrer : ma clé privée + clé publique de l'autre (otherUser)
+                                    // Si c'est SON message → chiffré avec [sa clé privée + ma clé publique]
+                                    //   → pour déchiffrer : ma clé privée + sa clé publique (message.sender.publicKey)
+                                    const attachmentTheirPublicKey = isOwn
+                                        ? otherUser?.publicKey   // Mon message : clé publique du destinataire
+                                        : (message.sender?.publicKey || otherUser?.publicKey); // Son message : clé publique de l'expéditeur
+                                    return (
+                                        <EncryptedAttachment
+                                            key={idx}
+                                            attachment={att}
+                                            isOwnMessage={isOwn}
+                                            myPrivateKey={privateKey || undefined}
+                                            theirPublicKey={attachmentTheirPublicKey}
+                                            currentUserId={currentUser?.id}
+                                        />
+                                    );
+                                })}
                             </div>
                         )}
+
 
                         <div className="flex items-center gap-2 mt-1 flex-wrap">
                             <span className="text-xs text-muted-foreground">
@@ -387,22 +402,41 @@ export default function DiscussionPage() {
     const messagesCacheUrl = conversationId ? `/api/conversations/${conversationId}/messages?limit=30` : null;
 
     // Real-time message handlers
-    const handleNewMessage = useCallback((data: { conversationId: string; message: Message }) => {
+    const handleNewMessage = useCallback(async (data: { conversationId: string; message: any }) => {
         if (data.conversationId !== conversationId) return;
         const me = getUser();
-        setMessages(prev => {
-            if (prev.some(m => m.id === data.message.id)) return prev;
-            const ourTemp = prev.find((m) => m.id.startsWith('temp-') && m.senderId === me?.id);
-            if (ourTemp && data.message.senderId === me?.id) {
-                stableMessageKeysRef.current.set(data.message.id, ourTemp.id);
-                stableMessageTimestampsRef.current.set(data.message.id, ourTemp.createdAt);
-                return prev.map((m) => (m.id === ourTemp.id ? data.message : m));
+
+        let fullMessage = data.message;
+
+        // Si le message a des pièces jointes, les données ne sont pas dans le payload Pusher
+        // (limite 10KB Pusher dépassée). On fetch le message complet depuis l'API.
+        if (data.message.hasAttachments) {
+            try {
+                const res = await fetchWithAuth(`/api/messages/${data.message.id}`);
+                if (res.ok) {
+                    const json = await res.json();
+                    fullMessage = json.message ?? data.message;
+                }
+            } catch {
+                // Si le fetch échoue, on affiche quand même le message sans pièces jointes
+                fullMessage = data.message;
             }
-            return [...prev, data.message];
+        }
+
+        setMessages(prev => {
+            if (prev.some(m => m.id === fullMessage.id)) return prev;
+            const ourTemp = prev.find((m) => m.id.startsWith('temp-') && m.senderId === me?.id);
+            if (ourTemp && fullMessage.senderId === me?.id) {
+                stableMessageKeysRef.current.set(fullMessage.id, ourTemp.id);
+                stableMessageTimestampsRef.current.set(fullMessage.id, ourTemp.createdAt);
+                return prev.map((m) => (m.id === ourTemp.id ? fullMessage : m));
+            }
+            return [...prev, fullMessage];
         });
-        if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, data.message);
+        if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, fullMessage);
         scrollToBottom();
     }, [conversationId, scrollToBottom, messagesCacheUrl]);
+
 
     const handleMessageEdited = useCallback((data: { conversationId: string; message: Message }) => {
         if (data.conversationId !== conversationId) return;
@@ -799,16 +833,21 @@ export default function DiscussionPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentUser]);
 
-    const handleUnlock = () => {
+    const handleUnlock = async () => {
         if (!currentUser || !password) return;
 
         try {
-            const decrypted = decryptPrivateKey(currentUser.encryptedPrivateKey, password);
+            // Essaie d'abord le déchiffrement asynchrone (PBKDF2 + AES-GCM, format v2)
+            // avec fallback automatique sur le format v1 legacy (crypto-js)
+            const decrypted = await decryptPrivateKeyAsync(currentUser.encryptedPrivateKey, password);
             setPrivateKey(decrypted);
             sessionStorage.setItem(`privateKey_${currentUser.id}`, decrypted);
             setShowPasswordDialog(false);
             setPassword('');
-            toast.success('Cle de chiffrement deverrouillee');
+
+            // Migration transparente : si c'était un format v1 legacy, re-chiffrer en v2
+            // (sera fait automatiquement au prochain changement de mot de passe)
+            toast.success('Clé de chiffrement deverrouillee');
         } catch (error) {
             toast.error('Mot de passe incorrect');
         }
@@ -837,13 +876,14 @@ export default function DiscussionPage() {
 
             if (currentFiles.length > 0) {
                 for (const file of currentFiles) {
-                    const base64Data = await fileToBase64(file);
                     const ext = file.name.split('.').pop()?.toLowerCase() || '';
                     let fileType = 'IMAGE';
                     if (['pdf'].includes(ext)) fileType = 'PDF';
                     else if (['doc', 'docx'].includes(ext)) fileType = 'WORD';
                     else if (['webm', 'mp3', 'ogg', 'm4a', 'wav'].includes(ext)) fileType = 'AUDIO';
 
+                    // On stocke le fichier en Base64 clair (sans chiffrement E2E)
+                    const base64Data = await fileToBase64(file);
                     attachments.push({ filename: file.name, type: fileType, data: base64Data });
                 }
             }

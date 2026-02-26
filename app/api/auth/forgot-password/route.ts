@@ -5,6 +5,7 @@ import { generateOTP, generateOTPExpiry } from '@/src/lib/otp';
 import { sendPasswordResetOTPEmail } from '@/src/lib/email';
 import { checkRateLimitAsync, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
 import { getClientIP } from '@/src/lib/geolocation-server';
+import { hashForSearch, decryptPII } from '@/src/lib/server-crypto';
 
 const forgotPasswordSchema = z.object({
     email: z.string().email('Email invalide'),
@@ -32,9 +33,13 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const validatedData = forgotPasswordSchema.parse(body);
 
-        const user = await prisma.user.findUnique({
-            where: { email: validatedData.email },
-        });
+        // Recherche par emailHash (HMAC) — comptes chiffrés
+        // Fallback : email en clair — comptes legacy
+        const emailHash = hashForSearch(validatedData.email);
+        let user = await prisma.user.findFirst({ where: { emailHash } });
+        if (!user) {
+            user = await prisma.user.findUnique({ where: { email: validatedData.email } });
+        }
 
         // Pour des raisons de sécurité, on ne révèle pas si l'email existe ou non
         if (!user) {
@@ -73,8 +78,11 @@ export async function POST(request: NextRequest) {
             },
         });
 
+        // Déchiffrer l'email pour l'envoi du mail
+        const plaintextEmail = decryptPII(user.email) || user.email;
+
         const emailSent = await sendPasswordResetOTPEmail(
-            user.email,
+            plaintextEmail,
             otpCode,
             user.name || undefined
         );

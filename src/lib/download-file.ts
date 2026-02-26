@@ -4,8 +4,12 @@
  * - Partager : utilise l’API Web Share pour "Enregistrer dans Fichiers" sur iOS / partage sur Android.
  */
 
-export function dataUrlToBlob(dataUrl: string): Blob | null {
+export async function dataUrlToBlob(dataUrl: string): Promise<Blob | null> {
     try {
+        if (dataUrl.startsWith('blob:')) {
+            const res = await fetch(dataUrl);
+            return await res.blob();
+        }
         const [header, base64] = dataUrl.split(',');
         if (!base64) return null;
         const mimeMatch = header.match(/data:([^;]+);/);
@@ -26,8 +30,8 @@ export function blobToFile(blob: Blob, filename: string): File {
 /**
  * Déclenche le téléchargement du fichier (Blob URL pour meilleur support mobile).
  */
-export function downloadFromDataUrl(dataUrl: string, filename: string): boolean {
-    const blob = dataUrlToBlob(dataUrl);
+export async function downloadFromDataUrl(dataUrl: string, filename: string): Promise<boolean> {
+    const blob = await dataUrlToBlob(dataUrl);
     if (!blob) return false;
     try {
         const url = URL.createObjectURL(blob);
@@ -62,7 +66,7 @@ export function canShareFile(): boolean {
  * Ouvre la feuille de partage (ex. "Enregistrer dans Fichiers" sur iOS).
  */
 export async function shareFileFromDataUrl(dataUrl: string, filename: string): Promise<boolean> {
-    const blob = dataUrlToBlob(dataUrl);
+    const blob = await dataUrlToBlob(dataUrl);
     if (!blob) return false;
     const file = blobToFile(blob, filename);
     if (!navigator.share) return false;

@@ -136,19 +136,26 @@ export function CollaborationDocumentsPanel({
             setPdfPreviewBlobUrl(null);
             return;
         }
+        let cancelled = false;
         const dataUrl = previewDoc.data.startsWith('data:') ? previewDoc.data : `data:application/pdf;base64,${previewDoc.data}`;
-        const blob = dataUrlToBlob(dataUrl);
-        if (blob) {
-            const url = URL.createObjectURL(blob);
-            pdfPreviewBlobUrlRef.current = url;
-            setPdfPreviewBlobUrl(url);
-            return () => {
-                URL.revokeObjectURL(url);
-                pdfPreviewBlobUrlRef.current = null;
+        dataUrlToBlob(dataUrl).then((blob) => {
+            if (cancelled) return;
+            if (blob) {
+                const url = URL.createObjectURL(blob);
+                pdfPreviewBlobUrlRef.current = url;
+                setPdfPreviewBlobUrl(url);
+            } else {
                 setPdfPreviewBlobUrl(null);
-            };
-        }
-        setPdfPreviewBlobUrl(null);
+            }
+        });
+        return () => {
+            cancelled = true;
+            if (pdfPreviewBlobUrlRef.current) {
+                URL.revokeObjectURL(pdfPreviewBlobUrlRef.current);
+                pdfPreviewBlobUrlRef.current = null;
+            }
+            setPdfPreviewBlobUrl(null);
+        };
     }, [previewDoc?.id, previewDoc?.type]);
 
     const fetchDocuments = async (q?: string) => {

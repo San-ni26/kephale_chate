@@ -84,24 +84,122 @@ export const decryptMessage = (
 
 import { AES, enc } from 'crypto-js';
 
+// --- Dérivation de clé robuste (PBKDF2 + AES-256-GCM via WebCrypto) ---
+// Format du payload chiffré (v2) : "v2:<sel_b64>:<iv_b64>:<cipher_b64>"
+// Format legacy (v1) : chaîne crypto-js (U2FsdGVk...)
+
+const PBKDF2_ITERATIONS = 100_000;
+const PBKDF2_HASH = 'SHA-256';
+const KEY_LENGTH = 256; // bits
+
 /**
- * Encrypt My Private Key with a Password using AES
+ * Dérive une clé AES-256 depuis le mot de passe avec PBKDF2 (WebCrypto).
+ * Utilise un sel aléatoire pour résister aux attaques par dictionnaire.
+ */
+async function deriveKey(password: string, salt: Uint8Array): Promise<CryptoKey> {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(password),
+        'PBKDF2',
+        false,
+        ['deriveKey']
+    );
+    return crypto.subtle.deriveKey(
+        {
+            name: 'PBKDF2',
+            salt: salt.buffer as ArrayBuffer,
+            iterations: PBKDF2_ITERATIONS,
+            hash: PBKDF2_HASH,
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: KEY_LENGTH },
+        false,
+        ['encrypt', 'decrypt']
+    );
+}
+
+/**
+ * Chiffre la clé privée avec le mot de passe (PBKDF2 + AES-256-GCM).
+ * Format de sortie : "v2:<sel_b64>:<iv_b64>:<cipher_b64>"
+ */
+export async function encryptPrivateKeyAsync(privateKey: string, password: string): Promise<string> {
+    const salt = crypto.getRandomValues(new Uint8Array(32));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await deriveKey(password, salt);
+
+    const encoder = new TextEncoder();
+    const encrypted = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv },
+        key,
+        encoder.encode(privateKey)
+    );
+
+    const saltB64 = encodeBase64(salt);
+    const ivB64 = encodeBase64(iv);
+    const cipherB64 = encodeBase64(new Uint8Array(encrypted));
+    return `v2:${saltB64}:${ivB64}:${cipherB64}`;
+}
+
+/**
+ * Déchiffre la clé privée.
+ * Supporte le format v2 (PBKDF2 + AES-GCM) ET le format v1 legacy (crypto-js).
+ */
+export async function decryptPrivateKeyAsync(encryptedKey: string, password: string): Promise<string> {
+    // Format v2 : PBKDF2 + AES-GCM
+    if (encryptedKey.startsWith('v2:')) {
+        const parts = encryptedKey.split(':');
+        if (parts.length !== 4) throw new Error('Format de clé invalide');
+        const [, saltB64, ivB64, cipherB64] = parts;
+        const salt = decodeBase64(saltB64);
+        const iv = decodeBase64(ivB64);
+        const cipherData = decodeBase64(cipherB64);
+
+        const key = await deriveKey(password, salt);
+        try {
+            const decrypted = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: iv.buffer as ArrayBuffer },
+                key,
+                cipherData.buffer as ArrayBuffer
+            );
+            return new TextDecoder().decode(decrypted);
+        } catch {
+            throw new Error('Mot de passe incorrect ou clé corrompue.');
+        }
+    }
+
+    // Format v1 legacy (crypto-js) — rétrocompatibilité
+    try {
+        const bytes = AES.decrypt(encryptedKey, password);
+        const decrypted = bytes.toString(enc.Utf8);
+        if (!decrypted) throw new Error('Incorrect Password');
+        return decrypted;
+    } catch {
+        throw new Error('Mot de passe incorrect ou clé corrompue.');
+    }
+}
+
+/**
+ * Version synchrone legacy — conservée pour la compatibilité inscription.
+ * @deprecated Utiliser encryptPrivateKeyAsync à la place
  */
 export const encryptPrivateKey = (privateKey: string, password: string): string => {
+    // Garde pour le register côté serveur (Node.js, pas WebCrypto disponible dans ce contexte)
     return AES.encrypt(privateKey, password).toString();
 };
 
 /**
- * Decrypt My Private Key with a Password
+ * Version synchrone legacy — conservée pour rétrocompatibilité.
+ * @deprecated Utiliser decryptPrivateKeyAsync à la place
  */
 export const decryptPrivateKey = (encryptedKey: string, password: string): string => {
     try {
         const bytes = AES.decrypt(encryptedKey, password);
         const decrypted = bytes.toString(enc.Utf8);
-        if (!decrypted) throw new Error("Incorrect Password");
+        if (!decrypted) throw new Error('Incorrect Password');
         return decrypted;
-    } catch (e) {
-        throw new Error("Decryption failed. Incorrect password or data.");
+    } catch {
+        throw new Error('Decryption failed. Incorrect password or data.');
     }
 };
 

@@ -4,6 +4,7 @@ import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { encryptPrivateKey } from '@/src/lib/crypto';
+import { decryptPII, encryptPII } from '@/src/lib/server-crypto';
 
 const updateProfileSchema = z.object({
     name: z.string().min(2).optional(),
@@ -46,7 +47,18 @@ export async function GET(request: NextRequest) {
             },
         });
 
-        return NextResponse.json({ profile }, { status: 200 });
+        if (!profile) {
+            return NextResponse.json({ error: 'Profil non trouvé' }, { status: 404 });
+        }
+
+        // Déchiffrer email et téléphone avant renvoi
+        const profileDecrypted = {
+            ...profile,
+            email: decryptPII(profile.email) || profile.email,
+            phone: profile.phone ? (decryptPII(profile.phone) || profile.phone) : null,
+        };
+
+        return NextResponse.json({ profile: profileDecrypted }, { status: 200 });
 
     } catch (error) {
         console.error('Get profile error:', error);
@@ -74,11 +86,14 @@ export async function PATCH(request: NextRequest) {
         if (action === 'update-info') {
             const validatedData = updateProfileSchema.parse(body);
 
+            // Chiffrer le téléphone avant màj (jamais en clair en DB)
+            const encryptedPhone = validatedData.phone ? encryptPII(validatedData.phone) : undefined;
+
             const updatedUser = await prisma.user.update({
                 where: { id: user.userId },
                 data: {
                     name: validatedData.name,
-                    phone: validatedData.phone,
+                    phone: encryptedPhone,    // Téléphone chiffré (AES-256-GCM)
                 },
                 select: {
                     id: true,
@@ -89,10 +104,15 @@ export async function PATCH(request: NextRequest) {
                 },
             });
 
+            // Déchiffrer avant de renvoyer au client
             return NextResponse.json(
                 {
                     message: 'Profil mis à jour avec succès',
-                    user: updatedUser,
+                    user: {
+                        ...updatedUser,
+                        email: decryptPII(updatedUser.email) || updatedUser.email,
+                        phone: updatedUser.phone ? (decryptPII(updatedUser.phone) || updatedUser.phone) : null,
+                    },
                 },
                 { status: 200 }
             );

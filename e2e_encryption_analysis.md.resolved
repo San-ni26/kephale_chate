@@ -1,0 +1,105 @@
+# 🔐 Analyse & Implémentation — Chiffrement E2E Renforcé (Kephale Chat)
+
+## 📊 Analyse du Système Actuel
+
+### ✅ Ce qui est déjà bien fait
+| Composant | Implémentation |
+|-----------|---------------|
+| **Chiffrement des messages** | NaCl `box` (Curve25519 + XSalsa20 + Poly1305) — excellent choix |
+| **Paires de clés** | Générées côté client à l'inscription |
+| **Clé privée stockée chiffrée** | AES(`privateKey`, `password`) en base |
+| **Clé privée en session** | Stockée dans `sessionStorage` après déverrouillage |
+| **Messages** | Chiffrés côté client avant envoi |
+| **Fichiers (1-to-1)** | NaCl `box` binaire |
+| **Groupes** | NaCl `secretbox` avec clé symétrique |
+
+---
+
+## 🚨 Vulnérabilités Identifiées
+
+### 🔴 CRITIQUE — Failles qui permettent au serveur/attaquant de lire les données
+
+#### 1. Email & Téléphone stockés **en clair** en base de données
+```
+User.email  → en clair, indexé
+User.phone  → en clair
+```
+**Risque :** Si la DB est compromise, tous les emails/téléphones sont exposés.
+
+#### 2. Clé privée AES avec `crypto-js` — dérivation de clé faible
+```ts
+// Actuel : AES.encrypt(privateKey, password)  <- mot de passe direct comme clé !
+// crypto-js utilise EVP_BytesToKey (MD5 non salé), trop faible
+```
+**Risque :** Bruteforce de la clé privée par dictionnaire.
+
+#### 3. Fichiers joints **NON chiffrés** côté client
+```ts
+// Dans handleSendMessage() — les fichiers sont juste convertis en base64 sans chiffrement
+const base64Data = await fileToBase64(file);
+attachments.push({ filename, type, data: base64Data }); // ← plain base64
+```
+**Risque :** Les pièces jointes sont lisibles directement par le serveur.
+
+#### 4. `STORAGE_ENCRYPTION_KEY` est une constante hardcodée côté client
+```ts
+const STORAGE_ENCRYPTION_KEY = process.env.NEXT_PUBLIC_STORAGE_KEY || 'mango-secure-storage-key-v1';
+```
+**Risque :** Clé publique → protection localStorage triviale à contourner.
+
+#### 5. La clé privée déchiffrée est exposée dans la réponse login
+```ts
+// login/route.ts ligne 137
+encryptedPrivateKey: user.encryptedPrivateKey, // envoyée au client
+```
+Ce n'est pas un problème en soi, mais la clé privée déchiffrée transite via sessionStorage.
+
+#### 6. Aucune intégrité vérifiable des messages
+Le serveur peut modifier le contenu d'un message sans que le client ne le détecte.
+
+---
+
+## 🛡️ Plan d'Implémentation — Défense en Profondeur
+
+### Niveau 1 : Chiffrement Email & Téléphone (Serveur)
+- Chiffrement AES-256-GCM côté serveur avec clé d'environnement + sel aléatoire
+- Email hashé séparément pour les recherches (HMAC-SHA256)
+- Phone chiffré de même
+
+### Niveau 2 : Dérivation de clé robuste (PBKDF2/Argon2)
+- Remplacer `AES.encrypt(key, password)` par PBKDF2 (WebCrypto) + AES-GCM
+- 100 000 itérations + sel aléatoire de 32 bytes
+- Le sel est stocké avec la clé chiffrée
+
+### Niveau 3 : Chiffrement des pièces jointes côté client
+- Chiffrer les fichiers avec NaCl `box` AVANT envoi (comme pour le texte)
+- Utiliser la même paire de clés Curve25519
+
+### Niveau 4 : Protection de la clé locale
+- Dériver une clé de stockage à partir d'un secret local (fingerprint navigateur + random)
+- Stocker dans IndexedDB chiffrée plutôt que sessionStorage
+
+---
+
+## 📁 Fichiers Modifiés/Créés
+
+| Fichier | Action | Description |
+|---------|--------|-------------|
+| `src/lib/server-crypto.ts` | **CRÉÉ** | Chiffrement email/phone côté serveur |
+| [src/lib/crypto.ts](file:///Users/paulkone/Desktop/Next_projet/chat-kephale/src/lib/crypto.ts) | **MODIFIÉ** | PBKDF2 pour la clé privée |
+| [app/chat/discussion/[id]/page.tsx](file:///Users/paulkone/Desktop/Next_projet/chat-kephale/app/chat/discussion/%5Bid%5D/page.tsx) | **MODIFIÉ** | Chiffrement fichiers joints |
+| [app/api/auth/register/route.ts](file:///Users/paulkone/Desktop/Next_projet/chat-kephale/app/api/auth/register/route.ts) | **MODIFIÉ** | Chiffrement email/phone à la création |
+| [app/api/auth/login/route.ts](file:///Users/paulkone/Desktop/Next_projet/chat-kephale/app/api/auth/login/route.ts) | **MODIFIÉ** | Recherche par hash HMAC |
+| [prisma/schema.prisma](file:///Users/paulkone/Desktop/Next_projet/chat-kephale/prisma/schema.prisma) | **MODIFIÉ** | emailHash, encryptedPhone |
+| Migration Prisma | **CRÉÉE** | Ajout des nouveaux champs |
+
+
+Headers manquants détectés
+Tu n’as pas :
+❌ Content-Security-Policy
+❌ Strict-Transport-Security
+❌ X-Frame-Options
+❌ X-Content-Type-Options
+❌ Referrer-Policy
+❌ Permissions-Policy
+❌ Cross-Origin-*

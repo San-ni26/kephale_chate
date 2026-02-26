@@ -39,18 +39,25 @@ export function DocumentViewerFullScreen({
             setBlobUrl(null);
             return;
         }
-        const blob = dataUrlToBlob(fileUrl);
-        if (blob) {
-            const url = URL.createObjectURL(blob);
-            blobUrlRef.current = url;
-            setBlobUrl(url);
-            return () => {
-                URL.revokeObjectURL(url);
-                blobUrlRef.current = null;
+        let cancelled = false;
+        dataUrlToBlob(fileUrl).then((blob) => {
+            if (cancelled) return;
+            if (blob) {
+                const url = URL.createObjectURL(blob);
+                blobUrlRef.current = url;
+                setBlobUrl(url);
+            } else {
                 setBlobUrl(null);
-            };
-        }
-        setBlobUrl(null);
+            }
+        });
+        return () => {
+            cancelled = true;
+            if (blobUrlRef.current) {
+                URL.revokeObjectURL(blobUrlRef.current);
+                blobUrlRef.current = null;
+            }
+            setBlobUrl(null);
+        };
     }, [open, type, fileUrl]);
 
     if (!open) return null;
