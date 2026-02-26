@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 import { z } from 'zod';
 import { generateKeyPair } from '@/src/lib/crypto';
 
@@ -65,7 +66,7 @@ export async function GET(
             },
         });
 
-        return NextResponse.json({ groups }, { status: 200 });
+        return NextResponse.json({ groups: decryptUserPII(groups) }, { status: 200 });
     } catch (error) {
         console.error('Get collaboration groups error:', error);
         return NextResponse.json(
@@ -179,7 +180,7 @@ export async function POST(
         return NextResponse.json(
             {
                 message: 'Groupe créé avec succès',
-                group,
+                group: decryptUserPII(group),
             },
             { status: 201 }
         );

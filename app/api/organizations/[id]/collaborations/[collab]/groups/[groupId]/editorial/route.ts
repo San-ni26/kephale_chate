@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 import { apiError, handleApiError } from '@/src/lib/api-response';
 
 export const dynamic = 'force-dynamic';
@@ -90,7 +91,7 @@ export async function GET(
             orderBy: [{ scheduledAt: 'asc' }, { order: 'asc' }, { createdAt: 'desc' }],
         });
 
-        return NextResponse.json({ items });
+        return NextResponse.json({ items: decryptUserPII(items) });
     } catch (error) {
         return handleApiError(error);
     }
@@ -140,7 +141,7 @@ export async function POST(
             },
         });
 
-        return NextResponse.json({ item }, { status: 201 });
+        return NextResponse.json({ item: decryptUserPII(item) }, { status: 201 });
     } catch (error) {
         return handleApiError(error);
     }

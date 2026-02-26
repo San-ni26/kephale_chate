@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { decryptPII } from '@/src/lib/server-crypto';
 import { z } from 'zod';
 import { generateEventToken } from '@/src/lib/subscription';
 import { sendEventInvitationEmail } from '@/src/lib/email';
@@ -204,7 +205,10 @@ export async function POST(
                     where: { orgId },
                     include: { user: { select: { email: true, name: true } } },
                 });
-                recipients = members.map((m) => ({ email: m.user.email, name: m.user.name }));
+                recipients = members.map((m) => ({
+                    email: decryptPII(m.user.email) || m.user.email,
+                    name: m.user.name,
+                }));
             } else if (sendInvitations.target === 'department' && sendInvitations.departmentId) {
                 const dept = await prisma.department.findFirst({
                     where: { id: sendInvitations.departmentId, orgId },
@@ -216,7 +220,7 @@ export async function POST(
                 });
                 if (dept) {
                     recipients = dept.members.map((m) => ({
-                        email: m.user.email,
+                        email: decryptPII(m.user.email) || m.user.email,
                         name: m.user.name,
                     }));
                 }
@@ -228,7 +232,10 @@ export async function POST(
                     },
                     select: { email: true, name: true },
                 });
-                recipients = users.map((u) => ({ email: u.email, name: u.name }));
+                recipients = users.map((u) => ({
+                    email: decryptPII(u.email) || u.email,
+                    name: u.name,
+                }));
             }
 
             const eventDetails = {

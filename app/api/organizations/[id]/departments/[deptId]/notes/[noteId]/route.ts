@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 import { apiError, handleApiError } from '@/src/lib/api-response';
 
 const updateNoteSchema = z.object({
@@ -56,7 +57,7 @@ export async function GET(
             return NextResponse.json({ error: 'Note non trouvée' }, { status: 404 });
         }
 
-        return NextResponse.json({ note });
+        return NextResponse.json({ note: decryptUserPII(note) });
     } catch (error) {
         return handleApiError(error);
     }
@@ -98,7 +99,7 @@ export async function PATCH(
             },
         });
 
-        return NextResponse.json({ note: updated });
+        return NextResponse.json({ note: decryptUserPII(updated) });
     } catch (error) {
         return handleApiError(error);
     }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 
 function isMonthClosed(monthStr: string): boolean {
     const [y, m] = monthStr.split('-').map(Number);
@@ -105,15 +106,15 @@ export async function GET(
                     email: m.user.email,
                 }));
             return NextResponse.json({
-                reports: reports.map((r) => ({
+                reports: decryptUserPII(reports.map((r) => ({
                     userId: r.user.id,
                     userName: r.user.name,
                     userEmail: r.user.email,
                     content: r.content,
                     createdAt: r.createdAt,
                     updatedAt: r.updatedAt,
-                })),
-                membersWithoutReport,
+                }))),
+                membersWithoutReport: decryptUserPII(membersWithoutReport),
                 canEdit: !closed,
             });
         }

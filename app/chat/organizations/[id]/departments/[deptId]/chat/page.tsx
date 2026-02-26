@@ -58,6 +58,7 @@ interface Message {
     createdAt: string;
     updatedAt: string;
     isEdited: boolean;
+    hasAttachments?: boolean;
     attachments?: {
         filename: string;
         type: string;
@@ -300,19 +301,31 @@ export default function DepartmentChatPage() {
         { refreshInterval: 60000, revalidateOnFocus: true }
     );
 
-    const handleNewMessage = useCallback((data: { conversationId: string; message: Message }) => {
+    const handleNewMessage = useCallback(async (data: { conversationId: string; message: Message }) => {
         const me = getUser();
-        setMessages((prev) => {
-            if (prev.some((m) => m.id === data.message.id)) return prev;
-            const ourTemp = prev.find((m) => m.id.startsWith('temp-') && m.senderId === me?.id);
-            if (ourTemp && data.message.senderId === me?.id) {
-                stableMessageKeysRef.current.set(data.message.id, ourTemp.id);
-                stableMessageTimestampsRef.current.set(data.message.id, ourTemp.createdAt);
-                return prev.map((m) => (m.id === ourTemp.id ? data.message : m));
+        let fullMessage = data.message;
+        if (data.message.hasAttachments) {
+            try {
+                const res = await fetchWithAuth(`/api/messages/${data.message.id}`);
+                if (res.ok) {
+                    const json = await res.json();
+                    fullMessage = json.message ?? data.message;
+                }
+            } catch {
+                fullMessage = data.message;
             }
-            return dedupeMessagesById([...prev, data.message]);
+        }
+        setMessages((prev) => {
+            if (prev.some((m) => m.id === fullMessage.id)) return prev;
+            const ourTemp = prev.find((m) => m.id.startsWith('temp-') && m.senderId === me?.id);
+            if (ourTemp && fullMessage.senderId === me?.id) {
+                stableMessageKeysRef.current.set(fullMessage.id, ourTemp.id);
+                stableMessageTimestampsRef.current.set(fullMessage.id, ourTemp.createdAt);
+                return prev.map((m) => (m.id === ourTemp.id ? fullMessage : m));
+            }
+            return dedupeMessagesById([...prev, fullMessage]);
         });
-        if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, data.message);
+        if (messagesCacheUrl) addMessageToCache(messagesCacheUrl, fullMessage);
     }, [messagesCacheUrl]);
     const handleMessageEdited = useCallback((data: { conversationId: string; message: Message }) => {
         setMessages((prev) => prev.map((m) => (m.id === data.message.id ? data.message : m)));

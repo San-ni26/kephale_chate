@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
-import { encryptMessage } from '@/src/lib/crypto';
+import { hashForSearch } from '@/src/lib/server-crypto';
 
 export async function POST(
     request: NextRequest,
@@ -42,12 +42,19 @@ export async function POST(
             return NextResponse.json({ error: 'Accès refusé - Droits requis' }, { status: 403 });
         }
         if (!deptAuth || deptAuth.orgId !== orgId) {
+            console.warn('[members POST] Département non trouvé:', { deptId, orgId, deptAuth: !!deptAuth });
             return NextResponse.json({ error: 'Département non trouvé' }, { status: 404 });
         }
 
-        // Find user by email
-        const userToAdd = await prisma.user.findUnique({
-            where: { email },
+        // Find user by email (emailHash pour comptes chiffrés, email pour legacy)
+        const emailHash = hashForSearch(email);
+        const userToAdd = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    { emailHash },
+                    { email },
+                ],
+            },
             select: {
                 id: true,
                 email: true,
@@ -57,6 +64,7 @@ export async function POST(
         });
 
         if (!userToAdd) {
+            console.warn('[members POST] Utilisateur non trouvé:', { email });
             return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 });
         }
 
@@ -95,6 +103,7 @@ export async function POST(
             },
         });
         if (!departmentWithSub || departmentWithSub.orgId !== orgId) {
+            console.warn('[members POST] Département non trouvé (2):', { deptId, orgId });
             return NextResponse.json({ error: 'Département non trouvé' }, { status: 404 });
         }
 

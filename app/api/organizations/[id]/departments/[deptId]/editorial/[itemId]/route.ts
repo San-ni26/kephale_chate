@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 import { apiError, handleApiError } from '@/src/lib/api-response';
 
 export const dynamic = 'force-dynamic';
@@ -66,7 +67,7 @@ export async function GET(
         });
         if (!item) return NextResponse.json({ error: 'Item non trouvé' }, { status: 404 });
 
-        return NextResponse.json({ item });
+        return NextResponse.json({ item: decryptUserPII(item) });
     } catch (error) {
         return handleApiError(error);
     }
@@ -113,7 +114,7 @@ export async function PATCH(
             },
         });
 
-        return NextResponse.json({ item });
+        return NextResponse.json({ item: decryptUserPII(item) });
     } catch (error) {
         return handleApiError(error);
     }

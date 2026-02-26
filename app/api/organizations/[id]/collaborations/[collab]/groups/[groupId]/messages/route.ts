@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
-import { emitToConversation } from '@/src/lib/pusher-server';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+import { emitMessageNewToConversation } from '@/src/lib/pusher-server';
 import { notifyCollaborationGroupNewMessage } from '@/src/lib/websocket';
 
 export const dynamic = 'force-dynamic';
@@ -154,7 +155,7 @@ export async function GET(
         }
 
         return NextResponse.json({
-            messages: messagesRaw,
+            messages: decryptUserPII(messagesRaw),
             hasMore,
             conversationId: conversation.id,
             pinnedEvents: [],
@@ -272,10 +273,7 @@ export async function POST(
         });
 
         try {
-            await emitToConversation(conversation.id, 'message:new', {
-                conversationId: conversation.id,
-                message,
-            });
+            await emitMessageNewToConversation(conversation.id, message);
         } catch (pusherErr) {
             console.error('[Collab messages] Pusher broadcast error:', pusherErr);
         }

@@ -7,11 +7,11 @@
 
 import { prisma } from '@/src/lib/prisma';
 import { sendPushNotification } from '@/src/lib/push';
-import { emitToUser, emitToConversation } from '@/src/lib/pusher-server';
+import { emitToUser, emitToConversation, emitMessageNewToConversation } from '@/src/lib/pusher-server';
 import { isUserInCall } from '@/src/lib/call-redis';
 
 // Re-export helpers for backward compatibility
-export { emitToUser, emitToConversation };
+export { emitToUser, emitToConversation, emitMessageNewToConversation };
 
 /**
  * Notify all members of a conversation about a new message.
@@ -29,47 +29,7 @@ export async function notifyNewMessage(message: any, conversationId: string) {
     // On n'envoie PAS les données des pièces jointes (base64 chiffré = plusieurs Ko/Mo).
     // Le client reçoit un signal et fetch le message complet depuis l'API si besoin.
     try {
-        const attachmentsMeta = (message.attachments ?? []).map((a: any) => ({
-            filename: a.filename,
-            type: a.type,
-            // 'data' volontairement omis — trop lourd pour Pusher (limite 10 240 bytes)
-        }));
-
-        // Payload Pusher allégé : métadonnées uniquement
-        const pusherPayload = {
-            conversationId,
-            message: {
-                id: message.id,
-                content: message.content, // déjà chiffré (court)
-                senderId: message.senderId,
-                sender: message.sender
-                    ? { id: message.sender.id, name: message.sender.name, publicKey: message.sender.publicKey }
-                    : null,
-                createdAt: message.createdAt instanceof Date
-                    ? message.createdAt.toISOString()
-                    : message.createdAt,
-                updatedAt: message.updatedAt instanceof Date
-                    ? message.updatedAt.toISOString()
-                    : message.updatedAt,
-                isEdited: message.isEdited ?? false,
-                replyTo: message.replyTo ?? null,
-                // Signaler la présence de pièces jointes sans les données
-                hasAttachments: attachmentsMeta.length > 0,
-                attachmentsMeta, // noms + types seulement
-            },
-        };
-
-        // Vérification taille préventive (Pusher max 10 240 bytes)
-        const payloadSize = Buffer.byteLength(JSON.stringify(pusherPayload), 'utf8');
-        if (payloadSize > 9500) {
-            // Si le payload est encore trop lourd (message chiffré très long), tronquer
-            pusherPayload.message.content = pusherPayload.message.content?.substring(0, 500) ?? '';
-        }
-
-        await emitToConversation(conversationId, 'message:new', pusherPayload);
-        if (process.env.NODE_ENV === 'development') {
-            console.log(`[Notify] Broadcast message:new (${payloadSize} bytes) to conversation:`, conversationId);
-        }
+        await emitMessageNewToConversation(conversationId, message);
     } catch (err) {
         console.error('[Notify] Error broadcasting message via Pusher:', err);
     }

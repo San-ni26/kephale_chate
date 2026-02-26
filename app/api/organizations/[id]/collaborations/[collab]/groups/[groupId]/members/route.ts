@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { decryptUserPII, hashForSearch } from '@/src/lib/server-crypto';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -64,7 +65,7 @@ export async function GET(
             );
         }
 
-        return NextResponse.json({ members: group.members }, { status: 200 });
+        return NextResponse.json({ members: decryptUserPII(group.members) }, { status: 200 });
     } catch (error) {
         console.error('Get collaboration group members error:', error);
         return NextResponse.json(
@@ -143,8 +144,15 @@ export async function POST(
             );
         }
 
-        const userToAdd = await prisma.user.findUnique({
-            where: { email: userEmail },
+        // Recherche par emailHash (comptes chiffrés) ou email (legacy)
+        const emailHash = hashForSearch(userEmail);
+        const userToAdd = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    { emailHash },
+                    { email: userEmail },
+                ],
+            },
             select: {
                 id: true,
                 email: true,

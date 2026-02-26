@@ -112,3 +112,29 @@ export function verifySearchHash(value: string, hash: string): boolean {
         Buffer.from(hash, 'hex')
     );
 }
+
+/**
+ * Parcourt récursivement un objet et déchiffre les champs email/phone.
+ * Utile pour les réponses API contenant des données utilisateur.
+ */
+export function decryptUserPII<T>(obj: T): T {
+    if (obj === null || obj === undefined) return obj;
+    if (Array.isArray(obj)) return obj.map(decryptUserPII) as unknown as T;
+    if (typeof obj === 'object') {
+        const result = { ...obj } as Record<string, unknown>;
+        for (const key of Object.keys(result)) {
+            result[key] = decryptUserPII(result[key]);
+        }
+        if ('email' in result && typeof result.email === 'string') {
+            result.email = decryptPII(result.email) || result.email;
+        }
+        if ('phone' in result && typeof result.phone === 'string') {
+            result.phone = result.phone ? (decryptPII(result.phone) || result.phone) : null;
+        }
+        if ('userEmail' in result && typeof result.userEmail === 'string') {
+            result.userEmail = decryptPII(result.userEmail) || result.userEmail;
+        }
+        return result as T;
+    }
+    return obj;
+}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { decryptPII } from '@/src/lib/server-crypto';
 
 /**
  * GET: List all members of the organization (id, name, email) for event invitations etc.
@@ -52,7 +53,7 @@ export async function GET(
         const list = members.map((m) => ({
             id: m.user.id,
             name: m.user.name,
-            email: m.user.email,
+            email: decryptPII(m.user.email) || m.user.email,
             role: m.role,
         }));
 

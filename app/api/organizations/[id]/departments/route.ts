@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 import { z } from 'zod';
-import { generateKeyPair, encryptMessage } from '@/src/lib/crypto';
+import { generateKeyPair } from '@/src/lib/crypto';
 
 const createDeptSchema = z.object({
     name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
@@ -86,7 +87,7 @@ export async function GET(
             },
         });
 
-        return NextResponse.json({ departments }, { status: 200 });
+        return NextResponse.json({ departments: decryptUserPII(departments) }, { status: 200 });
 
     } catch (error) {
         console.error('Get departments error:', error);
@@ -245,7 +246,7 @@ export async function POST(
         return NextResponse.json(
             {
                 message: 'Département créé avec succès',
-                department,
+                department: decryptUserPII(department),
             },
             { status: 201 }
         );

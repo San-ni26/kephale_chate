@@ -78,9 +78,15 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Check if email already exists
-        const existingUser = await prisma.user.findUnique({
-            where: { email: validatedData.email },
+        // Check if email already exists (emailHash pour comptes chiffrés, email pour legacy)
+        const emailHashForCheck = hashForSearch(validatedData.email);
+        const existingUser = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    { emailHash: emailHashForCheck },
+                    { email: validatedData.email },
+                ],
+            },
         });
 
         if (existingUser) {
@@ -128,7 +134,7 @@ export async function POST(request: NextRequest) {
         console.log('Attempting to create user in database...');
         try {
             // Chiffrement des données personnelles (email + téléphone)
-            const emailHash = hashForSearch(validatedData.email);
+            const emailHash = emailHashForCheck;
             const encryptedEmail = encryptPII(validatedData.email);
             // Le téléphone est chiffré directement dans le champ phone (AES-256-GCM)
             const encryptedPhone = validatedData.phone ? encryptPII(validatedData.phone) : null;

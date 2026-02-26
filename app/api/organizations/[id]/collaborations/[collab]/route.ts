@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 
 export const dynamic = 'force-dynamic';
 
@@ -98,7 +99,7 @@ export async function GET(
         });
         const canManageGroups = Boolean(adminMembership);
 
-        return NextResponse.json({ collaboration, canManageGroups }, { status: 200 });
+        return NextResponse.json({ collaboration: decryptUserPII(collaboration), canManageGroups }, { status: 200 });
     } catch (error) {
         console.error('Get collaboration error:', error);
         return NextResponse.json(
@@ -185,7 +186,7 @@ export async function PATCH(
 
         return NextResponse.json({
             message: action === 'accept' ? 'Collaboration acceptée' : 'Invitation refusée',
-            collaboration: updated,
+            collaboration: decryptUserPII(updated),
         });
     } catch (error) {
         console.error('Patch collaboration error:', error);

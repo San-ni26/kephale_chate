@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 import { notifyDepartmentNewMeeting } from '@/src/lib/notify-department';
 
 async function checkDeptAccess(orgId: string, deptId: string, userId: string) {
@@ -47,7 +48,7 @@ export async function GET(
             orderBy: { meetingDate: 'desc' },
         });
 
-        return NextResponse.json({ meetings });
+        return NextResponse.json({ meetings: decryptUserPII(meetings) });
     } catch (error) {
         console.error('Get meetings error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
@@ -108,7 +109,7 @@ export async function POST(
             console.error('[Dept meetings] Notify error:', notifErr);
         }
 
-        return NextResponse.json({ meeting });
+        return NextResponse.json({ meeting: decryptUserPII(meeting) });
     } catch (error) {
         console.error('Create meeting error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });

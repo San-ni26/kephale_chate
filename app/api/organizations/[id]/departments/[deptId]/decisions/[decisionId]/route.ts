@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 
 async function checkDeptAccess(orgId: string, deptId: string, userId: string) {
     const orgMember = await prisma.organizationMember.findFirst({
@@ -45,7 +46,7 @@ export async function GET(
         });
 
         if (!decision) return NextResponse.json({ error: 'Décision non trouvée' }, { status: 404 });
-        return NextResponse.json({ decision });
+        return NextResponse.json({ decision: decryptUserPII(decision) });
     } catch (error) {
         console.error('Get decision error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
@@ -93,7 +94,7 @@ export async function PATCH(
             },
         });
 
-        return NextResponse.json({ decision: updated });
+        return NextResponse.json({ decision: decryptUserPII(updated) });
     } catch (error) {
         console.error('Update decision error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });

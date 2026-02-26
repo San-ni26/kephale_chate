@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 import { apiError, handleApiError } from '@/src/lib/api-response';
 
 export const dynamic = 'force-dynamic';
@@ -57,7 +58,7 @@ export async function GET(
             orderBy: { createdAt: 'desc' },
         });
 
-        return NextResponse.json({ documents });
+        return NextResponse.json({ documents: decryptUserPII(documents) });
     } catch (error) {
         return handleApiError(error);
     }
@@ -106,7 +107,7 @@ export async function POST(
             },
         });
 
-        return NextResponse.json({ document: doc }, { status: 201 });
+        return NextResponse.json({ document: decryptUserPII(doc) }, { status: 201 });
     } catch (error) {
         if (error instanceof z.ZodError) {
             return apiError('Données invalides', 400, { details: error.issues });

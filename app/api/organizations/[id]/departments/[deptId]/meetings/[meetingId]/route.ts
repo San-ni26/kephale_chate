@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 
 async function checkDeptAccess(orgId: string, deptId: string, userId: string) {
     const orgMember = await prisma.organizationMember.findFirst({
@@ -46,7 +47,7 @@ export async function GET(
         });
 
         if (!meeting) return NextResponse.json({ error: 'Réunion non trouvée' }, { status: 404 });
-        return NextResponse.json({ meeting });
+        return NextResponse.json({ meeting: decryptUserPII(meeting) });
     } catch (error) {
         console.error('Get meeting error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
@@ -92,7 +93,7 @@ export async function PATCH(
             },
         });
 
-        return NextResponse.json({ meeting: updated });
+        return NextResponse.json({ meeting: decryptUserPII(updated) });
     } catch (error) {
         console.error('Update meeting error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
@@ -134,7 +135,7 @@ export async function PUT(
             },
         });
 
-        return NextResponse.json({ meeting: updated });
+        return NextResponse.json({ meeting: decryptUserPII(updated) });
     } catch (error) {
         console.error('Update meeting minutes error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 import { apiError, handleApiError } from '@/src/lib/api-response';
 
 const createNoteSchema = z.object({
@@ -61,7 +62,7 @@ export async function GET(
             orderBy: { updatedAt: 'desc' },
         });
 
-        return NextResponse.json({ notes });
+        return NextResponse.json({ notes: decryptUserPII(notes) });
     } catch (error) {
         return handleApiError(error);
     }
@@ -113,7 +114,7 @@ export async function POST(
             },
         });
 
-        return NextResponse.json({ note }, { status: 201 });
+        return NextResponse.json({ note: decryptUserPII(note) }, { status: 201 });
     } catch (error) {
         return handleApiError(error);
     }

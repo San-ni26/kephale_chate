@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 
 async function checkDeptAccess(orgId: string, deptId: string, userId: string) {
     const orgMember = await prisma.organizationMember.findFirst({
@@ -45,7 +46,7 @@ export async function GET(
         });
 
         if (!poll) return NextResponse.json({ error: 'Sondage non trouvé' }, { status: 404 });
-        return NextResponse.json({ poll });
+        return NextResponse.json({ poll: decryptUserPII(poll) });
     } catch (error) {
         console.error('Get poll error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });

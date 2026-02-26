@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 import { notifyDepartmentNewMessage } from '@/src/lib/notify-department';
-import { emitToConversation } from '@/src/lib/pusher-server';
+import { emitMessageNewToConversation } from '@/src/lib/pusher-server';
 
 export async function GET(
     request: NextRequest,
@@ -179,7 +180,7 @@ export async function GET(
         }
 
         return NextResponse.json({
-            messages,
+            messages: decryptUserPII(messages),
             hasMore,
             conversationId: conversation.id,
             pinnedEvents: events,
@@ -310,17 +311,14 @@ export async function POST(
             console.error('[Dept messages] Notify error:', notifErr);
         }
 
-        // Temps réel : même canal que les conversations (presence-conversation-{groupId})
+        // Temps réel : payload allégé (sans données base64 des pièces jointes) pour respecter la limite Pusher 10KB
         try {
-            await emitToConversation(conversation.id, 'message:new', {
-                conversationId: conversation.id,
-                message,
-            });
+            await emitMessageNewToConversation(conversation.id, message);
         } catch (pusherErr) {
             console.error('[Dept messages] Pusher broadcast error:', pusherErr);
         }
 
-        return NextResponse.json({ message }, { status: 201 });
+        return NextResponse.json({ message: decryptUserPII(message) }, { status: 201 });
     } catch (error) {
         console.error('Send department message error:', error);
         return NextResponse.json(

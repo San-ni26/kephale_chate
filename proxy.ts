@@ -8,7 +8,7 @@ const protectedRoutes = ['/chat', '/admin'];
 // Routes that should redirect to chat if already authenticated
 const authRoutes = ['/login', '/register'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Get token from cookie or Authorization header

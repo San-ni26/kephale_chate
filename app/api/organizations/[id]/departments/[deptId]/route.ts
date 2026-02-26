@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
 import { getOnlineUserIds } from '@/src/lib/presence';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 
 export async function GET(
     request: NextRequest,
@@ -117,7 +118,7 @@ export async function GET(
         };
 
         return NextResponse.json({
-            department: departmentResponseWithMembers,
+            department: decryptUserPII(departmentResponseWithMembers),
             currentMemberEncryptedDeptKey: currentMember?.encryptedDeptKey ?? null,
             userOrgRole: orgMember?.role ?? null,
             orgOwnerId: org?.ownerId ?? null,
@@ -262,7 +263,7 @@ export async function PATCH(
             },
         });
 
-        return NextResponse.json({ department });
+        return NextResponse.json({ department: decryptUserPII(department) });
     } catch (error) {
         console.error('Update department error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });

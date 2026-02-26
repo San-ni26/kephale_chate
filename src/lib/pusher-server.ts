@@ -50,6 +50,54 @@ export async function emitToConversation(conversationId: string, event: string, 
 }
 
 /**
+ * Payload allégé pour message:new (Pusher limite 10 240 bytes).
+ * Exclut les données base64 des pièces jointes — le client fetch le message complet si besoin.
+ */
+function buildLightweightMessagePayload(message: any, conversationId: string) {
+    const attachmentsMeta = (message.attachments ?? []).map((a: any) => ({
+        filename: a.filename,
+        type: a.type,
+    }));
+
+    const pusherPayload = {
+        conversationId,
+        message: {
+            id: message.id,
+            content: message.content,
+            senderId: message.senderId,
+            sender: message.sender
+                ? { id: message.sender.id, name: message.sender.name, publicKey: message.sender.publicKey }
+                : null,
+            createdAt: message.createdAt instanceof Date
+                ? message.createdAt.toISOString()
+                : message.createdAt,
+            updatedAt: message.updatedAt instanceof Date
+                ? message.updatedAt.toISOString()
+                : message.updatedAt,
+            isEdited: message.isEdited ?? false,
+            replyTo: message.replyTo ?? null,
+            hasAttachments: attachmentsMeta.length > 0,
+            attachmentsMeta,
+        },
+    };
+
+    const payloadSize = Buffer.byteLength(JSON.stringify(pusherPayload), 'utf8');
+    if (payloadSize > 9500) {
+        pusherPayload.message.content = pusherPayload.message.content?.substring(0, 500) ?? '';
+    }
+
+    return pusherPayload;
+}
+
+/**
+ * Broadcast message:new avec payload allégé (évite erreur 413 Pusher).
+ */
+export async function emitMessageNewToConversation(conversationId: string, message: any) {
+    const payload = buildLightweightMessagePayload(message, conversationId);
+    await emitToConversation(conversationId, 'message:new', payload);
+}
+
+/**
  * Send an event to multiple channels at once (max 100)
  */
 export async function emitToMultipleUsers(userIds: string[], event: string, data: any) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 
 async function checkDeptAccess(orgId: string, deptId: string, userId: string) {
     const orgMember = await prisma.organizationMember.findFirst({
@@ -85,7 +86,7 @@ export async function POST(
             },
         });
 
-        return NextResponse.json({ decision: updated, message: 'Vote enregistré' });
+        return NextResponse.json({ decision: decryptUserPII(updated), message: 'Vote enregistré' });
     } catch (error) {
         console.error('Vote decision error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });

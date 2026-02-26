@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -83,7 +84,7 @@ export async function GET(
         const isOrgAdmin = orgMember?.role === 'OWNER' || orgMember?.role === 'ADMIN';
 
         return NextResponse.json({
-            group,
+            group: decryptUserPII(group),
             currentMemberEncryptedDeptKey: currentMember?.encryptedDeptKey ?? null,
             canManageMembers: isOrgAdmin,
         }, { status: 200 });
