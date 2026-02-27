@@ -43,6 +43,9 @@ export function EnablePushBanner({ variant = 'banner' }: EnablePushBannerProps) 
     );
     const devices = Array.isArray(devicesData?.devices) ? devicesData.devices : [];
 
+    // Vrai si l'appareil courant est déjà inscrit côté serveur
+    const isCurrentDeviceRegistered = !!(currentEndpoint && devices.some((d) => d.endpoint === currentEndpoint));
+
     useEffect(() => {
         if (variant === 'settings') {
             getCurrentPushEndpoint().then(setCurrentEndpoint);
@@ -166,13 +169,12 @@ export function EnablePushBanner({ variant = 'banner' }: EnablePushBannerProps) 
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    {/* Bloc activation / test */}
-                    {showTestRow && permission === 'granted' ? (
+                    {/* Bloc activation : masqué si l'appareil courant est déjà enregistré */}
+                    {(showTestRow && permission === 'granted') || isCurrentDeviceRegistered ? (
                         <div className="space-y-2">
                             <p className="text-sm text-muted-foreground">
                                 Recevez les messages et appels même quand l&apos;app est fermée.
                             </p>
-
                         </div>
                     ) : (
                         <div className="space-y-2">
@@ -217,48 +219,48 @@ export function EnablePushBanner({ variant = 'banner' }: EnablePushBannerProps) 
                                     const isCurrentDevice = currentEndpoint && device.endpoint === currentEndpoint;
                                     const displayName = device.deviceName || 'Appareil';
                                     return (
-                                    <li
-                                        key={device.id}
-                                        className="flex items-center justify-between gap-2 p-3 rounded-lg bg-muted/50 border border-border"
-                                    >
-                                        <div className="flex items-center gap-2 min-w-0">
-                                            <Smartphone className="w-4 h-4 shrink-0 text-muted-foreground" />
-                                            <div className="min-w-0">
-                                                <div className="flex items-center gap-2 flex-wrap">
-                                                    <p className="text-sm font-medium text-foreground">
-                                                        {displayName}
-                                                    </p>
-                                                    {isCurrentDevice && (
-                                                        <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-medium">
-                                                            Cet appareil
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <p className="text-xs text-muted-foreground mt-0.5">
-                                                    Enregistré le{' '}
-                                                    {new Date(device.createdAt).toLocaleDateString('fr-FR', {
-                                                        day: 'numeric',
-                                                        month: 'long',
-                                                        year: 'numeric',
-                                                    })}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <Button
-                                            size="sm"
-                                            variant="ghost"
-                                            className="shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                            onClick={() => handleDeleteDevice(device.id)}
-                                            disabled={deletingId === device.id}
-                                            aria-label="Supprimer cet appareil"
+                                        <li
+                                            key={device.id}
+                                            className="flex items-center justify-between gap-2 p-3 rounded-lg bg-muted/50 border border-border"
                                         >
-                                            {deletingId === device.id ? (
-                                                <Loader2 className="w-4 h-4 animate-spin" />
-                                            ) : (
-                                                <Trash2 className="w-4 h-4" />
-                                            )}
-                                        </Button>
-                                    </li>
+                                            <div className="flex items-center gap-2 min-w-0">
+                                                <Smartphone className="w-4 h-4 shrink-0 text-muted-foreground" />
+                                                <div className="min-w-0">
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        <p className="text-sm font-medium text-foreground">
+                                                            {displayName}
+                                                        </p>
+                                                        {isCurrentDevice && (
+                                                            <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-medium">
+                                                                Cet appareil
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground mt-0.5">
+                                                        Enregistré le{' '}
+                                                        {new Date(device.createdAt).toLocaleDateString('fr-FR', {
+                                                            day: 'numeric',
+                                                            month: 'long',
+                                                            year: 'numeric',
+                                                        })}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                className="shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                onClick={() => handleDeleteDevice(device.id)}
+                                                disabled={deletingId === device.id}
+                                                aria-label="Supprimer cet appareil"
+                                            >
+                                                {deletingId === device.id ? (
+                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                ) : (
+                                                    <Trash2 className="w-4 h-4" />
+                                                )}
+                                            </Button>
+                                        </li>
                                     );
                                 })}
                             </ul>

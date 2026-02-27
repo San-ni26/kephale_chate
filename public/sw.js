@@ -65,7 +65,7 @@ self.addEventListener('push', function (event) {
     };
 
     // App fermée (aucune fenêtre) : TOUJOURS afficher la notification
-    // App ouverte : ne pas afficher si l'utilisateur a déjà la conversation ouverte et focalisée
+    // App ouverte : ne pas afficher si l'utilisateur a déjà la conversation ouverte (même sans focus)
     event.waitUntil(
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
             if (clientList.length === 0) {
@@ -74,21 +74,28 @@ self.addEventListener('push', function (event) {
                     console.warn('[SW] showNotification failed:', err);
                 });
             }
-            var hasFocused = clientList.some(function (c) { return c.focused; });
-            if (hasFocused) {
-                if (isCall) {
+
+            // Appels : toujours géré par Pusher si l'app est ouverte
+            if (isCall) {
+                var hasFocusedForCall = clientList.some(function (c) { return c.focused; });
+                if (hasFocusedForCall) {
                     console.log('[SW] App ouverte et focalisee, skip notification appel (Pusher gere)');
                     return Promise.resolve();
                 }
-                if (data.url) {
-                    for (var i = 0; i < clientList.length; i++) {
-                        if (clientList[i].focused && clientList[i].url && clientList[i].url.indexOf(data.url) !== -1) {
-                            console.log('[SW] User is viewing conversation, skip notification');
-                            return Promise.resolve();
-                        }
+            }
+
+            // Message : vérifier si l'utilisateur est sur la page de la conversation
+            // (peu importe si l'onglet est focused ou non)
+            if (!isCall && convId) {
+                var conversationUrl = '/chat/discussion/' + convId;
+                for (var i = 0; i < clientList.length; i++) {
+                    if (clientList[i].url && clientList[i].url.indexOf(conversationUrl) !== -1) {
+                        console.log('[SW] User is viewing conversation, skip notification');
+                        return Promise.resolve();
                     }
                 }
             }
+
             console.log('[SW] Showing notification:', data.title || 'Chat');
             return self.registration.showNotification(data.title || 'Chat', options).catch(function (err) {
                 console.warn('[SW] showNotification failed:', err);
@@ -141,7 +148,7 @@ self.addEventListener('notificationclick', function (event) {
                     return self.clients.matchAll({ type: 'window', includeUncontrolled: true });
                 }).then(function (clientList) {
                     clientList.forEach(function (c) {
-                        try { c.postMessage({ type: 'CALL_ENDED_BY_NOTIFICATION' }); } catch (e) {}
+                        try { c.postMessage({ type: 'CALL_ENDED_BY_NOTIFICATION' }); } catch (e) { }
                     });
                     if (clientList.length > 0) {
                         return clientList[0].focus();
@@ -312,7 +319,7 @@ function swProcessQueue() {
                             }).then(function () {
                                 return self.clients.matchAll().then(function (clients) {
                                     clients.forEach(function (c) {
-                                        try { c.postMessage({ type: 'QUEUE_ITEM_SENT', tempId: item.tempId, itemId: item.id }); } catch (e) {}
+                                        try { c.postMessage({ type: 'QUEUE_ITEM_SENT', tempId: item.tempId, itemId: item.id }); } catch (e) { }
                                     });
                                 });
                             });

@@ -399,7 +399,7 @@ export default function DiscussionPage() {
         };
     }, [blurOldMessages, lockState.canUseLock, blurEnabled, setDiscussionBlur]);
 
-    const messagesCacheUrl = conversationId ? `/api/conversations/${conversationId}/messages?limit=30` : null;
+    const messagesCacheUrl = conversationId ? `/api/conversations/${conversationId}/messages?limit=50` : null;
 
     // Real-time message handlers
     const handleNewMessage = useCallback(async (data: { conversationId: string; message: any }) => {
@@ -601,6 +601,39 @@ export default function DiscussionPage() {
             }
         };
     }, [conversationId]);
+
+    // Fetch rapide des nouveaux messages juste après le chargement initial
+    // Comble la fenêtre entre le fetch initial et la connexion Pusher
+    useEffect(() => {
+        if (!conversationId || loading) return;
+
+        const quickCheck = setTimeout(async () => {
+            try {
+                const lastMsg = [...messages].reverse().find(m => !m.id.startsWith('temp-'));
+                if (!lastMsg) return;
+
+                const res = await fetchWithAuth(
+                    `/api/conversations/${conversationId}/messages?after=${lastMsg.createdAt}&limit=20`
+                );
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.messages && data.messages.length > 0) {
+                        setMessages(prev => {
+                            const existingIds = new Set(prev.map(m => m.id));
+                            const newUnique = data.messages.filter((m: Message) => !existingIds.has(m.id));
+                            if (newUnique.length === 0) return prev;
+                            return [...prev, ...newUnique];
+                        });
+                    }
+                }
+            } catch {
+                // Silencieux - le polling régulier prendra le relais
+            }
+        }, 1500);
+
+        return () => clearTimeout(quickCheck);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [conversationId, loading]);
 
     // Fallback polling - only fetch NEW messages after the last known one
     useEffect(() => {
