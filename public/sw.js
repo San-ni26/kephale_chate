@@ -33,6 +33,10 @@ self.addEventListener('push', function (event) {
 
     var isCall = data.type === 'call';
     var convId = data.data && data.data.conversationId;
+    var orgId = data.data && data.data.orgId;
+    var deptId = data.data && data.data.deptId;
+    var collabId = data.data && data.data.collabId;
+    var groupId = data.data && data.data.groupId;
     var tag = isCall
         ? 'incoming-call-' + Date.now()
         : 'message-' + (convId || Date.now());
@@ -84,15 +88,35 @@ self.addEventListener('push', function (event) {
                 }
             }
 
-            // Message : vérifier si l'utilisateur est sur la page de la conversation
-            // (peu importe si l'onglet est focused ou non)
-            if (!isCall && convId) {
-                var conversationUrl = '/chat/discussion/' + convId;
+            // Message : ne pas afficher si l'utilisateur est déjà dans la page concernée (même logique que NotificationListener)
+            if (!isCall) {
+                var skip = false;
                 for (var i = 0; i < clientList.length; i++) {
-                    if (clientList[i].url && clientList[i].url.indexOf(conversationUrl) !== -1) {
-                        console.log('[SW] User is viewing conversation, skip notification');
-                        return Promise.resolve();
-                    }
+                    var clientUrl = clientList[i].url;
+                    if (!clientUrl) continue;
+                    try {
+                        var pathname = new URL(clientUrl).pathname;
+                        // Discussion privée
+                        if (convId && !skip) {
+                            var discussionMatch = pathname.match(/^\/chat\/discussion\/([^/?]+)/);
+                            var currentConvId = discussionMatch && discussionMatch[1];
+                            if (currentConvId && currentConvId === convId) skip = true;
+                        }
+                        // Discussion département
+                        if (orgId && deptId && !skip) {
+                            var deptMatch = pathname.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)\/chat/);
+                            if (deptMatch && deptMatch[1] === orgId && deptMatch[2] === deptId) skip = true;
+                        }
+                        // Chat collaboration
+                        if (orgId && collabId && groupId && !skip) {
+                            var collabMatch = pathname.match(/^\/chat\/organizations\/([^/]+)\/collaborations\/([^/]+)\/groups\/([^/]+)\/chat/);
+                            if (collabMatch && collabMatch[1] === orgId && collabMatch[2] === collabId && collabMatch[3] === groupId) skip = true;
+                        }
+                    } catch (e) { /* ignore */ }
+                }
+                if (skip) {
+                    console.log('[SW] User is viewing this chat, skip push notification');
+                    return Promise.resolve();
                 }
             }
 
