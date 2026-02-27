@@ -81,10 +81,12 @@ export function NotificationListener() {
                 return;
             }
 
-            // Discussion privée : ne pas notifier si l'utilisateur est déjà dans cette conversation (et onglet actif)
+            // Discussion privée : ne pas notifier si l'utilisateur est déjà dans cette conversation
             if (data.conversationId) {
-                const inThisDiscussion = currentPath?.includes(`/chat/discussion/${data.conversationId}`);
-                if (shouldSkip(!!inThisDiscussion)) return;
+                const discussionMatch = currentPath?.match(/^\/chat\/discussion\/([^/?]+)/);
+                const currentConvId = discussionMatch?.[1];
+                const inThisDiscussion = !!currentConvId && currentConvId === data.conversationId;
+                if (inThisDiscussion) return;
                 if (process.env.NODE_ENV === 'development') {
                     console.log('[Notification] Received:', data.senderName);
                 }
