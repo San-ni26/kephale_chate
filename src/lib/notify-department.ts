@@ -39,7 +39,10 @@ async function sendToUser(
                 content,
                 type: payload.type,
                 ...payload.data,
-                createdAt: notification.createdAt,
+                createdAt:
+                    notification.createdAt instanceof Date
+                        ? notification.createdAt.toISOString()
+                        : String(notification.createdAt),
             });
         } catch (e) {
             console.error('[NotifyDepartment] Pusher error for user', userId, e);
@@ -67,7 +70,7 @@ async function sendToUser(
                             );
                         } catch (err: any) {
                             if (err?.statusCode === 410 || err?.statusCode === 404) {
-                                await prisma.pushSubscription.delete({ where: { endpoint: sub.endpoint } }).catch(() => {});
+                                await prisma.pushSubscription.delete({ where: { endpoint: sub.endpoint } }).catch(() => { });
                             }
                             throw err;
                         }

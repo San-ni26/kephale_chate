@@ -1,9 +1,5 @@
-// This file is kept for backward compatibility.
-// The main service worker is now sw.js
-// If loaded via importScripts, the handlers are already in sw.js
-// If loaded directly, redirect to sw.js handlers
-
-if (typeof self !== 'undefined' && !self.__swLoaded) {
-    self.__swLoaded = true;
-    try { importScripts('/sw.js'); } catch(e) { /* already loaded */ }
-}
+// custom-sw.js
+// Ce fichier est intentionnellement vide ou minimiste.
+// ⚠️  Ne pas appeler importScripts('/sw.js') ici — cela provoquerait
+// une boucle récursive car sw.js lui-même importe ce fichier via next-pwa.
+// Tout le code Service Worker (push, click, cache) est centralisé dans sw.js.

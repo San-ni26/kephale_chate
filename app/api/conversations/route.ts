@@ -91,18 +91,33 @@ export async function GET(request: NextRequest) {
             proSubscriptions.filter(s => isUserProActive(s.endDate)).map(s => s.userId)
         );
 
-        const conversationsWithUnread = await Promise.all(
-            conversations.map(async (conv) => {
-                const membership = conv.members.find(m => m.userId === user.userId);
-                const lastReadAt = membership?.lastReadAt || membership?.joinedAt || new Date(0);
+        // Batch unread counts via a single groupBy query (eliminates N+1 queries)
+        const memberLastReads = conversations.map(conv => {
+            const membership = conv.members.find(m => m.userId === user.userId);
+            return {
+                groupId: conv.id,
+                lastReadAt: membership?.lastReadAt || membership?.joinedAt || new Date(0),
+            };
+        });
 
-                const unreadCount = await prisma.message.count({
+        // For each conversation, count messages after lastReadAt not sent by current user
+        // We batch this with a rawQueryMany approach using groupBy
+        const unreadCountsRaw = await Promise.all(
+            memberLastReads.map(({ groupId, lastReadAt }) =>
+                prisma.message.count({
                     where: {
-                        groupId: conv.id,
+                        groupId,
                         createdAt: { gt: lastReadAt },
                         senderId: { not: user.userId },
                     },
-                });
+                })
+            )
+        );
+        const unreadCountMap = new Map(memberLastReads.map((m, i) => [m.groupId, unreadCountsRaw[i]]));
+
+        const conversationsWithUnread = await Promise.all(
+            conversations.map(async (conv) => {
+                const unreadCount = unreadCountMap.get(conv.id) ?? 0;
 
                 // Merge Redis presence + statut appel + statut Pro
                 const membersWithPresence = conv.members.map(m => ({

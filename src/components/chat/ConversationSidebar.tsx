@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
@@ -75,8 +75,14 @@ export function ConversationSidebar() {
         };
     }, [userChannel, isConnected, mutateConversations]);
 
-    // Also refresh when navigating to a conversation (mark-as-read will update counts)
+    // Refresh when navigating to a conversation (mark-as-read will update counts)
+    // Skip initial mount to avoid double-fetch race condition with SWR
+    const isFirstPathRender = useRef(true);
     useEffect(() => {
+        if (isFirstPathRender.current) {
+            isFirstPathRender.current = false;
+            return;
+        }
         mutateConversations();
     }, [pathname, mutateConversations]);
 
@@ -185,78 +191,78 @@ export function ConversationSidebar() {
                                     onKeyDown={(e) => e.key === 'Enter' && router.push(`/chat/discussion/${chat.id}`)}
                                 >
 
-                                        <div className="relative flex-shrink-0">
-                                            <Avatar className={`border border-border ${isCollapsed ? 'h-10 w-10' : 'h-12 w-12'}`}>
-                                                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${chatName}`} />
-                                                <AvatarFallback>
-                                                    <User className="w-5 h-5" />
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            {/* Online indicator */}
-                                            {otherMember?.isOnline && (
-                                                <span className="absolute bottom-0 right-0 w-3 h-3 bg-success border-2 border-card rounded-full" />
-                                            )}
-                                            {/* Collapsed mode unread badge */}
-                                            {isCollapsed && unread > 0 && (
-                                                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center px-1">
-                                                    {unread > 99 ? '99+' : unread}
-                                                </span>
-                                            )}
-                                        </div>
+                                    <div className="relative flex-shrink-0">
+                                        <Avatar className={`border border-border ${isCollapsed ? 'h-10 w-10' : 'h-12 w-12'}`}>
+                                            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${chatName}`} />
+                                            <AvatarFallback>
+                                                <User className="w-5 h-5" />
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        {/* Online indicator */}
+                                        {otherMember?.isOnline && (
+                                            <span className="absolute bottom-0 right-0 w-3 h-3 bg-success border-2 border-card rounded-full" />
+                                        )}
+                                        {/* Collapsed mode unread badge */}
+                                        {isCollapsed && unread > 0 && (
+                                            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center px-1">
+                                                {unread > 99 ? '99+' : unread}
+                                            </span>
+                                        )}
+                                    </div>
 
-                                        {!isCollapsed && (
-                                            <div className="ml-3 flex-1 min-w-0 transition-opacity duration-200">
-                                                <div className="flex justify-between items-baseline mb-1">
-                                                    <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                                                        <h3 className={`text-sm truncate ${unread > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground'}`}>
-                                                            {chatName}
-                                                        </h3>
-                                                        {otherMember?.isPro && (
-                                                            <span className="shrink-0 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-500/20 text-amber-600 dark:text-amber-400">
-                                                                <Crown className="w-3 h-3" /> Pro
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex items-center gap-1 shrink-0 ml-2" onClick={(e) => e.stopPropagation()}>
-                                                        {lastMessage && (
-                                                            <span className={`text-[10px] ${unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
-                                                                {formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr })}
-                                                            </span>
-                                                        )}
-                                                        {(chat.canDelete || chat.canPurchaseRights) && (
-                                                            <ConversationActionsMenu
-                                                                conversationId={chat.id}
-                                                                canDelete={chat.canDelete ?? false}
-                                                                canPurchaseRights={chat.canPurchaseRights ?? false}
-                                                                onDeleteSuccess={() => mutateConversations()}
-                                                                onPurchaseSuccess={() => mutateConversations()}
-                                                                pendingRightsPayment={chat.pendingRightsPayment}
-                                                                pendingRightsOrder={chat.pendingRightsOrder}
-                                                                className="shrink-0"
-                                                            />
-                                                        )}
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center justify-between">
-                                                    <p className={`text-xs truncate pr-2 ${unread > 0 ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
-                                                        {lastMessage ? (
-                                                            <span>
-                                                                {lastMessage.sender.id === currentUserId && "Vous: "}
-                                                                {lastMessage.content ? "Message chiffre" : "Fichier"}
-                                                            </span>
-                                                        ) : (
-                                                            <span className="italic opacity-50">Aucun message</span>
-                                                        )}
-                                                    </p>
-                                                    {/* Unread badge */}
-                                                    {unread > 0 && (
-                                                        <span className="min-w-[20px] h-[20px] bg-primary text-primary-foreground text-[11px] font-bold rounded-full flex items-center justify-center px-1.5 shrink-0">
-                                                            {unread > 99 ? '99+' : unread}
+                                    {!isCollapsed && (
+                                        <div className="ml-3 flex-1 min-w-0 transition-opacity duration-200">
+                                            <div className="flex justify-between items-baseline mb-1">
+                                                <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                                                    <h3 className={`text-sm truncate ${unread > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground'}`}>
+                                                        {chatName}
+                                                    </h3>
+                                                    {otherMember?.isPro && (
+                                                        <span className="shrink-0 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-500/20 text-amber-600 dark:text-amber-400">
+                                                            <Crown className="w-3 h-3" /> Pro
                                                         </span>
                                                     )}
                                                 </div>
+                                                <div className="flex items-center gap-1 shrink-0 ml-2" onClick={(e) => e.stopPropagation()}>
+                                                    {lastMessage && (
+                                                        <span className={`text-[10px] ${unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
+                                                            {formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr })}
+                                                        </span>
+                                                    )}
+                                                    {(chat.canDelete || chat.canPurchaseRights) && (
+                                                        <ConversationActionsMenu
+                                                            conversationId={chat.id}
+                                                            canDelete={chat.canDelete ?? false}
+                                                            canPurchaseRights={chat.canPurchaseRights ?? false}
+                                                            onDeleteSuccess={() => mutateConversations()}
+                                                            onPurchaseSuccess={() => mutateConversations()}
+                                                            pendingRightsPayment={chat.pendingRightsPayment}
+                                                            pendingRightsOrder={chat.pendingRightsOrder}
+                                                            className="shrink-0"
+                                                        />
+                                                    )}
+                                                </div>
                                             </div>
-                                        )}
+                                            <div className="flex items-center justify-between">
+                                                <p className={`text-xs truncate pr-2 ${unread > 0 ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
+                                                    {lastMessage ? (
+                                                        <span>
+                                                            {lastMessage.sender.id === currentUserId && "Vous: "}
+                                                            {lastMessage.content ? "Message chiffre" : "Fichier"}
+                                                        </span>
+                                                    ) : (
+                                                        <span className="italic opacity-50">Aucun message</span>
+                                                    )}
+                                                </p>
+                                                {/* Unread badge */}
+                                                {unread > 0 && (
+                                                    <span className="min-w-[20px] h-[20px] bg-primary text-primary-foreground text-[11px] font-bold rounded-full flex items-center justify-center px-1.5 shrink-0">
+                                                        {unread > 99 ? '99+' : unread}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })}

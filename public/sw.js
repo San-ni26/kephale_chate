@@ -79,11 +79,26 @@ self.addEventListener('push', function (event) {
                 });
             }
 
-            // Appels : toujours géré par Pusher si l'app est ouverte
+            // Appels : skip la notification push SEULEMENT si l'utilisateur a la conversation
+            // de l'appel ouverte et focalisée — sinon il ne saurait pas qu'il a un appel.
             if (isCall) {
-                var hasFocusedForCall = clientList.some(function (c) { return c.focused; });
-                if (hasFocusedForCall) {
-                    console.log('[SW] App ouverte et focalisee, skip notification appel (Pusher gere)');
+                var convIdForCall = convId;
+                var skipCall = false;
+                if (convIdForCall) {
+                    for (var ci = 0; ci < clientList.length; ci++) {
+                        var cc = clientList[ci];
+                        if (!cc.focused || !cc.url) continue;
+                        try {
+                            var ccPath = new URL(cc.url).pathname;
+                            if (ccPath.indexOf('/chat/discussion/' + convIdForCall) !== -1) {
+                                skipCall = true;
+                                break;
+                            }
+                        } catch (e) { /* ignore */ }
+                    }
+                }
+                if (skipCall) {
+                    console.log('[SW] App ouverte + page conversation focalisee, skip notification appel (Pusher gere)');
                     return Promise.resolve();
                 }
             }

@@ -1313,12 +1313,12 @@ export default function DiscussionPage() {
     return (
         <div className="flex flex-col h-full bg-background text-foreground min-h-0">
             <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
-                <DialogContent>
+                <DialogContent aria-describedby="unlock-dialog-desc">
                     <DialogHeader>
                         <DialogTitle>Deverrouiller la discussion</DialogTitle>
                     </DialogHeader>
                     <div className="py-4">
-                        <p className="text-sm text-muted-foreground mb-4">
+                        <p id="unlock-dialog-desc" className="text-sm text-muted-foreground mb-4">
                             Entrez votre mot de passe pour dechiffrer votre cle privee et acceder aux messages.
                         </p>
                         <div className="relative">
