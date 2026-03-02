@@ -1,11 +1,44 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { toast } from 'sonner';
 import { usePathname, useRouter } from 'next/navigation';
 import { getToken, isProtectedPath } from '@/src/lib/auth-client';
 import { registerPushSubscription, syncPushSubscriptionIfGranted } from '@/src/lib/register-push-client';
+
+/** Envoie la route actuelle au Service Worker pour qu'il puisse masquer les push si l'utilisateur est déjà sur la page */
+function usePushSkipPathname(pathname: string | null) {
+    const lastSent = useRef<string | null>(null);
+
+    const sendPath = useCallback((p: string) => {
+        if (!p || typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
+        navigator.serviceWorker.ready.then((reg) => {
+            if (reg.active) {
+                reg.active.postMessage({ type: 'PUSH_SKIP_PATH', pathname: p });
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        if (!pathname) return;
+        if (lastSent.current !== pathname) {
+            lastSent.current = pathname;
+            sendPath(pathname);
+        }
+    }, [pathname, sendPath]);
+
+    useEffect(() => {
+        const onVisible = () => {
+            if (pathname && document.visibilityState === 'visible') {
+                lastSent.current = pathname;
+                sendPath(pathname);
+            }
+        };
+        document.addEventListener('visibilitychange', onVisible);
+        return () => document.removeEventListener('visibilitychange', onVisible);
+    }, [pathname, sendPath]);
+}
 
 /**
  * Écoute les notifications (messages, etc.) via Pusher.
@@ -17,6 +50,8 @@ export function NotificationListener() {
     const router = useRouter();
     const { userChannel, isConnected } = useWebSocket();
     const pushRegistered = useRef(false);
+
+    usePushSkipPathname(pathname);
 
     const pathnameRef = useRef(pathname);
     const routerRef = useRef(router);

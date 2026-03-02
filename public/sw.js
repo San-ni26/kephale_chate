@@ -5,8 +5,27 @@
  * Push notifications work on all platforms including Vercel.
  */
 
-var CACHE_VERSION = 'mango-v1';
+var CACHE_VERSION = 'mango-v2';
 var PRECACHE_URLS = ['/', '/login', '/register', '/chat', '/offline', '/manifest.json', '/icons/icon-192x192.png', '/icons/icon-512x512.png'];
+
+// ============ PUSH SKIP : route actuelle par client (pour masquer si déjà sur la page) ============
+var pathnameByClientId = {};
+var lastKnownPathnames = [];
+
+self.addEventListener('message', function (event) {
+    if (event.data && event.data.type === 'PUSH_SKIP_PATH' && event.data.pathname) {
+        var clientId = event.source && event.source.id;
+        var path = event.data.pathname;
+        if (clientId) {
+            pathnameByClientId[clientId] = path;
+        }
+        lastKnownPathnames.push(path);
+        if (lastKnownPathnames.length > 10) lastKnownPathnames.shift();
+    }
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
+});
 
 // ============ PUSH NOTIFICATION HANDLER ============
 // S'affiche même quand l'app est fermée (navigateur ou onglet) : le SW reste actif pour les push.
@@ -103,36 +122,58 @@ self.addEventListener('push', function (event) {
                 }
             }
 
-            // Message : ne pas afficher si l'utilisateur est déjà dans la page concernée ou sur la page notifications (même logique que NotificationListener)
+            // Message : ne pas afficher si l'utilisateur est déjà dans la page concernée ou sur la page notifications
             if (!isCall) {
+                var targetUrl = (data.url && typeof data.url === 'string') ? data.url.replace(/\/$/, '') : null;
+
+                function pathMatchesTarget(p) {
+                    if (!p || typeof p !== 'string') return false;
+                    p = p.replace(/\/$/, '');
+                    if (!targetUrl) return false;
+                    if (p === targetUrl) return true;
+                    if (p.indexOf(targetUrl + '/') === 0) return true;
+                    if (p.indexOf(targetUrl + '?') === 0) return true;
+                    return false;
+                }
+
+                function pathMatchesByData(p) {
+                    if (!p) return false;
+                    if (p.indexOf('/chat/notifications') === 0) return true;
+                    if (convId) {
+                        var m = p.match(/^\/chat\/discussion\/([^/?]+)/);
+                        if (m && m[1] === convId) return true;
+                    }
+                    if (orgId && deptId) {
+                        var dm = p.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)\/chat/);
+                        if (dm && dm[1] === orgId && dm[2] === deptId) return true;
+                    }
+                    if (orgId && collabId && groupId) {
+                        var cm = p.match(/^\/chat\/organizations\/([^/]+)\/collaborations\/([^/]+)\/groups\/([^/]+)\/chat/);
+                        if (cm && cm[1] === orgId && cm[2] === collabId && cm[3] === groupId) return true;
+                    }
+                    return false;
+                }
+
                 var skip = false;
+                var allPaths = lastKnownPathnames.slice();
                 for (var i = 0; i < clientList.length; i++) {
-                    var clientUrl = clientList[i].url;
-                    if (!clientUrl) continue;
-                    try {
-                        var pathname = new URL(clientUrl).pathname;
-                        // Page notifications : ne pas afficher la notification push
-                        if (pathname && pathname.indexOf('/chat/notifications') === 0) {
-                            skip = true;
-                            break;
-                        }
-                        // Discussion privée
-                        if (convId && !skip) {
-                            var discussionMatch = pathname.match(/^\/chat\/discussion\/([^/?]+)/);
-                            var currentConvId = discussionMatch && discussionMatch[1];
-                            if (currentConvId && currentConvId === convId) skip = true;
-                        }
-                        // Discussion département
-                        if (orgId && deptId && !skip) {
-                            var deptMatch = pathname.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)\/chat/);
-                            if (deptMatch && deptMatch[1] === orgId && deptMatch[2] === deptId) skip = true;
-                        }
-                        // Chat collaboration
-                        if (orgId && collabId && groupId && !skip) {
-                            var collabMatch = pathname.match(/^\/chat\/organizations\/([^/]+)\/collaborations\/([^/]+)\/groups\/([^/]+)\/chat/);
-                            if (collabMatch && collabMatch[1] === orgId && collabMatch[2] === collabId && collabMatch[3] === groupId) skip = true;
-                        }
-                    } catch (e) { /* ignore */ }
+                    var c = clientList[i];
+                    if (c.url) {
+                        try {
+                            var pu = new URL(c.url).pathname;
+                            if (pu && allPaths.indexOf(pu) === -1) allPaths.push(pu);
+                        } catch (e) { }
+                    }
+                    if (c.id && pathnameByClientId[c.id] && allPaths.indexOf(pathnameByClientId[c.id]) === -1) {
+                        allPaths.push(pathnameByClientId[c.id]);
+                    }
+                }
+                for (var k = 0; k < allPaths.length; k++) {
+                    var p = allPaths[k];
+                    if (pathMatchesByData(p) || (targetUrl && pathMatchesTarget(p))) {
+                        skip = true;
+                        break;
+                    }
                 }
                 if (skip) {
                     console.log('[SW] User is viewing this chat, skip push notification');
@@ -382,9 +423,3 @@ self.addEventListener('sync', function (event) {
     }
 });
 
-// Handle skip waiting message from client
-self.addEventListener('message', function (event) {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-        self.skipWaiting();
-    }
-});
