@@ -51,6 +51,13 @@ import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/cry
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { cn } from '@/src/lib/utils';
 
+/** Retourne une Date valide ou null si la valeur est invalide */
+function parseDateSafe(value: string | number | Date | null | undefined): Date | null {
+    if (value == null || value === '') return null;
+    const d = value instanceof Date ? value : new Date(value);
+    return !isNaN(d.getTime()) ? d : null;
+}
+
 interface Message {
     id: string;
     content: string;
@@ -133,7 +140,8 @@ function ChatMessageBubble({
         }
     }, [message.id, message.content, message.sender?.publicKey, departmentPrivateKey]);
 
-    const timestamp = displayCreatedAt ?? message.createdAt;
+    const date = parseDateSafe(displayCreatedAt ?? message.createdAt);
+    const timeLabel = date ? formatDistanceToNow(date, { addSuffix: true, locale: fr }) : '';
 
     return (
         <div
@@ -145,7 +153,7 @@ function ChatMessageBubble({
             <div className={cn('max-w-[85%] md:max-w-[75%]', isOwn ? 'items-end' : 'items-start', 'flex flex-col')}>
                 {!isOwn && (
                     <span className="text-xs text-muted-foreground mb-1 px-2">
-                        {message.sender.name || message.sender.email}
+                        {message.sender?.name || message.sender?.email || 'Utilisateur'}
                     </span>
                 )}
 
@@ -193,9 +201,11 @@ function ChatMessageBubble({
                         )}
 
                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                            <span className="text-xs text-muted-foreground">
-                                {formatDistanceToNow(new Date(timestamp), { addSuffix: true, locale: fr })}
-                            </span>
+                            {timeLabel && (
+                                <span className="text-xs text-muted-foreground">
+                                    {timeLabel}
+                                </span>
+                            )}
                             {isFailed && onRetry && (
                                 <Button
                                     variant="outline"
@@ -805,8 +815,9 @@ export default function DepartmentChatPage() {
 
     const canEditOrDelete = (message: Message): boolean => {
         if (message.senderId !== currentUser?.id) return false;
-        const messageTime = new Date(message.createdAt).getTime();
-        return (Date.now() - messageTime) < 5 * 60 * 1000; // 5 minutes
+        const messageDate = parseDateSafe(message.createdAt);
+        if (!messageDate) return false;
+        return (Date.now() - messageDate.getTime()) < 5 * 60 * 1000; // 5 minutes
     };
 
     const loadMoreHistory = useCallback(async () => {
@@ -995,7 +1006,10 @@ export default function DepartmentChatPage() {
                             Événements
                         </span>
                         {pinnedEvents
-                            .filter((ev) => new Date(ev.eventDate) >= new Date())
+                            .filter((ev) => {
+                                const d = parseDateSafe(ev.eventDate);
+                                return d != null && d >= new Date();
+                            })
                             .map((ev) => (
                                 <a
                                     key={ev.id}
@@ -1013,7 +1027,7 @@ export default function DepartmentChatPage() {
                                     )}
                                     <span className="text-sm font-medium text-foreground truncate">{ev.title}</span>
                                     <span className="text-xs text-muted-foreground shrink-0">
-                                        {new Date(ev.eventDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                        {parseDateSafe(ev.eventDate)?.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) ?? '—'}
                                     </span>
                                     <ExternalLink className="w-3.5 h-3.5 shrink-0 text-muted-foreground" />
                                 </a>
