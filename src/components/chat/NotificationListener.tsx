@@ -42,8 +42,9 @@ export function NotificationListener() {
         }) => {
             const currentPath = pathnameRef.current;
 
-            // Ne pas notifier si l'utilisateur est déjà dans la conversation (onglet ouvert)
-            const shouldSkip = (inConversation: boolean) => inConversation;
+            // Ne pas notifier si l'utilisateur est déjà dans la conversation ou sur la page notifications
+            const isOnNotificationsPage = currentPath?.startsWith('/chat/notifications') ?? false;
+            const shouldSkip = (inConversation: boolean) => inConversation || isOnNotificationsPage;
 
             // Groupe de collaboration : ne pas notifier si l'utilisateur est déjà dans ce chat (et onglet actif)
             if (data.type === 'collaboration_message' || (data.orgId && data.collabId && data.groupId && !data.deptId)) {
@@ -81,12 +82,12 @@ export function NotificationListener() {
                 return;
             }
 
-            // Discussion privée : ne pas notifier si l'utilisateur est déjà dans cette conversation
+            // Discussion privée : ne pas notifier si l'utilisateur est déjà dans cette conversation ou sur la page notifications
             if (data.conversationId) {
                 const discussionMatch = currentPath?.match(/^\/chat\/discussion\/([^/?]+)/);
                 const currentConvId = discussionMatch?.[1];
                 const inThisDiscussion = !!currentConvId && currentConvId === data.conversationId;
-                if (inThisDiscussion) return;
+                if (inThisDiscussion || isOnNotificationsPage) return;
                 if (process.env.NODE_ENV === 'development') {
                     console.log('[Notification] Received:', data.senderName);
                 }

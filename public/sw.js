@@ -103,7 +103,7 @@ self.addEventListener('push', function (event) {
                 }
             }
 
-            // Message : ne pas afficher si l'utilisateur est déjà dans la page concernée (même logique que NotificationListener)
+            // Message : ne pas afficher si l'utilisateur est déjà dans la page concernée ou sur la page notifications (même logique que NotificationListener)
             if (!isCall) {
                 var skip = false;
                 for (var i = 0; i < clientList.length; i++) {
@@ -111,6 +111,11 @@ self.addEventListener('push', function (event) {
                     if (!clientUrl) continue;
                     try {
                         var pathname = new URL(clientUrl).pathname;
+                        // Page notifications : ne pas afficher la notification push
+                        if (pathname && pathname.indexOf('/chat/notifications') === 0) {
+                            skip = true;
+                            break;
+                        }
                         // Discussion privée
                         if (convId && !skip) {
                             var discussionMatch = pathname.match(/^\/chat\/discussion\/([^/?]+)/);
