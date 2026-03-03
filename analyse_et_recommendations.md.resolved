@@ -460,3 +460,8 @@ Timeline corrigée :
 1. **Suppression du doublon** : Suppression de l'appel manuel `new Notification()` dans `NotificationListener.tsx`. Seul un `toast()` Sonner s'affiche in-app.
 2. **Détection fiable de la présence** (`isUserInConversationChannel`) : Ajout d'une vérification stricte côté Serveur (dans `websocket.ts / pusher-server.ts`). Avant de déclencher une Web Push, on interroge l'API Pusher REST pour voir si le destinataire est abonné au canal `presence` de la conversation. Si oui (= l'utilisateur a la discussion ouverte sur son écran), **le serveur annule l'envoi de la Push Notification** pour ne pas le déranger inutilement.
 
+
+### Appliqué à l'organisation & départements
+- La même logique (`isUserInConversationChannel`) a été étendue pour les chats de **Départements/Organisations**.
+- Le paramètre `groupId` est dorénavant transmis à `sendToUser` dans `notify-department.ts` pour tester l'abonnement Pusher de l'utilisateur. S'il est sur la page du département, il ne recevra pas le Push Web inutile.
+

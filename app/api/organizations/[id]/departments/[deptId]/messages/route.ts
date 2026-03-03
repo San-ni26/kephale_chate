@@ -319,6 +319,7 @@ export async function POST(
                 senderId: userId,
                 senderName: message.sender?.name || 'Un membre',
                 departmentName: department?.name ?? undefined,
+                groupId: conversation.id,
             });
         } catch (notifErr) {
             console.error('[Dept messages] Notify error:', notifErr);

@@ -8,7 +8,7 @@
  */
 
 import { prisma } from '@/src/lib/prisma';
-import { emitToUser } from '@/src/lib/pusher-server';
+import { emitToUser, isUserInConversationChannel } from '@/src/lib/pusher-server';
 import { sendPushNotification } from '@/src/lib/push';
 
 function buildDeptChatUrl(orgId: string, deptId: string) {
@@ -26,7 +26,8 @@ function buildDeptUrl(orgId: string, deptId: string) {
 async function sendToUser(
     userId: string,
     content: string,
-    payload: { title: string; body: string; url: string; type: string; data: Record<string, unknown> }
+    payload: { title: string; body: string; url: string; type: string; data: Record<string, unknown> },
+    groupId?: string
 ) {
     try {
         const notification = await prisma.notification.create({
@@ -53,6 +54,16 @@ async function sendToUser(
                 where: { userId },
             });
             if (subscriptions.length > 0) {
+                if (groupId) {
+                    const isInDiscussion = await isUserInConversationChannel(userId, groupId);
+                    if (isInDiscussion) {
+                        if (process.env.NODE_ENV === 'development') {
+                            console.log(`[NotifyDepartment] User ${userId} is in dept channel, skip web push`);
+                        }
+                        return; // Arrêter ici si l'utilisateur est déjà dans la conversation
+                    }
+                }
+
                 const pushPayload = {
                     title: payload.title,
                     body: payload.body,
@@ -95,8 +106,9 @@ export async function notifyDepartmentNewMessage(params: {
     senderId: string;
     senderName: string;
     departmentName?: string;
+    groupId?: string;
 }) {
-    const { orgId, deptId, messageId, senderId, senderName, departmentName } = params;
+    const { orgId, deptId, messageId, senderId, senderName, departmentName, groupId } = params;
     const url = buildDeptChatUrl(orgId, deptId);
 
     const members = await prisma.departmentMember.findMany({
@@ -108,13 +120,18 @@ export async function notifyDepartmentNewMessage(params: {
 
     await Promise.all(
         members.map((m) =>
-            sendToUser(m.userId, content, {
-                title: senderName,
-                body: 'Nouveau message dans la discussion du département',
-                url,
-                type: 'department_message',
-                data: { orgId, deptId, messageId, senderId },
-            })
+            sendToUser(
+                m.userId,
+                content,
+                {
+                    title: senderName,
+                    body: 'Nouveau message dans la discussion du département',
+                    url,
+                    type: 'department_message',
+                    data: { orgId, deptId, messageId, senderId, groupId },
+                },
+                groupId
+            )
         )
     );
 }
