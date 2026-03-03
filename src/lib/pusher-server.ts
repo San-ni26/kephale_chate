@@ -114,3 +114,26 @@ export async function emitToMultipleUsers(userIds: string[], event: string, data
         chunks.map(chunk => pusher.trigger(chunk, event, data))
     );
 }
+
+/**
+ * Vérifie si un utilisateur est actuellement dans le channel de presence d'une conversation.
+ *
+ * Si oui → l'app est ouverte sur la page de discussion → Pusher livre le message
+ * en temps réel → inutile d'envoyer un push Web (qui arriverait en double).
+ *
+ * Utilisé dans websocket.ts (notifyNewMessage) avant d'appeler sendPushNotification.
+ */
+export async function isUserInConversationChannel(userId: string, conversationId: string): Promise<boolean> {
+    try {
+        const pusher = getPusher();
+        const channelName = `presence-conversation-${conversationId}`;
+        const channelInfo = await pusher.get({ path: `/channels/${channelName}/users` });
+        if (!channelInfo || channelInfo.status !== 200) return false;
+        const body = await channelInfo.json() as { users?: { id: string }[] };
+        const users: { id: string }[] = body?.users ?? [];
+        return users.some((u) => u.id === userId);
+    } catch {
+        // Channel inexistant, erreur réseau ou Pusher indisponible → ne pas bloquer le push
+        return false;
+    }
+}

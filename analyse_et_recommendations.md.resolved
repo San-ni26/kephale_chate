@@ -448,3 +448,15 @@ Timeline corrigée :
                • temp-xxx en liste ? NON (déjà remplacé)
                • realId en liste ? OUI
                → return prev sans modification ✓
+
+
+## ✅ Fix Notifications Multiples & En discussion (Corrigé le 03/03/2026)
+
+### Problème initial
+- Des **notifications en double** apparaissaient car le `NotificationListener` (in-app) déclenchait l'API Native Web Notification en même temps que le Service Worker.
+- L'utilisateur recevait une **notification système native** même lorsqu'il était déjà en train de lire la conversation activement.
+
+### Solutions implémentées
+1. **Suppression du doublon** : Suppression de l'appel manuel `new Notification()` dans `NotificationListener.tsx`. Seul un `toast()` Sonner s'affiche in-app.
+2. **Détection fiable de la présence** (`isUserInConversationChannel`) : Ajout d'une vérification stricte côté Serveur (dans `websocket.ts / pusher-server.ts`). Avant de déclencher une Web Push, on interroge l'API Pusher REST pour voir si le destinataire est abonné au canal `presence` de la conversation. Si oui (= l'utilisateur a la discussion ouverte sur son écran), **le serveur annule l'envoi de la Push Notification** pour ne pas le déranger inutilement.
+

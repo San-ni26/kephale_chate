@@ -7,7 +7,8 @@
 
 import { prisma } from '@/src/lib/prisma';
 import { sendPushNotification } from '@/src/lib/push';
-import { emitToUser, emitToConversation, emitMessageNewToConversation } from '@/src/lib/pusher-server';
+import { emitToUser, emitToConversation, emitMessageNewToConversation, isUserInConversationChannel } from '@/src/lib/pusher-server';
+
 import { isUserInCall } from '@/src/lib/call-redis';
 
 // Re-export helpers for backward compatibility
@@ -97,68 +98,73 @@ export async function notifyNewMessage(message: any, conversationId: string) {
             console.error(`[Notify] Error sending Pusher notification to user ${member.userId}:`, err);
         }
 
-        // Send Web Push Notification (this is what works when app is CLOSED)
+        // Send Web Push Notification (this is what works when app is CLOSED/BACKGROUND)
+        // FIX 2 : Skip si l'utilisateur est déjà dans la discussion via Pusher
+        // Vérifier si le destinataire est dans le channel de presence de la conversation
+        // → s'il est présent, Pusher livre le message en temps réel → pas besoin de push
         try {
             const subscriptions = await prisma.pushSubscription.findMany({
                 where: { userId: member.userId }
             });
 
             if (subscriptions.length === 0) {
-                console.warn(`[Notify] User ${member.userId} n'a aucune subscription push : les notifications ne s'afficheront pas si l'app est fermée. Demandez-lui de cliquer sur "Activer les notifications".`);
-            } else if (process.env.NODE_ENV === 'development') {
-                console.log(`[Notify] User ${member.userId} has ${subscriptions.length} push subscription(s)`);
-            }
-
-            if (subscriptions.length > 0) {
-                const senderName = message.sender?.name || 'Utilisateur';
-
-                // Action 3 (Quick Win) : Body de notification contextuel selon le type de contenu.
-                // Le contenu réel est chiffré E2E, donc on indique le TYPE sans révéler le contenu.
-                const attachments = message.attachments ?? [];
-                const hasAudio = attachments.some((a: any) => a.type === 'AUDIO');
-                const notifBody = hasAudio
-                    ? `🎤 Message vocal de ${senderName}`
-                    : attachments.length > 0
-                        ? `📎 ${attachments.length} fichier(s) de ${senderName}`
-                        : `Message chiffré de ${senderName}`;
-
-                const payload = JSON.stringify({
-                    title: senderName,
-                    body: notifBody,
-                    icon: '/icons/icon-192x192.png',
-                    url: `/chat/discussion/${conversationId}`,
-                    type: 'message',
-                    data: {
-                        conversationId,
-                        messageId: message.id,
+                if (process.env.NODE_ENV === 'development') {
+                    console.warn(`[Notify] User ${member.userId} has no push subscription`);
+                }
+            } else {
+                // Vérifier si l'utilisateur est dans le channel Pusher de la conversation
+                const isInDiscussion = await isUserInConversationChannel(member.userId, conversationId);
+                if (isInDiscussion) {
+                    if (process.env.NODE_ENV === 'development') {
+                        console.log(`[Notify] User ${member.userId} is in discussion channel, skip web push`);
                     }
-                });
+                } else {
+                    const senderName = message.sender?.name || 'Utilisateur';
 
-                const pushResults = await Promise.allSettled(subscriptions.map(async (sub) => {
-                    try {
-                        await sendPushNotification({
-                            endpoint: sub.endpoint,
-                            keys: {
-                                p256dh: sub.p256dh,
-                                auth: sub.auth
+                    const attachments = message.attachments ?? [];
+                    const hasAudio = attachments.some((a: any) => a.type === 'AUDIO');
+                    const notifBody = hasAudio
+                        ? `🎤 Message vocal de ${senderName}`
+                        : attachments.length > 0
+                            ? `📎 ${attachments.length} fichier(s) de ${senderName}`
+                            : `Message chiffré de ${senderName}`;
+
+                    const payload = JSON.stringify({
+                        title: senderName,
+                        body: notifBody,
+                        icon: '/icons/icon-192x192.png',
+                        url: `/chat/discussion/${conversationId}`,
+                        type: 'message',
+                        data: {
+                            conversationId,
+                            messageId: message.id,
+                        }
+                    });
+
+                    await Promise.allSettled(subscriptions.map(async (sub) => {
+                        try {
+                            await sendPushNotification({
+                                endpoint: sub.endpoint,
+                                keys: { p256dh: sub.p256dh, auth: sub.auth }
+                            }, payload);
+                            if (process.env.NODE_ENV === 'development') {
+                                console.log(`[Notify] Push sent to ${sub.endpoint.substring(0, 50)}...`);
                             }
-                        }, payload);
-                        if (process.env.NODE_ENV === 'development') {
-                            console.log(`[Notify] Push sent to ${sub.endpoint.substring(0, 50)}...`);
+                        } catch (err: any) {
+                            console.error(`[Notify] Push failed for ${sub.endpoint.substring(0, 50)}:`, err.statusCode || err.message);
+                            if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
+                                await prisma.pushSubscription.delete({
+                                    where: { endpoint: sub.endpoint }
+                                }).catch(() => { });
+                            }
                         }
-                    } catch (err: any) {
-                        console.error(`[Notify] Push failed for ${sub.endpoint.substring(0, 50)}:`, err.statusCode || err.message);
-                        if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
-                            await prisma.pushSubscription.delete({
-                                where: { endpoint: sub.endpoint }
-                            }).catch(() => { });
-                        }
-                    }
-                }));
+                    }));
+                }
             }
         } catch (pushError) {
             console.error('[Notify] Failed to send push notifications:', pushError);
         }
+
     });
 
     await Promise.all(notificationPromises);
@@ -239,51 +245,56 @@ export async function notifyCollaborationGroupNewMessage(
             });
 
             if (subscriptions.length === 0 && process.env.NODE_ENV === 'development') {
-                console.warn(`[Notify] User ${member.userId} n'a aucune subscription push`);
-            }
+                console.warn(`[Notify] User ${member.userId} has no push subscription`);
+            } else if (subscriptions.length > 0) {
+                // Vérifier si l'utilisateur est dans le channel Pusher de la discussion
+                const isInDiscussion = await isUserInConversationChannel(member.userId, conversationId);
 
-            if (subscriptions.length > 0) {
-                const senderName = message.sender?.name || 'Utilisateur';
-
-                // Action 3 (Quick Win) : Body contextuel pour les notifications de collaboration aussi.
-                const attachments = message.attachments ?? [];
-                const hasAudio = attachments.some((a: any) => a.type === 'AUDIO');
-                const notifBody = hasAudio
-                    ? `🎤 Message vocal de ${senderName}`
-                    : attachments.length > 0
-                        ? `📎 ${attachments.length} fichier(s) de ${senderName}`
-                        : `Message chiffré de ${senderName}`;
-
-                const payload = JSON.stringify({
-                    title: senderName,
-                    body: notifBody,
-                    icon: '/icons/icon-192x192.png',
-                    url: chatUrl,
-                    type: 'message',
-                    data: {
-                        conversationId,
-                        messageId: message.id,
-                        orgId,
-                        collabId,
-                        groupId,
+                if (isInDiscussion) {
+                    if (process.env.NODE_ENV === 'development') {
+                        console.log(`[Notify] User ${member.userId} is in collab channel, skip web push`);
                     }
-                });
+                } else {
+                    const senderName = message.sender?.name || 'Utilisateur';
 
-                await Promise.allSettled(subscriptions.map(async (sub) => {
-                    try {
-                        await sendPushNotification({
-                            endpoint: sub.endpoint,
-                            keys: { p256dh: sub.p256dh, auth: sub.auth }
-                        }, payload);
-                    } catch (err: any) {
-                        if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
-                            await prisma.pushSubscription.delete({
-                                where: { endpoint: sub.endpoint }
-                            }).catch(() => { });
+                    const attachments = message.attachments ?? [];
+                    const hasAudio = attachments.some((a: any) => a.type === 'AUDIO');
+                    const notifBody = hasAudio
+                        ? `🎤 Message vocal de ${senderName}`
+                        : attachments.length > 0
+                            ? `📎 ${attachments.length} fichier(s) de ${senderName}`
+                            : `Message chiffré de ${senderName}`;
+
+                    const payload = JSON.stringify({
+                        title: senderName,
+                        body: notifBody,
+                        icon: '/icons/icon-192x192.png',
+                        url: chatUrl,
+                        type: 'message',
+                        data: {
+                            conversationId,
+                            messageId: message.id,
+                            orgId,
+                            collabId,
+                            groupId,
                         }
-                        throw err;
-                    }
-                }));
+                    });
+
+                    await Promise.allSettled(subscriptions.map(async (sub) => {
+                        try {
+                            await sendPushNotification({
+                                endpoint: sub.endpoint,
+                                keys: { p256dh: sub.p256dh, auth: sub.auth }
+                            }, payload);
+                        } catch (err: any) {
+                            if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 400) {
+                                await prisma.pushSubscription.delete({
+                                    where: { endpoint: sub.endpoint }
+                                }).catch(() => { });
+                            }
+                        }
+                    }));
+                }
             }
         } catch (err) {
             console.error(`[Notify] Error creating notification for user ${member.userId}:`, err);

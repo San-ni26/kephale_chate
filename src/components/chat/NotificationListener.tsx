@@ -7,7 +7,11 @@ import { usePathname, useRouter } from 'next/navigation';
 import { getToken, isProtectedPath } from '@/src/lib/auth-client';
 import { registerPushSubscription, syncPushSubscriptionIfGranted } from '@/src/lib/register-push-client';
 
-/** Envoie la route actuelle au Service Worker pour qu'il puisse masquer les push si l'utilisateur est déjà sur la page */
+/**
+ * Envoie la route actuelle au Service Worker.
+ * Le SW l'utilise pour supprimer le push si l'utilisateur est déjà sur la page.
+ * Envoi à chaque changement de route ET au retour de visibilité.
+ */
 function usePushSkipPathname(pathname: string | null) {
     const lastSent = useRef<string | null>(null);
 
@@ -17,7 +21,7 @@ function usePushSkipPathname(pathname: string | null) {
             if (reg.active) {
                 reg.active.postMessage({ type: 'PUSH_SKIP_PATH', pathname: p });
             }
-        });
+        }).catch(() => { });
     }, []);
 
     useEffect(() => {
@@ -41,9 +45,26 @@ function usePushSkipPathname(pathname: string | null) {
 }
 
 /**
- * Écoute les notifications (messages, etc.) via Pusher.
- * Les appels entrants sont gérés uniquement par CallContext + GlobalCallOverlay
- * pour éviter doublons et conflits - l'utilisateur peut répondre depuis n'importe quelle page.
+ * NotificationListener
+ *
+ * Écoute les notifications en temps réel via Pusher (canal privé utilisateur).
+ * Affiche uniquement un toast Sonner in-app — le push natif est géré exclusivement
+ * par le Service Worker (sw.js) pour éviter les doubles notifications.
+ *
+ * ── Corrections appliquées ──────────────────────────────────────────────────
+ * FIX 1 — Double notification :
+ *   Suppression de `new Notification()` dans ce fichier. Le SW reçoit le push
+ *   via VAPID et s'occupe de l'affichage. Garder les deux créait systématiquement
+ *   une notification dupliquée.
+ *
+ * FIX 2 — Notification quand l'utilisateur est dans la discussion :
+ *   - Côté client : vérification robuste via pathnameRef (toujours à jour)
+ *   - Côté SW     : la logique `pathnameByClientId` (PUSH_SKIP_PATH) est maintenant
+ *                   envoyée immédiatement et au retour de visibilité.
+ *   - Côté serveur : `notifyNewMessage` dans websocket.ts vérifie l'API Pusher
+ *                   pour savoir si le destinataire est abonné au channel de
+ *                   la conversation → skip du push Web si oui.
+ * ────────────────────────────────────────────────────────────────────────────
  */
 export function NotificationListener() {
     const pathname = usePathname();
@@ -58,7 +79,7 @@ export function NotificationListener() {
     pathnameRef.current = pathname;
     routerRef.current = router;
 
-    // Listen for in-app notifications via Pusher
+    // ── Écoute Pusher in-app ──────────────────────────────────────────────
     useEffect(() => {
         if (!userChannel || !isConnected) return;
 
@@ -76,56 +97,17 @@ export function NotificationListener() {
             type?: string;
         }) => {
             const currentPath = pathnameRef.current;
-
-            // Ne pas notifier si l'utilisateur est déjà dans la conversation ou sur la page notifications
             const isOnNotificationsPage = currentPath?.startsWith('/chat/notifications') ?? false;
-            const shouldSkip = (inConversation: boolean) => inConversation || isOnNotificationsPage;
 
-            // Groupe de collaboration : ne pas notifier si l'utilisateur est déjà dans ce chat (et onglet actif)
-            if (data.type === 'collaboration_message' || (data.orgId && data.collabId && data.groupId && !data.deptId)) {
-                const notifOrgId = data.orgId;
-                const notifCollabId = data.collabId;
-                const notifGroupId = data.groupId;
-                const collabChatMatch = currentPath?.match(/^\/chat\/organizations\/([^/]+)\/collaborations\/([^/]+)\/groups\/([^/]+)\/chat/);
-                if (collabChatMatch) {
-                    const [, currentOrgId, currentCollabId, currentGroupId] = collabChatMatch;
-                    const inThisChat = !!(notifOrgId && notifCollabId && notifGroupId && currentOrgId === notifOrgId && currentCollabId === notifCollabId && currentGroupId === notifGroupId);
-                    if (shouldSkip(inThisChat)) return;
-                }
-                if (!notifOrgId || !notifCollabId || !notifGroupId) return;
-                const collabChatPath = `/chat/organizations/${notifOrgId}/collaborations/${notifCollabId}/groups/${notifGroupId}/chat`;
-                if (process.env.NODE_ENV === 'development') {
-                    console.log('[Notification] Received (collaboration):', data.content);
-                }
-                toast(data.senderName ?? 'Nouveau message', {
-                    description: data.content,
-                    action: {
-                        label: 'Voir',
-                        onClick: () => routerRef.current.push(collabChatPath)
-                    },
-                    duration: 5000,
-                });
-                if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-                    try {
-                        new Notification(data.senderName ?? 'Nouveau message', {
-                            body: data.content,
-                            icon: '/icons/icon-192x192.png',
-                            tag: 'collab-' + data.groupId,
-                        });
-                    } catch (e) { }
-                }
-                return;
-            }
-
-            // Discussion privée : ne pas notifier si l'utilisateur est déjà dans cette conversation ou sur la page notifications
+            // ── Discussion privée ──
             if (data.conversationId) {
                 const discussionMatch = currentPath?.match(/^\/chat\/discussion\/([^/?]+)/);
                 const currentConvId = discussionMatch?.[1];
-                const inThisDiscussion = !!currentConvId && currentConvId === data.conversationId;
-                if (inThisDiscussion || isOnNotificationsPage) return;
-                if (process.env.NODE_ENV === 'development') {
-                    console.log('[Notification] Received:', data.senderName);
-                }
+                // Skip si l'utilisateur est déjà dans cette discussion ou sur /notifications
+                if ((currentConvId && currentConvId === data.conversationId) || isOnNotificationsPage) return;
+
+                // FIX 1 : Uniquement le toast Sonner — PAS de new Notification()
+                // Le push natif est envoyé par le serveur via VAPID → handled by sw.js
                 toast(data.senderName ?? 'Nouveau message', {
                     description: data.content,
                     action: {
@@ -134,64 +116,60 @@ export function NotificationListener() {
                     },
                     duration: 5000,
                 });
-                if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-                    try {
-                        new Notification(data.senderName ?? 'Nouveau message', {
-                            body: data.content,
-                            icon: '/icons/icon-192x192.png',
-                            tag: 'msg-' + data.conversationId,
-                        });
-                    } catch (e) { }
-                }
                 return;
             }
 
-            // Discussion département : ne pas notifier si l'utilisateur est déjà dans le chat du département (et onglet actif)
-            if (data.type === 'department_message' || (data.orgId && data.deptId)) {
-                const notifOrgId = data.orgId;
-                const notifDeptId = data.deptId;
-                const deptChatMatch = currentPath?.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)\/chat/);
-                if (deptChatMatch) {
-                    const [, currentOrgId, currentDeptId] = deptChatMatch;
-                    const inThisDeptChat = !!(notifOrgId && notifDeptId && currentOrgId === notifOrgId && currentDeptId === notifDeptId);
-                    if (shouldSkip(inThisDeptChat)) return;
-                    if (data.type === 'department_message' && !notifOrgId && !notifDeptId) return;
+            // ── Groupe de collaboration ──
+            if (data.type === 'collaboration_message' || (data.orgId && data.collabId && data.groupId && !data.deptId)) {
+                const { orgId: notifOrgId, collabId: notifCollabId, groupId: notifGroupId } = data;
+                if (!notifOrgId || !notifCollabId || !notifGroupId) return;
+
+                const collabChatMatch = currentPath?.match(/^\/chat\/organizations\/([^/]+)\/collaborations\/([^/]+)\/groups\/([^/]+)\/chat/);
+                if (collabChatMatch) {
+                    const [, cOrgId, cCollabId, cGroupId] = collabChatMatch;
+                    const inThisChat = cOrgId === notifOrgId && cCollabId === notifCollabId && cGroupId === notifGroupId;
+                    if (inThisChat || isOnNotificationsPage) return;
                 }
-                if (!notifOrgId || !notifDeptId) return; // pas de lien "Voir" possible
-                if (process.env.NODE_ENV === 'development') {
-                    console.log('[Notification] Received (département):', data.content);
-                }
-                const deptChatPath = `/chat/organizations/${notifOrgId}/departments/${notifDeptId}/chat`;
-                toast('Discussion département', {
+
+                const collabChatPath = `/chat/organizations/${notifOrgId}/collaborations/${notifCollabId}/groups/${notifGroupId}/chat`;
+                // FIX 1 : toast uniquement, pas de new Notification()
+                toast(data.senderName ?? 'Nouveau message', {
                     description: data.content,
-                    action: {
-                        label: 'Voir',
-                        onClick: () => routerRef.current.push(deptChatPath)
-                    },
+                    action: { label: 'Voir', onClick: () => routerRef.current.push(collabChatPath) },
                     duration: 5000,
                 });
-                if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-                    try {
-                        new Notification('Discussion département', {
-                            body: data.content,
-                            icon: '/icons/icon-192x192.png',
-                            tag: 'dept-' + data.deptId,
-                        });
-                    } catch (e) { }
-                }
                 return;
             }
 
-            // Notifications génériques (ex: partage de note)
+            // ── Département ──
+            if (data.type === 'department_message' || (data.orgId && data.deptId)) {
+                const { orgId: notifOrgId, deptId: notifDeptId } = data;
+                if (!notifOrgId || !notifDeptId) return;
+
+                const deptChatMatch = currentPath?.match(/^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)\/chat/);
+                if (deptChatMatch) {
+                    const [, cOrgId, cDeptId] = deptChatMatch;
+                    const inThisDeptChat = cOrgId === notifOrgId && cDeptId === notifDeptId;
+                    if (inThisDeptChat || isOnNotificationsPage) return;
+                }
+
+                const deptChatPath = `/chat/organizations/${notifOrgId}/departments/${notifDeptId}/chat`;
+                // FIX 1 : toast uniquement, pas de new Notification()
+                toast('Discussion département', {
+                    description: data.content,
+                    action: { label: 'Voir', onClick: () => routerRef.current.push(deptChatPath) },
+                    duration: 5000,
+                });
+                return;
+            }
+
+            // ── Notifications génériques ──
             if (data.content) {
                 const groupId = data.groupId;
                 toast(data.senderName ?? 'Notification', {
                     description: data.content,
                     ...(groupId && {
-                        action: {
-                            label: 'Voir',
-                            onClick: () => routerRef.current.push(`/chat/groups?groupId=${groupId}`),
-                        },
+                        action: { label: 'Voir', onClick: () => routerRef.current.push(`/chat/groups?groupId=${groupId}`) },
                     }),
                     duration: 5000,
                 });
@@ -200,7 +178,7 @@ export function NotificationListener() {
 
         userChannel.bind('notification:new', handleNewNotification);
         if (process.env.NODE_ENV === 'development') {
-            console.log('[Notification] Écoute Pusher active (notification:new)');
+            console.log('[NotificationListener] Écoute Pusher active');
         }
 
         return () => {
@@ -208,7 +186,7 @@ export function NotificationListener() {
         };
     }, [userChannel, isConnected]);
 
-    // Enregistrement Web Push initial (uniquement si utilisateur authentifié)
+    // ── Enregistrement Web Push initial ──────────────────────────────────
     useEffect(() => {
         if (typeof window === 'undefined') return;
         if (pushRegistered.current) return;
@@ -222,7 +200,7 @@ export function NotificationListener() {
         return () => clearTimeout(timeout);
     }, [pathname]);
 
-    // Re-synchroniser l'abonnement push au retour sur l'app (uniquement si authentifié)
+    // ── Re-synchroniser l'abonnement push au retour sur l'app ────────────
     useEffect(() => {
         if (typeof document === 'undefined') return;
 
