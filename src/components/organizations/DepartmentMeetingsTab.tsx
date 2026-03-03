@@ -18,7 +18,7 @@ import { fetchWithAuth } from '@/src/lib/auth-client';
 import { toast } from 'sonner';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 interface DepartmentMeeting {
@@ -172,7 +172,7 @@ export default function DepartmentMeetingsTab({
             title: meeting.title,
             description: meeting.description || '',
             agenda: meeting.agenda || '',
-            meetingDate: meeting.meetingDate ? format(new Date(meeting.meetingDate), 'yyyy-MM-dd\'T\'HH:mm') : '',
+            meetingDate: (meeting.meetingDate && isValid(new Date(meeting.meetingDate))) ? format(new Date(meeting.meetingDate), 'yyyy-MM-dd\'T\'HH:mm') : '',
             location: meeting.location || '',
         });
     };
@@ -220,7 +220,15 @@ export default function DepartmentMeetingsTab({
                                             <h3 className="font-semibold text-foreground">{meeting.title}</h3>
                                             <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
                                                 <Calendar className="w-4 h-4" />
-                                                {format(new Date(meeting.meetingDate), 'EEEE d MMMM yyyy à HH:mm', { locale: fr })}
+                                                {(() => {
+                                                    try {
+                                                        if (!meeting.meetingDate) return 'Date non définie';
+                                                        const d = new Date(meeting.meetingDate);
+                                                        return !isValid(d) ? 'Date invalide' : format(d, 'EEEE d MMMM yyyy à HH:mm', { locale: fr });
+                                                    } catch (e) {
+                                                        return 'Date invalide';
+                                                    }
+                                                })()}
                                             </div>
                                             {meeting.location && (
                                                 <p className="text-sm text-muted-foreground mt-1">{meeting.location}</p>
@@ -229,7 +237,15 @@ export default function DepartmentMeetingsTab({
                                                 <p className="text-sm text-muted-foreground mt-2 flex items-center gap-1">
                                                     <FileText className="w-4 h-4" />
                                                     Compte-rendu enregistré
-                                                    {meeting.minutesAt && ` le ${format(new Date(meeting.minutesAt), 'd MMM yyyy', { locale: fr })}`}
+                                                    {(() => {
+                                                        try {
+                                                            if (!meeting.minutesAt) return null;
+                                                            const d = new Date(meeting.minutesAt);
+                                                            return isValid(d) ? ` le ${format(d, 'd MMM yyyy', { locale: fr })}` : '';
+                                                        } catch (e) {
+                                                            return '';
+                                                        }
+                                                    })()}
                                                 </p>
                                             )}
                                             <p className="text-xs text-muted-foreground mt-2">
