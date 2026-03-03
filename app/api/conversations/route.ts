@@ -91,107 +91,139 @@ export async function GET(request: NextRequest) {
             proSubscriptions.filter(s => isUserProActive(s.endDate)).map(s => s.userId)
         );
 
-        // Batch unread counts via a single groupBy query (eliminates N+1 queries)
-        const memberLastReads = conversations.map(conv => {
+        // ─── Fix #3 : Élimination des N+1 queries ─────────────────────────────────
+        // AVANT : N requêtes prisma.message.count() + 2N requêtes pour les paiements
+        // APRÈS : 1 requête SQL groupée pour les unread counts + 2 findMany batchés
+        // ──────────────────────────────────────────────────────────────────────────
+
+        // 1. Construire la map lastReadAt pour chaque conversation de l'utilisateur
+        const memberLastReadMap = new Map<string, Date>();
+        for (const conv of conversations) {
             const membership = conv.members.find(m => m.userId === user.userId);
-            return {
-                groupId: conv.id,
-                lastReadAt: membership?.lastReadAt || membership?.joinedAt || new Date(0),
-            };
-        });
+            if (membership) {
+                memberLastReadMap.set(conv.id, membership.lastReadAt || membership.joinedAt || new Date(0));
+            }
+        }
+        const convIds = conversations.map(c => c.id);
 
-        // For each conversation, count messages after lastReadAt not sent by current user
-        // We batch this with a rawQueryMany approach using groupBy
-        const unreadCountsRaw = await Promise.all(
-            memberLastReads.map(({ groupId, lastReadAt }) =>
-                prisma.message.count({
-                    where: {
-                        groupId,
-                        createdAt: { gt: lastReadAt },
-                        senderId: { not: user.userId },
-                    },
-                })
-            )
+        // 2. Fix #3 : Unread counts — une seule requête SQL brute avec GROUP BY
+        // Remplace N prisma.message.count() individuels → 1 query totale
+        type UnreadRow = { groupId: string; count: bigint };
+        const unreadRows = convIds.length > 0
+            ? await prisma.$queryRaw<UnreadRow[]>`
+                SELECT m."groupId", COUNT(*)::int8 AS count
+                FROM "Message" m
+                WHERE m."groupId" = ANY(${convIds})
+                  AND m."senderId" != ${user.userId}
+                  AND m."createdAt" > (
+                      SELECT COALESCE(gm."lastReadAt", gm."joinedAt", TIMESTAMP '1970-01-01')
+                      FROM "GroupMember" gm
+                      WHERE gm."groupId" = m."groupId"
+                        AND gm."userId" = ${user.userId}
+                  )
+                GROUP BY m."groupId"
+            `
+            : [];
+        const unreadCountMap = new Map<string, number>(
+            unreadRows.map(r => [r.groupId, Number(r.count)])
         );
-        const unreadCountMap = new Map(memberLastReads.map((m, i) => [m.groupId, unreadCountsRaw[i]]));
 
-        const conversationsWithUnread = await Promise.all(
-            conversations.map(async (conv) => {
-                const unreadCount = unreadCountMap.get(conv.id) ?? 0;
-
-                // Merge Redis presence + statut appel + statut Pro
-                const membersWithPresence = conv.members.map(m => ({
-                    ...m,
-                    user: {
-                        ...m.user,
-                        isOnline: presenceMap[m.user.id] ?? m.user.isOnline,
-                        inCall: !!callMap[m.user.id],
-                        isPro: proUserIds.has(m.user.id),
-                    },
-                }));
-
-                const currentPro = proUserIds.has(user.userId);
+        // 3. Fix #3 : Pending payments — 2 findMany batchés pour TOUS les groupIds éligibles
+        // D'abord déterminer quels groupIds ont canPurchaseRights = true
+        const currentPro = proUserIds.has(user.userId);
+        const eligibleConvIds = conversations
+            .filter(conv => {
                 const otherMember = conv.members.find(m => m.userId !== user.userId);
                 const otherPro = otherMember ? proUserIds.has(otherMember.userId) : false;
                 const isDirectTwo = conv.isDirect && conv.members.length === 2;
                 const activeRights = conv.rightPurchase && new Date() < conv.rightPurchase.expiresAt;
-                const canPurchaseRights =
-                    isDirectTwo &&
-                    currentPro &&
-                    otherPro &&
-                    !activeRights;
-                const canDelete = !(otherPro && !currentPro);
-
-                let pendingRightsPayment: { id: string; plan: string; createdAt: string } | null = null;
-                let pendingRightsOrder: { id: string; plan: string; amountFcfa: number; createdAt: string } | null = null;
-                if (canPurchaseRights) {
-                    const [pendingPay, pendingOrd] = await Promise.all([
-                        prisma.pendingSubscriptionPayment.findFirst({
-                            where: {
-                                userId: user.userId,
-                                type: 'DISCUSSION_RIGHTS',
-                                groupId: conv.id,
-                            },
-                            select: { id: true, plan: true, createdAt: true },
-                        }),
-                        prisma.paymentOrder.findFirst({
-                            where: {
-                                userId: user.userId,
-                                type: 'DISCUSSION_RIGHTS',
-                                groupId: conv.id,
-                                status: 'PENDING',
-                            },
-                            select: { id: true, plan: true, amountFcfa: true, createdAt: true },
-                        }),
-                    ]);
-                    if (pendingPay) {
-                        pendingRightsPayment = {
-                            id: pendingPay.id,
-                            plan: pendingPay.plan,
-                            createdAt: pendingPay.createdAt.toISOString(),
-                        };
-                    }
-                    if (pendingOrd) {
-                        pendingRightsOrder = {
-                            id: pendingOrd.id,
-                            plan: pendingOrd.plan,
-                            amountFcfa: pendingOrd.amountFcfa,
-                            createdAt: pendingOrd.createdAt.toISOString(),
-                        };
-                    }
-                }
-
-                return {
-                    ...conv,
-                    members: membersWithPresence,
-                    unreadCount,
-                    canPurchaseRights,
-                    canDelete,
-                    pendingRightsPayment,
-                    pendingRightsOrder,
-                };
+                return isDirectTwo && currentPro && otherPro && !activeRights;
             })
-        );
+            .map(conv => conv.id);
+
+        // 2 requêtes batch au lieu de 2N requêtes individuelles
+        const [pendingPaymentsBatch, pendingOrdersBatch] = eligibleConvIds.length > 0
+            ? await Promise.all([
+                prisma.pendingSubscriptionPayment.findMany({
+                    where: {
+                        userId: user.userId,
+                        type: 'DISCUSSION_RIGHTS',
+                        groupId: { in: eligibleConvIds },
+                    },
+                    select: { id: true, plan: true, createdAt: true, groupId: true },
+                }),
+                prisma.paymentOrder.findMany({
+                    where: {
+                        userId: user.userId,
+                        type: 'DISCUSSION_RIGHTS',
+                        groupId: { in: eligibleConvIds },
+                        status: 'PENDING',
+                    },
+                    select: { id: true, plan: true, amountFcfa: true, createdAt: true, groupId: true },
+                }),
+            ])
+            : [[], []];
+
+        // Indexer par groupId pour un accès O(1)
+        const pendingPaymentMap = new Map(pendingPaymentsBatch.map(p => [p.groupId, p]));
+        const pendingOrderMap = new Map(pendingOrdersBatch.map(o => [o.groupId, o]));
+
+        // 4. Assemblage final — pur JS, 0 query supplémentaire
+        const conversationsWithUnread = conversations.map(conv => {
+            const unreadCount = unreadCountMap.get(conv.id) ?? 0;
+
+            // Merge Redis presence + statut appel + statut Pro
+            const membersWithPresence = conv.members.map(m => ({
+                ...m,
+                user: {
+                    ...m.user,
+                    isOnline: presenceMap[m.user.id] ?? m.user.isOnline,
+                    inCall: !!callMap[m.user.id],
+                    isPro: proUserIds.has(m.user.id),
+                },
+            }));
+
+            const otherMember = conv.members.find(m => m.userId !== user.userId);
+            const otherPro = otherMember ? proUserIds.has(otherMember.userId) : false;
+            const isDirectTwo = conv.isDirect && conv.members.length === 2;
+            const activeRights = conv.rightPurchase && new Date() < conv.rightPurchase.expiresAt;
+            const canPurchaseRights = isDirectTwo && currentPro && otherPro && !activeRights;
+            const canDelete = !(otherPro && !currentPro);
+
+            let pendingRightsPayment: { id: string; plan: string; createdAt: string } | null = null;
+            let pendingRightsOrder: { id: string; plan: string; amountFcfa: number; createdAt: string } | null = null;
+
+            if (canPurchaseRights) {
+                const pendingPay = pendingPaymentMap.get(conv.id);
+                const pendingOrd = pendingOrderMap.get(conv.id);
+                if (pendingPay) {
+                    pendingRightsPayment = {
+                        id: pendingPay.id,
+                        plan: pendingPay.plan,
+                        createdAt: pendingPay.createdAt.toISOString(),
+                    };
+                }
+                if (pendingOrd) {
+                    pendingRightsOrder = {
+                        id: pendingOrd.id,
+                        plan: pendingOrd.plan,
+                        amountFcfa: pendingOrd.amountFcfa,
+                        createdAt: pendingOrd.createdAt.toISOString(),
+                    };
+                }
+            }
+
+            return {
+                ...conv,
+                members: membersWithPresence,
+                unreadCount,
+                canPurchaseRights,
+                canDelete,
+                pendingRightsPayment,
+                pendingRightsOrder,
+            };
+        });
+
 
         // Déchiffrer les emails des membres dans chaque conversation
         const conversationsWithUnreadAndDecryptedEmails = conversationsWithUnread.map(conv => ({

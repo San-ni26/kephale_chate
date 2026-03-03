@@ -286,18 +286,18 @@ body: message.attachments?.length > 0
 |---|---------|--------|--------|----------|--------|
 | 1 | Page monolithique 1700 lignes | 🔴 Élevé | 🔴 Élevé | Progressif | 🔲 En attente |
 | 2 | Double polling Pusher + HTTP | 🔴 Élevé | 🟢 Faible | **IMMÉDIAT** | ✅ **APPLIQUÉ** |
-| 3 | N+1 queries `/api/conversations` | 🔴 Élevé | 🟡 Moyen | **IMMÉDIAT** | 🔲 En attente |
-| 4 | Fichiers en Base64 en BDD | 🔴 Élevé | 🔴 Élevé | Court terme | 🔲 En attente |
+| 3 | N+1 queries `/api/conversations` | 🔴 Élevé | 🟡 Moyen | **IMMÉDIAT** | ✅ **APPLIQUÉ** |
+| 4 | Fichiers en Base64 en BDD | 🔴 Élevé | 🔴 Élevé | Court terme | ⏭️ Laissé de côté |
 | 5 | `blurredMessageIds` recalcul | 🟡 Moyen | 🟢 Faible | **IMMÉDIAT** | ✅ **APPLIQUÉ** |
-| 6 | `canEditOrDelete` par render | 🟡 Moyen | 🟢 Faible | **IMMÉDIAT** | 🔲 En attente |
+| 6 | `canEditOrDelete` par render | 🟡 Moyen | 🟢 Faible | **IMMÉDIAT** | ✅ **APPLIQUÉ** |
 | 7 | SWR 15s sidebar conversations | 🟡 Moyen | 🟢 Faible | **IMMÉDIAT** | ✅ **APPLIQUÉ** |
-| 8 | Typing via HTTP | 🟡 Moyen | 🟡 Moyen | Court terme | 🔲 En attente |
+| 8 | Typing via HTTP | 🟡 Moyen | 🟡 Moyen | Court terme | ✅ **APPLIQUÉ** |
 | 9 | Listeners `window` instables | 🟡 Moyen | 🟡 Moyen | Court terme | ✅ **APPLIQUÉ** |
 | 10 | Push notification non contextuelle | 🟢 Faible | 🟢 Faible | **IMMÉDIAT** | ✅ **APPLIQUÉ** |
 | 11 | Pas de virtualisation liste | 🟡 Moyen | 🔴 Élevé | Long terme | 🔲 En attente |
 | 12 | Déchiffrement sur thread principal | 🟡 Moyen | 🔴 Élevé | Long terme | 🔲 En attente |
-| 13 | `formatDistanceToNow` par render | 🟢 Faible | 🟢 Faible | Optionnel | 🔲 En attente |
-| 14 | Preview fichiers en mémoire | 🟢 Faible | 🟡 Moyen | Optionnel | 🔲 En attente |
+| 13 | `formatDistanceToNow` par render | 🟢 Faible | 🟢 Faible | Optionnel | ✅ **APPLIQUÉ** |
+| 14 | Preview fichiers en mémoire | 🟢 Faible | 🟡 Moyen | Optionnel | ✅ **APPLIQUÉ** |
 
 ---
 
