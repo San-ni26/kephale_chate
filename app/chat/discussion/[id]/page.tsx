@@ -10,17 +10,15 @@
  *  - useDiscussionMessages       → envoi / édition / suppression / retry
  *  - useDiscussionLockHandlers   → code de verrouillage 4 chiffres
  *  - useFileSelection            → Object URLs + nettoyage mémoire
- *  - DiscussionMessageBubble     → composant mémoïsé (inchangé, déplacé dans ./DiscussionMessageBubble.tsx)
  */
 
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import {
-    ArrowLeft, Send, Paperclip, Loader2, MoreVertical, Edit2, Trash2,
+    Send, Paperclip, Loader2, MoreVertical, Edit2, Trash2,
     ArrowUp, RotateCw, Check, X, Lock, LockOpen, Eye, EyeOff,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -30,7 +28,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-    DropdownMenuTrigger, DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@/src/components/ui/dropdown-menu';
 import {
     Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
@@ -45,7 +43,7 @@ import { useSetDiscussionBlur } from '@/src/contexts/DiscussionBlurContext';
 import { ScreenshotBlocker } from '@/src/components/chat/ScreenshotBlocker';
 import { cn } from '@/src/lib/utils';
 
-// Hooks extraits
+// Hooks extraits (#1 refactoring)
 import { useDiscussionMessages } from '@/src/hooks/useDiscussionMessages';
 import { useDiscussionLockHandlers } from '@/src/hooks/useDiscussionLockHandlers';
 import { useFileSelection } from '@/src/hooks/useFileSelection';
@@ -96,8 +94,6 @@ interface Conversation {
     canPurchaseRights?: boolean;
 }
 
-// ─── Fetcher ──────────────────────────────────────────────────────────────────
-
 const fetcher = async (url: string) => {
     const res = await fetchWithAuth(url);
     if (!res.ok) throw new Error('Failed to fetch');
@@ -107,7 +103,6 @@ const fetcher = async (url: string) => {
 const BLUR_THRESHOLD_MS = 24 * 60 * 60 * 1000;
 
 // ─── DiscussionMessageBubble ──────────────────────────────────────────────────
-// Mémoïsé pour éviter les re-renders inutiles lors de nouveaux messages
 
 const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
     message, isOwn, canEdit, currentUser, otherUser, privateKey,
@@ -162,7 +157,6 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
                                 {message.isEdited && <p className="text-xs opacity-70 mt-1">Modifié</p>}
                             </div>
                         )}
-
                         {message.attachments && message.attachments.length > 0 && (
                             <div className={cn(decryptedContent?.trim() ? 'mt-2' : '', 'space-y-2', isBlurred && 'blur-md select-none pointer-events-none opacity-70')}>
                                 {message.attachments.map((att, idx) => {
@@ -182,7 +176,6 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
                                 })}
                             </div>
                         )}
-
                         <div className="flex items-center gap-2 mt-1 flex-wrap">
                             <span className="text-xs text-muted-foreground">
                                 {formatDistanceToNow(new Date(timestamp), { addSuffix: true, locale: fr })}
@@ -247,7 +240,7 @@ export default function DiscussionPage() {
     );
     const conversation: Conversation | null = conversationData?.conversation || null;
 
-    // Fix #13 : Ticker minute pour rafraîchir les timestamps relatifs ("il y a 2 min")
+    // Fix #13 : Ticker minute pour rafraîchir les timestamps relatifs
     const [, setTimeTick] = useState(0);
     useEffect(() => {
         const ticker = setInterval(() => setTimeTick(t => t + 1), 60_000);
@@ -285,11 +278,22 @@ export default function DiscussionPage() {
     const [editContent, setEditContent] = useState('');
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
     const [typingUsers, setTypingUsers] = useState<Record<string, boolean>>({});
+    const [loadingMore, setLoadingMore] = useState(false);
 
     // ── Messages ──
     const { messages, setMessages, loading, hasMore, setHasMore } = useInitialMessages(conversationId);
     const messageIds = useMemo(() => messages.map(m => m.id), [messages]);
 
+    const uniqueMessages = useMemo(() => {
+        const seen = new Set<string>();
+        return messages.filter(m => { if (seen.has(m.id)) return false; seen.add(m.id); return true; });
+    }, [messages]);
+
+    // ── User ──
+    const currentUser = useMemo(() => getUser(), []);
+    const otherUser = useMemo(() => conversation?.members.find(m => m.user.id !== currentUser?.id)?.user, [conversation?.members, currentUser?.id]);
+
+    // ── Blur ──
     const blurredMessageIds = useMemo(() => {
         const shouldBlurOldMessages = conversation?.isMessagesHiddenForCurrentUser || shouldApplyBlur;
         if (!shouldBlurOldMessages) return new Set<string>();
@@ -297,10 +301,16 @@ export default function DiscussionPage() {
         return new Set(messages.filter(m => now - new Date(m.createdAt).getTime() > BLUR_THRESHOLD_MS).map(m => m.id));
     }, [messageIds, shouldApplyBlur, conversation?.isMessagesHiddenForCurrentUser]);
 
-    const uniqueMessages = useMemo(() => {
-        const seen = new Set<string>();
-        return messages.filter(m => { if (seen.has(m.id)) return false; seen.add(m.id); return true; });
-    }, [messages]);
+    // Fix #6 : editableMessageIds pré-calculé (useMemo + ticker minute)
+    const editableMessageIds = useMemo(() => {
+        const threshold = Date.now() - 5 * 60 * 1000;
+        return new Set(
+            uniqueMessages
+                .filter(m => m.senderId === currentUser?.id && new Date(m.createdAt).getTime() > threshold)
+                .map(m => m.id)
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [uniqueMessages, currentUser?.id]);
 
     // ── Refs ──
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -308,8 +318,9 @@ export default function DiscussionPage() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isTypingRef = useRef(false);
-    const stableMessageKeysRef = useRef<Map<string, string>>(new Map());
-    const [loadingMore, setLoadingMore] = useState(false);
+    const callContext = useCallContext();
+    const isCallActiveRef = useRef(false);
+    isCallActiveRef.current = callContext?.activeCall !== null;
 
     const scrollToBottom = useCallback(() => {
         requestAnimationFrame(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }));
@@ -326,56 +337,18 @@ export default function DiscussionPage() {
         return () => { setDiscussionBlur(null); };
     }, [blurOldMessages, lockState.canUseLock, blurEnabled, setDiscussionBlur]);
 
-    // ── User ──
-    const currentUser = useMemo(() => getUser(), []);
+    // ── useDiscussionMessages en PREMIER ──
+    // IMPORTANT : exposer pendingTempIdsRef + stableMessageKeysRef
+    // avant d'appeler useWebSocket pour la déduplication correcte.
+    // stopTyping est passé via une ref pour éviter la dépendance circulaire.
+    const stopTypingRef = useRef<(id: string) => void>(() => { });
 
-    // Fix #6 : editableMessageIds pré-calculé (useMemo + ticker minute)
-    const editableMessageIds = useMemo(() => {
-        const threshold = Date.now() - 5 * 60 * 1000;
-        return new Set(
-            uniqueMessages
-                .filter(m => m.senderId === currentUser?.id && new Date(m.createdAt).getTime() > threshold)
-                .map(m => m.id)
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [uniqueMessages, currentUser?.id]);
-
-    const otherUser = useMemo(() => conversation?.members.find(m => m.user.id !== currentUser?.id)?.user, [conversation?.members, currentUser?.id]);
-    const callContext = useCallContext();
-    const isCallActiveRef = useRef(false);
-    isCallActiveRef.current = callContext?.activeCall !== null;
-
-    // ── WebSocket ──
-    const { isConnected, startTyping, stopTyping, joinConversation, leaveConversation } = useWebSocket(
-        // onNewMessage
-        (data) => {
-            const msg = data.message;
-            setMessages(prev => {
-                const stableKey = stableMessageKeysRef.current.get(msg.id);
-                if (stableKey && prev.some(m => m.id === stableKey)) {
-                    return prev.map(m => m.id === stableKey ? msg : m);
-                }
-                if (prev.some(m => m.id === msg.id)) return prev;
-                return [...prev, msg];
-            });
-        },
-        // onMessageEdited
-        (data) => setMessages(prev => prev.map(m => m.id === data.message.id ? data.message : m)),
-        // onMessageDeleted
-        (data) => setMessages(prev => prev.filter(m => m.id !== data.messageId)),
-        // onUserTyping
-        (data) => {
-            if (data.userId !== currentUser?.id) {
-                setTypingUsers(prev => ({ ...prev, [data.userId]: data.isTyping }));
-            }
-        }
-    );
-
-    // ── Hooks extraits ──
     const {
         sending,
         failedMessagePayloads,
+        stableMessageKeysRef,       // realId → tempId
         stableMessageTimestampsRef,
+        pendingTempIdsRef,          // Set<tempId> en vol (race condition fix)
         handleSendMessage,
         sendAudioMessage,
         handleEditMessage,
@@ -389,18 +362,60 @@ export default function DiscussionPage() {
         setMessages,
         scrollToBottom,
         setShowPasswordDialog,
-        stopTyping,
+        stopTyping: (id: string) => stopTypingRef.current(id),
     });
 
-    const lockHandlers = useDiscussionLockHandlers({
-        conversationId,
-        mutateConversation,
-        setIsUnlockedSession,
-    });
+    // ── useWebSocket (après useDiscussionMessages) ──
+    // onNewMessage corrige la race condition Pusher-avant-HTTP via pendingTempIdsRef
+    const { isConnected, startTyping, stopTyping, joinConversation, leaveConversation } = useWebSocket(
+        // onNewMessage — 4 cas, 0 doublon possible
+        (data) => {
+            const msg = data.message;
+            setMessages(prev => {
+                // Cas 1 : realId déjà en liste (HTTP avant Pusher) → skip
+                if (prev.some(m => m.id === msg.id)) return prev;
 
-    const { selectedFiles, handleFileSelect, removeFile, revokeAllFileUrls } = useFileSelection(conversationId);
+                // Cas 2 : Pusher après HTTP — stableMessageKeysRef peuplé
+                const tempId = stableMessageKeysRef.current.get(msg.id);
+                if (tempId && prev.some(m => m.id === tempId)) {
+                    return prev.map(m => m.id === tempId ? msg : m);
+                }
 
-    // ── Appel status au montage ──
+                // Cas 3 : Pusher AVANT HTTP (race condition principale)
+                // pendingTempIdsRef a été peuplé synchro AVANT le POST
+                if (pendingTempIdsRef.current.size > 0) {
+                    const ourTemp = prev.find(
+                        m => m.id.startsWith('temp-') && pendingTempIdsRef.current.has(m.id)
+                    );
+                    if (ourTemp) {
+                        // Stocker le mapping → replaceTempMessage (HTTP) verra que
+                        // Pusher a déjà fait le swap et ne créera pas de doublon
+                        stableMessageKeysRef.current.set(msg.id, ourTemp.id);
+                        pendingTempIdsRef.current.delete(ourTemp.id);
+                        return prev.map(m => m.id === ourTemp.id ? msg : m);
+                    }
+                }
+
+                // Cas 4 : message de l'autre utilisateur → ajouter
+                return [...prev, msg];
+            });
+        },
+        (data) => setMessages(prev => prev.map(m => m.id === data.message.id ? data.message : m)),
+        (data) => setMessages(prev => prev.filter(m => m.id !== data.messageId)),
+        (data) => {
+            if (data.userId !== currentUser?.id) {
+                setTypingUsers(prev => ({ ...prev, [data.userId]: data.isTyping }));
+            }
+        }
+    );
+
+    // Connecter la ref stopTyping après l'initialisation du hook
+    stopTypingRef.current = stopTyping;
+
+    const lockHandlers = useDiscussionLockHandlers({ conversationId, mutateConversation, setIsUnlockedSession });
+    const { selectedFiles, handleFileSelect, revokeAllFileUrls } = useFileSelection(conversationId);
+
+    // ── Call status au montage ──
     useEffect(() => {
         if (!conversationId) return;
         const applyPendingCall = (data: any) => callContext?.setIncomingCallData(data);
@@ -410,12 +425,8 @@ export default function DiscussionPage() {
                 const res = await fetchWithAuth(`/api/call/status?claim=${claim ? '1' : '0'}`);
                 if (!res.ok) return;
                 const { activeCall, pendingCall } = await res.json();
-                if (activeCall && activeCall.conversationId !== conversationId) {
-                    router.push(`/chat/discussion/${activeCall.conversationId}`); return;
-                }
-                if (pendingCall && pendingCall.conversationId !== conversationId) {
-                    router.push(`/chat/discussion/${pendingCall.conversationId}`); return;
-                }
+                if (activeCall && activeCall.conversationId !== conversationId) { router.push(`/chat/discussion/${activeCall.conversationId}`); return; }
+                if (pendingCall && pendingCall.conversationId !== conversationId) { router.push(`/chat/discussion/${pendingCall.conversationId}`); return; }
                 if (pendingCall && pendingCall.conversationId === conversationId) {
                     const shouldAutoAnswer = searchParams?.get('answer') === '1';
                     if (shouldAutoAnswer && callContext?.answerCallWithData) {
@@ -458,7 +469,7 @@ export default function DiscussionPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messages.length]);
 
-    // ── Join/leave channel Pusher ──
+    // ── Join/leave Pusher channel ──
     useEffect(() => {
         if (!conversationId || !isConnected) return;
         joinConversation(conversationId);
@@ -479,7 +490,7 @@ export default function DiscussionPage() {
         return () => { if (typeof sessionStorage !== 'undefined') sessionStorage.removeItem(`unlocked_${conversationId}`); };
     }, [conversationId]);
 
-    // ── Polling fallback (Action 1 Quick Win) ──
+    // ── Polling fallback (Quick Win #1) ──
     useEffect(() => {
         if (!conversationId || loading) return;
         const quickCheck = setTimeout(async () => {
@@ -528,7 +539,7 @@ export default function DiscussionPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversationId, loading, isConnected]);
 
-    // ── Clé privée (chiffrement) ──
+    // ── Clé privée ──
     useEffect(() => {
         if (currentUser) {
             const storedKey = sessionStorage.getItem(`privateKey_${currentUser.id}`);
@@ -595,8 +606,7 @@ export default function DiscussionPage() {
                         if (scrollContainer) {
                             const oldScrollHeight = scrollContainer.scrollHeight;
                             requestAnimationFrame(() => {
-                                const newScrollHeight = scrollContainer.scrollHeight;
-                                scrollContainer.scrollTop = newScrollHeight - oldScrollHeight;
+                                scrollContainer.scrollTop = scrollContainer.scrollHeight - oldScrollHeight;
                             });
                         }
                     });
@@ -607,7 +617,7 @@ export default function DiscussionPage() {
         finally { setLoadingMore(false); }
     };
 
-    // ── Handlers édition ──
+    // ── Edit handlers ──
     const handleEditOpen = useCallback((messageId: string, content: string) => {
         setEditingMessageId(messageId); setEditContent(content);
     }, []);
@@ -640,18 +650,14 @@ export default function DiscussionPage() {
         finally { setDeletionActionLoading(false); }
     };
 
-    // ── Verrou legacy in-page (handleUnlockWithCode) ──
+    // ── Lock handlers ──
     const handleUnlockWithCode = async () => {
-        if (!conversationId || lockHandlers.lockActionLoading || !/^\d{4}$/.test(lockHandlers.lockCode)) return;
+        if (lockHandlers.lockActionLoading || !/^\d{4}$/.test(lockHandlers.lockCode)) return;
         const ok = await lockHandlers.handleVerifyLockCode(lockHandlers.lockCode);
         if (ok) { lockHandlers.setLockCode(''); toast.success('Accès autorisé'); }
     };
 
-    const handleLock = () => lockHandlers.handleSetLock();
-    const handleDisableLock = () => lockHandlers.handleDisableLock(lockHandlers.lockCode);
-    const handleChangeCode = () => lockHandlers.handleChangeLockCode();
-
-    // ── Listeners window (Action 9) ──
+    // ── Listeners window (Action 9 — stables via refs) ──
     const conversationRef = useRef(conversation);
     const lockStateRef = useRef(lockState);
     const otherUserRef = useRef(otherUser);
@@ -665,29 +671,19 @@ export default function DiscussionPage() {
 
     useEffect(() => {
         const onLockClick = () => {
-            if (!conversationRef.current?.canCurrentUserControl) {
-                toast.error("Les droits de cette discussion ont été achetés par l'autre utilisateur."); return;
-            }
+            if (!conversationRef.current?.canCurrentUserControl) { toast.error("Les droits de cette discussion ont été achetés par l'autre utilisateur."); return; }
             if (!lockStateRef.current.userIsPro) { toast.error('Compte Pro requis pour verrouiller la discussion'); return; }
             if (lockStateRef.current.isLocked) return;
             lockHandlers.setShowLockDialog(true);
         };
         const onLockDisable = () => {
-            if (!conversationRef.current?.canCurrentUserControl) {
-                toast.error("Les droits de cette discussion ont été achetés par l'autre utilisateur."); return;
-            }
+            if (!conversationRef.current?.canCurrentUserControl) { toast.error("Les droits de cette discussion ont été achetés par l'autre utilisateur."); return; }
             lockHandlers.setShowDisableLockDialog(true);
         };
         const onLockChangeCode = () => {
-            if (!conversationRef.current?.canCurrentUserControl) {
-                toast.error("Les droits de cette discussion ont été achetés par l'autre utilisateur."); return;
-            }
-            if (!isUnlockedSessionRef.current && lockStateRef.current.canManageLock) {
-                toast.error("Déverrouillez d'abord la discussion pour modifier le code"); return;
-            }
-            if (isUnlockedSessionRef.current && lockStateRef.current.canManageLock) {
-                lockHandlers.setShowChangeCodeDialog(true);
-            }
+            if (!conversationRef.current?.canCurrentUserControl) { toast.error("Les droits de cette discussion ont été achetés par l'autre utilisateur."); return; }
+            if (!isUnlockedSessionRef.current && lockStateRef.current.canManageLock) { toast.error("Déverrouillez d'abord la discussion pour modifier le code"); return; }
+            if (isUnlockedSessionRef.current && lockStateRef.current.canManageLock) lockHandlers.setShowChangeCodeDialog(true);
         };
         const onCallClick = (e: Event) => {
             const u = otherUserRef.current;
@@ -713,9 +709,7 @@ export default function DiscussionPage() {
     if (loading) {
         return (
             <div className="flex flex-col h-full bg-background pt-16 pb-32 px-4 min-h-0">
-                <div className="flex justify-center py-4">
-                    <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
-                </div>
+                <div className="flex justify-center py-4"><div className="h-10 w-10 rounded-full bg-muted animate-pulse" /></div>
                 <div className="space-y-4 flex-1 max-w-2xl mx-auto w-full">
                     {[1, 2, 3, 4, 5, 6].map(i => (
                         <div key={i} className={cn('flex', i % 2 === 0 ? 'justify-end' : 'justify-start')}>
@@ -739,17 +733,9 @@ export default function DiscussionPage() {
                             Entrez votre mot de passe pour déchiffrer votre clé privée et accéder aux messages.
                         </p>
                         <div className="relative">
-                            <Input
-                                type={showPassword ? 'text' : 'password'}
-                                placeholder="Votre mot de passe"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                onKeyDown={e => e.key === 'Enter' && handleUnlock()}
-                                className="pr-10"
-                            />
-                            <Button type="button" variant="ghost" size="icon"
-                                className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
-                                onClick={() => setShowPassword(!showPassword)}>
+                            <Input type={showPassword ? 'text' : 'password'} placeholder="Votre mot de passe" value={password}
+                                onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleUnlock()} className="pr-10" />
+                            <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </Button>
                         </div>
@@ -763,31 +749,20 @@ export default function DiscussionPage() {
                 <DialogContent>
                     <DialogHeader><DialogTitle>Verrouiller la discussion</DialogTitle></DialogHeader>
                     <div className="py-4">
-                        <p className="text-sm text-muted-foreground mb-4">
-                            Définissez un code à 4 chiffres. L&apos;autre utilisateur Pro recevra ce code par email.
-                        </p>
+                        <p className="text-sm text-muted-foreground mb-4">Définissez un code à 4 chiffres. L&apos;autre utilisateur Pro recevra ce code par email.</p>
                         <div className="relative">
-                            <Input
-                                type={lockHandlers.showLockCode ? 'text' : 'password'}
-                                inputMode="numeric" pattern="[0-9]*" maxLength={4}
-                                placeholder="••••"
-                                value={lockHandlers.lockCode}
-                                onChange={e => lockHandlers.setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                                onKeyDown={e => e.key === 'Enter' && handleLock()}
-                                className="text-center text-lg tracking-[0.5em] pr-10"
-                            />
-                            <Button type="button" variant="ghost" size="icon"
-                                className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
-                                onClick={() => lockHandlers.setShowLockCode(!lockHandlers.showLockCode)}>
+                            <Input type={lockHandlers.showLockCode ? 'text' : 'password'} inputMode="numeric" pattern="[0-9]*" maxLength={4} placeholder="••••"
+                                value={lockHandlers.lockCode} onChange={e => lockHandlers.setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                onKeyDown={e => e.key === 'Enter' && lockHandlers.handleSetLock()} className="text-center text-lg tracking-[0.5em] pr-10" />
+                            <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground" onClick={() => lockHandlers.setShowLockCode(!lockHandlers.showLockCode)}>
                                 {lockHandlers.showLockCode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </Button>
                         </div>
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => { lockHandlers.setShowLockDialog(false); lockHandlers.setLockCode(''); }}>Annuler</Button>
-                        <Button onClick={handleLock} disabled={lockHandlers.lockActionLoading || lockHandlers.lockCode.length !== 4}>
-                            {lockHandlers.lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Lock className="w-4 h-4 mr-2" />}
-                            Verrouiller
+                        <Button onClick={lockHandlers.handleSetLock} disabled={lockHandlers.lockActionLoading || lockHandlers.lockCode.length !== 4}>
+                            {lockHandlers.lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Lock className="w-4 h-4 mr-2" />}Verrouiller
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -803,8 +778,7 @@ export default function DiscussionPage() {
                             <label className="text-sm font-medium mb-2 block">Code actuel</label>
                             <div className="relative">
                                 <Input type={lockHandlers.showCurrentCode ? 'text' : 'password'} inputMode="numeric" maxLength={4} placeholder="••••"
-                                    value={lockHandlers.currentCodeForChange}
-                                    onChange={e => lockHandlers.setCurrentCodeForChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                    value={lockHandlers.currentCodeForChange} onChange={e => lockHandlers.setCurrentCodeForChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
                                     className="text-center text-lg tracking-[0.5em] pr-10" />
                                 <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground" onClick={() => lockHandlers.setShowCurrentCode(!lockHandlers.showCurrentCode)}>
                                     {lockHandlers.showCurrentCode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -815,10 +789,8 @@ export default function DiscussionPage() {
                             <label className="text-sm font-medium mb-2 block">Nouveau code</label>
                             <div className="relative">
                                 <Input type={lockHandlers.showNewCode ? 'text' : 'password'} inputMode="numeric" maxLength={4} placeholder="••••"
-                                    value={lockHandlers.newCodeForChange}
-                                    onChange={e => lockHandlers.setNewCodeForChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                                    onKeyDown={e => e.key === 'Enter' && handleChangeCode()}
-                                    className="text-center text-lg tracking-[0.5em] pr-10" />
+                                    value={lockHandlers.newCodeForChange} onChange={e => lockHandlers.setNewCodeForChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                    onKeyDown={e => e.key === 'Enter' && lockHandlers.handleChangeLockCode()} className="text-center text-lg tracking-[0.5em] pr-10" />
                                 <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground" onClick={() => lockHandlers.setShowNewCode(!lockHandlers.showNewCode)}>
                                     {lockHandlers.showNewCode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </Button>
@@ -827,9 +799,8 @@ export default function DiscussionPage() {
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => { lockHandlers.setShowChangeCodeDialog(false); lockHandlers.setCurrentCodeForChange(''); lockHandlers.setNewCodeForChange(''); }}>Annuler</Button>
-                        <Button onClick={handleChangeCode} disabled={lockHandlers.lockActionLoading || lockHandlers.currentCodeForChange.length !== 4 || lockHandlers.newCodeForChange.length !== 4 || lockHandlers.currentCodeForChange === lockHandlers.newCodeForChange}>
-                            {lockHandlers.lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Lock className="w-4 h-4 mr-2" />}
-                            Changer le code
+                        <Button onClick={lockHandlers.handleChangeLockCode} disabled={lockHandlers.lockActionLoading || lockHandlers.currentCodeForChange.length !== 4 || lockHandlers.newCodeForChange.length !== 4 || lockHandlers.currentCodeForChange === lockHandlers.newCodeForChange}>
+                            {lockHandlers.lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Lock className="w-4 h-4 mr-2" />}Changer le code
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -839,16 +810,11 @@ export default function DiscussionPage() {
             <Dialog open={lockHandlers.showDisableLockDialog} onOpenChange={lockHandlers.setShowDisableLockDialog}>
                 <DialogContent>
                     <DialogHeader><DialogTitle>Désactiver le verrouillage</DialogTitle></DialogHeader>
-                    <div className="py-4">
-                        <p className="text-sm text-muted-foreground">
-                            Êtes-vous sûr de vouloir désactiver le code de verrouillage ? Cette discussion ne sera plus protégée.
-                        </p>
-                    </div>
+                    <div className="py-4"><p className="text-sm text-muted-foreground">Êtes-vous sûr de vouloir désactiver le code de verrouillage ? Cette discussion ne sera plus protégée.</p></div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => lockHandlers.setShowDisableLockDialog(false)}>Annuler</Button>
-                        <Button variant="destructive" onClick={handleDisableLock} disabled={lockHandlers.lockActionLoading}>
-                            {lockHandlers.lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                            Désactiver
+                        <Button variant="destructive" onClick={() => lockHandlers.handleDisableLock(lockHandlers.lockCode)} disabled={lockHandlers.lockActionLoading}>
+                            {lockHandlers.lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}Désactiver
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -859,29 +825,20 @@ export default function DiscussionPage() {
                 <div className="fixed inset-0 z-[70] flex items-center justify-center bg-background/95 backdrop-blur-sm px-4">
                     <div className="w-full max-w-sm p-6 rounded-2xl border border-border bg-card shadow-lg">
                         <div className="flex justify-center mb-4">
-                            <div className="h-14 w-14 rounded-full bg-amber-500/10 flex items-center justify-center">
-                                <Lock className="w-7 h-7 text-amber-500" />
-                            </div>
+                            <div className="h-14 w-14 rounded-full bg-amber-500/10 flex items-center justify-center"><Lock className="w-7 h-7 text-amber-500" /></div>
                         </div>
                         <h3 className="text-lg font-semibold text-center mb-2">Discussion verrouillée</h3>
                         <p className="text-sm text-muted-foreground text-center mb-4">Entrez le code à 4 chiffres pour déverrouiller.</p>
                         <div className="relative mb-4">
-                            <Input
-                                type={lockHandlers.showUnlockOverlayCode ? 'text' : 'password'}
-                                inputMode="numeric" pattern="[0-9]*" maxLength={4} placeholder="••••"
-                                value={lockHandlers.lockCode}
-                                onChange={e => lockHandlers.setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                                onKeyDown={e => e.key === 'Enter' && handleUnlockWithCode()}
-                                className="text-center text-lg tracking-[0.5em] pr-10"
-                            />
-                            <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
-                                onClick={() => lockHandlers.setShowUnlockOverlayCode(!lockHandlers.showUnlockOverlayCode)}>
+                            <Input type={lockHandlers.showUnlockOverlayCode ? 'text' : 'password'} inputMode="numeric" pattern="[0-9]*" maxLength={4} placeholder="••••"
+                                value={lockHandlers.lockCode} onChange={e => lockHandlers.setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                onKeyDown={e => e.key === 'Enter' && handleUnlockWithCode()} className="text-center text-lg tracking-[0.5em] pr-10" />
+                            <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground" onClick={() => lockHandlers.setShowUnlockOverlayCode(!lockHandlers.showUnlockOverlayCode)}>
                                 {lockHandlers.showUnlockOverlayCode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </Button>
                         </div>
                         <Button className="w-full" onClick={handleUnlockWithCode} disabled={lockHandlers.lockActionLoading || lockHandlers.lockCode.length !== 4}>
-                            {lockHandlers.lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <LockOpen className="w-4 h-4 mr-2" />}
-                            Déverrouiller
+                            {lockHandlers.lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <LockOpen className="w-4 h-4 mr-2" />}Déverrouiller
                         </Button>
                     </div>
                 </div>
@@ -892,9 +849,7 @@ export default function DiscussionPage() {
                 <div className={cn(
                     "p-3 rounded-lg border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3",
                     "fixed top-16 left-0 right-0 z-[55] mx-4 mt-2 md:relative md:top-auto md:left-auto md:right-auto",
-                    isDeletionRequester
-                        ? "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400"
-                        : "bg-destructive/10 border-destructive/30 text-destructive"
+                    isDeletionRequester ? "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400" : "bg-destructive/10 border-destructive/30 text-destructive"
                 )}>
                     <p className="text-sm">
                         {isDeletionRequester
@@ -907,8 +862,7 @@ export default function DiscussionPage() {
                                 <X className="w-4 h-4 mr-1" />Refuser
                             </Button>
                             <Button size="sm" variant="destructive" onClick={handleAcceptDeletion} disabled={deletionActionLoading}>
-                                {deletionActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Check className="w-4 h-4 mr-1" />}
-                                Accepter
+                                {deletionActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Check className="w-4 h-4 mr-1" />}Accepter
                             </Button>
                         </div>
                     )}
@@ -917,10 +871,7 @@ export default function DiscussionPage() {
 
             {/* ── Liste des messages ── */}
             <div
-                className={cn(
-                    "flex-1 overflow-y-auto px-4 pb-32 md:pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-0",
-                    deletionRequest ? "pt-36 md:pt-16" : "pt-16"
-                )}
+                className={cn("flex-1 overflow-y-auto px-4 pb-32 md:pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-0", deletionRequest ? "pt-36 md:pt-16" : "pt-16")}
                 ref={scrollRef}
             >
                 <ScreenshotBlocker enabled={shouldBlockScreenshot} className="min-h-full space-y-2">
@@ -973,30 +924,20 @@ export default function DiscussionPage() {
             {/* ── Zone de saisie ── */}
             <div className="fixed bottom-16 left-0 right-0 md:static md:bottom-auto md:w-full bg-background border-t border-border p-4 z-[60]">
                 <div className="flex items-center gap-2">
-                    <input
-                        ref={fileInputRef}
-                        type="file" multiple accept="image/*,.pdf,.docx"
-                        onChange={handleFileSelect}
-                        className="hidden"
-                    />
+                    <input ref={fileInputRef} type="file" multiple accept="image/*,.pdf,.docx" onChange={handleFileSelect} className="hidden" />
 
                     {!isRecordingAudio && (
                         <>
-                            <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} disabled={sending}
-                                className="text-muted-foreground hover:text-foreground hover:bg-muted">
+                            <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} disabled={sending} className="text-muted-foreground hover:text-foreground hover:bg-muted">
                                 <Paperclip className="w-5 h-5" />
                             </Button>
-
                             <Input
                                 value={newMessage}
                                 onChange={e => {
                                     setNewMessage(e.target.value);
                                     if (conversationId) {
                                         // Fix #8 : n'envoyer startTyping que si pas déjà en train de taper
-                                        if (!isTypingRef.current) {
-                                            isTypingRef.current = true;
-                                            startTyping(conversationId);
-                                        }
+                                        if (!isTypingRef.current) { isTypingRef.current = true; startTyping(conversationId); }
                                         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
                                         typingTimeoutRef.current = setTimeout(() => {
                                             stopTyping(conversationId);
@@ -1019,7 +960,7 @@ export default function DiscussionPage() {
                     )}
 
                     <AudioRecorderComponent
-                        onAudioRecorded={async (blob, duration) => {
+                        onAudioRecorded={async (blob) => {
                             let ext = 'webm';
                             if (blob.type.includes('mp4')) ext = 'mp4';
                             else if (blob.type.includes('aac')) ext = 'aac';

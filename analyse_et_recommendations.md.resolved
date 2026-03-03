@@ -432,3 +432,19 @@ const unreadCountMap = new Map(unreadRows.map(r => [r.groupId, Number(r.count)])
 
 > ⚠️ Cette optimisation est la plus impactante côté serveur mais nécessite de tester que les noms de colonnes correspondent au schéma Prisma exact (casse PostgreSQL). À faire en priorité court terme.
 
+Timeline corrigée :
+─────────────────────────────────────────────────────────
+  [Client]  pendingTempIdsRef.add("temp-xxx")  ← SYNCHRONE avant POST
+  [Client]  → POST message → serveur
+  [Serveur] → broadcast Pusher
+  [Pusher]  ← onNewMessage :
+               • realId pas en liste ?        ✓
+               • stableMessageKeysRef vide ?  ✓ (HTTP pas revenu)
+               • pendingTempIdsRef.has("temp-xxx") ?  ✓
+               → replace temp-xxx par realId directement
+               → stableMessageKeysRef.set(realId, "temp-xxx")
+               → pendingTempIdsRef.delete("temp-xxx")
+  [HTTP]    ← réponse → replaceTempMessage :
+               • temp-xxx en liste ? NON (déjà remplacé)
+               • realId en liste ? OUI
+               → return prev sans modification ✓
