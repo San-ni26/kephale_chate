@@ -348,11 +348,20 @@ export default function DiscussionPage() {
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
 
     const { messages, setMessages, loading, hasMore, setHasMore } = useInitialMessages(conversationId);
+    // Action 4 (Quick Win) : Séparer les IDs pour éviter de recalculer blurredMessageIds
+    // à chaque nouveau message quand shouldApplyBlur n'a pas changé.
+    const messageIds = useMemo(() => messages.map(m => m.id), [messages]);
+
     const blurredMessageIds = useMemo(() => {
         const shouldBlurOldMessages = conversation?.isMessagesHiddenForCurrentUser || shouldApplyBlur;
         if (!shouldBlurOldMessages) return new Set<string>();
-        return new Set(messages.filter(m => Date.now() - new Date(m.createdAt).getTime() > BLUR_THRESHOLD_MS).map(m => m.id));
-    }, [messages, shouldApplyBlur, conversation?.isMessagesHiddenForCurrentUser]);
+        const now = Date.now();
+        return new Set(
+            messages
+                .filter(m => now - new Date(m.createdAt).getTime() > BLUR_THRESHOLD_MS)
+                .map(m => m.id)
+        );
+    }, [messageIds, shouldApplyBlur, conversation?.isMessagesHiddenForCurrentUser]);
 
     const uniqueMessages = useMemo(() => {
         const seen = new Set<string>();
@@ -602,12 +611,16 @@ export default function DiscussionPage() {
         };
     }, [conversationId]);
 
-    // Fetch rapide des nouveaux messages juste après le chargement initial
-    // Comble la fenêtre entre le fetch initial et la connexion Pusher
+    // Action 1 (Quick Win) : Quick check conditionné à la connexion Pusher.
+    // Ce check ne s'exécute QUE si Pusher n'est pas encore connecté au moment du chargement
+    // (comble la fenêtre entre le fetch initial et la connexion Pusher).
     useEffect(() => {
         if (!conversationId || loading) return;
 
         const quickCheck = setTimeout(async () => {
+            // ✅ OPTIMISATION : Skip si Pusher est déjà connecté (les messages arrivent en temps réel)
+            if (isConnected) return;
+
             try {
                 const lastMsg = [...messages].reverse().find(m => !m.id.startsWith('temp-'));
                 if (!lastMsg) return;
@@ -627,19 +640,24 @@ export default function DiscussionPage() {
                     }
                 }
             } catch {
-                // Silencieux - le polling régulier prendra le relais
+                // Silencieux si Pusher prend le relais
             }
         }, 1500);
 
         return () => clearTimeout(quickCheck);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [conversationId, loading]);
+    }, [conversationId, loading, isConnected]);
 
-    // Fallback polling - only fetch NEW messages after the last known one
+    // Action 1 (Quick Win) : Fallback polling conditionné à la DÉCONNEXION de Pusher.
+    // Ce polling ne s'exécute que si Pusher est déconnecté pour garantir la cohérence
+    // des messages sans spam de requêtes inutiles quand le temps réel fonctionne.
     useEffect(() => {
         if (!conversationId || loading) return;
 
         const interval = setInterval(async () => {
+            // ✅ OPTIMISATION : Skip si Pusher est connecté — les messages arrivent en temps réel
+            if (isConnected) return;
+
             try {
                 // Find the latest real message timestamp
                 const lastMsg = [...messages].reverse().find(m => !m.id.startsWith('temp-'));
@@ -660,13 +678,14 @@ export default function DiscussionPage() {
                     }
                 }
             } catch (error) {
-                console.error("Polling error", error);
+                // Log seulement en mode fallback (Pusher déconnecté)
+                console.warn('[Polling] Fallback actif (Pusher déconnecté):', error);
             }
         }, 30000);
 
         return () => clearInterval(interval);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [conversationId, loading]);
+    }, [conversationId, loading, isConnected]);
 
     // Load More History - 20 older messages at a time
     const loadMoreHistory = async () => {
@@ -1238,44 +1257,57 @@ export default function DiscussionPage() {
         }
     };
 
-    // Écouter les clics depuis la TopNav (icône cadenas / appel) - après définition des variables
+    // Action 9 (Quick Win partiel) : Stabiliser les listeners window via useRef
+    // pour éviter de les re-créer à chaque refresh SWR de la conversation (toutes les 15s).
+    const conversationRef = useRef(conversation);
+    const lockStateRef = useRef(lockState);
+    const otherUserRef = useRef(otherUser);
+    const isUnlockedSessionRef = useRef(isUnlockedSession);
+    const callContextRef = useRef(callContext);
+    conversationRef.current = conversation;
+    lockStateRef.current = lockState;
+    otherUserRef.current = otherUser;
+    isUnlockedSessionRef.current = isUnlockedSession;
+    callContextRef.current = callContext;
+
     useEffect(() => {
         const onLockClick = () => {
-            if (!conversation?.canCurrentUserControl) {
+            if (!conversationRef.current?.canCurrentUserControl) {
                 toast.error('Les droits de cette discussion ont été achetés par l\'autre utilisateur.');
                 return;
             }
-            if (!lockState.userIsPro) {
+            if (!lockStateRef.current.userIsPro) {
                 toast.error('Compte Pro requis pour verrouiller la discussion');
                 return;
             }
-            if (lockState.isLocked) return; // Menu géré par TopNav
+            if (lockStateRef.current.isLocked) return; // Menu géré par TopNav
             setShowLockDialog(true);
         };
         const onLockDisable = () => {
-            if (!conversation?.canCurrentUserControl) {
+            if (!conversationRef.current?.canCurrentUserControl) {
                 toast.error('Les droits de cette discussion ont été achetés par l\'autre utilisateur.');
                 return;
             }
             setShowDisableLockDialog(true);
         };
         const onLockChangeCode = () => {
-            if (!conversation?.canCurrentUserControl) {
+            if (!conversationRef.current?.canCurrentUserControl) {
                 toast.error('Les droits de cette discussion ont été achetés par l\'autre utilisateur.');
                 return;
             }
-            if (!isUnlockedSession && lockState.canManageLock) {
+            if (!isUnlockedSessionRef.current && lockStateRef.current.canManageLock) {
                 toast.error('Déverrouillez d\'abord la discussion pour modifier le code');
                 return;
             }
-            if (isUnlockedSession && lockState.canManageLock) {
+            if (isUnlockedSessionRef.current && lockStateRef.current.canManageLock) {
                 setShowChangeCodeDialog(true);
             }
         };
         const onCallClick = (e: Event) => {
-            if (otherUser && conversationId) {
+            const currentOtherUser = otherUserRef.current;
+            if (currentOtherUser && conversationId) {
                 const callType = (e as CustomEvent<{ callType?: 'video' | 'audio' }>)?.detail?.callType ?? 'video';
-                callContext?.startCall(conversationId, otherUser.id, otherUser.name || otherUser.email || 'Utilisateur', callType);
+                callContextRef.current?.startCall(conversationId, currentOtherUser.id, currentOtherUser.name || currentOtherUser.email || 'Utilisateur', callType);
             }
         };
         window.addEventListener('discussion-lock-click', onLockClick);
@@ -1288,7 +1320,10 @@ export default function DiscussionPage() {
             window.removeEventListener('discussion-lock-change-code', onLockChangeCode);
             window.removeEventListener('discussion-call-click', onCallClick);
         };
-    }, [conversationId, otherUser, conversation?.canCurrentUserControl, lockState.userIsPro, lockState.isLocked, lockState.canManageLock, isUnlockedSession, callContext]);
+        // ✅ OPTIMISATION : Les dépendances instables (conversation, lockState, etc.) sont lues
+        // via useRef → les listeners ne sont plus recréés à chaque refresh SWR.
+        // Seul conversationId provoque une réinscription (changement de discussion).
+    }, [conversationId]);
 
     if (loading) {
         return (

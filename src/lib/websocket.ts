@@ -111,9 +111,20 @@ export async function notifyNewMessage(message: any, conversationId: string) {
 
             if (subscriptions.length > 0) {
                 const senderName = message.sender?.name || 'Utilisateur';
+
+                // Action 3 (Quick Win) : Body de notification contextuel selon le type de contenu.
+                // Le contenu réel est chiffré E2E, donc on indique le TYPE sans révéler le contenu.
+                const attachments = message.attachments ?? [];
+                const hasAudio = attachments.some((a: any) => a.type === 'AUDIO');
+                const notifBody = hasAudio
+                    ? `🎤 Message vocal de ${senderName}`
+                    : attachments.length > 0
+                        ? `📎 ${attachments.length} fichier(s) de ${senderName}`
+                        : `Message chiffré de ${senderName}`;
+
                 const payload = JSON.stringify({
-                    title: `${senderName}`,
-                    body: 'Nouveau message',
+                    title: senderName,
+                    body: notifBody,
                     icon: '/icons/icon-192x192.png',
                     url: `/chat/discussion/${conversationId}`,
                     type: 'message',
@@ -233,9 +244,19 @@ export async function notifyCollaborationGroupNewMessage(
 
             if (subscriptions.length > 0) {
                 const senderName = message.sender?.name || 'Utilisateur';
+
+                // Action 3 (Quick Win) : Body contextuel pour les notifications de collaboration aussi.
+                const attachments = message.attachments ?? [];
+                const hasAudio = attachments.some((a: any) => a.type === 'AUDIO');
+                const notifBody = hasAudio
+                    ? `🎤 Message vocal de ${senderName}`
+                    : attachments.length > 0
+                        ? `📎 ${attachments.length} fichier(s) de ${senderName}`
+                        : `Message chiffré de ${senderName}`;
+
                 const payload = JSON.stringify({
                     title: senderName,
-                    body: 'Nouveau message',
+                    body: notifBody,
                     icon: '/icons/icon-192x192.png',
                     url: chatUrl,
                     type: 'message',

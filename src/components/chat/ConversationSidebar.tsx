@@ -48,8 +48,13 @@ export function ConversationSidebar() {
     const pathname = usePathname();
     const router = useRouter();
     const { data: profileData } = useSWR('/api/users/profile', fetcher);
+    // Action 2 (Quick Win) : Intervalle SWR augmenté de 15s → 120s.
+    // Les mises à jour en temps réel (nouveaux messages, présence) sont déjà gérées
+    // via Pusher (notification:new) dans le useEffect en dessous.
+    // revalidateOnFocus garantit une mise à jour fraîche quand l'utilisateur revient sur l'onglet.
     const { data: conversationsData, error: conversationsError, mutate: mutateConversations } = useSWR('/api/conversations', fetcher, {
-        refreshInterval: 15000, // Refresh every 15s pour mise à jour présence (Redis)
+        refreshInterval: 120000, // 2 min (Pusher gère le temps réel)
+        revalidateOnFocus: true,  // Refresh quand l'onglet reprend le focus
     });
     const [searchQuery, setSearchQuery] = useState('');
     const [isCollapsed, setIsCollapsed] = useState(false);
