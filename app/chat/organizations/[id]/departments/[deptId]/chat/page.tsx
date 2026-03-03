@@ -3,7 +3,7 @@
 import { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import useSWR from 'swr';
-import { createCacheAwareFetcher, addMessageToCache, removeMessageFromCache } from '@/src/lib/api-cache';
+import { addMessageToCache, removeMessageFromCache } from '@/src/lib/api-cache';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
@@ -284,12 +284,12 @@ export default function DepartmentChatPage() {
 
     const currentUser = getUser();
 
-    const baseFetcher = useCallback(async (url: string) => {
+    // Fetcher réseau direct — pas de cache intermédiaire pour éviter les blocages
+    const messagesFetcher = useCallback(async (url: string) => {
         const res = await fetchWithAuth(url);
         if (!res.ok) throw new Error('Failed to fetch messages');
         return res.json();
     }, []);
-    const messagesFetcher = useMemo(() => createCacheAwareFetcher(baseFetcher), [baseFetcher]);
 
     const dedupeMessagesById = (list: Message[]) => {
         const seen = new Set<string>();
@@ -308,7 +308,7 @@ export default function DepartmentChatPage() {
     const { data: messagesData, mutate: mutateMessages, isLoading: messagesLoading } = useSWR(
         messagesUrl,
         messagesFetcher,
-        { refreshInterval: 60000, revalidateOnFocus: true }
+        { refreshInterval: 30000, revalidateOnFocus: true, dedupingInterval: 5000 }
     );
 
     const handleNewMessage = useCallback(async (data: { conversationId: string; message: Message }) => {
@@ -376,6 +376,38 @@ export default function DepartmentChatPage() {
         if (!conversationId || messagesLoading) return;
         fetchWithAuth(`/api/conversations/${conversationId}/read`, { method: 'POST' }).catch(() => { });
     }, [conversationId, messagesLoading]);
+
+    // Polling fallback : récupère les nouveaux messages si WebSocket en a manqué
+    useEffect(() => {
+        if (!orgId || !deptId || messagesLoading) return;
+
+        const interval = setInterval(async () => {
+            try {
+                const lastMsg = [...messages].reverse().find(m => !m.id.startsWith('temp-'));
+                if (!lastMsg) return;
+
+                const res = await fetchWithAuth(
+                    `/api/organizations/${orgId}/departments/${deptId}/messages?after=${lastMsg.createdAt}&limit=20`
+                );
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.messages && data.messages.length > 0) {
+                        setMessages((prev) => {
+                            const existingIds = new Set(prev.map((m) => m.id));
+                            const newUnique = data.messages.filter((m: Message) => !existingIds.has(m.id));
+                            if (newUnique.length === 0) return prev;
+                            return dedupeMessagesById([...prev, ...newUnique]);
+                        });
+                    }
+                }
+            } catch {
+                // Silencieux — le prochain tick réessaiera
+            }
+        }, 30000);
+
+        return () => clearInterval(interval);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [orgId, deptId, messagesLoading]);
 
     const lastMessageCountRef = useRef(0);
     const isFirstLoadRef = useRef(true);

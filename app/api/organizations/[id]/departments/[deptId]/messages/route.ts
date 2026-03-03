@@ -23,15 +23,22 @@ export async function GET(
         const userId = payload.userId;
         const { id: orgId, deptId } = await params;
 
-        // Verify user is member of the department
-        const deptMember = await prisma.departmentMember.findFirst({
-            where: {
-                userId,
-                deptId,
-            },
-        });
+        // Verify user has access: either a DepartmentMember OR an org owner/admin
+        const [deptMember, orgMember] = await Promise.all([
+            prisma.departmentMember.findFirst({
+                where: { userId, deptId },
+                select: { id: true },
+            }),
+            prisma.organizationMember.findFirst({
+                where: { userId, orgId },
+                select: { role: true },
+            }),
+        ]);
 
-        if (!deptMember) {
+        const isOrgOwnerOrAdmin = orgMember?.role === 'OWNER' || orgMember?.role === 'ADMIN';
+
+        if (!deptMember && !isOrgOwnerOrAdmin) {
+            console.warn(`[dept messages GET] Accès refusé - userId=${userId} deptId=${deptId} orgId=${orgId} deptMember=${!!deptMember} orgRole=${orgMember?.role}`);
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
@@ -214,15 +221,21 @@ export async function POST(
         const body = await request.json();
         const { content, attachments } = body;
 
-        // Verify user is member of the department
-        const deptMember = await prisma.departmentMember.findFirst({
-            where: {
-                userId,
-                deptId,
-            },
-        });
+        // Verify user has access: DepartmentMember OR org owner/admin
+        const [deptMember, orgMember] = await Promise.all([
+            prisma.departmentMember.findFirst({
+                where: { userId, deptId },
+                select: { id: true },
+            }),
+            prisma.organizationMember.findFirst({
+                where: { userId, orgId },
+                select: { role: true },
+            }),
+        ]);
 
-        if (!deptMember) {
+        const isOrgOwnerOrAdmin = orgMember?.role === 'OWNER' || orgMember?.role === 'ADMIN';
+
+        if (!deptMember && !isOrgOwnerOrAdmin) {
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
