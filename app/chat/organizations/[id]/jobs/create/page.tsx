@@ -531,7 +531,7 @@ export default function CreateJobOfferPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-between pb-10">
+                        <div className="flex justify-between pb-20">
                             <Button variant="outline" onClick={() => setStep(3)} className="gap-2">
                                 <ArrowLeft className="w-4 h-4" /> Précédent
                             </Button>
@@ -544,7 +544,7 @@ export default function CreateJobOfferPage() {
 
                 {/* Étape 5: Publication */}
                 {step === 5 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 mb-20">
                         <div className="text-center space-y-2">
                             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
                                 <Rocket className="w-8 h-8 text-primary" />
@@ -586,7 +586,7 @@ export default function CreateJobOfferPage() {
                             </div>
                         )}
 
-                        <div className="flex justify-start">
+                        <div className="flex justify-start pb-15">
                             <Button variant="outline" onClick={() => setStep(4)} className="gap-2">
                                 <ArrowLeft className="w-4 h-4" /> Précédent
                             </Button>
