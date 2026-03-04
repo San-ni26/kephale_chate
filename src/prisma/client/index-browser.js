@@ -581,6 +581,7 @@ exports.Prisma.SubscriptionScalarFieldEnum = {
   endDate: 'endDate',
   maxDepartments: 'maxDepartments',
   maxMembersPerDept: 'maxMembersPerDept',
+  maxJobOffers: 'maxJobOffers',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -813,6 +814,61 @@ exports.Prisma.UserMonthlyProgressScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.JobOfferScalarFieldEnum = {
+  id: 'id',
+  orgId: 'orgId',
+  companyName: 'companyName',
+  companyLogo: 'companyLogo',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
+  address: 'address',
+  city: 'city',
+  website: 'website',
+  title: 'title',
+  contractType: 'contractType',
+  location: 'location',
+  workMode: 'workMode',
+  description: 'description',
+  missions: 'missions',
+  skills: 'skills',
+  educationLevel: 'educationLevel',
+  experience: 'experience',
+  salary: 'salary',
+  deadline: 'deadline',
+  positionsCount: 'positionsCount',
+  formConfig: 'formConfig',
+  customQuestions: 'customQuestions',
+  status: 'status',
+  publishedAt: 'publishedAt',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.JobApplicationScalarFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  photoData: 'photoData',
+  cvData: 'cvData',
+  coverLetterData: 'coverLetterData',
+  portfolioUrl: 'portfolioUrl',
+  portfolioData: 'portfolioData',
+  educationLevel: 'educationLevel',
+  experience: 'experience',
+  socialLinks: 'socialLinks',
+  desiredSalary: 'desiredSalary',
+  availability: 'availability',
+  customAnswers: 'customAnswers',
+  status: 'status',
+  internalNote: 'internalNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -948,7 +1004,8 @@ exports.SubscriptionPlan = exports.$Enums.SubscriptionPlan = {
   FREE: 'FREE',
   BASIC: 'BASIC',
   PROFESSIONAL: 'PROFESSIONAL',
-  ENTERPRISE: 'ENTERPRISE'
+  ENTERPRISE: 'ENTERPRISE',
+  RECRUITMENT: 'RECRUITMENT'
 };
 
 exports.EventType = exports.$Enums.EventType = {
@@ -995,6 +1052,34 @@ exports.FinancialEntryType = exports.$Enums.FinancialEntryType = {
   SALARY: 'SALARY',
   SUPPLEMENTARY_INCOME: 'SUPPLEMENTARY_INCOME',
   EXPENSE: 'EXPENSE'
+};
+
+exports.ContractType = exports.$Enums.ContractType = {
+  CDI: 'CDI',
+  CDD: 'CDD',
+  STAGE: 'STAGE',
+  FREELANCE: 'FREELANCE',
+  FULL_TIME: 'FULL_TIME',
+  PART_TIME: 'PART_TIME'
+};
+
+exports.WorkMode = exports.$Enums.WorkMode = {
+  ONSITE: 'ONSITE',
+  REMOTE: 'REMOTE',
+  HYBRID: 'HYBRID'
+};
+
+exports.JobStatus = exports.$Enums.JobStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  CLOSED: 'CLOSED'
+};
+
+exports.ApplicationStatus = exports.$Enums.ApplicationStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  INTERVIEW: 'INTERVIEW'
 };
 
 exports.Prisma.ModelName = {
@@ -1059,7 +1144,9 @@ exports.Prisma.ModelName = {
   UserFinancialProfile: 'UserFinancialProfile',
   UserMonthlyStatement: 'UserMonthlyStatement',
   UserFinancialEntry: 'UserFinancialEntry',
-  UserMonthlyProgress: 'UserMonthlyProgress'
+  UserMonthlyProgress: 'UserMonthlyProgress',
+  JobOffer: 'JobOffer',
+  JobApplication: 'JobApplication'
 };
 
 /**

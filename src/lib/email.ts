@@ -496,6 +496,71 @@ export async function sendUnreachablePhoneNotificationEmail(
 }
 
 /**
+ * Envoie l'email de confirmation de candidature après postulation à une offre
+ */
+export async function sendJobApplicationConfirmationEmail(
+  email: string,
+  fullName: string | null,
+  jobTitle: string,
+  companyName: string,
+  location: string
+): Promise<boolean> {
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
+      to: email,
+      subject: `Candidature reçue — ${jobTitle} chez ${companyName}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); padding: 30px; text-align: center; color: white; }
+            .header h1 { margin: 0; font-size: 24px; }
+            .content { padding: 40px 30px; }
+            .card { background: #f8fafc; border-radius: 8px; padding: 16px; margin: 20px 0; }
+            .info { color: #64748b; font-size: 14px; line-height: 1.6; }
+            .footer { background: #f8fafc; padding: 20px; text-align: center; color: #94a3b8; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Votre candidature a bien été reçue ✅</h1>
+            </div>
+            <div class="content">
+              <h2 style="color: #1e293b; margin-top: 0;">Bonjour ${fullName || 'Candidat'},</h2>
+              <p style="color: #475569; font-size: 16px;">Nous confirmons la réception de votre candidature pour le poste de <strong>${jobTitle}</strong> chez <strong>${companyName}</strong>.</p>
+              <div class="card">
+                <p><strong>Poste :</strong> ${jobTitle}</p>
+                <p><strong>Entreprise :</strong> ${companyName}</p>
+                <p><strong>Lieu :</strong> ${location || 'Non précisé'}</p>
+              </div>
+              <p style="color: #475569; font-size: 16px;">L'équipe de recrutement étudiera votre profil et reviendra vers vous prochainement.</p>
+            </div>
+            <div class="footer">
+              <p>&copy; 2024 Chat Mango - Application de messagerie sécurisée</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error('Error sending job application confirmation email:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('DEV: Job application confirmation email failed for', email, error);
+    }
+    return false;
+  }
+}
+
+/**
  * Envoie le code de verrouillage d'une discussion à l'autre utilisateur Pro
  */
 export async function sendDiscussionLockCodeEmail(

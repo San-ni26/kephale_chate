@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, LockOpen, FileText, NotepadText, Phone, Video, KeyRound, ShieldOff, Eye, EyeOff, MoreVertical, Crown, Archive, ArchiveRestore } from 'lucide-react';
+import { Plus, UserCircle, ArrowLeft, Settings, MessageSquare, CheckCircle2, XCircle, ClipboardList, Building2, Handshake, Search, Wallet, Lightbulb, PiggyBank, Car, TrendingUp, Lock, Unlock, LockOpen, FileText, Phone, Video, KeyRound, ShieldOff, Eye, EyeOff, MoreVertical, Crown, Archive, ArchiveRestore, StickyNote, Briefcase, Filter, Send, NotepadText } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
@@ -10,7 +10,7 @@ import { UserSearch } from '@/src/components/chat/UserSearch';
 import { useFeedSearch } from '@/src/contexts/FeedSearchContext';
 import { useFinances } from '@/src/contexts/FinancesContext';
 import { toast } from 'sonner';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/auth-client';
 import { cn } from '@/src/lib/utils';
 import {
@@ -19,6 +19,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/src/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
 import OrganizationRequestDialog from '@/src/components/organizations/OrganizationRequestDialog';
 import { useDiscussionBlurState } from '@/src/contexts/DiscussionBlurContext';
 import { PurchaseRightsDialog } from '@/src/components/chat/PurchaseRightsDialog';
@@ -29,6 +30,7 @@ const fetcher = (url: string) => fetchWithAuth(url).then((r) => (r.ok ? r.json()
 export function TopNav() {
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const feedSearch = useFeedSearch();
     const discussionBlurState = useDiscussionBlurState();
     const isNotificationsPage = pathname?.startsWith('/chat/notifications');
@@ -54,7 +56,36 @@ export function TopNav() {
 
     const isOrganizationsPage = pathname?.startsWith('/chat/organizations');
     const isFinancesPage = pathname?.startsWith('/chat/finances');
-    const isGroupsPage = pathname?.startsWith('/chat/groups');
+    const isGroupsPage = pathname === '/chat/groups';
+    const isNotesPage = pathname === '/chat/notes';
+    const notesGroupId = searchParams?.get('group') || null;
+    const { data: notesGroupsData } = useSWR<{ groups: { id: string; name: string | null }[] }>(
+        isNotesPage ? '/api/groups' : null,
+        fetcher
+    );
+    const notesGroups = notesGroupsData?.groups || [];
+    // Page Mes candidatures : /chat/jobs/my-applications
+    const isMyApplicationsPage = pathname === '/chat/jobs/my-applications';
+    // Page détail offre publique : /chat/jobs/[jobId] (exclure my-applications)
+    const publicJobMatch = pathname?.match(/^\/chat\/jobs\/([^/]+)\/?$/);
+    const publicJobId = publicJobMatch?.[1] && publicJobMatch[1] !== 'my-applications' ? publicJobMatch[1] : null;
+    const { data: publicJobData } = useSWR<{ job: { title: string; companyName?: string; deadline?: string } }>(
+        publicJobId ? `/api/jobs/${publicJobId}` : null,
+        fetcher
+    );
+    const publicJob = publicJobData?.job;
+    const isPublicJobPage = Boolean(publicJobId);
+    const isPublicJobExpired = publicJob?.deadline ? new Date(publicJob.deadline) < new Date() : false;
+    const { data: myApplicationData } = useSWR<{ application: { id: string } | null }>(
+        publicJobId ? `/api/jobs/${publicJobId}/my-application` : null,
+        fetcher
+    );
+    const hasAlreadyApplied = Boolean(myApplicationData?.application);
+    const { data: groupsJobsData } = useSWR<{ pagination?: { total: number } }>(
+        isGroupsPage ? '/api/jobs?limit=1&page=1' : null,
+        fetcher
+    );
+    const groupsJobsTotal = groupsJobsData?.pagination?.total ?? 0;
     const isSettingsPage = pathname?.startsWith('/chat/settings');
     const isChatListPage = pathname === '/chat';
     const discussionMatch = pathname?.match(/^\/chat\/discussion\/([^/]+)\/?$/);
@@ -90,6 +121,45 @@ export function TopNav() {
     );
     const orgSettings = orgSettingsData?.organization ?? null;
     const isOrgSettingsPage = Boolean(orgSettingsOrgId && orgSettings);
+
+    // Page offres d'emploi : /chat/organizations/[id]/jobs
+    const jobsListMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/jobs\/?$/);
+    const jobsOrgId = jobsListMatch?.[1];
+    const { data: jobsData } = useSWR<{ jobs: any[]; subscription?: { plan: string; maxJobOffers?: number }; isAdmin?: boolean }>(
+        jobsOrgId ? `/api/organizations/${jobsOrgId}/jobs` : null,
+        fetcher
+    );
+    const jobsList = jobsData?.jobs || [];
+    const jobsSubscription = jobsData?.subscription;
+    const jobsIsAdmin = jobsData?.isAdmin ?? false;
+    const isJobsListPage = Boolean(jobsOrgId);
+    const planLimits: Record<string, number> = {
+        FREE: 0, BASIC: 3, PROFESSIONAL: 10, ENTERPRISE: 50, RECRUITMENT: 999,
+    };
+    const jobLimit = jobsSubscription ? (planLimits[jobsSubscription.plan] ?? jobsSubscription.maxJobOffers ?? 0) : 0;
+    const canCreateJob = jobLimit === 999 || jobsList.filter((j: any) => j.status !== 'CLOSED').length < jobLimit;
+
+    // Page candidatures offre : /chat/organizations/[id]/jobs/[jobId]
+    const jobDetailMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/jobs\/([^/]+)\/?$/);
+    const jobDetailOrgId = jobDetailMatch?.[1];
+    const jobDetailId = jobDetailMatch?.[2];
+    const jobStatusFilter = searchParams?.get('status') || 'ALL';
+    const jobDetailUrl = jobDetailOrgId && jobDetailId
+        ? `/api/organizations/${jobDetailOrgId}/jobs/${jobDetailId}/applications${jobStatusFilter !== 'ALL' ? `?status=${jobStatusFilter}` : ''}`
+        : null;
+    const { data: jobDetailData } = useSWR<{ job: { title: string; companyName?: string }; applications: any[] }>(
+        jobDetailUrl,
+        fetcher
+    );
+    const jobDetail = jobDetailData?.job;
+    const jobApplications = jobDetailData?.applications || [];
+    const isJobDetailPage = Boolean(jobDetailOrgId && jobDetailId);
+    const APPLICATION_STATUSES = [
+        { value: 'PENDING', label: 'En attente' },
+        { value: 'INTERVIEW', label: 'Entretien' },
+        { value: 'ACCEPTED', label: 'Accepté' },
+        { value: 'REJECTED', label: 'Refusé' },
+    ];
 
     // Page département (détail / chat / rapports) : même top bar avec retour, avatar, nom, membres
     const deptMatch = pathname?.match(
@@ -251,7 +321,10 @@ export function TopNav() {
     }
 
     return (
-        <header className={`fixed top-0 w-full left-0 z-50 h-16 flex items-center justify-between px-3 md:px-4 ${isFinancesPage ? 'bg-background border-b border-border' : 'bg-background border-b border-border'}`}>
+        <header className={cn(
+            'fixed top-0 w-full left-0 z-50 bg-background border-b border-border px-3 md:px-4',
+            mounted && isJobDetailPage ? 'flex flex-col min-h-16' : 'h-16 flex items-center justify-between'
+        )}>
             {isFinancesPage && finances ? (
                 /* Top bar page Finances : titre, portefeuille, icônes recommandations/graphique/entrées/code */
                 <div className="flex items-center justify-between w-full gap-2 min-w-0 overflow-hidden">
@@ -534,6 +607,131 @@ export function TopNav() {
                         {isDeptChatPage ? <Settings className="w-5 h-5" /> : <MessageSquare className="w-5 h-5" />}
                     </Button>
                 </>
+            ) : isJobDetailPage && jobDetailOrgId && jobDetailId ? (
+                /* Top bar page candidatures : layout 2 lignes (mounted) ou 1 ligne (!mounted) pour éviter hydration mismatch */
+                mounted ? (
+                    <div className="flex flex-col w-full flex-1 min-h-0">
+                        <div className="flex items-center justify-between gap-2 h-16 shrink-0">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => router.push(`/chat/organizations/${jobDetailOrgId}/jobs`)}
+                                className="mr-2 shrink-0"
+                            >
+                                <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                            </Button>
+                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                                <Briefcase className="w-5 h-5 text-muted-foreground shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                    <h2 className="font-semibold text-foreground truncate">{jobDetail?.title || 'Candidatures'}</h2>
+                                    <p className="text-xs text-muted-foreground truncate">{jobDetail?.companyName}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 py-2 border-t border-border shrink-0">
+                            <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
+                            <Select
+                                value={jobStatusFilter}
+                                onValueChange={(v) => {
+                                    const params = new URLSearchParams(searchParams?.toString() || '');
+                                    if (v === 'ALL') params.delete('status');
+                                    else params.set('status', v);
+                                    router.replace(`${pathname}${params.toString() ? '?' + params.toString() : ''}`);
+                                }}
+                            >
+                                <SelectTrigger className="h-8 w-36 text-xs">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="ALL">Tous les statuts</SelectItem>
+                                    {APPLICATION_STATUSES.map(s => (
+                                        <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <span className="text-xs text-muted-foreground whitespace-nowrap">{jobApplications.length} résultat{jobApplications.length !== 1 ? 's' : ''}</span>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-between w-full gap-2">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => router.push(`/chat/organizations/${jobDetailOrgId}/jobs`)}
+                            className="mr-2 shrink-0"
+                        >
+                            <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                        </Button>
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <Briefcase className="w-5 h-5 text-muted-foreground shrink-0" />
+                            <div className="min-w-0 flex-1">
+                                <h2 className="font-semibold text-foreground truncate">{jobDetail?.title || 'Candidatures'}</h2>
+                                <p className="text-xs text-muted-foreground truncate">{jobDetail?.companyName}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                            <Filter className="w-4 h-4 text-muted-foreground" />
+                            <Select
+                                value={jobStatusFilter}
+                                onValueChange={(v) => {
+                                    const params = new URLSearchParams(searchParams?.toString() || '');
+                                    if (v === 'ALL') params.delete('status');
+                                    else params.set('status', v);
+                                    router.replace(`${pathname}${params.toString() ? '?' + params.toString() : ''}`);
+                                }}
+                            >
+                                <SelectTrigger className="h-8 w-36 text-xs">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="ALL">Tous les statuts</SelectItem>
+                                    {APPLICATION_STATUSES.map(s => (
+                                        <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <span className="text-xs text-muted-foreground whitespace-nowrap">{jobApplications.length} résultat{jobApplications.length !== 1 ? 's' : ''}</span>
+                        </div>
+                    </div>
+                )
+            ) : isJobsListPage && jobsOrgId ? (
+                /* Top bar page offres d'emploi : retour, titre, plan, nouvelle offre */
+                <div className="flex items-center justify-between w-full gap-3">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => router.push(`/chat/organizations/${jobsOrgId}`)}
+                            className="shrink-0"
+                        >
+                            <ArrowLeft className="w-5 h-5" />
+                        </Button>
+                        <Briefcase className="w-5 h-5 text-primary shrink-0" />
+                        <div className="min-w-0">
+                            <h2 className="font-semibold text-foreground truncate">Offres d&apos;emploi</h2>
+                            {jobsSubscription && (
+                                <p className="text-xs text-muted-foreground truncate">
+                                    Plan {jobsSubscription.plan} · {jobLimit === 999 ? 'Illimité' : `${jobsList.filter((j: any) => j.status !== 'CLOSED').length}/${jobLimit} offres`}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                    {jobsIsAdmin && (
+                        <Button
+                            size="sm"
+                            className="gap-2 shrink-0"
+                            onClick={() => {
+                                if (!canCreateJob) {
+                                    toast.error('Limite d\'offres atteinte. Mettez à niveau votre abonnement.');
+                                    return;
+                                }
+                                router.push(`/chat/organizations/${jobsOrgId}/jobs/create`);
+                            }}
+                        >
+                            <Plus className="w-4 h-4" />
+                        </Button>
+                    )}
+                </div>
             ) : isOrgSettingsPage && orgSettings ? (
                 /* Top bar page paramètres organisation */
                 <div className="flex items-center justify-between w-full gap-3">
@@ -600,10 +798,55 @@ export function TopNav() {
                     )}
                 </div>
             ) : isGroupsPage ? (
-                /* Top bar page Notes / Groupes */
-                <div className="flex items-center gap-2 w-full">
-                    <NotepadText className="w-5 h-5 text-primary shrink-0" />
-                    <h2 className="font-semibold text-foreground truncate">Notes</h2>
+                /* Top bar page Offres d'emploi (/chat/groups) */
+                <div className="flex items-center justify-between w-full gap-3">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <Briefcase className="w-5 h-5 text-primary shrink-0" />
+                        <div className="min-w-0">
+                            <h2 className="font-semibold text-foreground truncate">Offres d&apos;emploi</h2>
+                            <p className="text-xs text-muted-foreground truncate">
+                                Trouvez votre prochaine opportunité parmi {groupsJobsTotal || '...'} offres
+                            </p>
+                        </div>
+                    </div>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2 shrink-0"
+                        onClick={() => router.push('/chat/jobs/my-applications')}
+                    >
+                        <FileText className="w-4 h-4" /> Mes candidatures
+                    </Button>
+                </div>
+            ) : isNotesPage ? (
+                /* Top bar page Notes (/chat/notes) */
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div className="flex items-center gap-2 shrink-0">
+                        <NotepadText className="w-5 h-5 text-primary shrink-0" />
+                        <h2 className="text-base sm:text-lg font-bold text-foreground truncate">Notes</h2>
+                    </div>
+                    {notesGroups.length > 0 && (
+                        <div className="flex items-center gap-0.5">
+                            <Select
+                                value={notesGroupId ?? ''}
+                                onValueChange={(v) => {
+                                    const url = v ? `/chat/notes?group=${v}` : '/chat/notes';
+                                    router.push(url);
+                                }}
+                            >
+                                <SelectTrigger className="h-8 max-w-[180px] sm:max-w-[220px] text-sm">
+                                    <SelectValue placeholder="Choisir un groupe" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {notesGroups.map((g) => (
+                                        <SelectItem key={g.id} value={g.id}>
+                                            {g.name || 'Sans nom'}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    )}
                 </div>
             ) : isSettingsPage ? (
                 /* Top bar page Paramètres */
@@ -617,7 +860,13 @@ export function TopNav() {
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => router.push('/chat')}
+                        onClick={() => {
+                            if (searchParams?.get('view') === 'notes') {
+                                router.push(`/chat/discussion/${discussionId}`);
+                            } else {
+                                router.push('/chat');
+                            }
+                        }}
                         className="mr-2 shrink-0"
                     >
                         <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
@@ -719,6 +968,15 @@ export function TopNav() {
                         >
                             <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
                         </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => router.push(`${pathname}?view=notes`)}
+                            title="Notes"
+                            className="hover:bg-primary/10"
+                        >
+                            <StickyNote className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                        </Button>
                         {(discussionBlurState?.showBlurToggle || (discussion?.canCurrentUserControl && discussion?.members?.length === 2) || discussion?.canPurchaseRights) && (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -791,11 +1049,20 @@ export function TopNav() {
                         />
                     </div>
                 </>
-            ) : isChatListPage ? (
+            ) : mounted && isChatListPage ? (
                 /* Top bar page liste des chats */
                 <div className="flex items-center gap-2 w-full">
                     <MessageSquare className="w-5 h-5 text-primary shrink-0" />
-                    <h2 className="font-semibold text-foreground truncate">Chats</h2>
+                    <h2 className="font-semibold text-foreground truncate flex-1">Chats</h2>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push('/chat/notes')}
+                        title="Notes de groupe"
+                        className="text-muted-foreground hover:text-primary shrink-0"
+                    >
+                        <StickyNote className="w-5 h-5" />
+                    </Button>
                 </div>
             ) : pathname === '/chat/organizations' ? (
                 /* Top bar page Organisations (liste) */
@@ -804,6 +1071,53 @@ export function TopNav() {
                         <Building2 className="w-5 h-5 text-primary shrink-0" />
                         <span className="font-semibold text-lg text-foreground">Organisations</span>
                     </div>
+                </div>
+            ) : isMyApplicationsPage ? (
+                /* Top bar page Mes candidatures */
+                <div className="flex items-center justify-between w-full gap-3">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push('/chat/groups')}
+                        className="shrink-0"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <FileText className="w-5 h-5 text-primary shrink-0" />
+                        <h2 className="font-semibold text-foreground truncate">Mes candidatures</h2>
+                    </div>
+                </div>
+            ) : isPublicJobPage && publicJobId ? (
+                /* Top bar page détail offre publique : retour, titre, bouton Postuler */
+                <div className="flex items-center justify-between w-full gap-3">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => router.push('/chat/groups')}
+                            className="shrink-0"
+                        >
+                            <ArrowLeft className="w-5 h-5" />
+                        </Button>
+                        <div className="min-w-0 flex-1">
+                            <h2 className="font-semibold text-foreground truncate">{publicJob?.title || 'Offre'}</h2>
+                            <p className="text-xs text-muted-foreground truncate">{publicJob?.companyName}</p>
+                        </div>
+                    </div>
+                    <Button
+                        size="sm"
+                        className="gap-2 shrink-0"
+                        onClick={() => {
+                            if (!isPublicJobExpired) {
+                                window.dispatchEvent(new CustomEvent('job-apply-open', { detail: { jobId: publicJobId } }));
+                            }
+                        }}
+                        disabled={!!isPublicJobExpired}
+                        variant={hasAlreadyApplied ? "outline" : "default"}
+                    >
+                        {isPublicJobExpired ? 'Offre expirée' : hasAlreadyApplied ? <><FileText className="w-4 h-4" /> Voir ma candidature</> : <><Send className="w-4 h-4" /> Postuler</>}
+                    </Button>
                 </div>
             ) : mounted && isPublicPageView ? (
                 /* Top bar page publique : retour + avatar + nom compact, sans recherche ni plus */
@@ -848,7 +1162,7 @@ export function TopNav() {
                 </div>
             )}
 
-            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && !isGroupsPage && !isSettingsPage && !(mounted && isDiscussionPage) && !(mounted && isPublicPageView) && (
+            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && !isGroupsPage && !isNotesPage && !isSettingsPage && !isJobsListPage && !isJobDetailPage && !isPublicJobPage && !isMyApplicationsPage && !(mounted && isDiscussionPage) && !(mounted && isPublicPageView) && (
                 <div className="flex items-center gap-2">
                     {!isOrganizationsPage && <UserSearch />}
 

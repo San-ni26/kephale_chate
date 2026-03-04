@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2, ClipboardList, CheckCircle2, AlertCircle, Clock, MoreVertical, Loader2, ImagePlus, FileText, StickyNote, FolderOpen, Handshake } from "lucide-react";
+import { Building2, Users, Calendar, Plus, ArrowLeft, Settings, MessageSquare, LogOut, Pencil, Trash2, ClipboardList, CheckCircle2, AlertCircle, Clock, MoreVertical, Loader2, ImagePlus, FileText, StickyNote, FolderOpen, Handshake, Briefcase } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
@@ -1024,6 +1024,24 @@ export default function OrganizationDashboard() {
                     </Card>
                 </div>
 
+
+                {/* Quick Access: Offres d'emploi */}
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+                        <Briefcase className="w-5 h-5 text-primary" />
+                        Recrutement
+                    </h2>
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => router.push(`/chat/organizations/${orgId}/jobs`)}
+                        className="gap-1"
+                    >
+                        <Briefcase className="w-4 h-4" />
+                        Gérer les offres
+                    </Button>
+                </div>
+
                 {/* Departments Section */}
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
@@ -1168,6 +1186,9 @@ export default function OrganizationDashboard() {
                             <Handshake className="w-5 h-5" />
                             Collaborations
                         </h2>
+
+                    </div>
+                    <div>
                         {isAdmin && (
                             <Button
                                 size="sm"
@@ -1180,9 +1201,7 @@ export default function OrganizationDashboard() {
                             </Button>
                         )}
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                        Collaborez avec d&apos;autres organisations : créez des groupes, ajoutez des membres des deux équipes et utilisez les outils de collaboration (chat, tâches, documents).
-                    </p>
+
 
                     {collaborations.length === 0 ? (
                         <div className="text-center py-12 border-2 border-dashed border-border rounded-xl">
@@ -1229,11 +1248,10 @@ export default function OrganizationDashboard() {
                                         </CardHeader>
                                         <CardContent className="space-y-3">
                                             <div className="flex items-center gap-2">
-                                                <span className={`text-xs px-2 py-0.5 rounded-full ${
-                                                    collab.status === 'ACTIVE' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                                                <span className={`text-xs px-2 py-0.5 rounded-full ${collab.status === 'ACTIVE' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
                                                     collab.status === 'PENDING' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
-                                                    'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
-                                                }`}>
+                                                        'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                                                    }`}>
                                                     {collab.status === 'ACTIVE' ? 'Active' : collab.status === 'PENDING' ? 'En attente' : 'Refusée'}
                                                 </span>
                                             </div>

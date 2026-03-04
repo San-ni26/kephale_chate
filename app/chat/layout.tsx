@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { BottomNav } from "@/src/components/chat/BottomNav";
 import { TopNav } from "@/src/components/chat/TopNav";
 import { NotificationPermissionModal } from "@/src/components/chat/NotificationPermissionModal";
@@ -20,7 +21,9 @@ export default function ChatLayout({
                 <DiscussionBlurProvider>
                     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
                         {/* Top Bar : visible sur mobile et desktop */}
-                        <TopNav />
+                        <Suspense fallback={<header className="h-14 shrink-0 border-b border-border bg-background" />}>
+                            <TopNav />
+                        </Suspense>
 
                         <div className="flex-1 flex overflow-hidden min-h-0">
                             {/* Desktop Sidebar (Conversation List) */}

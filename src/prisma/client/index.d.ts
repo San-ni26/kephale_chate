@@ -323,6 +323,16 @@ export type UserFinancialEntry = $Result.DefaultSelection<Prisma.$UserFinancialE
  * 
  */
 export type UserMonthlyProgress = $Result.DefaultSelection<Prisma.$UserMonthlyProgressPayload>
+/**
+ * Model JobOffer
+ * 
+ */
+export type JobOffer = $Result.DefaultSelection<Prisma.$JobOfferPayload>
+/**
+ * Model JobApplication
+ * 
+ */
+export type JobApplication = $Result.DefaultSelection<Prisma.$JobApplicationPayload>
 
 /**
  * Enums
@@ -450,7 +460,8 @@ export const SubscriptionPlan: {
   FREE: 'FREE',
   BASIC: 'BASIC',
   PROFESSIONAL: 'PROFESSIONAL',
-  ENTERPRISE: 'ENTERPRISE'
+  ENTERPRISE: 'ENTERPRISE',
+  RECRUITMENT: 'RECRUITMENT'
 };
 
 export type SubscriptionPlan = (typeof SubscriptionPlan)[keyof typeof SubscriptionPlan]
@@ -551,6 +562,46 @@ export const FinancialEntryType: {
 
 export type FinancialEntryType = (typeof FinancialEntryType)[keyof typeof FinancialEntryType]
 
+
+export const ContractType: {
+  CDI: 'CDI',
+  CDD: 'CDD',
+  STAGE: 'STAGE',
+  FREELANCE: 'FREELANCE',
+  FULL_TIME: 'FULL_TIME',
+  PART_TIME: 'PART_TIME'
+};
+
+export type ContractType = (typeof ContractType)[keyof typeof ContractType]
+
+
+export const WorkMode: {
+  ONSITE: 'ONSITE',
+  REMOTE: 'REMOTE',
+  HYBRID: 'HYBRID'
+};
+
+export type WorkMode = (typeof WorkMode)[keyof typeof WorkMode]
+
+
+export const JobStatus: {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  CLOSED: 'CLOSED'
+};
+
+export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus]
+
+
+export const ApplicationStatus: {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  INTERVIEW: 'INTERVIEW'
+};
+
+export type ApplicationStatus = (typeof ApplicationStatus)[keyof typeof ApplicationStatus]
+
 }
 
 export type InvitationStatus = $Enums.InvitationStatus
@@ -644,6 +695,22 @@ export const FinancialGoalType: typeof $Enums.FinancialGoalType
 export type FinancialEntryType = $Enums.FinancialEntryType
 
 export const FinancialEntryType: typeof $Enums.FinancialEntryType
+
+export type ContractType = $Enums.ContractType
+
+export const ContractType: typeof $Enums.ContractType
+
+export type WorkMode = $Enums.WorkMode
+
+export const WorkMode: typeof $Enums.WorkMode
+
+export type JobStatus = $Enums.JobStatus
+
+export const JobStatus: typeof $Enums.JobStatus
+
+export type ApplicationStatus = $Enums.ApplicationStatus
+
+export const ApplicationStatus: typeof $Enums.ApplicationStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1381,6 +1448,26 @@ export class PrismaClient<
     * ```
     */
   get userMonthlyProgress(): Prisma.UserMonthlyProgressDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.jobOffer`: Exposes CRUD operations for the **JobOffer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more JobOffers
+    * const jobOffers = await prisma.jobOffer.findMany()
+    * ```
+    */
+  get jobOffer(): Prisma.JobOfferDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.jobApplication`: Exposes CRUD operations for the **JobApplication** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more JobApplications
+    * const jobApplications = await prisma.jobApplication.findMany()
+    * ```
+    */
+  get jobApplication(): Prisma.JobApplicationDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1876,7 +1963,9 @@ export namespace Prisma {
     UserFinancialProfile: 'UserFinancialProfile',
     UserMonthlyStatement: 'UserMonthlyStatement',
     UserFinancialEntry: 'UserFinancialEntry',
-    UserMonthlyProgress: 'UserMonthlyProgress'
+    UserMonthlyProgress: 'UserMonthlyProgress',
+    JobOffer: 'JobOffer',
+    JobApplication: 'JobApplication'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1892,7 +1981,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationCollaboration" | "collaborationGroup" | "collaborationGroupMember" | "collaborationTask" | "collaborationDocument" | "collaborationNote" | "collaborationEditorialItem" | "departmentEditorialItem" | "organizationMember" | "department" | "departmentNote" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "discussionRightPurchase" | "group" | "conversationDeletionRequest" | "groupDocument" | "groupNote" | "groupNoteShare" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userProSubscription" | "userProSettings" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress"
+      modelProps: "user" | "userInvitation" | "invitationGuest" | "follow" | "organization" | "organizationCollaboration" | "collaborationGroup" | "collaborationGroupMember" | "collaborationTask" | "collaborationDocument" | "collaborationNote" | "collaborationEditorialItem" | "departmentEditorialItem" | "organizationMember" | "department" | "departmentNote" | "departmentDocument" | "departmentGoal" | "departmentMeeting" | "departmentPoll" | "pollVote" | "teamDecision" | "decisionVote" | "departmentMember" | "discussionRightPurchase" | "group" | "conversationDeletionRequest" | "groupDocument" | "groupNote" | "groupNoteShare" | "groupMember" | "message" | "attachment" | "notification" | "announcement" | "announcementRead" | "organizationRequest" | "pendingSubscriptionPayment" | "paymentOrder" | "paymentSetting" | "subscription" | "eventInvitation" | "eventDepartmentBroadcast" | "invitationRSVP" | "userPage" | "post" | "like" | "comment" | "postRead" | "task" | "taskMessage" | "taskAttachment" | "departmentMonthlyReport" | "pushSubscription" | "userProSubscription" | "userProSettings" | "userPersonalTask" | "userFinancialGoal" | "userFinancialProfile" | "userMonthlyStatement" | "userFinancialEntry" | "userMonthlyProgress" | "jobOffer" | "jobApplication"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -6484,6 +6573,154 @@ export namespace Prisma {
           }
         }
       }
+      JobOffer: {
+        payload: Prisma.$JobOfferPayload<ExtArgs>
+        fields: Prisma.JobOfferFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.JobOfferFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.JobOfferFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload>
+          }
+          findFirst: {
+            args: Prisma.JobOfferFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.JobOfferFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload>
+          }
+          findMany: {
+            args: Prisma.JobOfferFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload>[]
+          }
+          create: {
+            args: Prisma.JobOfferCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload>
+          }
+          createMany: {
+            args: Prisma.JobOfferCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.JobOfferCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload>[]
+          }
+          delete: {
+            args: Prisma.JobOfferDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload>
+          }
+          update: {
+            args: Prisma.JobOfferUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload>
+          }
+          deleteMany: {
+            args: Prisma.JobOfferDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.JobOfferUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.JobOfferUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload>[]
+          }
+          upsert: {
+            args: Prisma.JobOfferUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobOfferPayload>
+          }
+          aggregate: {
+            args: Prisma.JobOfferAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateJobOffer>
+          }
+          groupBy: {
+            args: Prisma.JobOfferGroupByArgs<ExtArgs>
+            result: $Utils.Optional<JobOfferGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.JobOfferCountArgs<ExtArgs>
+            result: $Utils.Optional<JobOfferCountAggregateOutputType> | number
+          }
+        }
+      }
+      JobApplication: {
+        payload: Prisma.$JobApplicationPayload<ExtArgs>
+        fields: Prisma.JobApplicationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.JobApplicationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.JobApplicationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          findFirst: {
+            args: Prisma.JobApplicationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.JobApplicationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          findMany: {
+            args: Prisma.JobApplicationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+          }
+          create: {
+            args: Prisma.JobApplicationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          createMany: {
+            args: Prisma.JobApplicationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.JobApplicationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+          }
+          delete: {
+            args: Prisma.JobApplicationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          update: {
+            args: Prisma.JobApplicationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          deleteMany: {
+            args: Prisma.JobApplicationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.JobApplicationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.JobApplicationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+          }
+          upsert: {
+            args: Prisma.JobApplicationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+          }
+          aggregate: {
+            args: Prisma.JobApplicationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateJobApplication>
+          }
+          groupBy: {
+            args: Prisma.JobApplicationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<JobApplicationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.JobApplicationCountArgs<ExtArgs>
+            result: $Utils.Optional<JobApplicationCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -6654,6 +6891,8 @@ export namespace Prisma {
     userMonthlyStatement?: UserMonthlyStatementOmit
     userFinancialEntry?: UserFinancialEntryOmit
     userMonthlyProgress?: UserMonthlyProgressOmit
+    jobOffer?: JobOfferOmit
+    jobApplication?: JobApplicationOmit
   }
 
   /* Types for Logging */
@@ -6762,6 +7001,7 @@ export namespace Prisma {
     deletionRequestsInitiated: number
     discussionRightsBought: number
     discussionRightsSold: number
+    createdJobOffers: number
     followers: number
     following: number
     uploadedDepartmentDocuments: number
@@ -6809,6 +7049,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: boolean | UserCountOutputTypeCountDeletionRequestsInitiatedArgs
     discussionRightsBought?: boolean | UserCountOutputTypeCountDiscussionRightsBoughtArgs
     discussionRightsSold?: boolean | UserCountOutputTypeCountDiscussionRightsSoldArgs
+    createdJobOffers?: boolean | UserCountOutputTypeCountCreatedJobOffersArgs
     followers?: boolean | UserCountOutputTypeCountFollowersArgs
     following?: boolean | UserCountOutputTypeCountFollowingArgs
     uploadedDepartmentDocuments?: boolean | UserCountOutputTypeCountUploadedDepartmentDocumentsArgs
@@ -7037,6 +7278,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountCreatedJobOffersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JobOfferWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountFollowersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FollowWhereInput
   }
@@ -7189,6 +7437,7 @@ export namespace Prisma {
     collaborationsAsA: number
     collaborationsAsB: number
     collaborationGroupMembers: number
+    jobOffers: number
   }
 
   export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7198,6 +7447,7 @@ export namespace Prisma {
     collaborationsAsA?: boolean | OrganizationCountOutputTypeCountCollaborationsAsAArgs
     collaborationsAsB?: boolean | OrganizationCountOutputTypeCountCollaborationsAsBArgs
     collaborationGroupMembers?: boolean | OrganizationCountOutputTypeCountCollaborationGroupMembersArgs
+    jobOffers?: boolean | OrganizationCountOutputTypeCountJobOffersArgs
   }
 
   // Custom InputTypes
@@ -7251,6 +7501,13 @@ export namespace Prisma {
    */
   export type OrganizationCountOutputTypeCountCollaborationGroupMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CollaborationGroupMemberWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountJobOffersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JobOfferWhereInput
   }
 
 
@@ -7980,6 +8237,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type JobOfferCountOutputType
+   */
+
+  export type JobOfferCountOutputType = {
+    applications: number
+  }
+
+  export type JobOfferCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    applications?: boolean | JobOfferCountOutputTypeCountApplicationsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * JobOfferCountOutputType without action
+   */
+  export type JobOfferCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOfferCountOutputType
+     */
+    select?: JobOfferCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * JobOfferCountOutputType without action
+   */
+  export type JobOfferCountOutputTypeCountApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JobApplicationWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -8327,6 +8615,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: boolean | User$deletionRequestsInitiatedArgs<ExtArgs>
     discussionRightsBought?: boolean | User$discussionRightsBoughtArgs<ExtArgs>
     discussionRightsSold?: boolean | User$discussionRightsSoldArgs<ExtArgs>
+    createdJobOffers?: boolean | User$createdJobOffersArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
     uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
@@ -8464,6 +8753,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: boolean | User$deletionRequestsInitiatedArgs<ExtArgs>
     discussionRightsBought?: boolean | User$discussionRightsBoughtArgs<ExtArgs>
     discussionRightsSold?: boolean | User$discussionRightsSoldArgs<ExtArgs>
+    createdJobOffers?: boolean | User$createdJobOffersArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
     uploadedDepartmentDocuments?: boolean | User$uploadedDepartmentDocumentsArgs<ExtArgs>
@@ -8520,6 +8810,7 @@ export namespace Prisma {
       deletionRequestsInitiated: Prisma.$ConversationDeletionRequestPayload<ExtArgs>[]
       discussionRightsBought: Prisma.$DiscussionRightPurchasePayload<ExtArgs>[]
       discussionRightsSold: Prisma.$DiscussionRightPurchasePayload<ExtArgs>[]
+      createdJobOffers: Prisma.$JobOfferPayload<ExtArgs>[]
       followers: Prisma.$FollowPayload<ExtArgs>[]
       following: Prisma.$FollowPayload<ExtArgs>[]
       uploadedDepartmentDocuments: Prisma.$DepartmentDocumentPayload<ExtArgs>[]
@@ -8989,6 +9280,7 @@ export namespace Prisma {
     deletionRequestsInitiated<T extends User$deletionRequestsInitiatedArgs<ExtArgs> = {}>(args?: Subset<T, User$deletionRequestsInitiatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationDeletionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     discussionRightsBought<T extends User$discussionRightsBoughtArgs<ExtArgs> = {}>(args?: Subset<T, User$discussionRightsBoughtArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     discussionRightsSold<T extends User$discussionRightsSoldArgs<ExtArgs> = {}>(args?: Subset<T, User$discussionRightsSoldArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscussionRightPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdJobOffers<T extends User$createdJobOffersArgs<ExtArgs> = {}>(args?: Subset<T, User$createdJobOffersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     followers<T extends User$followersArgs<ExtArgs> = {}>(args?: Subset<T, User$followersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     following<T extends User$followingArgs<ExtArgs> = {}>(args?: Subset<T, User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     uploadedDepartmentDocuments<T extends User$uploadedDepartmentDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$uploadedDepartmentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -10192,6 +10484,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DiscussionRightPurchaseScalarFieldEnum | DiscussionRightPurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * User.createdJobOffers
+   */
+  export type User$createdJobOffersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    where?: JobOfferWhereInput
+    orderBy?: JobOfferOrderByWithRelationInput | JobOfferOrderByWithRelationInput[]
+    cursor?: JobOfferWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: JobOfferScalarFieldEnum | JobOfferScalarFieldEnum[]
   }
 
   /**
@@ -14137,6 +14453,7 @@ export namespace Prisma {
     collaborationsAsA?: boolean | Organization$collaborationsAsAArgs<ExtArgs>
     collaborationsAsB?: boolean | Organization$collaborationsAsBArgs<ExtArgs>
     collaborationGroupMembers?: boolean | Organization$collaborationGroupMembersArgs<ExtArgs>
+    jobOffers?: boolean | Organization$jobOffersArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -14185,6 +14502,7 @@ export namespace Prisma {
     collaborationsAsA?: boolean | Organization$collaborationsAsAArgs<ExtArgs>
     collaborationsAsB?: boolean | Organization$collaborationsAsBArgs<ExtArgs>
     collaborationGroupMembers?: boolean | Organization$collaborationGroupMembersArgs<ExtArgs>
+    jobOffers?: boolean | Organization$jobOffersArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -14200,6 +14518,7 @@ export namespace Prisma {
       collaborationsAsA: Prisma.$OrganizationCollaborationPayload<ExtArgs>[]
       collaborationsAsB: Prisma.$OrganizationCollaborationPayload<ExtArgs>[]
       collaborationGroupMembers: Prisma.$CollaborationGroupMemberPayload<ExtArgs>[]
+      jobOffers: Prisma.$JobOfferPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14612,6 +14931,7 @@ export namespace Prisma {
     collaborationsAsA<T extends Organization$collaborationsAsAArgs<ExtArgs> = {}>(args?: Subset<T, Organization$collaborationsAsAArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrganizationCollaborationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     collaborationsAsB<T extends Organization$collaborationsAsBArgs<ExtArgs> = {}>(args?: Subset<T, Organization$collaborationsAsBArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrganizationCollaborationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     collaborationGroupMembers<T extends Organization$collaborationGroupMembersArgs<ExtArgs> = {}>(args?: Subset<T, Organization$collaborationGroupMembersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CollaborationGroupMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    jobOffers<T extends Organization$jobOffersArgs<ExtArgs> = {}>(args?: Subset<T, Organization$jobOffersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15198,6 +15518,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CollaborationGroupMemberScalarFieldEnum | CollaborationGroupMemberScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.jobOffers
+   */
+  export type Organization$jobOffersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    where?: JobOfferWhereInput
+    orderBy?: JobOfferOrderByWithRelationInput | JobOfferOrderByWithRelationInput[]
+    cursor?: JobOfferWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: JobOfferScalarFieldEnum | JobOfferScalarFieldEnum[]
   }
 
   /**
@@ -54833,11 +55177,13 @@ export namespace Prisma {
   export type SubscriptionAvgAggregateOutputType = {
     maxDepartments: number | null
     maxMembersPerDept: number | null
+    maxJobOffers: number | null
   }
 
   export type SubscriptionSumAggregateOutputType = {
     maxDepartments: number | null
     maxMembersPerDept: number | null
+    maxJobOffers: number | null
   }
 
   export type SubscriptionMinAggregateOutputType = {
@@ -54848,6 +55194,7 @@ export namespace Prisma {
     endDate: Date | null
     maxDepartments: number | null
     maxMembersPerDept: number | null
+    maxJobOffers: number | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -54861,6 +55208,7 @@ export namespace Prisma {
     endDate: Date | null
     maxDepartments: number | null
     maxMembersPerDept: number | null
+    maxJobOffers: number | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -54874,6 +55222,7 @@ export namespace Prisma {
     endDate: number
     maxDepartments: number
     maxMembersPerDept: number
+    maxJobOffers: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -54884,11 +55233,13 @@ export namespace Prisma {
   export type SubscriptionAvgAggregateInputType = {
     maxDepartments?: true
     maxMembersPerDept?: true
+    maxJobOffers?: true
   }
 
   export type SubscriptionSumAggregateInputType = {
     maxDepartments?: true
     maxMembersPerDept?: true
+    maxJobOffers?: true
   }
 
   export type SubscriptionMinAggregateInputType = {
@@ -54899,6 +55250,7 @@ export namespace Prisma {
     endDate?: true
     maxDepartments?: true
     maxMembersPerDept?: true
+    maxJobOffers?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -54912,6 +55264,7 @@ export namespace Prisma {
     endDate?: true
     maxDepartments?: true
     maxMembersPerDept?: true
+    maxJobOffers?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -54925,6 +55278,7 @@ export namespace Prisma {
     endDate?: true
     maxDepartments?: true
     maxMembersPerDept?: true
+    maxJobOffers?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -55025,6 +55379,7 @@ export namespace Prisma {
     endDate: Date | null
     maxDepartments: number
     maxMembersPerDept: number
+    maxJobOffers: number
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -55057,6 +55412,7 @@ export namespace Prisma {
     endDate?: boolean
     maxDepartments?: boolean
     maxMembersPerDept?: boolean
+    maxJobOffers?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -55071,6 +55427,7 @@ export namespace Prisma {
     endDate?: boolean
     maxDepartments?: boolean
     maxMembersPerDept?: boolean
+    maxJobOffers?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -55085,6 +55442,7 @@ export namespace Prisma {
     endDate?: boolean
     maxDepartments?: boolean
     maxMembersPerDept?: boolean
+    maxJobOffers?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -55099,12 +55457,13 @@ export namespace Prisma {
     endDate?: boolean
     maxDepartments?: boolean
     maxMembersPerDept?: boolean
+    maxJobOffers?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SubscriptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orgId" | "plan" | "startDate" | "endDate" | "maxDepartments" | "maxMembersPerDept" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
+  export type SubscriptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orgId" | "plan" | "startDate" | "endDate" | "maxDepartments" | "maxMembersPerDept" | "maxJobOffers" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
   export type SubscriptionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }
@@ -55128,6 +55487,7 @@ export namespace Prisma {
       endDate: Date | null
       maxDepartments: number
       maxMembersPerDept: number
+      maxJobOffers: number
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -55562,6 +55922,7 @@ export namespace Prisma {
     readonly endDate: FieldRef<"Subscription", 'DateTime'>
     readonly maxDepartments: FieldRef<"Subscription", 'Int'>
     readonly maxMembersPerDept: FieldRef<"Subscription", 'Int'>
+    readonly maxJobOffers: FieldRef<"Subscription", 'Int'>
     readonly isActive: FieldRef<"Subscription", 'Boolean'>
     readonly createdAt: FieldRef<"Subscription", 'DateTime'>
     readonly updatedAt: FieldRef<"Subscription", 'DateTime'>
@@ -79687,6 +80048,2685 @@ export namespace Prisma {
 
 
   /**
+   * Model JobOffer
+   */
+
+  export type AggregateJobOffer = {
+    _count: JobOfferCountAggregateOutputType | null
+    _avg: JobOfferAvgAggregateOutputType | null
+    _sum: JobOfferSumAggregateOutputType | null
+    _min: JobOfferMinAggregateOutputType | null
+    _max: JobOfferMaxAggregateOutputType | null
+  }
+
+  export type JobOfferAvgAggregateOutputType = {
+    positionsCount: number | null
+  }
+
+  export type JobOfferSumAggregateOutputType = {
+    positionsCount: number | null
+  }
+
+  export type JobOfferMinAggregateOutputType = {
+    id: string | null
+    orgId: string | null
+    companyName: string | null
+    companyLogo: string | null
+    contactEmail: string | null
+    contactPhone: string | null
+    address: string | null
+    city: string | null
+    website: string | null
+    title: string | null
+    contractType: $Enums.ContractType | null
+    location: string | null
+    workMode: $Enums.WorkMode | null
+    description: string | null
+    missions: string | null
+    skills: string | null
+    educationLevel: string | null
+    experience: string | null
+    salary: string | null
+    deadline: Date | null
+    positionsCount: number | null
+    status: $Enums.JobStatus | null
+    publishedAt: Date | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type JobOfferMaxAggregateOutputType = {
+    id: string | null
+    orgId: string | null
+    companyName: string | null
+    companyLogo: string | null
+    contactEmail: string | null
+    contactPhone: string | null
+    address: string | null
+    city: string | null
+    website: string | null
+    title: string | null
+    contractType: $Enums.ContractType | null
+    location: string | null
+    workMode: $Enums.WorkMode | null
+    description: string | null
+    missions: string | null
+    skills: string | null
+    educationLevel: string | null
+    experience: string | null
+    salary: string | null
+    deadline: Date | null
+    positionsCount: number | null
+    status: $Enums.JobStatus | null
+    publishedAt: Date | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type JobOfferCountAggregateOutputType = {
+    id: number
+    orgId: number
+    companyName: number
+    companyLogo: number
+    contactEmail: number
+    contactPhone: number
+    address: number
+    city: number
+    website: number
+    title: number
+    contractType: number
+    location: number
+    workMode: number
+    description: number
+    missions: number
+    skills: number
+    educationLevel: number
+    experience: number
+    salary: number
+    deadline: number
+    positionsCount: number
+    formConfig: number
+    customQuestions: number
+    status: number
+    publishedAt: number
+    createdBy: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type JobOfferAvgAggregateInputType = {
+    positionsCount?: true
+  }
+
+  export type JobOfferSumAggregateInputType = {
+    positionsCount?: true
+  }
+
+  export type JobOfferMinAggregateInputType = {
+    id?: true
+    orgId?: true
+    companyName?: true
+    companyLogo?: true
+    contactEmail?: true
+    contactPhone?: true
+    address?: true
+    city?: true
+    website?: true
+    title?: true
+    contractType?: true
+    location?: true
+    workMode?: true
+    description?: true
+    missions?: true
+    skills?: true
+    educationLevel?: true
+    experience?: true
+    salary?: true
+    deadline?: true
+    positionsCount?: true
+    status?: true
+    publishedAt?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type JobOfferMaxAggregateInputType = {
+    id?: true
+    orgId?: true
+    companyName?: true
+    companyLogo?: true
+    contactEmail?: true
+    contactPhone?: true
+    address?: true
+    city?: true
+    website?: true
+    title?: true
+    contractType?: true
+    location?: true
+    workMode?: true
+    description?: true
+    missions?: true
+    skills?: true
+    educationLevel?: true
+    experience?: true
+    salary?: true
+    deadline?: true
+    positionsCount?: true
+    status?: true
+    publishedAt?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type JobOfferCountAggregateInputType = {
+    id?: true
+    orgId?: true
+    companyName?: true
+    companyLogo?: true
+    contactEmail?: true
+    contactPhone?: true
+    address?: true
+    city?: true
+    website?: true
+    title?: true
+    contractType?: true
+    location?: true
+    workMode?: true
+    description?: true
+    missions?: true
+    skills?: true
+    educationLevel?: true
+    experience?: true
+    salary?: true
+    deadline?: true
+    positionsCount?: true
+    formConfig?: true
+    customQuestions?: true
+    status?: true
+    publishedAt?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type JobOfferAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which JobOffer to aggregate.
+     */
+    where?: JobOfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobOffers to fetch.
+     */
+    orderBy?: JobOfferOrderByWithRelationInput | JobOfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: JobOfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobOffers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobOffers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned JobOffers
+    **/
+    _count?: true | JobOfferCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: JobOfferAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: JobOfferSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: JobOfferMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: JobOfferMaxAggregateInputType
+  }
+
+  export type GetJobOfferAggregateType<T extends JobOfferAggregateArgs> = {
+        [P in keyof T & keyof AggregateJobOffer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateJobOffer[P]>
+      : GetScalarType<T[P], AggregateJobOffer[P]>
+  }
+
+
+
+
+  export type JobOfferGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JobOfferWhereInput
+    orderBy?: JobOfferOrderByWithAggregationInput | JobOfferOrderByWithAggregationInput[]
+    by: JobOfferScalarFieldEnum[] | JobOfferScalarFieldEnum
+    having?: JobOfferScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: JobOfferCountAggregateInputType | true
+    _avg?: JobOfferAvgAggregateInputType
+    _sum?: JobOfferSumAggregateInputType
+    _min?: JobOfferMinAggregateInputType
+    _max?: JobOfferMaxAggregateInputType
+  }
+
+  export type JobOfferGroupByOutputType = {
+    id: string
+    orgId: string
+    companyName: string
+    companyLogo: string | null
+    contactEmail: string
+    contactPhone: string | null
+    address: string | null
+    city: string | null
+    website: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions: string | null
+    skills: string | null
+    educationLevel: string | null
+    experience: string | null
+    salary: string | null
+    deadline: Date | null
+    positionsCount: number
+    formConfig: JsonValue
+    customQuestions: JsonValue | null
+    status: $Enums.JobStatus
+    publishedAt: Date | null
+    createdBy: string
+    createdAt: Date
+    updatedAt: Date
+    _count: JobOfferCountAggregateOutputType | null
+    _avg: JobOfferAvgAggregateOutputType | null
+    _sum: JobOfferSumAggregateOutputType | null
+    _min: JobOfferMinAggregateOutputType | null
+    _max: JobOfferMaxAggregateOutputType | null
+  }
+
+  type GetJobOfferGroupByPayload<T extends JobOfferGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<JobOfferGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof JobOfferGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], JobOfferGroupByOutputType[P]>
+            : GetScalarType<T[P], JobOfferGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type JobOfferSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orgId?: boolean
+    companyName?: boolean
+    companyLogo?: boolean
+    contactEmail?: boolean
+    contactPhone?: boolean
+    address?: boolean
+    city?: boolean
+    website?: boolean
+    title?: boolean
+    contractType?: boolean
+    location?: boolean
+    workMode?: boolean
+    description?: boolean
+    missions?: boolean
+    skills?: boolean
+    educationLevel?: boolean
+    experience?: boolean
+    salary?: boolean
+    deadline?: boolean
+    positionsCount?: boolean
+    formConfig?: boolean
+    customQuestions?: boolean
+    status?: boolean
+    publishedAt?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+    applications?: boolean | JobOffer$applicationsArgs<ExtArgs>
+    _count?: boolean | JobOfferCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["jobOffer"]>
+
+  export type JobOfferSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orgId?: boolean
+    companyName?: boolean
+    companyLogo?: boolean
+    contactEmail?: boolean
+    contactPhone?: boolean
+    address?: boolean
+    city?: boolean
+    website?: boolean
+    title?: boolean
+    contractType?: boolean
+    location?: boolean
+    workMode?: boolean
+    description?: boolean
+    missions?: boolean
+    skills?: boolean
+    educationLevel?: boolean
+    experience?: boolean
+    salary?: boolean
+    deadline?: boolean
+    positionsCount?: boolean
+    formConfig?: boolean
+    customQuestions?: boolean
+    status?: boolean
+    publishedAt?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["jobOffer"]>
+
+  export type JobOfferSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orgId?: boolean
+    companyName?: boolean
+    companyLogo?: boolean
+    contactEmail?: boolean
+    contactPhone?: boolean
+    address?: boolean
+    city?: boolean
+    website?: boolean
+    title?: boolean
+    contractType?: boolean
+    location?: boolean
+    workMode?: boolean
+    description?: boolean
+    missions?: boolean
+    skills?: boolean
+    educationLevel?: boolean
+    experience?: boolean
+    salary?: boolean
+    deadline?: boolean
+    positionsCount?: boolean
+    formConfig?: boolean
+    customQuestions?: boolean
+    status?: boolean
+    publishedAt?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["jobOffer"]>
+
+  export type JobOfferSelectScalar = {
+    id?: boolean
+    orgId?: boolean
+    companyName?: boolean
+    companyLogo?: boolean
+    contactEmail?: boolean
+    contactPhone?: boolean
+    address?: boolean
+    city?: boolean
+    website?: boolean
+    title?: boolean
+    contractType?: boolean
+    location?: boolean
+    workMode?: boolean
+    description?: boolean
+    missions?: boolean
+    skills?: boolean
+    educationLevel?: boolean
+    experience?: boolean
+    salary?: boolean
+    deadline?: boolean
+    positionsCount?: boolean
+    formConfig?: boolean
+    customQuestions?: boolean
+    status?: boolean
+    publishedAt?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type JobOfferOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orgId" | "companyName" | "companyLogo" | "contactEmail" | "contactPhone" | "address" | "city" | "website" | "title" | "contractType" | "location" | "workMode" | "description" | "missions" | "skills" | "educationLevel" | "experience" | "salary" | "deadline" | "positionsCount" | "formConfig" | "customQuestions" | "status" | "publishedAt" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["jobOffer"]>
+  export type JobOfferInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+    applications?: boolean | JobOffer$applicationsArgs<ExtArgs>
+    _count?: boolean | JobOfferCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type JobOfferIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type JobOfferIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $JobOfferPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "JobOffer"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      creator: Prisma.$UserPayload<ExtArgs>
+      applications: Prisma.$JobApplicationPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      orgId: string
+      companyName: string
+      companyLogo: string | null
+      contactEmail: string
+      contactPhone: string | null
+      address: string | null
+      city: string | null
+      website: string | null
+      title: string
+      contractType: $Enums.ContractType
+      location: string
+      workMode: $Enums.WorkMode
+      description: string
+      missions: string | null
+      skills: string | null
+      educationLevel: string | null
+      experience: string | null
+      salary: string | null
+      deadline: Date | null
+      positionsCount: number
+      formConfig: Prisma.JsonValue
+      customQuestions: Prisma.JsonValue | null
+      status: $Enums.JobStatus
+      publishedAt: Date | null
+      createdBy: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["jobOffer"]>
+    composites: {}
+  }
+
+  type JobOfferGetPayload<S extends boolean | null | undefined | JobOfferDefaultArgs> = $Result.GetResult<Prisma.$JobOfferPayload, S>
+
+  type JobOfferCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<JobOfferFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: JobOfferCountAggregateInputType | true
+    }
+
+  export interface JobOfferDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['JobOffer'], meta: { name: 'JobOffer' } }
+    /**
+     * Find zero or one JobOffer that matches the filter.
+     * @param {JobOfferFindUniqueArgs} args - Arguments to find a JobOffer
+     * @example
+     * // Get one JobOffer
+     * const jobOffer = await prisma.jobOffer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends JobOfferFindUniqueArgs>(args: SelectSubset<T, JobOfferFindUniqueArgs<ExtArgs>>): Prisma__JobOfferClient<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one JobOffer that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {JobOfferFindUniqueOrThrowArgs} args - Arguments to find a JobOffer
+     * @example
+     * // Get one JobOffer
+     * const jobOffer = await prisma.jobOffer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends JobOfferFindUniqueOrThrowArgs>(args: SelectSubset<T, JobOfferFindUniqueOrThrowArgs<ExtArgs>>): Prisma__JobOfferClient<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first JobOffer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobOfferFindFirstArgs} args - Arguments to find a JobOffer
+     * @example
+     * // Get one JobOffer
+     * const jobOffer = await prisma.jobOffer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends JobOfferFindFirstArgs>(args?: SelectSubset<T, JobOfferFindFirstArgs<ExtArgs>>): Prisma__JobOfferClient<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first JobOffer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobOfferFindFirstOrThrowArgs} args - Arguments to find a JobOffer
+     * @example
+     * // Get one JobOffer
+     * const jobOffer = await prisma.jobOffer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends JobOfferFindFirstOrThrowArgs>(args?: SelectSubset<T, JobOfferFindFirstOrThrowArgs<ExtArgs>>): Prisma__JobOfferClient<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more JobOffers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobOfferFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all JobOffers
+     * const jobOffers = await prisma.jobOffer.findMany()
+     * 
+     * // Get first 10 JobOffers
+     * const jobOffers = await prisma.jobOffer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const jobOfferWithIdOnly = await prisma.jobOffer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends JobOfferFindManyArgs>(args?: SelectSubset<T, JobOfferFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a JobOffer.
+     * @param {JobOfferCreateArgs} args - Arguments to create a JobOffer.
+     * @example
+     * // Create one JobOffer
+     * const JobOffer = await prisma.jobOffer.create({
+     *   data: {
+     *     // ... data to create a JobOffer
+     *   }
+     * })
+     * 
+     */
+    create<T extends JobOfferCreateArgs>(args: SelectSubset<T, JobOfferCreateArgs<ExtArgs>>): Prisma__JobOfferClient<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many JobOffers.
+     * @param {JobOfferCreateManyArgs} args - Arguments to create many JobOffers.
+     * @example
+     * // Create many JobOffers
+     * const jobOffer = await prisma.jobOffer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends JobOfferCreateManyArgs>(args?: SelectSubset<T, JobOfferCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many JobOffers and returns the data saved in the database.
+     * @param {JobOfferCreateManyAndReturnArgs} args - Arguments to create many JobOffers.
+     * @example
+     * // Create many JobOffers
+     * const jobOffer = await prisma.jobOffer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many JobOffers and only return the `id`
+     * const jobOfferWithIdOnly = await prisma.jobOffer.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends JobOfferCreateManyAndReturnArgs>(args?: SelectSubset<T, JobOfferCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a JobOffer.
+     * @param {JobOfferDeleteArgs} args - Arguments to delete one JobOffer.
+     * @example
+     * // Delete one JobOffer
+     * const JobOffer = await prisma.jobOffer.delete({
+     *   where: {
+     *     // ... filter to delete one JobOffer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends JobOfferDeleteArgs>(args: SelectSubset<T, JobOfferDeleteArgs<ExtArgs>>): Prisma__JobOfferClient<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one JobOffer.
+     * @param {JobOfferUpdateArgs} args - Arguments to update one JobOffer.
+     * @example
+     * // Update one JobOffer
+     * const jobOffer = await prisma.jobOffer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends JobOfferUpdateArgs>(args: SelectSubset<T, JobOfferUpdateArgs<ExtArgs>>): Prisma__JobOfferClient<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more JobOffers.
+     * @param {JobOfferDeleteManyArgs} args - Arguments to filter JobOffers to delete.
+     * @example
+     * // Delete a few JobOffers
+     * const { count } = await prisma.jobOffer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends JobOfferDeleteManyArgs>(args?: SelectSubset<T, JobOfferDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more JobOffers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobOfferUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many JobOffers
+     * const jobOffer = await prisma.jobOffer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends JobOfferUpdateManyArgs>(args: SelectSubset<T, JobOfferUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more JobOffers and returns the data updated in the database.
+     * @param {JobOfferUpdateManyAndReturnArgs} args - Arguments to update many JobOffers.
+     * @example
+     * // Update many JobOffers
+     * const jobOffer = await prisma.jobOffer.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more JobOffers and only return the `id`
+     * const jobOfferWithIdOnly = await prisma.jobOffer.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends JobOfferUpdateManyAndReturnArgs>(args: SelectSubset<T, JobOfferUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one JobOffer.
+     * @param {JobOfferUpsertArgs} args - Arguments to update or create a JobOffer.
+     * @example
+     * // Update or create a JobOffer
+     * const jobOffer = await prisma.jobOffer.upsert({
+     *   create: {
+     *     // ... data to create a JobOffer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the JobOffer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends JobOfferUpsertArgs>(args: SelectSubset<T, JobOfferUpsertArgs<ExtArgs>>): Prisma__JobOfferClient<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of JobOffers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobOfferCountArgs} args - Arguments to filter JobOffers to count.
+     * @example
+     * // Count the number of JobOffers
+     * const count = await prisma.jobOffer.count({
+     *   where: {
+     *     // ... the filter for the JobOffers we want to count
+     *   }
+     * })
+    **/
+    count<T extends JobOfferCountArgs>(
+      args?: Subset<T, JobOfferCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], JobOfferCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a JobOffer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobOfferAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends JobOfferAggregateArgs>(args: Subset<T, JobOfferAggregateArgs>): Prisma.PrismaPromise<GetJobOfferAggregateType<T>>
+
+    /**
+     * Group by JobOffer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobOfferGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends JobOfferGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: JobOfferGroupByArgs['orderBy'] }
+        : { orderBy?: JobOfferGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, JobOfferGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetJobOfferGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the JobOffer model
+   */
+  readonly fields: JobOfferFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for JobOffer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__JobOfferClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    applications<T extends JobOffer$applicationsArgs<ExtArgs> = {}>(args?: Subset<T, JobOffer$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the JobOffer model
+   */
+  interface JobOfferFieldRefs {
+    readonly id: FieldRef<"JobOffer", 'String'>
+    readonly orgId: FieldRef<"JobOffer", 'String'>
+    readonly companyName: FieldRef<"JobOffer", 'String'>
+    readonly companyLogo: FieldRef<"JobOffer", 'String'>
+    readonly contactEmail: FieldRef<"JobOffer", 'String'>
+    readonly contactPhone: FieldRef<"JobOffer", 'String'>
+    readonly address: FieldRef<"JobOffer", 'String'>
+    readonly city: FieldRef<"JobOffer", 'String'>
+    readonly website: FieldRef<"JobOffer", 'String'>
+    readonly title: FieldRef<"JobOffer", 'String'>
+    readonly contractType: FieldRef<"JobOffer", 'ContractType'>
+    readonly location: FieldRef<"JobOffer", 'String'>
+    readonly workMode: FieldRef<"JobOffer", 'WorkMode'>
+    readonly description: FieldRef<"JobOffer", 'String'>
+    readonly missions: FieldRef<"JobOffer", 'String'>
+    readonly skills: FieldRef<"JobOffer", 'String'>
+    readonly educationLevel: FieldRef<"JobOffer", 'String'>
+    readonly experience: FieldRef<"JobOffer", 'String'>
+    readonly salary: FieldRef<"JobOffer", 'String'>
+    readonly deadline: FieldRef<"JobOffer", 'DateTime'>
+    readonly positionsCount: FieldRef<"JobOffer", 'Int'>
+    readonly formConfig: FieldRef<"JobOffer", 'Json'>
+    readonly customQuestions: FieldRef<"JobOffer", 'Json'>
+    readonly status: FieldRef<"JobOffer", 'JobStatus'>
+    readonly publishedAt: FieldRef<"JobOffer", 'DateTime'>
+    readonly createdBy: FieldRef<"JobOffer", 'String'>
+    readonly createdAt: FieldRef<"JobOffer", 'DateTime'>
+    readonly updatedAt: FieldRef<"JobOffer", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * JobOffer findUnique
+   */
+  export type JobOfferFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    /**
+     * Filter, which JobOffer to fetch.
+     */
+    where: JobOfferWhereUniqueInput
+  }
+
+  /**
+   * JobOffer findUniqueOrThrow
+   */
+  export type JobOfferFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    /**
+     * Filter, which JobOffer to fetch.
+     */
+    where: JobOfferWhereUniqueInput
+  }
+
+  /**
+   * JobOffer findFirst
+   */
+  export type JobOfferFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    /**
+     * Filter, which JobOffer to fetch.
+     */
+    where?: JobOfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobOffers to fetch.
+     */
+    orderBy?: JobOfferOrderByWithRelationInput | JobOfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JobOffers.
+     */
+    cursor?: JobOfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobOffers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobOffers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobOffers.
+     */
+    distinct?: JobOfferScalarFieldEnum | JobOfferScalarFieldEnum[]
+  }
+
+  /**
+   * JobOffer findFirstOrThrow
+   */
+  export type JobOfferFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    /**
+     * Filter, which JobOffer to fetch.
+     */
+    where?: JobOfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobOffers to fetch.
+     */
+    orderBy?: JobOfferOrderByWithRelationInput | JobOfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JobOffers.
+     */
+    cursor?: JobOfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobOffers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobOffers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobOffers.
+     */
+    distinct?: JobOfferScalarFieldEnum | JobOfferScalarFieldEnum[]
+  }
+
+  /**
+   * JobOffer findMany
+   */
+  export type JobOfferFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    /**
+     * Filter, which JobOffers to fetch.
+     */
+    where?: JobOfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobOffers to fetch.
+     */
+    orderBy?: JobOfferOrderByWithRelationInput | JobOfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing JobOffers.
+     */
+    cursor?: JobOfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobOffers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobOffers.
+     */
+    skip?: number
+    distinct?: JobOfferScalarFieldEnum | JobOfferScalarFieldEnum[]
+  }
+
+  /**
+   * JobOffer create
+   */
+  export type JobOfferCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    /**
+     * The data needed to create a JobOffer.
+     */
+    data: XOR<JobOfferCreateInput, JobOfferUncheckedCreateInput>
+  }
+
+  /**
+   * JobOffer createMany
+   */
+  export type JobOfferCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many JobOffers.
+     */
+    data: JobOfferCreateManyInput | JobOfferCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * JobOffer createManyAndReturn
+   */
+  export type JobOfferCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * The data used to create many JobOffers.
+     */
+    data: JobOfferCreateManyInput | JobOfferCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * JobOffer update
+   */
+  export type JobOfferUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    /**
+     * The data needed to update a JobOffer.
+     */
+    data: XOR<JobOfferUpdateInput, JobOfferUncheckedUpdateInput>
+    /**
+     * Choose, which JobOffer to update.
+     */
+    where: JobOfferWhereUniqueInput
+  }
+
+  /**
+   * JobOffer updateMany
+   */
+  export type JobOfferUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update JobOffers.
+     */
+    data: XOR<JobOfferUpdateManyMutationInput, JobOfferUncheckedUpdateManyInput>
+    /**
+     * Filter which JobOffers to update
+     */
+    where?: JobOfferWhereInput
+    /**
+     * Limit how many JobOffers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * JobOffer updateManyAndReturn
+   */
+  export type JobOfferUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * The data used to update JobOffers.
+     */
+    data: XOR<JobOfferUpdateManyMutationInput, JobOfferUncheckedUpdateManyInput>
+    /**
+     * Filter which JobOffers to update
+     */
+    where?: JobOfferWhereInput
+    /**
+     * Limit how many JobOffers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * JobOffer upsert
+   */
+  export type JobOfferUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    /**
+     * The filter to search for the JobOffer to update in case it exists.
+     */
+    where: JobOfferWhereUniqueInput
+    /**
+     * In case the JobOffer found by the `where` argument doesn't exist, create a new JobOffer with this data.
+     */
+    create: XOR<JobOfferCreateInput, JobOfferUncheckedCreateInput>
+    /**
+     * In case the JobOffer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<JobOfferUpdateInput, JobOfferUncheckedUpdateInput>
+  }
+
+  /**
+   * JobOffer delete
+   */
+  export type JobOfferDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+    /**
+     * Filter which JobOffer to delete.
+     */
+    where: JobOfferWhereUniqueInput
+  }
+
+  /**
+   * JobOffer deleteMany
+   */
+  export type JobOfferDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which JobOffers to delete
+     */
+    where?: JobOfferWhereInput
+    /**
+     * Limit how many JobOffers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * JobOffer.applications
+   */
+  export type JobOffer$applicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    where?: JobApplicationWhereInput
+    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    cursor?: JobApplicationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * JobOffer without action
+   */
+  export type JobOfferDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobOffer
+     */
+    select?: JobOfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobOffer
+     */
+    omit?: JobOfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobOfferInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model JobApplication
+   */
+
+  export type AggregateJobApplication = {
+    _count: JobApplicationCountAggregateOutputType | null
+    _min: JobApplicationMinAggregateOutputType | null
+    _max: JobApplicationMaxAggregateOutputType | null
+  }
+
+  export type JobApplicationMinAggregateOutputType = {
+    id: string | null
+    jobId: string | null
+    fullName: string | null
+    email: string | null
+    phone: string | null
+    address: string | null
+    photoData: string | null
+    cvData: string | null
+    coverLetterData: string | null
+    portfolioUrl: string | null
+    portfolioData: string | null
+    educationLevel: string | null
+    experience: string | null
+    desiredSalary: string | null
+    availability: string | null
+    status: $Enums.ApplicationStatus | null
+    internalNote: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type JobApplicationMaxAggregateOutputType = {
+    id: string | null
+    jobId: string | null
+    fullName: string | null
+    email: string | null
+    phone: string | null
+    address: string | null
+    photoData: string | null
+    cvData: string | null
+    coverLetterData: string | null
+    portfolioUrl: string | null
+    portfolioData: string | null
+    educationLevel: string | null
+    experience: string | null
+    desiredSalary: string | null
+    availability: string | null
+    status: $Enums.ApplicationStatus | null
+    internalNote: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type JobApplicationCountAggregateOutputType = {
+    id: number
+    jobId: number
+    fullName: number
+    email: number
+    phone: number
+    address: number
+    photoData: number
+    cvData: number
+    coverLetterData: number
+    portfolioUrl: number
+    portfolioData: number
+    educationLevel: number
+    experience: number
+    socialLinks: number
+    desiredSalary: number
+    availability: number
+    customAnswers: number
+    status: number
+    internalNote: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type JobApplicationMinAggregateInputType = {
+    id?: true
+    jobId?: true
+    fullName?: true
+    email?: true
+    phone?: true
+    address?: true
+    photoData?: true
+    cvData?: true
+    coverLetterData?: true
+    portfolioUrl?: true
+    portfolioData?: true
+    educationLevel?: true
+    experience?: true
+    desiredSalary?: true
+    availability?: true
+    status?: true
+    internalNote?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type JobApplicationMaxAggregateInputType = {
+    id?: true
+    jobId?: true
+    fullName?: true
+    email?: true
+    phone?: true
+    address?: true
+    photoData?: true
+    cvData?: true
+    coverLetterData?: true
+    portfolioUrl?: true
+    portfolioData?: true
+    educationLevel?: true
+    experience?: true
+    desiredSalary?: true
+    availability?: true
+    status?: true
+    internalNote?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type JobApplicationCountAggregateInputType = {
+    id?: true
+    jobId?: true
+    fullName?: true
+    email?: true
+    phone?: true
+    address?: true
+    photoData?: true
+    cvData?: true
+    coverLetterData?: true
+    portfolioUrl?: true
+    portfolioData?: true
+    educationLevel?: true
+    experience?: true
+    socialLinks?: true
+    desiredSalary?: true
+    availability?: true
+    customAnswers?: true
+    status?: true
+    internalNote?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type JobApplicationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which JobApplication to aggregate.
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobApplications to fetch.
+     */
+    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: JobApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned JobApplications
+    **/
+    _count?: true | JobApplicationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: JobApplicationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: JobApplicationMaxAggregateInputType
+  }
+
+  export type GetJobApplicationAggregateType<T extends JobApplicationAggregateArgs> = {
+        [P in keyof T & keyof AggregateJobApplication]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateJobApplication[P]>
+      : GetScalarType<T[P], AggregateJobApplication[P]>
+  }
+
+
+
+
+  export type JobApplicationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JobApplicationWhereInput
+    orderBy?: JobApplicationOrderByWithAggregationInput | JobApplicationOrderByWithAggregationInput[]
+    by: JobApplicationScalarFieldEnum[] | JobApplicationScalarFieldEnum
+    having?: JobApplicationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: JobApplicationCountAggregateInputType | true
+    _min?: JobApplicationMinAggregateInputType
+    _max?: JobApplicationMaxAggregateInputType
+  }
+
+  export type JobApplicationGroupByOutputType = {
+    id: string
+    jobId: string
+    fullName: string | null
+    email: string
+    phone: string | null
+    address: string | null
+    photoData: string | null
+    cvData: string | null
+    coverLetterData: string | null
+    portfolioUrl: string | null
+    portfolioData: string | null
+    educationLevel: string | null
+    experience: string | null
+    socialLinks: JsonValue | null
+    desiredSalary: string | null
+    availability: string | null
+    customAnswers: JsonValue | null
+    status: $Enums.ApplicationStatus
+    internalNote: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: JobApplicationCountAggregateOutputType | null
+    _min: JobApplicationMinAggregateOutputType | null
+    _max: JobApplicationMaxAggregateOutputType | null
+  }
+
+  type GetJobApplicationGroupByPayload<T extends JobApplicationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<JobApplicationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof JobApplicationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], JobApplicationGroupByOutputType[P]>
+            : GetScalarType<T[P], JobApplicationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type JobApplicationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    jobId?: boolean
+    fullName?: boolean
+    email?: boolean
+    phone?: boolean
+    address?: boolean
+    photoData?: boolean
+    cvData?: boolean
+    coverLetterData?: boolean
+    portfolioUrl?: boolean
+    portfolioData?: boolean
+    educationLevel?: boolean
+    experience?: boolean
+    socialLinks?: boolean
+    desiredSalary?: boolean
+    availability?: boolean
+    customAnswers?: boolean
+    status?: boolean
+    internalNote?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    jobOffer?: boolean | JobOfferDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["jobApplication"]>
+
+  export type JobApplicationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    jobId?: boolean
+    fullName?: boolean
+    email?: boolean
+    phone?: boolean
+    address?: boolean
+    photoData?: boolean
+    cvData?: boolean
+    coverLetterData?: boolean
+    portfolioUrl?: boolean
+    portfolioData?: boolean
+    educationLevel?: boolean
+    experience?: boolean
+    socialLinks?: boolean
+    desiredSalary?: boolean
+    availability?: boolean
+    customAnswers?: boolean
+    status?: boolean
+    internalNote?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    jobOffer?: boolean | JobOfferDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["jobApplication"]>
+
+  export type JobApplicationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    jobId?: boolean
+    fullName?: boolean
+    email?: boolean
+    phone?: boolean
+    address?: boolean
+    photoData?: boolean
+    cvData?: boolean
+    coverLetterData?: boolean
+    portfolioUrl?: boolean
+    portfolioData?: boolean
+    educationLevel?: boolean
+    experience?: boolean
+    socialLinks?: boolean
+    desiredSalary?: boolean
+    availability?: boolean
+    customAnswers?: boolean
+    status?: boolean
+    internalNote?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    jobOffer?: boolean | JobOfferDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["jobApplication"]>
+
+  export type JobApplicationSelectScalar = {
+    id?: boolean
+    jobId?: boolean
+    fullName?: boolean
+    email?: boolean
+    phone?: boolean
+    address?: boolean
+    photoData?: boolean
+    cvData?: boolean
+    coverLetterData?: boolean
+    portfolioUrl?: boolean
+    portfolioData?: boolean
+    educationLevel?: boolean
+    experience?: boolean
+    socialLinks?: boolean
+    desiredSalary?: boolean
+    availability?: boolean
+    customAnswers?: boolean
+    status?: boolean
+    internalNote?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type JobApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "jobId" | "fullName" | "email" | "phone" | "address" | "photoData" | "cvData" | "coverLetterData" | "portfolioUrl" | "portfolioData" | "educationLevel" | "experience" | "socialLinks" | "desiredSalary" | "availability" | "customAnswers" | "status" | "internalNote" | "createdAt" | "updatedAt", ExtArgs["result"]["jobApplication"]>
+  export type JobApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    jobOffer?: boolean | JobOfferDefaultArgs<ExtArgs>
+  }
+  export type JobApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    jobOffer?: boolean | JobOfferDefaultArgs<ExtArgs>
+  }
+  export type JobApplicationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    jobOffer?: boolean | JobOfferDefaultArgs<ExtArgs>
+  }
+
+  export type $JobApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "JobApplication"
+    objects: {
+      jobOffer: Prisma.$JobOfferPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      jobId: string
+      fullName: string | null
+      email: string
+      phone: string | null
+      address: string | null
+      photoData: string | null
+      cvData: string | null
+      coverLetterData: string | null
+      portfolioUrl: string | null
+      portfolioData: string | null
+      educationLevel: string | null
+      experience: string | null
+      socialLinks: Prisma.JsonValue | null
+      desiredSalary: string | null
+      availability: string | null
+      customAnswers: Prisma.JsonValue | null
+      status: $Enums.ApplicationStatus
+      internalNote: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["jobApplication"]>
+    composites: {}
+  }
+
+  type JobApplicationGetPayload<S extends boolean | null | undefined | JobApplicationDefaultArgs> = $Result.GetResult<Prisma.$JobApplicationPayload, S>
+
+  type JobApplicationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<JobApplicationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: JobApplicationCountAggregateInputType | true
+    }
+
+  export interface JobApplicationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['JobApplication'], meta: { name: 'JobApplication' } }
+    /**
+     * Find zero or one JobApplication that matches the filter.
+     * @param {JobApplicationFindUniqueArgs} args - Arguments to find a JobApplication
+     * @example
+     * // Get one JobApplication
+     * const jobApplication = await prisma.jobApplication.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends JobApplicationFindUniqueArgs>(args: SelectSubset<T, JobApplicationFindUniqueArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one JobApplication that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {JobApplicationFindUniqueOrThrowArgs} args - Arguments to find a JobApplication
+     * @example
+     * // Get one JobApplication
+     * const jobApplication = await prisma.jobApplication.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends JobApplicationFindUniqueOrThrowArgs>(args: SelectSubset<T, JobApplicationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first JobApplication that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationFindFirstArgs} args - Arguments to find a JobApplication
+     * @example
+     * // Get one JobApplication
+     * const jobApplication = await prisma.jobApplication.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends JobApplicationFindFirstArgs>(args?: SelectSubset<T, JobApplicationFindFirstArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first JobApplication that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationFindFirstOrThrowArgs} args - Arguments to find a JobApplication
+     * @example
+     * // Get one JobApplication
+     * const jobApplication = await prisma.jobApplication.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends JobApplicationFindFirstOrThrowArgs>(args?: SelectSubset<T, JobApplicationFindFirstOrThrowArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more JobApplications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all JobApplications
+     * const jobApplications = await prisma.jobApplication.findMany()
+     * 
+     * // Get first 10 JobApplications
+     * const jobApplications = await prisma.jobApplication.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const jobApplicationWithIdOnly = await prisma.jobApplication.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends JobApplicationFindManyArgs>(args?: SelectSubset<T, JobApplicationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a JobApplication.
+     * @param {JobApplicationCreateArgs} args - Arguments to create a JobApplication.
+     * @example
+     * // Create one JobApplication
+     * const JobApplication = await prisma.jobApplication.create({
+     *   data: {
+     *     // ... data to create a JobApplication
+     *   }
+     * })
+     * 
+     */
+    create<T extends JobApplicationCreateArgs>(args: SelectSubset<T, JobApplicationCreateArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many JobApplications.
+     * @param {JobApplicationCreateManyArgs} args - Arguments to create many JobApplications.
+     * @example
+     * // Create many JobApplications
+     * const jobApplication = await prisma.jobApplication.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends JobApplicationCreateManyArgs>(args?: SelectSubset<T, JobApplicationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many JobApplications and returns the data saved in the database.
+     * @param {JobApplicationCreateManyAndReturnArgs} args - Arguments to create many JobApplications.
+     * @example
+     * // Create many JobApplications
+     * const jobApplication = await prisma.jobApplication.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many JobApplications and only return the `id`
+     * const jobApplicationWithIdOnly = await prisma.jobApplication.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends JobApplicationCreateManyAndReturnArgs>(args?: SelectSubset<T, JobApplicationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a JobApplication.
+     * @param {JobApplicationDeleteArgs} args - Arguments to delete one JobApplication.
+     * @example
+     * // Delete one JobApplication
+     * const JobApplication = await prisma.jobApplication.delete({
+     *   where: {
+     *     // ... filter to delete one JobApplication
+     *   }
+     * })
+     * 
+     */
+    delete<T extends JobApplicationDeleteArgs>(args: SelectSubset<T, JobApplicationDeleteArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one JobApplication.
+     * @param {JobApplicationUpdateArgs} args - Arguments to update one JobApplication.
+     * @example
+     * // Update one JobApplication
+     * const jobApplication = await prisma.jobApplication.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends JobApplicationUpdateArgs>(args: SelectSubset<T, JobApplicationUpdateArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more JobApplications.
+     * @param {JobApplicationDeleteManyArgs} args - Arguments to filter JobApplications to delete.
+     * @example
+     * // Delete a few JobApplications
+     * const { count } = await prisma.jobApplication.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends JobApplicationDeleteManyArgs>(args?: SelectSubset<T, JobApplicationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more JobApplications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many JobApplications
+     * const jobApplication = await prisma.jobApplication.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends JobApplicationUpdateManyArgs>(args: SelectSubset<T, JobApplicationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more JobApplications and returns the data updated in the database.
+     * @param {JobApplicationUpdateManyAndReturnArgs} args - Arguments to update many JobApplications.
+     * @example
+     * // Update many JobApplications
+     * const jobApplication = await prisma.jobApplication.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more JobApplications and only return the `id`
+     * const jobApplicationWithIdOnly = await prisma.jobApplication.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends JobApplicationUpdateManyAndReturnArgs>(args: SelectSubset<T, JobApplicationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one JobApplication.
+     * @param {JobApplicationUpsertArgs} args - Arguments to update or create a JobApplication.
+     * @example
+     * // Update or create a JobApplication
+     * const jobApplication = await prisma.jobApplication.upsert({
+     *   create: {
+     *     // ... data to create a JobApplication
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the JobApplication we want to update
+     *   }
+     * })
+     */
+    upsert<T extends JobApplicationUpsertArgs>(args: SelectSubset<T, JobApplicationUpsertArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of JobApplications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationCountArgs} args - Arguments to filter JobApplications to count.
+     * @example
+     * // Count the number of JobApplications
+     * const count = await prisma.jobApplication.count({
+     *   where: {
+     *     // ... the filter for the JobApplications we want to count
+     *   }
+     * })
+    **/
+    count<T extends JobApplicationCountArgs>(
+      args?: Subset<T, JobApplicationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], JobApplicationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a JobApplication.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends JobApplicationAggregateArgs>(args: Subset<T, JobApplicationAggregateArgs>): Prisma.PrismaPromise<GetJobApplicationAggregateType<T>>
+
+    /**
+     * Group by JobApplication.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobApplicationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends JobApplicationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: JobApplicationGroupByArgs['orderBy'] }
+        : { orderBy?: JobApplicationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, JobApplicationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetJobApplicationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the JobApplication model
+   */
+  readonly fields: JobApplicationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for JobApplication.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__JobApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    jobOffer<T extends JobOfferDefaultArgs<ExtArgs> = {}>(args?: Subset<T, JobOfferDefaultArgs<ExtArgs>>): Prisma__JobOfferClient<$Result.GetResult<Prisma.$JobOfferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the JobApplication model
+   */
+  interface JobApplicationFieldRefs {
+    readonly id: FieldRef<"JobApplication", 'String'>
+    readonly jobId: FieldRef<"JobApplication", 'String'>
+    readonly fullName: FieldRef<"JobApplication", 'String'>
+    readonly email: FieldRef<"JobApplication", 'String'>
+    readonly phone: FieldRef<"JobApplication", 'String'>
+    readonly address: FieldRef<"JobApplication", 'String'>
+    readonly photoData: FieldRef<"JobApplication", 'String'>
+    readonly cvData: FieldRef<"JobApplication", 'String'>
+    readonly coverLetterData: FieldRef<"JobApplication", 'String'>
+    readonly portfolioUrl: FieldRef<"JobApplication", 'String'>
+    readonly portfolioData: FieldRef<"JobApplication", 'String'>
+    readonly educationLevel: FieldRef<"JobApplication", 'String'>
+    readonly experience: FieldRef<"JobApplication", 'String'>
+    readonly socialLinks: FieldRef<"JobApplication", 'Json'>
+    readonly desiredSalary: FieldRef<"JobApplication", 'String'>
+    readonly availability: FieldRef<"JobApplication", 'String'>
+    readonly customAnswers: FieldRef<"JobApplication", 'Json'>
+    readonly status: FieldRef<"JobApplication", 'ApplicationStatus'>
+    readonly internalNote: FieldRef<"JobApplication", 'String'>
+    readonly createdAt: FieldRef<"JobApplication", 'DateTime'>
+    readonly updatedAt: FieldRef<"JobApplication", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * JobApplication findUnique
+   */
+  export type JobApplicationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which JobApplication to fetch.
+     */
+    where: JobApplicationWhereUniqueInput
+  }
+
+  /**
+   * JobApplication findUniqueOrThrow
+   */
+  export type JobApplicationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which JobApplication to fetch.
+     */
+    where: JobApplicationWhereUniqueInput
+  }
+
+  /**
+   * JobApplication findFirst
+   */
+  export type JobApplicationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which JobApplication to fetch.
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobApplications to fetch.
+     */
+    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JobApplications.
+     */
+    cursor?: JobApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobApplications.
+     */
+    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * JobApplication findFirstOrThrow
+   */
+  export type JobApplicationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which JobApplication to fetch.
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobApplications to fetch.
+     */
+    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JobApplications.
+     */
+    cursor?: JobApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobApplications.
+     */
+    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * JobApplication findMany
+   */
+  export type JobApplicationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which JobApplications to fetch.
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobApplications to fetch.
+     */
+    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing JobApplications.
+     */
+    cursor?: JobApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobApplications.
+     */
+    skip?: number
+    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * JobApplication create
+   */
+  export type JobApplicationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a JobApplication.
+     */
+    data: XOR<JobApplicationCreateInput, JobApplicationUncheckedCreateInput>
+  }
+
+  /**
+   * JobApplication createMany
+   */
+  export type JobApplicationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many JobApplications.
+     */
+    data: JobApplicationCreateManyInput | JobApplicationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * JobApplication createManyAndReturn
+   */
+  export type JobApplicationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * The data used to create many JobApplications.
+     */
+    data: JobApplicationCreateManyInput | JobApplicationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * JobApplication update
+   */
+  export type JobApplicationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a JobApplication.
+     */
+    data: XOR<JobApplicationUpdateInput, JobApplicationUncheckedUpdateInput>
+    /**
+     * Choose, which JobApplication to update.
+     */
+    where: JobApplicationWhereUniqueInput
+  }
+
+  /**
+   * JobApplication updateMany
+   */
+  export type JobApplicationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update JobApplications.
+     */
+    data: XOR<JobApplicationUpdateManyMutationInput, JobApplicationUncheckedUpdateManyInput>
+    /**
+     * Filter which JobApplications to update
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * Limit how many JobApplications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * JobApplication updateManyAndReturn
+   */
+  export type JobApplicationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * The data used to update JobApplications.
+     */
+    data: XOR<JobApplicationUpdateManyMutationInput, JobApplicationUncheckedUpdateManyInput>
+    /**
+     * Filter which JobApplications to update
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * Limit how many JobApplications to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * JobApplication upsert
+   */
+  export type JobApplicationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the JobApplication to update in case it exists.
+     */
+    where: JobApplicationWhereUniqueInput
+    /**
+     * In case the JobApplication found by the `where` argument doesn't exist, create a new JobApplication with this data.
+     */
+    create: XOR<JobApplicationCreateInput, JobApplicationUncheckedCreateInput>
+    /**
+     * In case the JobApplication was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<JobApplicationUpdateInput, JobApplicationUncheckedUpdateInput>
+  }
+
+  /**
+   * JobApplication delete
+   */
+  export type JobApplicationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    /**
+     * Filter which JobApplication to delete.
+     */
+    where: JobApplicationWhereUniqueInput
+  }
+
+  /**
+   * JobApplication deleteMany
+   */
+  export type JobApplicationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which JobApplications to delete
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * Limit how many JobApplications to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * JobApplication without action
+   */
+  export type JobApplicationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobApplication
+     */
+    omit?: JobApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -80281,6 +83321,7 @@ export namespace Prisma {
     endDate: 'endDate',
     maxDepartments: 'maxDepartments',
     maxMembersPerDept: 'maxMembersPerDept',
+    maxJobOffers: 'maxJobOffers',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -80577,6 +83618,67 @@ export namespace Prisma {
   };
 
   export type UserMonthlyProgressScalarFieldEnum = (typeof UserMonthlyProgressScalarFieldEnum)[keyof typeof UserMonthlyProgressScalarFieldEnum]
+
+
+  export const JobOfferScalarFieldEnum: {
+    id: 'id',
+    orgId: 'orgId',
+    companyName: 'companyName',
+    companyLogo: 'companyLogo',
+    contactEmail: 'contactEmail',
+    contactPhone: 'contactPhone',
+    address: 'address',
+    city: 'city',
+    website: 'website',
+    title: 'title',
+    contractType: 'contractType',
+    location: 'location',
+    workMode: 'workMode',
+    description: 'description',
+    missions: 'missions',
+    skills: 'skills',
+    educationLevel: 'educationLevel',
+    experience: 'experience',
+    salary: 'salary',
+    deadline: 'deadline',
+    positionsCount: 'positionsCount',
+    formConfig: 'formConfig',
+    customQuestions: 'customQuestions',
+    status: 'status',
+    publishedAt: 'publishedAt',
+    createdBy: 'createdBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type JobOfferScalarFieldEnum = (typeof JobOfferScalarFieldEnum)[keyof typeof JobOfferScalarFieldEnum]
+
+
+  export const JobApplicationScalarFieldEnum: {
+    id: 'id',
+    jobId: 'jobId',
+    fullName: 'fullName',
+    email: 'email',
+    phone: 'phone',
+    address: 'address',
+    photoData: 'photoData',
+    cvData: 'cvData',
+    coverLetterData: 'coverLetterData',
+    portfolioUrl: 'portfolioUrl',
+    portfolioData: 'portfolioData',
+    educationLevel: 'educationLevel',
+    experience: 'experience',
+    socialLinks: 'socialLinks',
+    desiredSalary: 'desiredSalary',
+    availability: 'availability',
+    customAnswers: 'customAnswers',
+    status: 'status',
+    internalNote: 'internalNote',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type JobApplicationScalarFieldEnum = (typeof JobApplicationScalarFieldEnum)[keyof typeof JobApplicationScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -81029,6 +84131,62 @@ export namespace Prisma {
    */
   export type ListEnumFinancialEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialEntryType[]'>
     
+
+
+  /**
+   * Reference to a field of type 'ContractType'
+   */
+  export type EnumContractTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContractType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ContractType[]'
+   */
+  export type ListEnumContractTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContractType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkMode'
+   */
+  export type EnumWorkModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkMode[]'
+   */
+  export type ListEnumWorkModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkMode[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'JobStatus'
+   */
+  export type EnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'JobStatus[]'
+   */
+  export type ListEnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApplicationStatus'
+   */
+  export type EnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApplicationStatus[]'
+   */
+  export type ListEnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -81095,6 +84253,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestListRelationFilter
     discussionRightsBought?: DiscussionRightPurchaseListRelationFilter
     discussionRightsSold?: DiscussionRightPurchaseListRelationFilter
+    createdJobOffers?: JobOfferListRelationFilter
     followers?: FollowListRelationFilter
     following?: FollowListRelationFilter
     uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
@@ -81171,6 +84330,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestOrderByRelationAggregateInput
     discussionRightsBought?: DiscussionRightPurchaseOrderByRelationAggregateInput
     discussionRightsSold?: DiscussionRightPurchaseOrderByRelationAggregateInput
+    createdJobOffers?: JobOfferOrderByRelationAggregateInput
     followers?: FollowOrderByRelationAggregateInput
     following?: FollowOrderByRelationAggregateInput
     uploadedDepartmentDocuments?: DepartmentDocumentOrderByRelationAggregateInput
@@ -81250,6 +84410,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestListRelationFilter
     discussionRightsBought?: DiscussionRightPurchaseListRelationFilter
     discussionRightsSold?: DiscussionRightPurchaseListRelationFilter
+    createdJobOffers?: JobOfferListRelationFilter
     followers?: FollowListRelationFilter
     following?: FollowListRelationFilter
     uploadedDepartmentDocuments?: DepartmentDocumentListRelationFilter
@@ -81559,6 +84720,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationListRelationFilter
     collaborationsAsB?: OrganizationCollaborationListRelationFilter
     collaborationGroupMembers?: CollaborationGroupMemberListRelationFilter
+    jobOffers?: JobOfferListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -81578,6 +84740,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationOrderByRelationAggregateInput
     collaborationsAsB?: OrganizationCollaborationOrderByRelationAggregateInput
     collaborationGroupMembers?: CollaborationGroupMemberOrderByRelationAggregateInput
+    jobOffers?: JobOfferOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -81600,6 +84763,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationListRelationFilter
     collaborationsAsB?: OrganizationCollaborationListRelationFilter
     collaborationGroupMembers?: CollaborationGroupMemberListRelationFilter
+    jobOffers?: JobOfferListRelationFilter
   }, "id" | "code">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -84271,6 +87435,7 @@ export namespace Prisma {
     endDate?: DateTimeNullableFilter<"Subscription"> | Date | string | null
     maxDepartments?: IntFilter<"Subscription"> | number
     maxMembersPerDept?: IntFilter<"Subscription"> | number
+    maxJobOffers?: IntFilter<"Subscription"> | number
     isActive?: BoolFilter<"Subscription"> | boolean
     createdAt?: DateTimeFilter<"Subscription"> | Date | string
     updatedAt?: DateTimeFilter<"Subscription"> | Date | string
@@ -84285,6 +87450,7 @@ export namespace Prisma {
     endDate?: SortOrderInput | SortOrder
     maxDepartments?: SortOrder
     maxMembersPerDept?: SortOrder
+    maxJobOffers?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -84302,6 +87468,7 @@ export namespace Prisma {
     endDate?: DateTimeNullableFilter<"Subscription"> | Date | string | null
     maxDepartments?: IntFilter<"Subscription"> | number
     maxMembersPerDept?: IntFilter<"Subscription"> | number
+    maxJobOffers?: IntFilter<"Subscription"> | number
     isActive?: BoolFilter<"Subscription"> | boolean
     createdAt?: DateTimeFilter<"Subscription"> | Date | string
     updatedAt?: DateTimeFilter<"Subscription"> | Date | string
@@ -84316,6 +87483,7 @@ export namespace Prisma {
     endDate?: SortOrderInput | SortOrder
     maxDepartments?: SortOrder
     maxMembersPerDept?: SortOrder
+    maxJobOffers?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -84337,6 +87505,7 @@ export namespace Prisma {
     endDate?: DateTimeNullableWithAggregatesFilter<"Subscription"> | Date | string | null
     maxDepartments?: IntWithAggregatesFilter<"Subscription"> | number
     maxMembersPerDept?: IntWithAggregatesFilter<"Subscription"> | number
+    maxJobOffers?: IntWithAggregatesFilter<"Subscription"> | number
     isActive?: BoolWithAggregatesFilter<"Subscription"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Subscription"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Subscription"> | Date | string
@@ -85874,6 +89043,319 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"UserMonthlyProgress"> | Date | string
   }
 
+  export type JobOfferWhereInput = {
+    AND?: JobOfferWhereInput | JobOfferWhereInput[]
+    OR?: JobOfferWhereInput[]
+    NOT?: JobOfferWhereInput | JobOfferWhereInput[]
+    id?: StringFilter<"JobOffer"> | string
+    orgId?: StringFilter<"JobOffer"> | string
+    companyName?: StringFilter<"JobOffer"> | string
+    companyLogo?: StringNullableFilter<"JobOffer"> | string | null
+    contactEmail?: StringFilter<"JobOffer"> | string
+    contactPhone?: StringNullableFilter<"JobOffer"> | string | null
+    address?: StringNullableFilter<"JobOffer"> | string | null
+    city?: StringNullableFilter<"JobOffer"> | string | null
+    website?: StringNullableFilter<"JobOffer"> | string | null
+    title?: StringFilter<"JobOffer"> | string
+    contractType?: EnumContractTypeFilter<"JobOffer"> | $Enums.ContractType
+    location?: StringFilter<"JobOffer"> | string
+    workMode?: EnumWorkModeFilter<"JobOffer"> | $Enums.WorkMode
+    description?: StringFilter<"JobOffer"> | string
+    missions?: StringNullableFilter<"JobOffer"> | string | null
+    skills?: StringNullableFilter<"JobOffer"> | string | null
+    educationLevel?: StringNullableFilter<"JobOffer"> | string | null
+    experience?: StringNullableFilter<"JobOffer"> | string | null
+    salary?: StringNullableFilter<"JobOffer"> | string | null
+    deadline?: DateTimeNullableFilter<"JobOffer"> | Date | string | null
+    positionsCount?: IntFilter<"JobOffer"> | number
+    formConfig?: JsonFilter<"JobOffer">
+    customQuestions?: JsonNullableFilter<"JobOffer">
+    status?: EnumJobStatusFilter<"JobOffer"> | $Enums.JobStatus
+    publishedAt?: DateTimeNullableFilter<"JobOffer"> | Date | string | null
+    createdBy?: StringFilter<"JobOffer"> | string
+    createdAt?: DateTimeFilter<"JobOffer"> | Date | string
+    updatedAt?: DateTimeFilter<"JobOffer"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+    applications?: JobApplicationListRelationFilter
+  }
+
+  export type JobOfferOrderByWithRelationInput = {
+    id?: SortOrder
+    orgId?: SortOrder
+    companyName?: SortOrder
+    companyLogo?: SortOrderInput | SortOrder
+    contactEmail?: SortOrder
+    contactPhone?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    title?: SortOrder
+    contractType?: SortOrder
+    location?: SortOrder
+    workMode?: SortOrder
+    description?: SortOrder
+    missions?: SortOrderInput | SortOrder
+    skills?: SortOrderInput | SortOrder
+    educationLevel?: SortOrderInput | SortOrder
+    experience?: SortOrderInput | SortOrder
+    salary?: SortOrderInput | SortOrder
+    deadline?: SortOrderInput | SortOrder
+    positionsCount?: SortOrder
+    formConfig?: SortOrder
+    customQuestions?: SortOrderInput | SortOrder
+    status?: SortOrder
+    publishedAt?: SortOrderInput | SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    creator?: UserOrderByWithRelationInput
+    applications?: JobApplicationOrderByRelationAggregateInput
+  }
+
+  export type JobOfferWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: JobOfferWhereInput | JobOfferWhereInput[]
+    OR?: JobOfferWhereInput[]
+    NOT?: JobOfferWhereInput | JobOfferWhereInput[]
+    orgId?: StringFilter<"JobOffer"> | string
+    companyName?: StringFilter<"JobOffer"> | string
+    companyLogo?: StringNullableFilter<"JobOffer"> | string | null
+    contactEmail?: StringFilter<"JobOffer"> | string
+    contactPhone?: StringNullableFilter<"JobOffer"> | string | null
+    address?: StringNullableFilter<"JobOffer"> | string | null
+    city?: StringNullableFilter<"JobOffer"> | string | null
+    website?: StringNullableFilter<"JobOffer"> | string | null
+    title?: StringFilter<"JobOffer"> | string
+    contractType?: EnumContractTypeFilter<"JobOffer"> | $Enums.ContractType
+    location?: StringFilter<"JobOffer"> | string
+    workMode?: EnumWorkModeFilter<"JobOffer"> | $Enums.WorkMode
+    description?: StringFilter<"JobOffer"> | string
+    missions?: StringNullableFilter<"JobOffer"> | string | null
+    skills?: StringNullableFilter<"JobOffer"> | string | null
+    educationLevel?: StringNullableFilter<"JobOffer"> | string | null
+    experience?: StringNullableFilter<"JobOffer"> | string | null
+    salary?: StringNullableFilter<"JobOffer"> | string | null
+    deadline?: DateTimeNullableFilter<"JobOffer"> | Date | string | null
+    positionsCount?: IntFilter<"JobOffer"> | number
+    formConfig?: JsonFilter<"JobOffer">
+    customQuestions?: JsonNullableFilter<"JobOffer">
+    status?: EnumJobStatusFilter<"JobOffer"> | $Enums.JobStatus
+    publishedAt?: DateTimeNullableFilter<"JobOffer"> | Date | string | null
+    createdBy?: StringFilter<"JobOffer"> | string
+    createdAt?: DateTimeFilter<"JobOffer"> | Date | string
+    updatedAt?: DateTimeFilter<"JobOffer"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+    applications?: JobApplicationListRelationFilter
+  }, "id">
+
+  export type JobOfferOrderByWithAggregationInput = {
+    id?: SortOrder
+    orgId?: SortOrder
+    companyName?: SortOrder
+    companyLogo?: SortOrderInput | SortOrder
+    contactEmail?: SortOrder
+    contactPhone?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    title?: SortOrder
+    contractType?: SortOrder
+    location?: SortOrder
+    workMode?: SortOrder
+    description?: SortOrder
+    missions?: SortOrderInput | SortOrder
+    skills?: SortOrderInput | SortOrder
+    educationLevel?: SortOrderInput | SortOrder
+    experience?: SortOrderInput | SortOrder
+    salary?: SortOrderInput | SortOrder
+    deadline?: SortOrderInput | SortOrder
+    positionsCount?: SortOrder
+    formConfig?: SortOrder
+    customQuestions?: SortOrderInput | SortOrder
+    status?: SortOrder
+    publishedAt?: SortOrderInput | SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: JobOfferCountOrderByAggregateInput
+    _avg?: JobOfferAvgOrderByAggregateInput
+    _max?: JobOfferMaxOrderByAggregateInput
+    _min?: JobOfferMinOrderByAggregateInput
+    _sum?: JobOfferSumOrderByAggregateInput
+  }
+
+  export type JobOfferScalarWhereWithAggregatesInput = {
+    AND?: JobOfferScalarWhereWithAggregatesInput | JobOfferScalarWhereWithAggregatesInput[]
+    OR?: JobOfferScalarWhereWithAggregatesInput[]
+    NOT?: JobOfferScalarWhereWithAggregatesInput | JobOfferScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"JobOffer"> | string
+    orgId?: StringWithAggregatesFilter<"JobOffer"> | string
+    companyName?: StringWithAggregatesFilter<"JobOffer"> | string
+    companyLogo?: StringNullableWithAggregatesFilter<"JobOffer"> | string | null
+    contactEmail?: StringWithAggregatesFilter<"JobOffer"> | string
+    contactPhone?: StringNullableWithAggregatesFilter<"JobOffer"> | string | null
+    address?: StringNullableWithAggregatesFilter<"JobOffer"> | string | null
+    city?: StringNullableWithAggregatesFilter<"JobOffer"> | string | null
+    website?: StringNullableWithAggregatesFilter<"JobOffer"> | string | null
+    title?: StringWithAggregatesFilter<"JobOffer"> | string
+    contractType?: EnumContractTypeWithAggregatesFilter<"JobOffer"> | $Enums.ContractType
+    location?: StringWithAggregatesFilter<"JobOffer"> | string
+    workMode?: EnumWorkModeWithAggregatesFilter<"JobOffer"> | $Enums.WorkMode
+    description?: StringWithAggregatesFilter<"JobOffer"> | string
+    missions?: StringNullableWithAggregatesFilter<"JobOffer"> | string | null
+    skills?: StringNullableWithAggregatesFilter<"JobOffer"> | string | null
+    educationLevel?: StringNullableWithAggregatesFilter<"JobOffer"> | string | null
+    experience?: StringNullableWithAggregatesFilter<"JobOffer"> | string | null
+    salary?: StringNullableWithAggregatesFilter<"JobOffer"> | string | null
+    deadline?: DateTimeNullableWithAggregatesFilter<"JobOffer"> | Date | string | null
+    positionsCount?: IntWithAggregatesFilter<"JobOffer"> | number
+    formConfig?: JsonWithAggregatesFilter<"JobOffer">
+    customQuestions?: JsonNullableWithAggregatesFilter<"JobOffer">
+    status?: EnumJobStatusWithAggregatesFilter<"JobOffer"> | $Enums.JobStatus
+    publishedAt?: DateTimeNullableWithAggregatesFilter<"JobOffer"> | Date | string | null
+    createdBy?: StringWithAggregatesFilter<"JobOffer"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"JobOffer"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"JobOffer"> | Date | string
+  }
+
+  export type JobApplicationWhereInput = {
+    AND?: JobApplicationWhereInput | JobApplicationWhereInput[]
+    OR?: JobApplicationWhereInput[]
+    NOT?: JobApplicationWhereInput | JobApplicationWhereInput[]
+    id?: StringFilter<"JobApplication"> | string
+    jobId?: StringFilter<"JobApplication"> | string
+    fullName?: StringNullableFilter<"JobApplication"> | string | null
+    email?: StringFilter<"JobApplication"> | string
+    phone?: StringNullableFilter<"JobApplication"> | string | null
+    address?: StringNullableFilter<"JobApplication"> | string | null
+    photoData?: StringNullableFilter<"JobApplication"> | string | null
+    cvData?: StringNullableFilter<"JobApplication"> | string | null
+    coverLetterData?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioUrl?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioData?: StringNullableFilter<"JobApplication"> | string | null
+    educationLevel?: StringNullableFilter<"JobApplication"> | string | null
+    experience?: StringNullableFilter<"JobApplication"> | string | null
+    socialLinks?: JsonNullableFilter<"JobApplication">
+    desiredSalary?: StringNullableFilter<"JobApplication"> | string | null
+    availability?: StringNullableFilter<"JobApplication"> | string | null
+    customAnswers?: JsonNullableFilter<"JobApplication">
+    status?: EnumApplicationStatusFilter<"JobApplication"> | $Enums.ApplicationStatus
+    internalNote?: StringNullableFilter<"JobApplication"> | string | null
+    createdAt?: DateTimeFilter<"JobApplication"> | Date | string
+    updatedAt?: DateTimeFilter<"JobApplication"> | Date | string
+    jobOffer?: XOR<JobOfferScalarRelationFilter, JobOfferWhereInput>
+  }
+
+  export type JobApplicationOrderByWithRelationInput = {
+    id?: SortOrder
+    jobId?: SortOrder
+    fullName?: SortOrderInput | SortOrder
+    email?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    photoData?: SortOrderInput | SortOrder
+    cvData?: SortOrderInput | SortOrder
+    coverLetterData?: SortOrderInput | SortOrder
+    portfolioUrl?: SortOrderInput | SortOrder
+    portfolioData?: SortOrderInput | SortOrder
+    educationLevel?: SortOrderInput | SortOrder
+    experience?: SortOrderInput | SortOrder
+    socialLinks?: SortOrderInput | SortOrder
+    desiredSalary?: SortOrderInput | SortOrder
+    availability?: SortOrderInput | SortOrder
+    customAnswers?: SortOrderInput | SortOrder
+    status?: SortOrder
+    internalNote?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    jobOffer?: JobOfferOrderByWithRelationInput
+  }
+
+  export type JobApplicationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: JobApplicationWhereInput | JobApplicationWhereInput[]
+    OR?: JobApplicationWhereInput[]
+    NOT?: JobApplicationWhereInput | JobApplicationWhereInput[]
+    jobId?: StringFilter<"JobApplication"> | string
+    fullName?: StringNullableFilter<"JobApplication"> | string | null
+    email?: StringFilter<"JobApplication"> | string
+    phone?: StringNullableFilter<"JobApplication"> | string | null
+    address?: StringNullableFilter<"JobApplication"> | string | null
+    photoData?: StringNullableFilter<"JobApplication"> | string | null
+    cvData?: StringNullableFilter<"JobApplication"> | string | null
+    coverLetterData?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioUrl?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioData?: StringNullableFilter<"JobApplication"> | string | null
+    educationLevel?: StringNullableFilter<"JobApplication"> | string | null
+    experience?: StringNullableFilter<"JobApplication"> | string | null
+    socialLinks?: JsonNullableFilter<"JobApplication">
+    desiredSalary?: StringNullableFilter<"JobApplication"> | string | null
+    availability?: StringNullableFilter<"JobApplication"> | string | null
+    customAnswers?: JsonNullableFilter<"JobApplication">
+    status?: EnumApplicationStatusFilter<"JobApplication"> | $Enums.ApplicationStatus
+    internalNote?: StringNullableFilter<"JobApplication"> | string | null
+    createdAt?: DateTimeFilter<"JobApplication"> | Date | string
+    updatedAt?: DateTimeFilter<"JobApplication"> | Date | string
+    jobOffer?: XOR<JobOfferScalarRelationFilter, JobOfferWhereInput>
+  }, "id">
+
+  export type JobApplicationOrderByWithAggregationInput = {
+    id?: SortOrder
+    jobId?: SortOrder
+    fullName?: SortOrderInput | SortOrder
+    email?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    photoData?: SortOrderInput | SortOrder
+    cvData?: SortOrderInput | SortOrder
+    coverLetterData?: SortOrderInput | SortOrder
+    portfolioUrl?: SortOrderInput | SortOrder
+    portfolioData?: SortOrderInput | SortOrder
+    educationLevel?: SortOrderInput | SortOrder
+    experience?: SortOrderInput | SortOrder
+    socialLinks?: SortOrderInput | SortOrder
+    desiredSalary?: SortOrderInput | SortOrder
+    availability?: SortOrderInput | SortOrder
+    customAnswers?: SortOrderInput | SortOrder
+    status?: SortOrder
+    internalNote?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: JobApplicationCountOrderByAggregateInput
+    _max?: JobApplicationMaxOrderByAggregateInput
+    _min?: JobApplicationMinOrderByAggregateInput
+  }
+
+  export type JobApplicationScalarWhereWithAggregatesInput = {
+    AND?: JobApplicationScalarWhereWithAggregatesInput | JobApplicationScalarWhereWithAggregatesInput[]
+    OR?: JobApplicationScalarWhereWithAggregatesInput[]
+    NOT?: JobApplicationScalarWhereWithAggregatesInput | JobApplicationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"JobApplication"> | string
+    jobId?: StringWithAggregatesFilter<"JobApplication"> | string
+    fullName?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    email?: StringWithAggregatesFilter<"JobApplication"> | string
+    phone?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    address?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    photoData?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    cvData?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    coverLetterData?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    portfolioUrl?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    portfolioData?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    educationLevel?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    experience?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    socialLinks?: JsonNullableWithAggregatesFilter<"JobApplication">
+    desiredSalary?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    availability?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    customAnswers?: JsonNullableWithAggregatesFilter<"JobApplication">
+    status?: EnumApplicationStatusWithAggregatesFilter<"JobApplication"> | $Enums.ApplicationStatus
+    internalNote?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"JobApplication"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"JobApplication"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -85932,6 +89414,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -86008,6 +89491,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -86084,6 +89568,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -86160,6 +89645,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -86496,6 +89982,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -86515,6 +90002,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -86534,6 +90022,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -86553,6 +90042,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -89331,6 +92821,7 @@ export namespace Prisma {
     endDate?: Date | string | null
     maxDepartments?: number
     maxMembersPerDept?: number
+    maxJobOffers?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -89345,6 +92836,7 @@ export namespace Prisma {
     endDate?: Date | string | null
     maxDepartments?: number
     maxMembersPerDept?: number
+    maxJobOffers?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -89357,6 +92849,7 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxDepartments?: IntFieldUpdateOperationsInput | number
     maxMembersPerDept?: IntFieldUpdateOperationsInput | number
+    maxJobOffers?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89371,6 +92864,7 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxDepartments?: IntFieldUpdateOperationsInput | number
     maxMembersPerDept?: IntFieldUpdateOperationsInput | number
+    maxJobOffers?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89384,6 +92878,7 @@ export namespace Prisma {
     endDate?: Date | string | null
     maxDepartments?: number
     maxMembersPerDept?: number
+    maxJobOffers?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -89396,6 +92891,7 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxDepartments?: IntFieldUpdateOperationsInput | number
     maxMembersPerDept?: IntFieldUpdateOperationsInput | number
+    maxJobOffers?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89409,6 +92905,7 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxDepartments?: IntFieldUpdateOperationsInput | number
     maxMembersPerDept?: IntFieldUpdateOperationsInput | number
+    maxJobOffers?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91016,6 +94513,392 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type JobOfferCreateInput = {
+    id?: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutJobOffersInput
+    creator: UserCreateNestedOneWithoutCreatedJobOffersInput
+    applications?: JobApplicationCreateNestedManyWithoutJobOfferInput
+  }
+
+  export type JobOfferUncheckedCreateInput = {
+    id?: string
+    orgId: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applications?: JobApplicationUncheckedCreateNestedManyWithoutJobOfferInput
+  }
+
+  export type JobOfferUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutJobOffersNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedJobOffersNestedInput
+    applications?: JobApplicationUpdateManyWithoutJobOfferNestedInput
+  }
+
+  export type JobOfferUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applications?: JobApplicationUncheckedUpdateManyWithoutJobOfferNestedInput
+  }
+
+  export type JobOfferCreateManyInput = {
+    id?: string
+    orgId: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobOfferUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobOfferUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobApplicationCreateInput = {
+    id?: string
+    fullName?: string | null
+    email: string
+    phone?: string | null
+    address?: string | null
+    photoData?: string | null
+    cvData?: string | null
+    coverLetterData?: string | null
+    portfolioUrl?: string | null
+    portfolioData?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: string | null
+    availability?: string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.ApplicationStatus
+    internalNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    jobOffer: JobOfferCreateNestedOneWithoutApplicationsInput
+  }
+
+  export type JobApplicationUncheckedCreateInput = {
+    id?: string
+    jobId: string
+    fullName?: string | null
+    email: string
+    phone?: string | null
+    address?: string | null
+    photoData?: string | null
+    cvData?: string | null
+    coverLetterData?: string | null
+    portfolioUrl?: string | null
+    portfolioData?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: string | null
+    availability?: string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.ApplicationStatus
+    internalNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobApplicationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    photoData?: NullableStringFieldUpdateOperationsInput | string | null
+    cvData?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: NullableStringFieldUpdateOperationsInput | string | null
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    jobOffer?: JobOfferUpdateOneRequiredWithoutApplicationsNestedInput
+  }
+
+  export type JobApplicationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    jobId?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    photoData?: NullableStringFieldUpdateOperationsInput | string | null
+    cvData?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: NullableStringFieldUpdateOperationsInput | string | null
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobApplicationCreateManyInput = {
+    id?: string
+    jobId: string
+    fullName?: string | null
+    email: string
+    phone?: string | null
+    address?: string | null
+    photoData?: string | null
+    cvData?: string | null
+    coverLetterData?: string | null
+    portfolioUrl?: string | null
+    portfolioData?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: string | null
+    availability?: string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.ApplicationStatus
+    internalNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobApplicationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    photoData?: NullableStringFieldUpdateOperationsInput | string | null
+    cvData?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: NullableStringFieldUpdateOperationsInput | string | null
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobApplicationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    jobId?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    photoData?: NullableStringFieldUpdateOperationsInput | string | null
+    cvData?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: NullableStringFieldUpdateOperationsInput | string | null
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -91279,6 +95162,12 @@ export namespace Prisma {
     none?: DiscussionRightPurchaseWhereInput
   }
 
+  export type JobOfferListRelationFilter = {
+    every?: JobOfferWhereInput
+    some?: JobOfferWhereInput
+    none?: JobOfferWhereInput
+  }
+
   export type FollowListRelationFilter = {
     every?: FollowWhereInput
     some?: FollowWhereInput
@@ -91457,6 +95346,10 @@ export namespace Prisma {
   }
 
   export type DiscussionRightPurchaseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type JobOfferOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -93686,6 +97579,7 @@ export namespace Prisma {
     endDate?: SortOrder
     maxDepartments?: SortOrder
     maxMembersPerDept?: SortOrder
+    maxJobOffers?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -93694,6 +97588,7 @@ export namespace Prisma {
   export type SubscriptionAvgOrderByAggregateInput = {
     maxDepartments?: SortOrder
     maxMembersPerDept?: SortOrder
+    maxJobOffers?: SortOrder
   }
 
   export type SubscriptionMaxOrderByAggregateInput = {
@@ -93704,6 +97599,7 @@ export namespace Prisma {
     endDate?: SortOrder
     maxDepartments?: SortOrder
     maxMembersPerDept?: SortOrder
+    maxJobOffers?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -93717,6 +97613,7 @@ export namespace Prisma {
     endDate?: SortOrder
     maxDepartments?: SortOrder
     maxMembersPerDept?: SortOrder
+    maxJobOffers?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -93725,6 +97622,7 @@ export namespace Prisma {
   export type SubscriptionSumOrderByAggregateInput = {
     maxDepartments?: SortOrder
     maxMembersPerDept?: SortOrder
+    maxJobOffers?: SortOrder
   }
 
   export type EnumSubscriptionPlanWithAggregatesFilter<$PrismaModel = never> = {
@@ -94717,6 +98615,254 @@ export namespace Prisma {
     amount?: SortOrder
   }
 
+  export type EnumContractTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContractType | EnumContractTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ContractType[] | ListEnumContractTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContractType[] | ListEnumContractTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumContractTypeFilter<$PrismaModel> | $Enums.ContractType
+  }
+
+  export type EnumWorkModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkMode | EnumWorkModeFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkMode[] | ListEnumWorkModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkMode[] | ListEnumWorkModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkModeFilter<$PrismaModel> | $Enums.WorkMode
+  }
+
+  export type EnumJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobStatusFilter<$PrismaModel> | $Enums.JobStatus
+  }
+
+  export type JobApplicationListRelationFilter = {
+    every?: JobApplicationWhereInput
+    some?: JobApplicationWhereInput
+    none?: JobApplicationWhereInput
+  }
+
+  export type JobApplicationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type JobOfferCountOrderByAggregateInput = {
+    id?: SortOrder
+    orgId?: SortOrder
+    companyName?: SortOrder
+    companyLogo?: SortOrder
+    contactEmail?: SortOrder
+    contactPhone?: SortOrder
+    address?: SortOrder
+    city?: SortOrder
+    website?: SortOrder
+    title?: SortOrder
+    contractType?: SortOrder
+    location?: SortOrder
+    workMode?: SortOrder
+    description?: SortOrder
+    missions?: SortOrder
+    skills?: SortOrder
+    educationLevel?: SortOrder
+    experience?: SortOrder
+    salary?: SortOrder
+    deadline?: SortOrder
+    positionsCount?: SortOrder
+    formConfig?: SortOrder
+    customQuestions?: SortOrder
+    status?: SortOrder
+    publishedAt?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobOfferAvgOrderByAggregateInput = {
+    positionsCount?: SortOrder
+  }
+
+  export type JobOfferMaxOrderByAggregateInput = {
+    id?: SortOrder
+    orgId?: SortOrder
+    companyName?: SortOrder
+    companyLogo?: SortOrder
+    contactEmail?: SortOrder
+    contactPhone?: SortOrder
+    address?: SortOrder
+    city?: SortOrder
+    website?: SortOrder
+    title?: SortOrder
+    contractType?: SortOrder
+    location?: SortOrder
+    workMode?: SortOrder
+    description?: SortOrder
+    missions?: SortOrder
+    skills?: SortOrder
+    educationLevel?: SortOrder
+    experience?: SortOrder
+    salary?: SortOrder
+    deadline?: SortOrder
+    positionsCount?: SortOrder
+    status?: SortOrder
+    publishedAt?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobOfferMinOrderByAggregateInput = {
+    id?: SortOrder
+    orgId?: SortOrder
+    companyName?: SortOrder
+    companyLogo?: SortOrder
+    contactEmail?: SortOrder
+    contactPhone?: SortOrder
+    address?: SortOrder
+    city?: SortOrder
+    website?: SortOrder
+    title?: SortOrder
+    contractType?: SortOrder
+    location?: SortOrder
+    workMode?: SortOrder
+    description?: SortOrder
+    missions?: SortOrder
+    skills?: SortOrder
+    educationLevel?: SortOrder
+    experience?: SortOrder
+    salary?: SortOrder
+    deadline?: SortOrder
+    positionsCount?: SortOrder
+    status?: SortOrder
+    publishedAt?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobOfferSumOrderByAggregateInput = {
+    positionsCount?: SortOrder
+  }
+
+  export type EnumContractTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContractType | EnumContractTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ContractType[] | ListEnumContractTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContractType[] | ListEnumContractTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumContractTypeWithAggregatesFilter<$PrismaModel> | $Enums.ContractType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumContractTypeFilter<$PrismaModel>
+    _max?: NestedEnumContractTypeFilter<$PrismaModel>
+  }
+
+  export type EnumWorkModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkMode | EnumWorkModeFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkMode[] | ListEnumWorkModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkMode[] | ListEnumWorkModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkModeWithAggregatesFilter<$PrismaModel> | $Enums.WorkMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkModeFilter<$PrismaModel>
+    _max?: NestedEnumWorkModeFilter<$PrismaModel>
+  }
+
+  export type EnumJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.JobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumJobStatusFilter<$PrismaModel>
+  }
+
+  export type EnumApplicationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApplicationStatusFilter<$PrismaModel> | $Enums.ApplicationStatus
+  }
+
+  export type JobOfferScalarRelationFilter = {
+    is?: JobOfferWhereInput
+    isNot?: JobOfferWhereInput
+  }
+
+  export type JobApplicationCountOrderByAggregateInput = {
+    id?: SortOrder
+    jobId?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    address?: SortOrder
+    photoData?: SortOrder
+    cvData?: SortOrder
+    coverLetterData?: SortOrder
+    portfolioUrl?: SortOrder
+    portfolioData?: SortOrder
+    educationLevel?: SortOrder
+    experience?: SortOrder
+    socialLinks?: SortOrder
+    desiredSalary?: SortOrder
+    availability?: SortOrder
+    customAnswers?: SortOrder
+    status?: SortOrder
+    internalNote?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobApplicationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    jobId?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    address?: SortOrder
+    photoData?: SortOrder
+    cvData?: SortOrder
+    coverLetterData?: SortOrder
+    portfolioUrl?: SortOrder
+    portfolioData?: SortOrder
+    educationLevel?: SortOrder
+    experience?: SortOrder
+    desiredSalary?: SortOrder
+    availability?: SortOrder
+    status?: SortOrder
+    internalNote?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobApplicationMinOrderByAggregateInput = {
+    id?: SortOrder
+    jobId?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    address?: SortOrder
+    photoData?: SortOrder
+    cvData?: SortOrder
+    coverLetterData?: SortOrder
+    portfolioUrl?: SortOrder
+    portfolioData?: SortOrder
+    educationLevel?: SortOrder
+    experience?: SortOrder
+    desiredSalary?: SortOrder
+    availability?: SortOrder
+    status?: SortOrder
+    internalNote?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApplicationStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApplicationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApplicationStatusFilter<$PrismaModel>
+    _max?: NestedEnumApplicationStatusFilter<$PrismaModel>
+  }
+
   export type AnnouncementCreateNestedManyWithoutPublisherInput = {
     create?: XOR<AnnouncementCreateWithoutPublisherInput, AnnouncementUncheckedCreateWithoutPublisherInput> | AnnouncementCreateWithoutPublisherInput[] | AnnouncementUncheckedCreateWithoutPublisherInput[]
     connectOrCreate?: AnnouncementCreateOrConnectWithoutPublisherInput | AnnouncementCreateOrConnectWithoutPublisherInput[]
@@ -94935,6 +99081,13 @@ export namespace Prisma {
     connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutSellerInput | DiscussionRightPurchaseCreateOrConnectWithoutSellerInput[]
     createMany?: DiscussionRightPurchaseCreateManySellerInputEnvelope
     connect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+  }
+
+  export type JobOfferCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<JobOfferCreateWithoutCreatorInput, JobOfferUncheckedCreateWithoutCreatorInput> | JobOfferCreateWithoutCreatorInput[] | JobOfferUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: JobOfferCreateOrConnectWithoutCreatorInput | JobOfferCreateOrConnectWithoutCreatorInput[]
+    createMany?: JobOfferCreateManyCreatorInputEnvelope
+    connect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
   }
 
   export type FollowCreateNestedManyWithoutFollowingInput = {
@@ -95267,6 +99420,13 @@ export namespace Prisma {
     connectOrCreate?: DiscussionRightPurchaseCreateOrConnectWithoutSellerInput | DiscussionRightPurchaseCreateOrConnectWithoutSellerInput[]
     createMany?: DiscussionRightPurchaseCreateManySellerInputEnvelope
     connect?: DiscussionRightPurchaseWhereUniqueInput | DiscussionRightPurchaseWhereUniqueInput[]
+  }
+
+  export type JobOfferUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<JobOfferCreateWithoutCreatorInput, JobOfferUncheckedCreateWithoutCreatorInput> | JobOfferCreateWithoutCreatorInput[] | JobOfferUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: JobOfferCreateOrConnectWithoutCreatorInput | JobOfferCreateOrConnectWithoutCreatorInput[]
+    createMany?: JobOfferCreateManyCreatorInputEnvelope
+    connect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
   }
 
   export type FollowUncheckedCreateNestedManyWithoutFollowingInput = {
@@ -95835,6 +99995,20 @@ export namespace Prisma {
     update?: DiscussionRightPurchaseUpdateWithWhereUniqueWithoutSellerInput | DiscussionRightPurchaseUpdateWithWhereUniqueWithoutSellerInput[]
     updateMany?: DiscussionRightPurchaseUpdateManyWithWhereWithoutSellerInput | DiscussionRightPurchaseUpdateManyWithWhereWithoutSellerInput[]
     deleteMany?: DiscussionRightPurchaseScalarWhereInput | DiscussionRightPurchaseScalarWhereInput[]
+  }
+
+  export type JobOfferUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<JobOfferCreateWithoutCreatorInput, JobOfferUncheckedCreateWithoutCreatorInput> | JobOfferCreateWithoutCreatorInput[] | JobOfferUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: JobOfferCreateOrConnectWithoutCreatorInput | JobOfferCreateOrConnectWithoutCreatorInput[]
+    upsert?: JobOfferUpsertWithWhereUniqueWithoutCreatorInput | JobOfferUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: JobOfferCreateManyCreatorInputEnvelope
+    set?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    disconnect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    delete?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    connect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    update?: JobOfferUpdateWithWhereUniqueWithoutCreatorInput | JobOfferUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: JobOfferUpdateManyWithWhereWithoutCreatorInput | JobOfferUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: JobOfferScalarWhereInput | JobOfferScalarWhereInput[]
   }
 
   export type FollowUpdateManyWithoutFollowingNestedInput = {
@@ -96493,6 +100667,20 @@ export namespace Prisma {
     deleteMany?: DiscussionRightPurchaseScalarWhereInput | DiscussionRightPurchaseScalarWhereInput[]
   }
 
+  export type JobOfferUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<JobOfferCreateWithoutCreatorInput, JobOfferUncheckedCreateWithoutCreatorInput> | JobOfferCreateWithoutCreatorInput[] | JobOfferUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: JobOfferCreateOrConnectWithoutCreatorInput | JobOfferCreateOrConnectWithoutCreatorInput[]
+    upsert?: JobOfferUpsertWithWhereUniqueWithoutCreatorInput | JobOfferUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: JobOfferCreateManyCreatorInputEnvelope
+    set?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    disconnect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    delete?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    connect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    update?: JobOfferUpdateWithWhereUniqueWithoutCreatorInput | JobOfferUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: JobOfferUpdateManyWithWhereWithoutCreatorInput | JobOfferUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: JobOfferScalarWhereInput | JobOfferScalarWhereInput[]
+  }
+
   export type FollowUncheckedUpdateManyWithoutFollowingNestedInput = {
     create?: XOR<FollowCreateWithoutFollowingInput, FollowUncheckedCreateWithoutFollowingInput> | FollowCreateWithoutFollowingInput[] | FollowUncheckedCreateWithoutFollowingInput[]
     connectOrCreate?: FollowCreateOrConnectWithoutFollowingInput | FollowCreateOrConnectWithoutFollowingInput[]
@@ -96879,6 +101067,13 @@ export namespace Prisma {
     connect?: CollaborationGroupMemberWhereUniqueInput | CollaborationGroupMemberWhereUniqueInput[]
   }
 
+  export type JobOfferCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<JobOfferCreateWithoutOrganizationInput, JobOfferUncheckedCreateWithoutOrganizationInput> | JobOfferCreateWithoutOrganizationInput[] | JobOfferUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: JobOfferCreateOrConnectWithoutOrganizationInput | JobOfferCreateOrConnectWithoutOrganizationInput[]
+    createMany?: JobOfferCreateManyOrganizationInputEnvelope
+    connect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+  }
+
   export type DepartmentUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<DepartmentCreateWithoutOrganizationInput, DepartmentUncheckedCreateWithoutOrganizationInput> | DepartmentCreateWithoutOrganizationInput[] | DepartmentUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: DepartmentCreateOrConnectWithoutOrganizationInput | DepartmentCreateOrConnectWithoutOrganizationInput[]
@@ -96925,6 +101120,13 @@ export namespace Prisma {
     connectOrCreate?: CollaborationGroupMemberCreateOrConnectWithoutOrganizationInput | CollaborationGroupMemberCreateOrConnectWithoutOrganizationInput[]
     createMany?: CollaborationGroupMemberCreateManyOrganizationInputEnvelope
     connect?: CollaborationGroupMemberWhereUniqueInput | CollaborationGroupMemberWhereUniqueInput[]
+  }
+
+  export type JobOfferUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<JobOfferCreateWithoutOrganizationInput, JobOfferUncheckedCreateWithoutOrganizationInput> | JobOfferCreateWithoutOrganizationInput[] | JobOfferUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: JobOfferCreateOrConnectWithoutOrganizationInput | JobOfferCreateOrConnectWithoutOrganizationInput[]
+    createMany?: JobOfferCreateManyOrganizationInputEnvelope
+    connect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
   }
 
   export type DepartmentUpdateManyWithoutOrganizationNestedInput = {
@@ -97021,6 +101223,20 @@ export namespace Prisma {
     deleteMany?: CollaborationGroupMemberScalarWhereInput | CollaborationGroupMemberScalarWhereInput[]
   }
 
+  export type JobOfferUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<JobOfferCreateWithoutOrganizationInput, JobOfferUncheckedCreateWithoutOrganizationInput> | JobOfferCreateWithoutOrganizationInput[] | JobOfferUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: JobOfferCreateOrConnectWithoutOrganizationInput | JobOfferCreateOrConnectWithoutOrganizationInput[]
+    upsert?: JobOfferUpsertWithWhereUniqueWithoutOrganizationInput | JobOfferUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: JobOfferCreateManyOrganizationInputEnvelope
+    set?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    disconnect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    delete?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    connect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    update?: JobOfferUpdateWithWhereUniqueWithoutOrganizationInput | JobOfferUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: JobOfferUpdateManyWithWhereWithoutOrganizationInput | JobOfferUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: JobOfferScalarWhereInput | JobOfferScalarWhereInput[]
+  }
+
   export type DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<DepartmentCreateWithoutOrganizationInput, DepartmentUncheckedCreateWithoutOrganizationInput> | DepartmentCreateWithoutOrganizationInput[] | DepartmentUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: DepartmentCreateOrConnectWithoutOrganizationInput | DepartmentCreateOrConnectWithoutOrganizationInput[]
@@ -97113,6 +101329,20 @@ export namespace Prisma {
     update?: CollaborationGroupMemberUpdateWithWhereUniqueWithoutOrganizationInput | CollaborationGroupMemberUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: CollaborationGroupMemberUpdateManyWithWhereWithoutOrganizationInput | CollaborationGroupMemberUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: CollaborationGroupMemberScalarWhereInput | CollaborationGroupMemberScalarWhereInput[]
+  }
+
+  export type JobOfferUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<JobOfferCreateWithoutOrganizationInput, JobOfferUncheckedCreateWithoutOrganizationInput> | JobOfferCreateWithoutOrganizationInput[] | JobOfferUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: JobOfferCreateOrConnectWithoutOrganizationInput | JobOfferCreateOrConnectWithoutOrganizationInput[]
+    upsert?: JobOfferUpsertWithWhereUniqueWithoutOrganizationInput | JobOfferUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: JobOfferCreateManyOrganizationInputEnvelope
+    set?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    disconnect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    delete?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    connect?: JobOfferWhereUniqueInput | JobOfferWhereUniqueInput[]
+    update?: JobOfferUpdateWithWhereUniqueWithoutOrganizationInput | JobOfferUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: JobOfferUpdateManyWithWhereWithoutOrganizationInput | JobOfferUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: JobOfferScalarWhereInput | JobOfferScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutCollaborationsAsAInput = {
@@ -100241,6 +104471,106 @@ export namespace Prisma {
     update?: XOR<XOR<UserFinancialGoalUpdateToOneWithWhereWithoutProgressInput, UserFinancialGoalUpdateWithoutProgressInput>, UserFinancialGoalUncheckedUpdateWithoutProgressInput>
   }
 
+  export type OrganizationCreateNestedOneWithoutJobOffersInput = {
+    create?: XOR<OrganizationCreateWithoutJobOffersInput, OrganizationUncheckedCreateWithoutJobOffersInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutJobOffersInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCreatedJobOffersInput = {
+    create?: XOR<UserCreateWithoutCreatedJobOffersInput, UserUncheckedCreateWithoutCreatedJobOffersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedJobOffersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type JobApplicationCreateNestedManyWithoutJobOfferInput = {
+    create?: XOR<JobApplicationCreateWithoutJobOfferInput, JobApplicationUncheckedCreateWithoutJobOfferInput> | JobApplicationCreateWithoutJobOfferInput[] | JobApplicationUncheckedCreateWithoutJobOfferInput[]
+    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobOfferInput | JobApplicationCreateOrConnectWithoutJobOfferInput[]
+    createMany?: JobApplicationCreateManyJobOfferInputEnvelope
+    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+  }
+
+  export type JobApplicationUncheckedCreateNestedManyWithoutJobOfferInput = {
+    create?: XOR<JobApplicationCreateWithoutJobOfferInput, JobApplicationUncheckedCreateWithoutJobOfferInput> | JobApplicationCreateWithoutJobOfferInput[] | JobApplicationUncheckedCreateWithoutJobOfferInput[]
+    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobOfferInput | JobApplicationCreateOrConnectWithoutJobOfferInput[]
+    createMany?: JobApplicationCreateManyJobOfferInputEnvelope
+    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+  }
+
+  export type EnumContractTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ContractType
+  }
+
+  export type EnumWorkModeFieldUpdateOperationsInput = {
+    set?: $Enums.WorkMode
+  }
+
+  export type EnumJobStatusFieldUpdateOperationsInput = {
+    set?: $Enums.JobStatus
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutJobOffersNestedInput = {
+    create?: XOR<OrganizationCreateWithoutJobOffersInput, OrganizationUncheckedCreateWithoutJobOffersInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutJobOffersInput
+    upsert?: OrganizationUpsertWithoutJobOffersInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutJobOffersInput, OrganizationUpdateWithoutJobOffersInput>, OrganizationUncheckedUpdateWithoutJobOffersInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCreatedJobOffersNestedInput = {
+    create?: XOR<UserCreateWithoutCreatedJobOffersInput, UserUncheckedCreateWithoutCreatedJobOffersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedJobOffersInput
+    upsert?: UserUpsertWithoutCreatedJobOffersInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedJobOffersInput, UserUpdateWithoutCreatedJobOffersInput>, UserUncheckedUpdateWithoutCreatedJobOffersInput>
+  }
+
+  export type JobApplicationUpdateManyWithoutJobOfferNestedInput = {
+    create?: XOR<JobApplicationCreateWithoutJobOfferInput, JobApplicationUncheckedCreateWithoutJobOfferInput> | JobApplicationCreateWithoutJobOfferInput[] | JobApplicationUncheckedCreateWithoutJobOfferInput[]
+    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobOfferInput | JobApplicationCreateOrConnectWithoutJobOfferInput[]
+    upsert?: JobApplicationUpsertWithWhereUniqueWithoutJobOfferInput | JobApplicationUpsertWithWhereUniqueWithoutJobOfferInput[]
+    createMany?: JobApplicationCreateManyJobOfferInputEnvelope
+    set?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    disconnect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    delete?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    update?: JobApplicationUpdateWithWhereUniqueWithoutJobOfferInput | JobApplicationUpdateWithWhereUniqueWithoutJobOfferInput[]
+    updateMany?: JobApplicationUpdateManyWithWhereWithoutJobOfferInput | JobApplicationUpdateManyWithWhereWithoutJobOfferInput[]
+    deleteMany?: JobApplicationScalarWhereInput | JobApplicationScalarWhereInput[]
+  }
+
+  export type JobApplicationUncheckedUpdateManyWithoutJobOfferNestedInput = {
+    create?: XOR<JobApplicationCreateWithoutJobOfferInput, JobApplicationUncheckedCreateWithoutJobOfferInput> | JobApplicationCreateWithoutJobOfferInput[] | JobApplicationUncheckedCreateWithoutJobOfferInput[]
+    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobOfferInput | JobApplicationCreateOrConnectWithoutJobOfferInput[]
+    upsert?: JobApplicationUpsertWithWhereUniqueWithoutJobOfferInput | JobApplicationUpsertWithWhereUniqueWithoutJobOfferInput[]
+    createMany?: JobApplicationCreateManyJobOfferInputEnvelope
+    set?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    disconnect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    delete?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    update?: JobApplicationUpdateWithWhereUniqueWithoutJobOfferInput | JobApplicationUpdateWithWhereUniqueWithoutJobOfferInput[]
+    updateMany?: JobApplicationUpdateManyWithWhereWithoutJobOfferInput | JobApplicationUpdateManyWithWhereWithoutJobOfferInput[]
+    deleteMany?: JobApplicationScalarWhereInput | JobApplicationScalarWhereInput[]
+  }
+
+  export type JobOfferCreateNestedOneWithoutApplicationsInput = {
+    create?: XOR<JobOfferCreateWithoutApplicationsInput, JobOfferUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: JobOfferCreateOrConnectWithoutApplicationsInput
+    connect?: JobOfferWhereUniqueInput
+  }
+
+  export type EnumApplicationStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ApplicationStatus
+  }
+
+  export type JobOfferUpdateOneRequiredWithoutApplicationsNestedInput = {
+    create?: XOR<JobOfferCreateWithoutApplicationsInput, JobOfferUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: JobOfferCreateOrConnectWithoutApplicationsInput
+    upsert?: JobOfferUpsertWithoutApplicationsInput
+    connect?: JobOfferWhereUniqueInput
+    update?: XOR<XOR<JobOfferUpdateToOneWithWhereWithoutApplicationsInput, JobOfferUpdateWithoutApplicationsInput>, JobOfferUncheckedUpdateWithoutApplicationsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -100909,6 +105239,74 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFinancialEntryTypeFilter<$PrismaModel>
     _max?: NestedEnumFinancialEntryTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumContractTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContractType | EnumContractTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ContractType[] | ListEnumContractTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContractType[] | ListEnumContractTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumContractTypeFilter<$PrismaModel> | $Enums.ContractType
+  }
+
+  export type NestedEnumWorkModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkMode | EnumWorkModeFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkMode[] | ListEnumWorkModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkMode[] | ListEnumWorkModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkModeFilter<$PrismaModel> | $Enums.WorkMode
+  }
+
+  export type NestedEnumJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobStatusFilter<$PrismaModel> | $Enums.JobStatus
+  }
+
+  export type NestedEnumContractTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ContractType | EnumContractTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ContractType[] | ListEnumContractTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ContractType[] | ListEnumContractTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumContractTypeWithAggregatesFilter<$PrismaModel> | $Enums.ContractType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumContractTypeFilter<$PrismaModel>
+    _max?: NestedEnumContractTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWorkModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkMode | EnumWorkModeFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkMode[] | ListEnumWorkModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkMode[] | ListEnumWorkModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkModeWithAggregatesFilter<$PrismaModel> | $Enums.WorkMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkModeFilter<$PrismaModel>
+    _max?: NestedEnumWorkModeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.JobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumJobStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumApplicationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApplicationStatusFilter<$PrismaModel> | $Enums.ApplicationStatus
+  }
+
+  export type NestedEnumApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApplicationStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApplicationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApplicationStatusFilter<$PrismaModel>
+    _max?: NestedEnumApplicationStatusFilter<$PrismaModel>
   }
 
   export type AnnouncementCreateWithoutPublisherInput = {
@@ -101872,6 +106270,78 @@ export namespace Prisma {
 
   export type DiscussionRightPurchaseCreateManySellerInputEnvelope = {
     data: DiscussionRightPurchaseCreateManySellerInput | DiscussionRightPurchaseCreateManySellerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type JobOfferCreateWithoutCreatorInput = {
+    id?: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutJobOffersInput
+    applications?: JobApplicationCreateNestedManyWithoutJobOfferInput
+  }
+
+  export type JobOfferUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    orgId: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applications?: JobApplicationUncheckedCreateNestedManyWithoutJobOfferInput
+  }
+
+  export type JobOfferCreateOrConnectWithoutCreatorInput = {
+    where: JobOfferWhereUniqueInput
+    create: XOR<JobOfferCreateWithoutCreatorInput, JobOfferUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type JobOfferCreateManyCreatorInputEnvelope = {
+    data: JobOfferCreateManyCreatorInput | JobOfferCreateManyCreatorInput[]
     skipDuplicates?: boolean
   }
 
@@ -103327,6 +107797,56 @@ export namespace Prisma {
     data: XOR<DiscussionRightPurchaseUpdateManyMutationInput, DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerInput>
   }
 
+  export type JobOfferUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: JobOfferWhereUniqueInput
+    update: XOR<JobOfferUpdateWithoutCreatorInput, JobOfferUncheckedUpdateWithoutCreatorInput>
+    create: XOR<JobOfferCreateWithoutCreatorInput, JobOfferUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type JobOfferUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: JobOfferWhereUniqueInput
+    data: XOR<JobOfferUpdateWithoutCreatorInput, JobOfferUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type JobOfferUpdateManyWithWhereWithoutCreatorInput = {
+    where: JobOfferScalarWhereInput
+    data: XOR<JobOfferUpdateManyMutationInput, JobOfferUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type JobOfferScalarWhereInput = {
+    AND?: JobOfferScalarWhereInput | JobOfferScalarWhereInput[]
+    OR?: JobOfferScalarWhereInput[]
+    NOT?: JobOfferScalarWhereInput | JobOfferScalarWhereInput[]
+    id?: StringFilter<"JobOffer"> | string
+    orgId?: StringFilter<"JobOffer"> | string
+    companyName?: StringFilter<"JobOffer"> | string
+    companyLogo?: StringNullableFilter<"JobOffer"> | string | null
+    contactEmail?: StringFilter<"JobOffer"> | string
+    contactPhone?: StringNullableFilter<"JobOffer"> | string | null
+    address?: StringNullableFilter<"JobOffer"> | string | null
+    city?: StringNullableFilter<"JobOffer"> | string | null
+    website?: StringNullableFilter<"JobOffer"> | string | null
+    title?: StringFilter<"JobOffer"> | string
+    contractType?: EnumContractTypeFilter<"JobOffer"> | $Enums.ContractType
+    location?: StringFilter<"JobOffer"> | string
+    workMode?: EnumWorkModeFilter<"JobOffer"> | $Enums.WorkMode
+    description?: StringFilter<"JobOffer"> | string
+    missions?: StringNullableFilter<"JobOffer"> | string | null
+    skills?: StringNullableFilter<"JobOffer"> | string | null
+    educationLevel?: StringNullableFilter<"JobOffer"> | string | null
+    experience?: StringNullableFilter<"JobOffer"> | string | null
+    salary?: StringNullableFilter<"JobOffer"> | string | null
+    deadline?: DateTimeNullableFilter<"JobOffer"> | Date | string | null
+    positionsCount?: IntFilter<"JobOffer"> | number
+    formConfig?: JsonFilter<"JobOffer">
+    customQuestions?: JsonNullableFilter<"JobOffer">
+    status?: EnumJobStatusFilter<"JobOffer"> | $Enums.JobStatus
+    publishedAt?: DateTimeNullableFilter<"JobOffer"> | Date | string | null
+    createdBy?: StringFilter<"JobOffer"> | string
+    createdAt?: DateTimeFilter<"JobOffer"> | Date | string
+    updatedAt?: DateTimeFilter<"JobOffer"> | Date | string
+  }
+
   export type FollowUpsertWithWhereUniqueWithoutFollowingInput = {
     where: FollowWhereUniqueInput
     update: XOR<FollowUpdateWithoutFollowingInput, FollowUncheckedUpdateWithoutFollowingInput>
@@ -103816,6 +108336,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -103891,6 +108412,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -104006,6 +108528,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -104081,6 +108604,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -104264,6 +108788,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
@@ -104339,6 +108864,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
@@ -104419,6 +108945,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
@@ -104494,6 +109021,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
@@ -104585,6 +109113,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
@@ -104660,6 +109189,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -104746,6 +109276,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
@@ -104821,6 +109352,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -104921,6 +109453,7 @@ export namespace Prisma {
     endDate?: Date | string | null
     maxDepartments?: number
     maxMembersPerDept?: number
+    maxJobOffers?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -104933,6 +109466,7 @@ export namespace Prisma {
     endDate?: Date | string | null
     maxDepartments?: number
     maxMembersPerDept?: number
+    maxJobOffers?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -105075,6 +109609,78 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type JobOfferCreateWithoutOrganizationInput = {
+    id?: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: UserCreateNestedOneWithoutCreatedJobOffersInput
+    applications?: JobApplicationCreateNestedManyWithoutJobOfferInput
+  }
+
+  export type JobOfferUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applications?: JobApplicationUncheckedCreateNestedManyWithoutJobOfferInput
+  }
+
+  export type JobOfferCreateOrConnectWithoutOrganizationInput = {
+    where: JobOfferWhereUniqueInput
+    create: XOR<JobOfferCreateWithoutOrganizationInput, JobOfferUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type JobOfferCreateManyOrganizationInputEnvelope = {
+    data: JobOfferCreateManyOrganizationInput | JobOfferCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
   export type DepartmentUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: DepartmentWhereUniqueInput
     update: XOR<DepartmentUpdateWithoutOrganizationInput, DepartmentUncheckedUpdateWithoutOrganizationInput>
@@ -105125,6 +109731,7 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxDepartments?: IntFieldUpdateOperationsInput | number
     maxMembersPerDept?: IntFieldUpdateOperationsInput | number
+    maxJobOffers?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -105137,6 +109744,7 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     maxDepartments?: IntFieldUpdateOperationsInput | number
     maxMembersPerDept?: IntFieldUpdateOperationsInput | number
+    maxJobOffers?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -105238,6 +109846,22 @@ export namespace Prisma {
     data: XOR<CollaborationGroupMemberUpdateManyMutationInput, CollaborationGroupMemberUncheckedUpdateManyWithoutOrganizationInput>
   }
 
+  export type JobOfferUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: JobOfferWhereUniqueInput
+    update: XOR<JobOfferUpdateWithoutOrganizationInput, JobOfferUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<JobOfferCreateWithoutOrganizationInput, JobOfferUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type JobOfferUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: JobOfferWhereUniqueInput
+    data: XOR<JobOfferUpdateWithoutOrganizationInput, JobOfferUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type JobOfferUpdateManyWithWhereWithoutOrganizationInput = {
+    where: JobOfferScalarWhereInput
+    data: XOR<JobOfferUpdateManyMutationInput, JobOfferUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
   export type OrganizationCreateWithoutCollaborationsAsAInput = {
     id?: string
     name: string
@@ -105254,6 +109878,7 @@ export namespace Prisma {
     events?: EventInvitationCreateNestedManyWithoutOrganizationInput
     collaborationsAsB?: OrganizationCollaborationCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutCollaborationsAsAInput = {
@@ -105272,6 +109897,7 @@ export namespace Prisma {
     events?: EventInvitationUncheckedCreateNestedManyWithoutOrganizationInput
     collaborationsAsB?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutCollaborationsAsAInput = {
@@ -105295,6 +109921,7 @@ export namespace Prisma {
     events?: EventInvitationCreateNestedManyWithoutOrganizationInput
     collaborationsAsA?: OrganizationCollaborationCreateNestedManyWithoutOrgAInput
     collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutCollaborationsAsBInput = {
@@ -105313,6 +109940,7 @@ export namespace Prisma {
     events?: EventInvitationUncheckedCreateNestedManyWithoutOrganizationInput
     collaborationsAsA?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgAInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutCollaborationsAsBInput = {
@@ -105387,6 +110015,7 @@ export namespace Prisma {
     events?: EventInvitationUpdateManyWithoutOrganizationNestedInput
     collaborationsAsB?: OrganizationCollaborationUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutCollaborationsAsAInput = {
@@ -105405,6 +110034,7 @@ export namespace Prisma {
     events?: EventInvitationUncheckedUpdateManyWithoutOrganizationNestedInput
     collaborationsAsB?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUpsertWithoutCollaborationsAsBInput = {
@@ -105434,6 +110064,7 @@ export namespace Prisma {
     events?: EventInvitationUpdateManyWithoutOrganizationNestedInput
     collaborationsAsA?: OrganizationCollaborationUpdateManyWithoutOrgANestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutCollaborationsAsBInput = {
@@ -105452,6 +110083,7 @@ export namespace Prisma {
     events?: EventInvitationUncheckedUpdateManyWithoutOrganizationNestedInput
     collaborationsAsA?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgANestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type CollaborationGroupUpsertWithWhereUniqueWithoutCollaborationInput = {
@@ -105555,6 +110187,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -105630,6 +110263,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -105968,6 +110602,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -106043,6 +110678,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -106266,6 +110902,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -106341,6 +110978,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -106379,6 +111017,7 @@ export namespace Prisma {
     events?: EventInvitationCreateNestedManyWithoutOrganizationInput
     collaborationsAsA?: OrganizationCollaborationCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationCreateNestedManyWithoutOrgBInput
+    jobOffers?: JobOfferCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutCollaborationGroupMembersInput = {
@@ -106397,6 +111036,7 @@ export namespace Prisma {
     events?: EventInvitationUncheckedCreateNestedManyWithoutOrganizationInput
     collaborationsAsA?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgBInput
+    jobOffers?: JobOfferUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutCollaborationGroupMembersInput = {
@@ -106514,6 +111154,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -106589,6 +111230,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -106633,6 +111275,7 @@ export namespace Prisma {
     events?: EventInvitationUpdateManyWithoutOrganizationNestedInput
     collaborationsAsA?: OrganizationCollaborationUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUpdateManyWithoutOrgBNestedInput
+    jobOffers?: JobOfferUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutCollaborationGroupMembersInput = {
@@ -106651,6 +111294,7 @@ export namespace Prisma {
     events?: EventInvitationUncheckedUpdateManyWithoutOrganizationNestedInput
     collaborationsAsA?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgBNestedInput
+    jobOffers?: JobOfferUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type CollaborationGroupCreateWithoutTasksInput = {
@@ -106746,6 +111390,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -106821,6 +111466,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -106901,6 +111547,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -106976,6 +111623,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -107108,6 +111756,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -107183,6 +111832,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -107269,6 +111919,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -107344,6 +111995,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -107454,6 +112106,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -107529,6 +112182,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -107661,6 +112315,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -107736,6 +112391,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -107846,6 +112502,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -107921,6 +112578,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -108053,6 +112711,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -108128,6 +112787,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -108238,6 +112898,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -108313,6 +112974,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -108393,6 +113055,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -108468,6 +113131,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -108600,6 +113264,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -108675,6 +113340,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -108761,6 +113427,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -108836,6 +113503,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -108958,6 +113626,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -109033,6 +113702,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -109113,6 +113783,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -109188,6 +113859,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -109332,6 +114004,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -109407,6 +114080,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -109493,6 +114167,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -109568,6 +114243,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -109601,6 +114277,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMembersInput = {
@@ -109619,6 +114296,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMembersInput = {
@@ -109683,6 +114361,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -109758,6 +114437,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -109808,6 +114488,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMembersInput = {
@@ -109826,6 +114507,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutOrgMembershipsInput = {
@@ -109896,6 +114578,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -109971,6 +114654,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -110005,6 +114689,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutDepartmentsInput = {
@@ -110023,6 +114708,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutDepartmentsInput = {
@@ -110087,6 +114773,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -110162,6 +114849,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -110614,6 +115302,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutDepartmentsInput = {
@@ -110632,6 +115321,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutHeadedDepartmentsInput = {
@@ -110702,6 +115392,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -110777,6 +115468,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -111118,6 +115810,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -111193,6 +115886,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -111337,6 +116031,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -111412,6 +116107,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -111534,6 +116230,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
@@ -111609,6 +116306,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
@@ -111753,6 +116451,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
@@ -111828,6 +116527,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -112049,6 +116749,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -112124,6 +116825,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -112268,6 +116970,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -112343,6 +117046,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -112465,6 +117169,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -112540,6 +117245,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -112708,6 +117414,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -112783,6 +117490,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -112901,6 +117609,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -112976,6 +117685,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -113100,6 +117810,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -113175,6 +117886,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -113297,6 +118009,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -113372,6 +118085,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -113540,6 +118254,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -113615,6 +118330,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -113735,6 +118451,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -113810,6 +118527,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -113936,6 +118654,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -114011,6 +118730,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -114133,6 +118853,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -114208,6 +118929,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -114352,6 +119074,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -114427,6 +119150,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -114543,6 +119267,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -114618,6 +119343,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -114698,6 +119424,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -114773,6 +119500,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -114911,6 +119639,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -114986,6 +119715,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -115072,6 +119802,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -115147,6 +119878,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -115674,6 +120406,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -115749,6 +120482,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -115887,6 +120621,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -115962,6 +120697,7 @@ export namespace Prisma {
     financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -116197,6 +120933,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -116272,6 +121009,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -116414,6 +121152,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -116489,6 +121228,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -116609,6 +121349,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -116684,6 +121425,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -116810,6 +121552,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -116885,6 +121628,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -117000,6 +121744,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -117075,6 +121820,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -117213,6 +121959,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -117288,6 +122035,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -117430,6 +122178,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -117505,6 +122254,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -117671,6 +122421,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -117746,6 +122497,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -117877,6 +122629,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -117952,6 +122705,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -118043,6 +122797,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -118118,6 +122873,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -118193,6 +122949,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -118268,6 +123025,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -118381,6 +123139,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -118456,6 +123215,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -118572,6 +123332,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
@@ -118590,6 +123351,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSubscriptionInput = {
@@ -118624,6 +123386,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
@@ -118642,6 +123405,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutEventsInput = {
@@ -118660,6 +123424,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutEventsInput = {
@@ -118678,6 +123443,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgAInput
     collaborationsAsB?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgBInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    jobOffers?: JobOfferUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutEventsInput = {
@@ -118758,6 +123524,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutEventsInput = {
@@ -118776,6 +123543,7 @@ export namespace Prisma {
     collaborationsAsA?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgANestedInput
     collaborationsAsB?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgBNestedInput
     collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    jobOffers?: JobOfferUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type InvitationRSVPUpsertWithWhereUniqueWithoutEventInput = {
@@ -119138,6 +123906,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -119213,6 +123982,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -119342,6 +124112,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -119417,6 +124188,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -119730,6 +124502,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -119805,6 +124578,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -119935,6 +124709,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -120010,6 +124785,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -120118,6 +124894,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -120193,6 +124970,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -120378,6 +125156,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -120453,6 +125232,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -120575,6 +125355,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -120650,6 +125431,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -120774,6 +125556,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -120849,6 +125632,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -121010,6 +125794,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -121085,6 +125870,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -121165,6 +125951,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -121240,6 +126027,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -121444,6 +126232,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -121519,6 +126308,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -121605,6 +126395,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -121680,6 +126471,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -121841,6 +126633,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -121916,6 +126709,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -122084,6 +126878,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -122159,6 +126954,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -122433,6 +127229,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -122508,6 +127305,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -122652,6 +127450,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -122727,6 +127526,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -122802,6 +127602,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -122877,6 +127678,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -122968,6 +127770,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -123043,6 +127846,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -123118,6 +127922,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -123193,6 +127998,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -123284,6 +128090,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -123359,6 +128166,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -123434,6 +128242,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -123509,6 +128318,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -123600,6 +128410,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -123675,6 +128486,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -123750,6 +128562,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -123825,6 +128638,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -123916,6 +128730,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -123991,6 +128806,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -124066,6 +128882,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -124141,6 +128958,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -124262,6 +129080,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -124337,6 +129156,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -124442,6 +129262,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -124517,6 +129338,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -124608,6 +129430,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -124683,6 +129506,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -124758,6 +129582,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -124833,6 +129658,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -124924,6 +129750,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -124999,6 +129826,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -125074,6 +129902,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferCreateNestedManyWithoutCreatorInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     following?: FollowCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
@@ -125149,6 +129978,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    createdJobOffers?: JobOfferUncheckedCreateNestedManyWithoutCreatorInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
@@ -125240,6 +130070,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUpdateManyWithoutCreatorNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     following?: FollowUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
@@ -125315,6 +130146,7 @@ export namespace Prisma {
     deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
     discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
     discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    createdJobOffers?: JobOfferUncheckedUpdateManyWithoutCreatorNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -125397,6 +130229,657 @@ export namespace Prisma {
     targetAmount?: FloatFieldUpdateOperationsInput | number
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     label?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrganizationCreateWithoutJobOffersInput = {
+    id?: string
+    name: string
+    code: string
+    logo?: string | null
+    address?: string | null
+    isSuspended?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownerId: string
+    departments?: DepartmentCreateNestedManyWithoutOrganizationInput
+    members?: OrganizationMemberCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedOneWithoutOrganizationInput
+    events?: EventInvitationCreateNestedManyWithoutOrganizationInput
+    collaborationsAsA?: OrganizationCollaborationCreateNestedManyWithoutOrgAInput
+    collaborationsAsB?: OrganizationCollaborationCreateNestedManyWithoutOrgBInput
+    collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutJobOffersInput = {
+    id?: string
+    name: string
+    code: string
+    logo?: string | null
+    address?: string | null
+    isSuspended?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownerId: string
+    departments?: DepartmentUncheckedCreateNestedManyWithoutOrganizationInput
+    members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
+    events?: EventInvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    collaborationsAsA?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgAInput
+    collaborationsAsB?: OrganizationCollaborationUncheckedCreateNestedManyWithoutOrgBInput
+    collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutJobOffersInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutJobOffersInput, OrganizationUncheckedCreateWithoutJobOffersInput>
+  }
+
+  export type UserCreateWithoutCreatedJobOffersInput = {
+    id?: string
+    email: string
+    emailHash?: string | null
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    userPage?: UserPageCreateNestedOneWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    postReads?: PostReadCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutUserInput
+    proSubscription?: UserProSubscriptionCreateNestedOneWithoutUserInput
+    proSettings?: UserProSettingsCreateNestedOneWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryCreateNestedManyWithoutUserInput
+    deletionRequestsInitiated?: ConversationDeletionRequestCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseCreateNestedManyWithoutSellerInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    following?: FollowCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareCreateNestedManyWithoutSharedWithInput
+    collaborationGroupMembers?: CollaborationGroupMemberCreateNestedManyWithoutUserInput
+    headedCollaborationGroups?: CollaborationGroupCreateNestedManyWithoutHeadInput
+    createdCollaborationTasks?: CollaborationTaskCreateNestedManyWithoutCreatorInput
+    assignedCollaborationTasks?: CollaborationTaskCreateNestedManyWithoutAssigneeInput
+    uploadedCollaborationDocs?: CollaborationDocumentCreateNestedManyWithoutUploaderInput
+    collaborationNotes?: CollaborationNoteCreateNestedManyWithoutCreatorInput
+    createdEditorialItems?: CollaborationEditorialItemCreateNestedManyWithoutCreatorInput
+    assignedEditorialItems?: CollaborationEditorialItemCreateNestedManyWithoutAssigneeInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemCreateNestedManyWithoutCreatorInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemCreateNestedManyWithoutAssigneeInput
+  }
+
+  export type UserUncheckedCreateWithoutCreatedJobOffersInput = {
+    id?: string
+    email: string
+    emailHash?: string | null
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    phone?: string | null
+    publicKey: string
+    encryptedPrivateKey: string
+    otpCode?: string | null
+    otpExpiry?: Date | string | null
+    isVerified?: boolean
+    deviceId?: string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: string | null
+    isBanned?: boolean
+    isFirstLogin?: boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: Date | string | null
+    isOnline?: boolean
+    role?: $Enums.UserRole
+    canPublishNotifications?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    publishedAnnouncements?: AnnouncementUncheckedCreateNestedManyWithoutPublisherInput
+    deptMemberships?: DepartmentMemberUncheckedCreateNestedManyWithoutUserInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orgMemberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    userPage?: UserPageUncheckedCreateNestedOneWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    postReads?: PostReadUncheckedCreateNestedManyWithoutUserInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    createdTasks?: TaskUncheckedCreateNestedManyWithoutCreatorInput
+    headedDepartments?: DepartmentUncheckedCreateNestedManyWithoutHeadInput
+    taskMessages?: TaskMessageUncheckedCreateNestedManyWithoutSenderInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedCreateNestedManyWithoutUserInput
+    createdMeetings?: DepartmentMeetingUncheckedCreateNestedManyWithoutCreatorInput
+    createdPolls?: DepartmentPollUncheckedCreateNestedManyWithoutCreatorInput
+    createdDecisions?: TeamDecisionUncheckedCreateNestedManyWithoutCreatorInput
+    pollVotes?: PollVoteUncheckedCreateNestedManyWithoutUserInput
+    decisionVotes?: DecisionVoteUncheckedCreateNestedManyWithoutUserInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+    proSubscription?: UserProSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    proSettings?: UserProSettingsUncheckedCreateNestedOneWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutUserInput
+    personalTasks?: UserPersonalTaskUncheckedCreateNestedManyWithoutUserInput
+    financialGoals?: UserFinancialGoalUncheckedCreateNestedManyWithoutUserInput
+    financialProfile?: UserFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+    monthlyStatements?: UserMonthlyStatementUncheckedCreateNestedManyWithoutUserInput
+    financialEntries?: UserFinancialEntryUncheckedCreateNestedManyWithoutUserInput
+    deletionRequestsInitiated?: ConversationDeletionRequestUncheckedCreateNestedManyWithoutRequesterInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutBuyerInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedCreateNestedManyWithoutSellerInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    following?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    groupNotes?: GroupNoteUncheckedCreateNestedManyWithoutCreatorInput
+    departmentNotes?: DepartmentNoteUncheckedCreateNestedManyWithoutCreatorInput
+    noteSharesReceived?: GroupNoteShareUncheckedCreateNestedManyWithoutSharedWithInput
+    collaborationGroupMembers?: CollaborationGroupMemberUncheckedCreateNestedManyWithoutUserInput
+    headedCollaborationGroups?: CollaborationGroupUncheckedCreateNestedManyWithoutHeadInput
+    createdCollaborationTasks?: CollaborationTaskUncheckedCreateNestedManyWithoutCreatorInput
+    assignedCollaborationTasks?: CollaborationTaskUncheckedCreateNestedManyWithoutAssigneeInput
+    uploadedCollaborationDocs?: CollaborationDocumentUncheckedCreateNestedManyWithoutUploaderInput
+    collaborationNotes?: CollaborationNoteUncheckedCreateNestedManyWithoutCreatorInput
+    createdEditorialItems?: CollaborationEditorialItemUncheckedCreateNestedManyWithoutCreatorInput
+    assignedEditorialItems?: CollaborationEditorialItemUncheckedCreateNestedManyWithoutAssigneeInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemUncheckedCreateNestedManyWithoutCreatorInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemUncheckedCreateNestedManyWithoutAssigneeInput
+  }
+
+  export type UserCreateOrConnectWithoutCreatedJobOffersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCreatedJobOffersInput, UserUncheckedCreateWithoutCreatedJobOffersInput>
+  }
+
+  export type JobApplicationCreateWithoutJobOfferInput = {
+    id?: string
+    fullName?: string | null
+    email: string
+    phone?: string | null
+    address?: string | null
+    photoData?: string | null
+    cvData?: string | null
+    coverLetterData?: string | null
+    portfolioUrl?: string | null
+    portfolioData?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: string | null
+    availability?: string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.ApplicationStatus
+    internalNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobApplicationUncheckedCreateWithoutJobOfferInput = {
+    id?: string
+    fullName?: string | null
+    email: string
+    phone?: string | null
+    address?: string | null
+    photoData?: string | null
+    cvData?: string | null
+    coverLetterData?: string | null
+    portfolioUrl?: string | null
+    portfolioData?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: string | null
+    availability?: string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.ApplicationStatus
+    internalNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobApplicationCreateOrConnectWithoutJobOfferInput = {
+    where: JobApplicationWhereUniqueInput
+    create: XOR<JobApplicationCreateWithoutJobOfferInput, JobApplicationUncheckedCreateWithoutJobOfferInput>
+  }
+
+  export type JobApplicationCreateManyJobOfferInputEnvelope = {
+    data: JobApplicationCreateManyJobOfferInput | JobApplicationCreateManyJobOfferInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationUpsertWithoutJobOffersInput = {
+    update: XOR<OrganizationUpdateWithoutJobOffersInput, OrganizationUncheckedUpdateWithoutJobOffersInput>
+    create: XOR<OrganizationCreateWithoutJobOffersInput, OrganizationUncheckedCreateWithoutJobOffersInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutJobOffersInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutJobOffersInput, OrganizationUncheckedUpdateWithoutJobOffersInput>
+  }
+
+  export type OrganizationUpdateWithoutJobOffersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    isSuspended?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    departments?: DepartmentUpdateManyWithoutOrganizationNestedInput
+    members?: OrganizationMemberUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateOneWithoutOrganizationNestedInput
+    events?: EventInvitationUpdateManyWithoutOrganizationNestedInput
+    collaborationsAsA?: OrganizationCollaborationUpdateManyWithoutOrgANestedInput
+    collaborationsAsB?: OrganizationCollaborationUpdateManyWithoutOrgBNestedInput
+    collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutJobOffersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    isSuspended?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    departments?: DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput
+    members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
+    events?: EventInvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    collaborationsAsA?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgANestedInput
+    collaborationsAsB?: OrganizationCollaborationUncheckedUpdateManyWithoutOrgBNestedInput
+    collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type UserUpsertWithoutCreatedJobOffersInput = {
+    update: XOR<UserUpdateWithoutCreatedJobOffersInput, UserUncheckedUpdateWithoutCreatedJobOffersInput>
+    create: XOR<UserCreateWithoutCreatedJobOffersInput, UserUncheckedCreateWithoutCreatedJobOffersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCreatedJobOffersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCreatedJobOffersInput, UserUncheckedUpdateWithoutCreatedJobOffersInput>
+  }
+
+  export type UserUpdateWithoutCreatedJobOffersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUpdateOneWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutUserNestedInput
+    proSubscription?: UserProSubscriptionUpdateOneWithoutUserNestedInput
+    proSettings?: UserProSettingsUpdateOneWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUpdateManyWithoutUserNestedInput
+    deletionRequestsInitiated?: ConversationDeletionRequestUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUpdateManyWithoutSellerNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    following?: FollowUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUpdateManyWithoutSharedWithNestedInput
+    collaborationGroupMembers?: CollaborationGroupMemberUpdateManyWithoutUserNestedInput
+    headedCollaborationGroups?: CollaborationGroupUpdateManyWithoutHeadNestedInput
+    createdCollaborationTasks?: CollaborationTaskUpdateManyWithoutCreatorNestedInput
+    assignedCollaborationTasks?: CollaborationTaskUpdateManyWithoutAssigneeNestedInput
+    uploadedCollaborationDocs?: CollaborationDocumentUpdateManyWithoutUploaderNestedInput
+    collaborationNotes?: CollaborationNoteUpdateManyWithoutCreatorNestedInput
+    createdEditorialItems?: CollaborationEditorialItemUpdateManyWithoutCreatorNestedInput
+    assignedEditorialItems?: CollaborationEditorialItemUpdateManyWithoutAssigneeNestedInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemUpdateManyWithoutCreatorNestedInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemUpdateManyWithoutAssigneeNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCreatedJobOffersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailHash?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    publicKey?: StringFieldUpdateOperationsInput | string
+    encryptedPrivateKey?: StringFieldUpdateOperationsInput | string
+    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
+    otpExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceInfo?: NullableJsonNullValueInput | InputJsonValue
+    location?: NullableJsonNullValueInput | InputJsonValue
+    allowedCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    isBanned?: BoolFieldUpdateOperationsInput | boolean
+    isFirstLogin?: BoolFieldUpdateOperationsInput | boolean
+    currentLocation?: NullableJsonNullValueInput | InputJsonValue
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    canPublishNotifications?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    publishedAnnouncements?: AnnouncementUncheckedUpdateManyWithoutPublisherNestedInput
+    deptMemberships?: DepartmentMemberUncheckedUpdateManyWithoutUserNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orgMemberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    userPage?: UserPageUncheckedUpdateOneWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    postReads?: PostReadUncheckedUpdateManyWithoutUserNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdTasks?: TaskUncheckedUpdateManyWithoutCreatorNestedInput
+    headedDepartments?: DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+    taskMessages?: TaskMessageUncheckedUpdateManyWithoutSenderNestedInput
+    departmentMonthlyReports?: DepartmentMonthlyReportUncheckedUpdateManyWithoutUserNestedInput
+    createdMeetings?: DepartmentMeetingUncheckedUpdateManyWithoutCreatorNestedInput
+    createdPolls?: DepartmentPollUncheckedUpdateManyWithoutCreatorNestedInput
+    createdDecisions?: TeamDecisionUncheckedUpdateManyWithoutCreatorNestedInput
+    pollVotes?: PollVoteUncheckedUpdateManyWithoutUserNestedInput
+    decisionVotes?: DecisionVoteUncheckedUpdateManyWithoutUserNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    proSubscription?: UserProSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    proSettings?: UserProSettingsUncheckedUpdateOneWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutUserNestedInput
+    personalTasks?: UserPersonalTaskUncheckedUpdateManyWithoutUserNestedInput
+    financialGoals?: UserFinancialGoalUncheckedUpdateManyWithoutUserNestedInput
+    financialProfile?: UserFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+    monthlyStatements?: UserMonthlyStatementUncheckedUpdateManyWithoutUserNestedInput
+    financialEntries?: UserFinancialEntryUncheckedUpdateManyWithoutUserNestedInput
+    deletionRequestsInitiated?: ConversationDeletionRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    discussionRightsBought?: DiscussionRightPurchaseUncheckedUpdateManyWithoutBuyerNestedInput
+    discussionRightsSold?: DiscussionRightPurchaseUncheckedUpdateManyWithoutSellerNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    following?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    uploadedDepartmentDocuments?: DepartmentDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    groupNotes?: GroupNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    departmentNotes?: DepartmentNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    noteSharesReceived?: GroupNoteShareUncheckedUpdateManyWithoutSharedWithNestedInput
+    collaborationGroupMembers?: CollaborationGroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    headedCollaborationGroups?: CollaborationGroupUncheckedUpdateManyWithoutHeadNestedInput
+    createdCollaborationTasks?: CollaborationTaskUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedCollaborationTasks?: CollaborationTaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    uploadedCollaborationDocs?: CollaborationDocumentUncheckedUpdateManyWithoutUploaderNestedInput
+    collaborationNotes?: CollaborationNoteUncheckedUpdateManyWithoutCreatorNestedInput
+    createdEditorialItems?: CollaborationEditorialItemUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedEditorialItems?: CollaborationEditorialItemUncheckedUpdateManyWithoutAssigneeNestedInput
+    createdDepartmentEditorialItems?: DepartmentEditorialItemUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedDepartmentEditorialItems?: DepartmentEditorialItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  }
+
+  export type JobApplicationUpsertWithWhereUniqueWithoutJobOfferInput = {
+    where: JobApplicationWhereUniqueInput
+    update: XOR<JobApplicationUpdateWithoutJobOfferInput, JobApplicationUncheckedUpdateWithoutJobOfferInput>
+    create: XOR<JobApplicationCreateWithoutJobOfferInput, JobApplicationUncheckedCreateWithoutJobOfferInput>
+  }
+
+  export type JobApplicationUpdateWithWhereUniqueWithoutJobOfferInput = {
+    where: JobApplicationWhereUniqueInput
+    data: XOR<JobApplicationUpdateWithoutJobOfferInput, JobApplicationUncheckedUpdateWithoutJobOfferInput>
+  }
+
+  export type JobApplicationUpdateManyWithWhereWithoutJobOfferInput = {
+    where: JobApplicationScalarWhereInput
+    data: XOR<JobApplicationUpdateManyMutationInput, JobApplicationUncheckedUpdateManyWithoutJobOfferInput>
+  }
+
+  export type JobApplicationScalarWhereInput = {
+    AND?: JobApplicationScalarWhereInput | JobApplicationScalarWhereInput[]
+    OR?: JobApplicationScalarWhereInput[]
+    NOT?: JobApplicationScalarWhereInput | JobApplicationScalarWhereInput[]
+    id?: StringFilter<"JobApplication"> | string
+    jobId?: StringFilter<"JobApplication"> | string
+    fullName?: StringNullableFilter<"JobApplication"> | string | null
+    email?: StringFilter<"JobApplication"> | string
+    phone?: StringNullableFilter<"JobApplication"> | string | null
+    address?: StringNullableFilter<"JobApplication"> | string | null
+    photoData?: StringNullableFilter<"JobApplication"> | string | null
+    cvData?: StringNullableFilter<"JobApplication"> | string | null
+    coverLetterData?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioUrl?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioData?: StringNullableFilter<"JobApplication"> | string | null
+    educationLevel?: StringNullableFilter<"JobApplication"> | string | null
+    experience?: StringNullableFilter<"JobApplication"> | string | null
+    socialLinks?: JsonNullableFilter<"JobApplication">
+    desiredSalary?: StringNullableFilter<"JobApplication"> | string | null
+    availability?: StringNullableFilter<"JobApplication"> | string | null
+    customAnswers?: JsonNullableFilter<"JobApplication">
+    status?: EnumApplicationStatusFilter<"JobApplication"> | $Enums.ApplicationStatus
+    internalNote?: StringNullableFilter<"JobApplication"> | string | null
+    createdAt?: DateTimeFilter<"JobApplication"> | Date | string
+    updatedAt?: DateTimeFilter<"JobApplication"> | Date | string
+  }
+
+  export type JobOfferCreateWithoutApplicationsInput = {
+    id?: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutJobOffersInput
+    creator: UserCreateNestedOneWithoutCreatedJobOffersInput
+  }
+
+  export type JobOfferUncheckedCreateWithoutApplicationsInput = {
+    id?: string
+    orgId: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobOfferCreateOrConnectWithoutApplicationsInput = {
+    where: JobOfferWhereUniqueInput
+    create: XOR<JobOfferCreateWithoutApplicationsInput, JobOfferUncheckedCreateWithoutApplicationsInput>
+  }
+
+  export type JobOfferUpsertWithoutApplicationsInput = {
+    update: XOR<JobOfferUpdateWithoutApplicationsInput, JobOfferUncheckedUpdateWithoutApplicationsInput>
+    create: XOR<JobOfferCreateWithoutApplicationsInput, JobOfferUncheckedCreateWithoutApplicationsInput>
+    where?: JobOfferWhereInput
+  }
+
+  export type JobOfferUpdateToOneWithWhereWithoutApplicationsInput = {
+    where?: JobOfferWhereInput
+    data: XOR<JobOfferUpdateWithoutApplicationsInput, JobOfferUncheckedUpdateWithoutApplicationsInput>
+  }
+
+  export type JobOfferUpdateWithoutApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutJobOffersNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedJobOffersNestedInput
+  }
+
+  export type JobOfferUncheckedUpdateWithoutApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -125670,6 +131153,36 @@ export namespace Prisma {
     purchasedAt?: Date | string
     expiresAt: Date | string
     isActive?: boolean
+  }
+
+  export type JobOfferCreateManyCreatorInput = {
+    id?: string
+    orgId: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type FollowCreateManyFollowingInput = {
@@ -126714,6 +132227,98 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type JobOfferUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutJobOffersNestedInput
+    applications?: JobApplicationUpdateManyWithoutJobOfferNestedInput
+  }
+
+  export type JobOfferUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applications?: JobApplicationUncheckedUpdateManyWithoutJobOfferNestedInput
+  }
+
+  export type JobOfferUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orgId?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type FollowUpdateWithoutFollowingInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -127357,6 +132962,36 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type JobOfferCreateManyOrganizationInput = {
+    id?: string
+    companyName: string
+    companyLogo?: string | null
+    contactEmail: string
+    contactPhone?: string | null
+    address?: string | null
+    city?: string | null
+    website?: string | null
+    title: string
+    contractType: $Enums.ContractType
+    location: string
+    workMode: $Enums.WorkMode
+    description: string
+    missions?: string | null
+    skills?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    salary?: string | null
+    deadline?: Date | string | null
+    positionsCount?: number
+    formConfig: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.JobStatus
+    publishedAt?: Date | string | null
+    createdBy: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type DepartmentUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -127561,6 +133196,98 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     encryptedDeptKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobOfferUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: UserUpdateOneRequiredWithoutCreatedJobOffersNestedInput
+    applications?: JobApplicationUpdateManyWithoutJobOfferNestedInput
+  }
+
+  export type JobOfferUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applications?: JobApplicationUncheckedUpdateManyWithoutJobOfferNestedInput
+  }
+
+  export type JobOfferUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    companyLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    contractType?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    location?: StringFieldUpdateOperationsInput | string
+    workMode?: EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+    description?: StringFieldUpdateOperationsInput | string
+    missions?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    salary?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    positionsCount?: IntFieldUpdateOperationsInput | number
+    formConfig?: JsonNullValueInput | InputJsonValue
+    customQuestions?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CollaborationGroupCreateManyCollaborationInput = {
@@ -129121,6 +134848,98 @@ export namespace Prisma {
     month?: IntFieldUpdateOperationsInput | number
     amount?: FloatFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobApplicationCreateManyJobOfferInput = {
+    id?: string
+    fullName?: string | null
+    email: string
+    phone?: string | null
+    address?: string | null
+    photoData?: string | null
+    cvData?: string | null
+    coverLetterData?: string | null
+    portfolioUrl?: string | null
+    portfolioData?: string | null
+    educationLevel?: string | null
+    experience?: string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: string | null
+    availability?: string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.ApplicationStatus
+    internalNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobApplicationUpdateWithoutJobOfferInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    photoData?: NullableStringFieldUpdateOperationsInput | string | null
+    cvData?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: NullableStringFieldUpdateOperationsInput | string | null
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobApplicationUncheckedUpdateWithoutJobOfferInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    photoData?: NullableStringFieldUpdateOperationsInput | string | null
+    cvData?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: NullableStringFieldUpdateOperationsInput | string | null
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobApplicationUncheckedUpdateManyWithoutJobOfferInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    photoData?: NullableStringFieldUpdateOperationsInput | string | null
+    cvData?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    desiredSalary?: NullableStringFieldUpdateOperationsInput | string | null
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    customAnswers?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -37,6 +37,13 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlan, SubscriptionLimits> = 
         price: 50000,
         duration: 1,
     },
+    RECRUITMENT: {
+        maxDepartments: 10,
+        maxMembersPerDept: 30,
+        // 20 000 FCFA / mois — Spécialisé Recrutement (offres illimitées)
+        price: 20000,
+        duration: 1,
+    },
 };
 
 export function getSubscriptionLimits(plan: SubscriptionPlan): SubscriptionLimits {

@@ -65,6 +65,7 @@ model User {
   deletionRequestsInitiated ConversationDeletionRequest[] @relation("DeletionRequestRequester")
   discussionRightsBought    DiscussionRightPurchase[]     @relation("DiscussionRightBuyer")
   discussionRightsSold      DiscussionRightPurchase[]     @relation("DiscussionRightSeller")
+  createdJobOffers          JobOffer[]                    @relation("JobOfferCreator")
 
   followers                        Follow[]                     @relation("UserFollowers")
   following                        Follow[]                     @relation("UserFollowing")
@@ -168,6 +169,7 @@ model Organization {
   collaborationsAsA         OrganizationCollaboration[] @relation("OrgACollaborations")
   collaborationsAsB         OrganizationCollaboration[] @relation("OrgBCollaborations")
   collaborationGroupMembers CollaborationGroupMember[]
+  jobOffers                 JobOffer[]
 
   @@index([code])
   @@index([isSuspended])
@@ -799,6 +801,7 @@ enum SubscriptionPlan {
   BASIC
   PROFESSIONAL
   ENTERPRISE
+  RECRUITMENT
 }
 
 enum EventType {
@@ -887,6 +890,7 @@ model Subscription {
   endDate           DateTime?
   maxDepartments    Int              @default(2)
   maxMembersPerDept Int              @default(5)
+  maxJobOffers      Int              @default(0)
   isActive          Boolean          @default(true)
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
@@ -1307,4 +1311,112 @@ model UserMonthlyProgress {
   @@index([goalId])
   @@index([goalId, year, month])
   @@index([year, month])
+}
+
+// ===== MODULE OFFRES D'EMPLOI =====
+
+enum ContractType {
+  CDI
+  CDD
+  STAGE
+  FREELANCE
+  FULL_TIME
+  PART_TIME
+}
+
+enum WorkMode {
+  ONSITE
+  REMOTE
+  HYBRID
+}
+
+enum JobStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  INTERVIEW
+}
+
+model JobOffer {
+  id              String       @id @default(cuid())
+  orgId           String
+  // Infos entreprise
+  companyName     String
+  companyLogo     String?      @db.Text
+  contactEmail    String
+  contactPhone    String?
+  address         String?
+  city            String?
+  website         String?      @db.Text
+  // Infos poste
+  title           String
+  contractType    ContractType
+  location        String
+  workMode        WorkMode
+  description     String       @db.Text
+  missions        String?      @db.Text
+  skills          String?      @db.Text
+  educationLevel  String?
+  experience      String?
+  salary          String?
+  deadline        DateTime?
+  positionsCount  Int          @default(1)
+  // Configuration du formulaire de candidature (JSON)
+  formConfig      Json // Champs activés avec leur statut: required/optional/disabled
+  customQuestions Json? // Questions personnalisées ajoutées par l'entreprise
+  status          JobStatus    @default(DRAFT)
+  publishedAt     DateTime?
+  createdBy       String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  organization Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  creator      User             @relation("JobOfferCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  applications JobApplication[]
+
+  @@index([orgId])
+  @@index([status])
+  @@index([createdBy])
+  @@index([deadline])
+  @@index([city])
+  @@index([contractType])
+}
+
+model JobApplication {
+  id              String            @id @default(cuid())
+  jobId           String
+  // Données candidat
+  fullName        String?
+  email           String
+  phone           String?
+  address         String?
+  photoData       String?           @db.Text // Base64 photo
+  cvData          String?           @db.Text // Base64 CV
+  coverLetterData String?           @db.Text // Base64 lettre de motivation
+  portfolioUrl    String?           @db.Text
+  portfolioData   String?           @db.Text // Base64 portfolio optionnel
+  educationLevel  String?
+  experience      String?           @db.Text
+  socialLinks     Json? // { linkedin, github, twitter, ... }
+  desiredSalary   String?
+  availability    String?
+  customAnswers   Json? // Réponses aux questions personnalisées
+  // Gestion interne
+  status          ApplicationStatus @default(PENDING)
+  internalNote    String?           @db.Text
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  jobOffer JobOffer @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
 }

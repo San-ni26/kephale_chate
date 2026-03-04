@@ -4,6 +4,7 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { apiError, handleApiError } from '@/src/lib/api-response';
 import { emitToUser } from '@/src/lib/pusher-server';
+import { hashForSearch, decryptPII } from '@/src/lib/server-crypto';
 
 const shareSchema = z.object({
     email: z.string().email('Email invalide'),
@@ -59,9 +60,15 @@ export async function POST(
             return apiError('Email invalide', 400, { code: 'VALIDATION_ERROR', details: validated.error.issues });
         }
 
+        // Recherche par email : emailHash (chiffré) ou email en clair (legacy)
+        const emailLower = validated.data.email.toLowerCase().trim();
+        const emailHash = hashForSearch(emailLower);
         const targetUser = await prisma.user.findFirst({
             where: {
-                email: validated.data.email.toLowerCase(),
+                OR: [
+                    { emailHash },
+                    { email: emailLower },
+                ],
                 isVerified: true,
                 isBanned: false,
             },
@@ -127,9 +134,10 @@ export async function POST(
             console.error('[Share] Error sending Pusher notification:', err);
         }
 
+        const targetEmail = decryptPII(targetUser.email) || targetUser.email;
         return NextResponse.json({
             success: true,
-            sharedWith: { id: targetUser.id, name: targetUser.name, email: targetUser.email, canEdit: validated.data.canEdit ?? true },
+            sharedWith: { id: targetUser.id, name: targetUser.name, email: targetEmail, canEdit: validated.data.canEdit ?? true },
         });
     } catch (error) {
         return handleApiError(error);

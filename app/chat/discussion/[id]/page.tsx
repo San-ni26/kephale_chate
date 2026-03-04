@@ -42,6 +42,7 @@ import { useCallContext } from '@/src/contexts/CallContext';
 import { useSetDiscussionBlur } from '@/src/contexts/DiscussionBlurContext';
 import { ScreenshotBlocker } from '@/src/components/chat/ScreenshotBlocker';
 import { cn } from '@/src/lib/utils';
+import { DiscussionNotesPanel } from '@/src/components/chat/DiscussionNotesPanel';
 
 // Hooks extraits (#1 refactoring)
 import { useDiscussionMessages } from '@/src/hooks/useDiscussionMessages';
@@ -719,6 +720,10 @@ export default function DiscussionPage() {
                 </div>
             </div>
         );
+    }
+
+    if (searchParams?.get('view') === 'notes') {
+        return <DiscussionNotesPanel conversation={conversation} />;
     }
 
     return (
