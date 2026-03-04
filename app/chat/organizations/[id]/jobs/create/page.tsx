@@ -186,17 +186,17 @@ export default function CreateJobOfferPage() {
 
             <div className="max-w-3xl mx-auto px-4 mt-6">
                 {/* Barre de progression */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center justify-between mb-8 mt-20">
                     {STEPS.map((s, i) => (
                         <div key={s.id} className="flex items-center">
                             <div className="flex flex-col items-center">
                                 <button
                                     onClick={() => step > s.id && setStep(s.id)}
                                     className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${step > s.id
-                                            ? "bg-green-500 text-white cursor-pointer"
-                                            : step === s.id
-                                                ? "bg-primary text-primary-foreground"
-                                                : "bg-muted text-muted-foreground cursor-not-allowed"
+                                        ? "bg-green-500 text-white cursor-pointer"
+                                        : step === s.id
+                                            ? "bg-primary text-primary-foreground"
+                                            : "bg-muted text-muted-foreground cursor-not-allowed"
                                         }`}
                                 >
                                     {step > s.id ? <Check className="w-5 h-5" /> : <s.icon className="w-5 h-5" />}
@@ -214,7 +214,7 @@ export default function CreateJobOfferPage() {
 
                 {/* Étape 1: Informations entreprise */}
                 {step === 1 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
                         <div>
                             <h2 className="text-xl font-bold mb-1">Informations de l'entreprise</h2>
                             <p className="text-muted-foreground text-sm">Ces informations seront visibles par les candidats</p>
@@ -273,7 +273,7 @@ export default function CreateJobOfferPage() {
 
                 {/* Étape 2: Informations du poste */}
                 {step === 2 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
                         <div>
                             <h2 className="text-xl font-bold mb-1">Informations du poste</h2>
                             <p className="text-muted-foreground text-sm">Décrivez le poste en détail pour attirer les bons candidats</p>
@@ -377,7 +377,7 @@ export default function CreateJobOfferPage() {
 
                 {/* Étape 3: Formulaire candidat */}
                 {step === 3 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
                         <div>
                             <h2 className="text-xl font-bold mb-1">Formulaire de candidature</h2>
                             <p className="text-muted-foreground text-sm">Choisissez les informations à demander aux candidats</p>
@@ -394,12 +394,12 @@ export default function CreateJobOfferPage() {
                                                 key={status}
                                                 onClick={() => setFormConfig(prev => ({ ...prev, [field.key]: status }))}
                                                 className={`px-3 py-1 text-xs rounded-lg transition-all font-medium ${formConfig[field.key] === status
-                                                        ? status === "required"
-                                                            ? "bg-primary text-primary-foreground"
-                                                            : status === "optional"
-                                                                ? "bg-amber-500 text-white"
-                                                                : "bg-muted-foreground/20 text-muted-foreground"
-                                                        : "text-muted-foreground hover:bg-muted"
+                                                    ? status === "required"
+                                                        ? "bg-primary text-primary-foreground"
+                                                        : status === "optional"
+                                                            ? "bg-amber-500 text-white"
+                                                            : "bg-muted-foreground/20 text-muted-foreground"
+                                                    : "text-muted-foreground hover:bg-muted"
                                                     }`}
                                             >
                                                 {status === "required" ? "Obligatoire" : status === "optional" ? "Optionnel" : "Non demandé"}
@@ -478,7 +478,7 @@ export default function CreateJobOfferPage() {
                 {/* Étape 4: Aperçu */}
                 {step === 4 && (
                     <div className="space-y-6">
-                        <div className="bg-card border border-border rounded-2xl p-6">
+                        <div className="bg-card border border-border rounded-2xl p-6 pb-20">
                             <h2 className="text-xl font-bold mb-4">Aperçu de l'offre</h2>
                             {/* Preview card */}
                             <div className="border border-border rounded-xl p-5 space-y-4">
@@ -544,7 +544,7 @@ export default function CreateJobOfferPage() {
 
                 {/* Étape 5: Publication */}
                 {step === 5 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
                         <div className="text-center space-y-2">
                             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
                                 <Rocket className="w-8 h-8 text-primary" />
