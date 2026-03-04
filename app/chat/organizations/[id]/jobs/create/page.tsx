@@ -478,7 +478,7 @@ export default function CreateJobOfferPage() {
                 {/* Étape 4: Aperçu */}
                 {step === 4 && (
                     <div className="space-y-6">
-                        <div className="bg-card border border-border rounded-2xl p-6 pb-20">
+                        <div className="bg-card border border-border rounded-2xl p-6 ">
                             <h2 className="text-xl font-bold mb-4">Aperçu de l'offre</h2>
                             {/* Preview card */}
                             <div className="border border-border rounded-xl p-5 space-y-4">
@@ -531,7 +531,7 @@ export default function CreateJobOfferPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between pb-10">
                             <Button variant="outline" onClick={() => setStep(3)} className="gap-2">
                                 <ArrowLeft className="w-4 h-4" /> Précédent
                             </Button>
