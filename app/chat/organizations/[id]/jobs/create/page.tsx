@@ -402,7 +402,7 @@ export default function CreateJobOfferPage() {
                                                     : "text-muted-foreground hover:bg-muted"
                                                     }`}
                                             >
-                                                {status === "required" ? "Obligatoire" : status === "optional" ? "Optionnel" : "Non demandé"}
+                                                {status === "required" ? "Obligatoire" : status === "optional" ? "Optionnel" : "Non"}
                                             </button>
                                         ))}
                                     </div>
