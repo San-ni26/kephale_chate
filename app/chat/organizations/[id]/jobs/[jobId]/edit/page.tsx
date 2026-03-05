@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, Building2, Briefcase, ClipboardList, Eye, Rocket, Loader2, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
@@ -13,7 +13,6 @@ import { fetchWithAuth, getUser } from "@/src/lib/auth-client";
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 type FieldStatus = "required" | "optional" | "disabled";
 type FormConfig = Record<string, FieldStatus>;
 
@@ -52,24 +51,44 @@ const STEPS = [
     { id: 2, label: "Poste", icon: Briefcase },
     { id: 3, label: "Formulaire", icon: ClipboardList },
     { id: 4, label: "Aperçu", icon: Eye },
-    { id: 5, label: "Publication", icon: Rocket },
+    { id: 5, label: "Enregistrer", icon: Rocket },
 ];
 
-// ─── Page principale ──────────────────────────────────────────────────────────
-export default function CreateJobOfferPage() {
+const DEFAULT_FORM_CONFIG: FormConfig = {
+    fullName: "required",
+    phone: "optional",
+    address: "disabled",
+    photoData: "disabled",
+    cvData: "required",
+    coverLetterData: "optional",
+    portfolioUrl: "optional",
+    educationLevel: "optional",
+    experience: "optional",
+    socialLinks: "disabled",
+    desiredSalary: "disabled",
+    availability: "optional",
+};
+
+export default function EditJobOfferPage() {
     const router = useRouter();
     const params = useParams();
     const orgId = params?.id as string;
+    const jobId = params?.jobId as string;
     const currentUser = getUser();
 
     const [step, setStep] = useState(1);
     const [submitting, setSubmitting] = useState(false);
+    const [initialized, setInitialized] = useState(false);
 
-    // Fetch org data to auto-fill company name
+    const { data: jobData, error: jobError, isLoading: jobLoading } = useSWR(
+        orgId && jobId ? `/api/organizations/${orgId}/jobs/${jobId}` : null,
+        fetcher
+    );
+    const job = jobData?.job;
+
     const { data: orgData } = useSWR(orgId ? `/api/organizations/${orgId}` : null, fetcher);
     const org = orgData?.organization;
 
-    // Step 1: Company info
     const [companyName, setCompanyName] = useState("");
     const [companyLogo, setCompanyLogo] = useState("");
     const [contactEmail, setContactEmail] = useState(currentUser?.email || "");
@@ -78,7 +97,6 @@ export default function CreateJobOfferPage() {
     const [city, setCity] = useState("");
     const [website, setWebsite] = useState("");
 
-    // Step 2: Job info
     const [title, setTitle] = useState("");
     const [contractType, setContractType] = useState("");
     const [location, setLocation] = useState("");
@@ -92,29 +110,46 @@ export default function CreateJobOfferPage() {
     const [deadline, setDeadline] = useState("");
     const [positionsCount, setPositionsCount] = useState(1);
 
-    // Step 3: Form config
-    const [formConfig, setFormConfig] = useState<FormConfig>({
-        fullName: "required",
-        phone: "optional",
-        address: "disabled",
-        photoData: "disabled",
-        cvData: "required",
-        coverLetterData: "optional",
-        portfolioUrl: "optional",
-        educationLevel: "optional",
-        experience: "optional",
-        socialLinks: "disabled",
-        desiredSalary: "disabled",
-        availability: "optional",
-    });
+    const [formConfig, setFormConfig] = useState<FormConfig>(DEFAULT_FORM_CONFIG);
     const [customQuestions, setCustomQuestions] = useState<Array<{
         id: string; type: "text" | "yesno" | "multiple"; question: string; options?: string[];
     }>>([]);
 
-    // Auto-fill company name from org
-    useState(() => {
-        if (org && !companyName) setCompanyName(org.name || "");
-    });
+    useEffect(() => {
+        if (!job || initialized) return;
+        setCompanyName(job.companyName || "");
+        setCompanyLogo(job.companyLogo || "");
+        setContactEmail(job.contactEmail || currentUser?.email || "");
+        setContactPhone(job.contactPhone || "");
+        setAddress(job.address || "");
+        setCity(job.city || "");
+        setWebsite(job.website || "");
+        setTitle(job.title || "");
+        setContractType(job.contractType || "");
+        setLocation(job.location || "");
+        setWorkMode(job.workMode || "");
+        setDescription(job.description || "");
+        setMissions(job.missions || "");
+        setSkills(job.skills || "");
+        setEducationLevel(job.educationLevel || "");
+        setExperience(job.experience || "");
+        setSalary(job.salary || "");
+        setDeadline(job.deadline ? new Date(job.deadline).toISOString().slice(0, 10) : "");
+        setPositionsCount(job.positionsCount ?? 1);
+        if (job.formConfig && typeof job.formConfig === "object") {
+            setFormConfig({ ...DEFAULT_FORM_CONFIG, ...job.formConfig });
+        }
+        const cq = job.customQuestions;
+        if (Array.isArray(cq) && cq.length > 0) {
+            setCustomQuestions(cq.map((q: any) => ({
+                id: q.id || String(Date.now() + Math.random()),
+                type: q.type || "text",
+                question: q.question || "",
+                options: q.options,
+            })));
+        }
+        setInitialized(true);
+    }, [job, currentUser?.email, initialized]);
 
     const addCustomQuestion = (type: "text" | "yesno" | "multiple") => {
         setCustomQuestions(prev => [...prev, {
@@ -145,22 +180,22 @@ export default function CreateJobOfferPage() {
     const handleSubmit = async (publish: boolean) => {
         setSubmitting(true);
         try {
-            const res = await fetchWithAuth(`/api/organizations/${orgId}/jobs`, {
-                method: "POST",
+            const res = await fetchWithAuth(`/api/organizations/${orgId}/jobs/${jobId}`, {
+                method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     companyName, companyLogo, contactEmail, contactPhone,
                     address, city, website,
                     title, contractType, location, workMode,
                     description, missions, skills, educationLevel, experience,
-                    salary, deadline, positionsCount,
+                    salary, deadline: deadline || null, positionsCount,
                     formConfig, customQuestions,
-                    publish,
+                    status: publish ? "PUBLISHED" : "DRAFT",
                 }),
             });
             const data = await res.json();
             if (!res.ok) { toast.error(data.error || "Erreur"); return; }
-            toast.success(publish ? "Offre publiée avec succès !" : "Brouillon enregistré");
+            toast.success(publish ? "Offre publiée avec succès !" : "Modifications enregistrées");
             router.push(`/chat/organizations/${orgId}/jobs`);
         } catch {
             toast.error("Erreur serveur");
@@ -172,20 +207,35 @@ export default function CreateJobOfferPage() {
     const canProceedStep1 = companyName.trim() && contactEmail.trim();
     const canProceedStep2 = title.trim() && contractType && location.trim() && workMode && description.trim();
 
+    if (jobLoading || !job) {
+        return (
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+            </div>
+        );
+    }
+
+    if (jobError || !job) {
+        return (
+            <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 p-4">
+                <p className="text-muted-foreground">Offre non trouvée ou accès refusé.</p>
+                <Button onClick={() => router.push(`/chat/organizations/${orgId}/jobs`)}>Retour aux offres</Button>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-background pb-20 md:pb-8">
-            {/* Header */}
             <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border px-4 py-3">
                 <div className="max-w-3xl mx-auto flex items-center gap-3">
                     <Button variant="ghost" size="icon" onClick={() => router.back()}>
                         <ArrowLeft className="w-5 h-5" />
                     </Button>
-                    <h1 className="text-lg font-bold">Créer une offre d'emploi</h1>
+                    <h1 className="text-lg font-bold">Modifier l&apos;offre</h1>
                 </div>
             </div>
 
-            <div className="max-w-3xl mx-auto px-4 mt-6 pb-20">
-                {/* Barre de progression */}
+            <div className="max-w-3xl mx-auto px-4 mt-6">
                 <div className="flex items-center justify-between mb-8 mt-20">
                     {STEPS.map((s, i) => (
                         <div key={s.id} className="flex items-center">
@@ -212,21 +262,20 @@ export default function CreateJobOfferPage() {
                     ))}
                 </div>
 
-                {/* Étape 1: Informations entreprise */}
                 {step === 1 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 ">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
                         <div>
-                            <h2 className="text-xl font-bold mb-1">Informations de l'entreprise</h2>
+                            <h2 className="text-xl font-bold mb-1">Informations de l&apos;entreprise</h2>
                             <p className="text-muted-foreground text-sm">Ces informations seront visibles par les candidats</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="md:col-span-2">
-                                <Label>Nom de l'entreprise *</Label>
+                                <Label>Nom de l&apos;entreprise *</Label>
                                 <Input value={companyName} onChange={e => setCompanyName(e.target.value)}
                                     placeholder={org?.name || "Nom de votre entreprise"} className="mt-1" />
                             </div>
                             <div className="md:col-span-2">
-                                <Label>Logo de l'entreprise</Label>
+                                <Label>Logo de l&apos;entreprise</Label>
                                 <div className="mt-1 flex items-center gap-4">
                                     {companyLogo && (
                                         <img src={companyLogo} alt="Logo" className="w-16 h-16 object-cover rounded-lg border border-border" />
@@ -271,9 +320,8 @@ export default function CreateJobOfferPage() {
                     </div>
                 )}
 
-                {/* Étape 2: Informations du poste */}
                 {step === 2 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 ">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
                         <div>
                             <h2 className="text-xl font-bold mb-1">Informations du poste</h2>
                             <p className="text-muted-foreground text-sm">Décrivez le poste en détail pour attirer les bons candidats</p>
@@ -305,25 +353,25 @@ export default function CreateJobOfferPage() {
                             <div className="md:col-span-2">
                                 <Label>Localisation *</Label>
                                 <Input value={location} onChange={e => setLocation(e.target.value)}
-                                    placeholder="Ex: Abidjan, Côte d'Ivoire (ou précisez le quartier)" className="mt-1" />
+                                    placeholder="Ex: Abidjan, Côte d'Ivoire" className="mt-1" />
                             </div>
                             <div className="md:col-span-2">
                                 <Label>Description détaillée *</Label>
                                 <Textarea value={description} onChange={e => setDescription(e.target.value)}
-                                    placeholder="Décrivez le contexte du poste, l'environnement de travail..." rows={4} className="mt-1" />
+                                    placeholder="Décrivez le contexte du poste..." rows={4} className="mt-1" />
                             </div>
                             <div className="md:col-span-2">
                                 <Label>Missions principales</Label>
                                 <Textarea value={missions} onChange={e => setMissions(e.target.value)}
-                                    placeholder="Listez les missions principales du poste..." rows={3} className="mt-1" />
+                                    placeholder="Listez les missions..." rows={3} className="mt-1" />
                             </div>
                             <div className="md:col-span-2">
                                 <Label>Compétences requises</Label>
                                 <Textarea value={skills} onChange={e => setSkills(e.target.value)}
-                                    placeholder="Ex: React, Node.js, SQL, communication..." rows={2} className="mt-1" />
+                                    placeholder="Ex: React, Node.js..." rows={2} className="mt-1" />
                             </div>
                             <div>
-                                <Label>Niveau d'étude requis</Label>
+                                <Label>Niveau d&apos;étude requis</Label>
                                 <Select value={educationLevel} onValueChange={setEducationLevel}>
                                     <SelectTrigger className="mt-1"><SelectValue placeholder="Niveau requis..." /></SelectTrigger>
                                     <SelectContent>
@@ -375,14 +423,12 @@ export default function CreateJobOfferPage() {
                     </div>
                 )}
 
-                {/* Étape 3: Formulaire candidat */}
                 {step === 3 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 ">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
                         <div>
                             <h2 className="text-xl font-bold mb-1">Formulaire de candidature</h2>
                             <p className="text-muted-foreground text-sm">Choisissez les informations à demander aux candidats</p>
                         </div>
-
                         <div className="space-y-3">
                             <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Champs standards</h3>
                             {AVAILABLE_FIELDS.map(field => (
@@ -409,8 +455,6 @@ export default function CreateJobOfferPage() {
                                 </div>
                             ))}
                         </div>
-
-                        {/* Questions personnalisées */}
                         <div className="space-y-3">
                             <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Questions personnalisées</h3>
                             {customQuestions.map(q => (
@@ -463,7 +507,6 @@ export default function CreateJobOfferPage() {
                                 </Button>
                             </div>
                         </div>
-
                         <div className="flex justify-between">
                             <Button variant="outline" onClick={() => setStep(2)} className="gap-2">
                                 <ArrowLeft className="w-4 h-4" /> Précédent
@@ -475,12 +518,10 @@ export default function CreateJobOfferPage() {
                     </div>
                 )}
 
-                {/* Étape 4: Aperçu */}
                 {step === 4 && (
                     <div className="space-y-6">
-                        <div className="bg-card border border-border rounded-2xl p-6 ">
-                            <h2 className="text-xl font-bold mb-4">Aperçu de l'offre</h2>
-                            {/* Preview card */}
+                        <div className="bg-card border border-border rounded-2xl p-6">
+                            <h2 className="text-xl font-bold mb-4">Aperçu de l&apos;offre</h2>
                             <div className="border border-border rounded-xl p-5 space-y-4">
                                 <div className="flex items-start gap-4">
                                     {companyLogo ? (
@@ -526,12 +567,12 @@ export default function CreateJobOfferPage() {
                                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground pt-2 border-t border-border">
                                     {educationLevel && <span>🎓 {educationLevel}</span>}
                                     {experience && <span>⏱ {experience}</span>}
-                                    {positionsCount && <span>👥 {positionsCount} poste{positionsCount > 1 ? 's' : ''}</span>}
-                                    {deadline && <span>📅 Jusqu'au {new Date(deadline).toLocaleDateString('fr-FR')}</span>}
+                                    {positionsCount && <span>👥 {positionsCount} poste{positionsCount > 1 ? "s" : ""}</span>}
+                                    {deadline && <span>📅 Jusqu&apos;au {new Date(deadline).toLocaleDateString("fr-FR")}</span>}
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-between ">
+                        <div className="flex justify-between pb-20">
                             <Button variant="outline" onClick={() => setStep(3)} className="gap-2">
                                 <ArrowLeft className="w-4 h-4" /> Précédent
                             </Button>
@@ -542,51 +583,42 @@ export default function CreateJobOfferPage() {
                     </div>
                 )}
 
-                {/* Étape 5: Publication */}
                 {step === 5 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 ">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 mb-20">
                         <div className="text-center space-y-2">
                             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
                                 <Rocket className="w-8 h-8 text-primary" />
                             </div>
-                            <h2 className="text-2xl font-bold">Prêt à publier !</h2>
-                            <p className="text-muted-foreground">Choisissez comment vous souhaitez enregistrer cette offre</p>
+                            <h2 className="text-2xl font-bold">Enregistrer les modifications</h2>
+                            <p className="text-muted-foreground">Choisissez comment enregistrer cette offre</p>
                         </div>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <button
                                 onClick={() => handleSubmit(false)}
                                 disabled={submitting}
-                                className="p-5 border-2 border-border rounded-xl text-left hover:border-primary/50 transition-all group"
+                                className="p-5 border-2 border-border rounded-xl text-left hover:border-primary/50 transition-all"
                             >
-                                <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center mb-3">
-                                    📝
-                                </div>
+                                <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center mb-3">📝</div>
                                 <h3 className="font-bold mb-1">Brouillon</h3>
-                                <p className="text-sm text-muted-foreground">Enregistrez et publiez plus tard</p>
+                                <p className="text-sm text-muted-foreground">Enregistrer sans publier</p>
                             </button>
-
                             <button
                                 onClick={() => handleSubmit(true)}
                                 disabled={submitting}
                                 className="p-5 border-2 border-primary/50 bg-primary/5 rounded-xl text-left hover:border-primary transition-all"
                             >
-                                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
-                                    🚀
-                                </div>
-                                <h3 className="font-bold mb-1 text-primary">Publier maintenant</h3>
-                                <p className="text-sm text-muted-foreground">Rendre visible aux candidats immédiatement</p>
+                                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">🚀</div>
+                                <h3 className="font-bold mb-1 text-primary">Publier</h3>
+                                <p className="text-sm text-muted-foreground">Rendre visible aux candidats</p>
                             </button>
                         </div>
-
                         {submitting && (
                             <div className="flex items-center justify-center gap-2 text-muted-foreground">
                                 <Loader2 className="w-5 h-5 animate-spin" />
                                 <span>Enregistrement en cours...</span>
                             </div>
                         )}
-
-                        <div className="flex justify-start ">
+                        <div className="flex justify-start">
                             <Button variant="outline" onClick={() => setStep(4)} className="gap-2">
                                 <ArrowLeft className="w-4 h-4" /> Précédent
                             </Button>

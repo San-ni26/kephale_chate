@@ -113,8 +113,8 @@ export default function OrganizationJobsPage() {
     const canCreate = jobLimit === 999 || jobs.filter((j: any) => j.status !== 'CLOSED').length < jobLimit;
 
     return (
-        <div className="min-h-screen bg-background pb-20 md:pb-8 mt-14 md:mt-16">
-            <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+        <div className="min-h-screen bg-background pb-20 md:pb-8 mt-14 md:mt-16 ">
+            <div className="max-w-5xl mx-auto px-4 py-6 space-y-6 pb-25">
                 {/* Stats */}
                 {isAdmin && (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

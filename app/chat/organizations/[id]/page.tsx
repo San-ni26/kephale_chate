@@ -766,7 +766,7 @@ export default function OrganizationDashboard() {
     if (!isAdmin) {
         return (
             <div className="min-h-screen bg-background mt-14 md:mt-16 pb-20 md:pb-6">
-                <div className="mx-auto w-full max-w-6xl px-4 md:px-6 lg:px-8 py-6 space-y-8">
+                <div className="mx-auto w-full max-w-6xl px-4 md:px-6 lg:px-8 py-6 space-y-8 pb-25">
                     {/* My Departments Section */}
                     <div className="space-y-4">
                         <h2 className="text-lg md:text-xl font-semibold text-foreground">Mes Départements</h2>

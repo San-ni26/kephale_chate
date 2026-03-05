@@ -273,7 +273,7 @@ export default function JobDetailPage() {
 
     return (
         <div className="min-h-screen bg-background pb-24 mt-16">
-            <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+            <div className="max-w-3xl mx-auto px-4 py-6 space-y-6 pb-24">
                 {/* Hero de l'offre */}
                 <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
                     <div className="flex items-start gap-4">
@@ -401,204 +401,204 @@ export default function JobDetailPage() {
                             </>
                         ) : (
                             <>
-                        <DialogHeader>
-                            <DialogTitle className="flex items-center justify-between">
-                                <span>Votre candidature</span>
-                                <span className="text-sm font-normal text-muted-foreground">
-                                    Étape {formStep + 1} / {totalSteps}
-                                </span>
-                            </DialogTitle>
-                            <p className="text-sm text-muted-foreground">
-                                Postuler à <strong>{job.title}</strong>
-                            </p>
-                        </DialogHeader>
-
-                        <div className="space-y-4 py-4">
-                            {/* Indicateur d'étapes */}
-                            <div className="flex gap-1">
-                                {Array.from({ length: totalSteps }).map((_, i) => (
-                                    <div
-                                        key={i}
-                                        className={`h-1 flex-1 rounded-full transition-colors ${i <= formStep ? "bg-primary" : "bg-muted"}`}
-                                    />
-                                ))}
-                            </div>
-
-                            {/* Contenu par étape */}
-                            {formStep === totalSteps - 1 ? (
-                                <div className="space-y-4">
+                                <DialogHeader>
+                                    <DialogTitle className="flex items-center justify-between">
+                                        <span>Votre candidature</span>
+                                        <span className="text-sm font-normal text-muted-foreground">
+                                            Étape {formStep + 1} / {totalSteps}
+                                        </span>
+                                    </DialogTitle>
                                     <p className="text-sm text-muted-foreground">
-                                        Vérifiez vos informations avant d&apos;envoyer.
+                                        Postuler à <strong>{job.title}</strong>
                                     </p>
-                                    <Button
-                                        onClick={handleSubmit}
-                                        disabled={!canSubmit() || submitting}
-                                        className="w-full gap-2"
-                                    >
-                                        {submitting
-                                            ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi...</>
-                                            : <><Send className="w-4 h-4" /> Envoyer ma candidature</>
-                                        }
-                                    </Button>
-                                </div>
-                            ) : (
-                                <>
-                                    {getFieldsForStep(formStep).map(fieldKey => {
-                                        if (fieldKey === "custom") {
-                                            return (
-                                                <div key="custom" className="space-y-4 pt-2 border-t border-border">
-                                                    <h4 className="font-semibold">Questions de l&apos;entreprise</h4>
-                                                    {customQuestions.map(q => (
-                                                        <div key={q.id}>
-                                                            <Label>{q.question}</Label>
-                                                            {q.type === "text" && (
-                                                                <Textarea
-                                                                    value={formData.customAnswers?.[q.question] || ""}
-                                                                    onChange={e => updateField("customAnswers", {
-                                                                        ...formData.customAnswers,
-                                                                        [q.question]: e.target.value,
-                                                                    })}
-                                                                    placeholder="Votre réponse..." rows={2} className="mt-1"
-                                                                />
-                                                            )}
-                                                            {q.type === "yesno" && (
-                                                                <div className="flex gap-3 mt-1">
-                                                                    {["Oui", "Non"].map(opt => (
-                                                                        <button
-                                                                            key={opt}
-                                                                            type="button"
-                                                                            onClick={() => updateField("customAnswers", {
-                                                                                ...formData.customAnswers,
-                                                                                [q.question]: opt,
-                                                                            })}
-                                                                            className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all ${formData.customAnswers?.[q.question] === opt
-                                                                                ? "border-primary bg-primary/10 text-primary"
-                                                                                : "border-border text-muted-foreground hover:border-primary/50"
-                                                                                }`}
-                                                                        >
-                                                                            {opt}
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            )}
-                                                            {q.type === "multiple" && (
-                                                                <div className="flex flex-wrap gap-2 mt-1">
-                                                                    {(q.options || []).map(opt => (
-                                                                        <button
-                                                                            key={opt}
-                                                                            type="button"
-                                                                            onClick={() => updateField("customAnswers", {
-                                                                                ...formData.customAnswers,
-                                                                                [q.question]: opt,
-                                                                            })}
-                                                                            className={`px-3 py-1.5 rounded-xl border text-sm transition-all ${formData.customAnswers?.[q.question] === opt
-                                                                                ? "border-primary bg-primary/10 text-primary font-medium"
-                                                                                : "border-border text-muted-foreground hover:border-primary/50"
-                                                                                }`}
-                                                                        >
-                                                                            {opt}
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            );
-                                        }
-                                        const status = formConfig[fieldKey];
-                                        const required = status === "required";
-                                        const label = FIELD_LABELS[fieldKey] || fieldKey;
+                                </DialogHeader>
 
-                                        if (fieldKey === "cvData" || fieldKey === "coverLetterData" || fieldKey === "portfolioData" || fieldKey === "photoData") {
-                                            const accept = fieldKey === "photoData" ? "image/*" : ".pdf,.doc,.docx,image/*";
-                                            return (
-                                                <UploadField
-                                                    key={fieldKey}
-                                                    label={label}
-                                                    required={required}
-                                                    fieldKey={fieldKey}
-                                                    accept={accept}
-                                                    onChange={val => updateField(fieldKey, val)}
-                                                />
-                                            );
-                                        }
-                                        if (fieldKey === "experience") {
-                                            return (
-                                                <div key={fieldKey}>
-                                                    <Label className="flex items-center gap-1">
-                                                        {label} {required && <span className="text-destructive">*</span>}
-                                                    </Label>
-                                                    <Textarea
-                                                        value={formData[fieldKey]}
-                                                        onChange={e => updateField(fieldKey, e.target.value)}
-                                                        placeholder="Décrivez votre expérience professionnelle..."
-                                                        rows={4} className="mt-1"
-                                                    />
-                                                </div>
-                                            );
-                                        }
-                                        if (fieldKey === "socialLinks") {
-                                            return (
-                                                <div key={fieldKey} className="space-y-2">
-                                                    <Label>{label} {required && <span className="text-destructive">*</span>}</Label>
-                                                    {["linkedin", "github", "twitter"].map(network => (
-                                                        <div key={network} className="flex gap-2 items-center">
-                                                            <span className="text-sm text-muted-foreground w-20 capitalize">{network}</span>
-                                                            <Input
-                                                                value={formData.socialLinks?.[network] || ""}
-                                                                onChange={e => updateField("socialLinks", { ...formData.socialLinks, [network]: e.target.value })}
-                                                                placeholder={`https://${network}.com/profil`}
+                                <div className="space-y-4 py-4">
+                                    {/* Indicateur d'étapes */}
+                                    <div className="flex gap-1">
+                                        {Array.from({ length: totalSteps }).map((_, i) => (
+                                            <div
+                                                key={i}
+                                                className={`h-1 flex-1 rounded-full transition-colors ${i <= formStep ? "bg-primary" : "bg-muted"}`}
+                                            />
+                                        ))}
+                                    </div>
+
+                                    {/* Contenu par étape */}
+                                    {formStep === totalSteps - 1 ? (
+                                        <div className="space-y-4">
+                                            <p className="text-sm text-muted-foreground">
+                                                Vérifiez vos informations avant d&apos;envoyer.
+                                            </p>
+                                            <Button
+                                                onClick={handleSubmit}
+                                                disabled={!canSubmit() || submitting}
+                                                className="w-full gap-2"
+                                            >
+                                                {submitting
+                                                    ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi...</>
+                                                    : <><Send className="w-4 h-4" /> Envoyer ma candidature</>
+                                                }
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            {getFieldsForStep(formStep).map(fieldKey => {
+                                                if (fieldKey === "custom") {
+                                                    return (
+                                                        <div key="custom" className="space-y-4 pt-2 border-t border-border">
+                                                            <h4 className="font-semibold">Questions de l&apos;entreprise</h4>
+                                                            {customQuestions.map(q => (
+                                                                <div key={q.id}>
+                                                                    <Label>{q.question}</Label>
+                                                                    {q.type === "text" && (
+                                                                        <Textarea
+                                                                            value={formData.customAnswers?.[q.question] || ""}
+                                                                            onChange={e => updateField("customAnswers", {
+                                                                                ...formData.customAnswers,
+                                                                                [q.question]: e.target.value,
+                                                                            })}
+                                                                            placeholder="Votre réponse..." rows={2} className="mt-1"
+                                                                        />
+                                                                    )}
+                                                                    {q.type === "yesno" && (
+                                                                        <div className="flex gap-3 mt-1">
+                                                                            {["Oui", "Non"].map(opt => (
+                                                                                <button
+                                                                                    key={opt}
+                                                                                    type="button"
+                                                                                    onClick={() => updateField("customAnswers", {
+                                                                                        ...formData.customAnswers,
+                                                                                        [q.question]: opt,
+                                                                                    })}
+                                                                                    className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all ${formData.customAnswers?.[q.question] === opt
+                                                                                        ? "border-primary bg-primary/10 text-primary"
+                                                                                        : "border-border text-muted-foreground hover:border-primary/50"
+                                                                                        }`}
+                                                                                >
+                                                                                    {opt}
+                                                                                </button>
+                                                                            ))}
+                                                                        </div>
+                                                                    )}
+                                                                    {q.type === "multiple" && (
+                                                                        <div className="flex flex-wrap gap-2 mt-1">
+                                                                            {(q.options || []).map(opt => (
+                                                                                <button
+                                                                                    key={opt}
+                                                                                    type="button"
+                                                                                    onClick={() => updateField("customAnswers", {
+                                                                                        ...formData.customAnswers,
+                                                                                        [q.question]: opt,
+                                                                                    })}
+                                                                                    className={`px-3 py-1.5 rounded-xl border text-sm transition-all ${formData.customAnswers?.[q.question] === opt
+                                                                                        ? "border-primary bg-primary/10 text-primary font-medium"
+                                                                                        : "border-border text-muted-foreground hover:border-primary/50"
+                                                                                        }`}
+                                                                                >
+                                                                                    {opt}
+                                                                                </button>
+                                                                            ))}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    );
+                                                }
+                                                const status = formConfig[fieldKey];
+                                                const required = status === "required";
+                                                const label = FIELD_LABELS[fieldKey] || fieldKey;
+
+                                                if (fieldKey === "cvData" || fieldKey === "coverLetterData" || fieldKey === "portfolioData" || fieldKey === "photoData") {
+                                                    const accept = fieldKey === "photoData" ? "image/*" : ".pdf,.doc,.docx,image/*";
+                                                    return (
+                                                        <UploadField
+                                                            key={fieldKey}
+                                                            label={label}
+                                                            required={required}
+                                                            fieldKey={fieldKey}
+                                                            accept={accept}
+                                                            onChange={val => updateField(fieldKey, val)}
+                                                        />
+                                                    );
+                                                }
+                                                if (fieldKey === "experience") {
+                                                    return (
+                                                        <div key={fieldKey}>
+                                                            <Label className="flex items-center gap-1">
+                                                                {label} {required && <span className="text-destructive">*</span>}
+                                                            </Label>
+                                                            <Textarea
+                                                                value={formData[fieldKey]}
+                                                                onChange={e => updateField(fieldKey, e.target.value)}
+                                                                placeholder="Décrivez votre expérience professionnelle..."
+                                                                rows={4} className="mt-1"
                                                             />
                                                         </div>
-                                                    ))}
-                                                </div>
-                                            );
-                                        }
-                                        return (
-                                            <div key={fieldKey}>
-                                                <Label className="flex items-center gap-1">
-                                                    {label} {required && <span className="text-destructive">*</span>}
-                                                </Label>
-                                                <Input
-                                                    value={formData[fieldKey] || ""}
-                                                    onChange={e => updateField(fieldKey, e.target.value)}
-                                                    placeholder={label}
-                                                    type={fieldKey === "email" ? "email" : "text"}
-                                                    className="mt-1"
-                                                />
-                                            </div>
-                                        );
-                                    })}
-                                </>
-                            )}
-                        </div>
+                                                    );
+                                                }
+                                                if (fieldKey === "socialLinks") {
+                                                    return (
+                                                        <div key={fieldKey} className="space-y-2">
+                                                            <Label>{label} {required && <span className="text-destructive">*</span>}</Label>
+                                                            {["linkedin", "github", "twitter"].map(network => (
+                                                                <div key={network} className="flex gap-2 items-center">
+                                                                    <span className="text-sm text-muted-foreground w-20 capitalize">{network}</span>
+                                                                    <Input
+                                                                        value={formData.socialLinks?.[network] || ""}
+                                                                        onChange={e => updateField("socialLinks", { ...formData.socialLinks, [network]: e.target.value })}
+                                                                        placeholder={`https://${network}.com/profil`}
+                                                                    />
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    );
+                                                }
+                                                return (
+                                                    <div key={fieldKey}>
+                                                        <Label className="flex items-center gap-1">
+                                                            {label} {required && <span className="text-destructive">*</span>}
+                                                        </Label>
+                                                        <Input
+                                                            value={formData[fieldKey] || ""}
+                                                            onChange={e => updateField(fieldKey, e.target.value)}
+                                                            placeholder={label}
+                                                            type={fieldKey === "email" ? "email" : "text"}
+                                                            className="mt-1"
+                                                        />
+                                                    </div>
+                                                );
+                                            })}
+                                        </>
+                                    )}
+                                </div>
 
-                        {/* Navigation */}
-                        <div className="flex gap-3 pt-4 border-t border-border">
-                            <Button
-                                variant="outline"
-                                onClick={() => formStep === 0 ? setShowForm(false) : setFormStep(s => s - 1)}
-                                className="flex-1"
-                            >
-                                {formStep === 0 ? "Annuler" : "Précédent"}
-                            </Button>
-                            {formStep < totalSteps - 1 && (
-                                <Button
-                                    onClick={() => {
-                                        if (!canProceedToNextStep(formStep)) {
-                                            toast.error("Veuillez remplir tous les champs obligatoires de cette étape");
-                                            return;
-                                        }
-                                        setFormStep(s => s + 1);
-                                    }}
-                                    className="flex-1 gap-1"
-                                >
-                                    Suivant <ChevronRight className="w-4 h-4" />
-                                </Button>
-                            )}
-                        </div>
-                    </>
+                                {/* Navigation */}
+                                <div className="flex gap-3 pt-4 border-t border-border">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => formStep === 0 ? setShowForm(false) : setFormStep(s => s - 1)}
+                                        className="flex-1"
+                                    >
+                                        {formStep === 0 ? "Annuler" : "Précédent"}
+                                    </Button>
+                                    {formStep < totalSteps - 1 && (
+                                        <Button
+                                            onClick={() => {
+                                                if (!canProceedToNextStep(formStep)) {
+                                                    toast.error("Veuillez remplir tous les champs obligatoires de cette étape");
+                                                    return;
+                                                }
+                                                setFormStep(s => s + 1);
+                                            }}
+                                            className="flex-1 gap-1"
+                                        >
+                                            Suivant <ChevronRight className="w-4 h-4" />
+                                        </Button>
+                                    )}
+                                </div>
+                            </>
                         )}
                     </DialogContent>
                 </Dialog>

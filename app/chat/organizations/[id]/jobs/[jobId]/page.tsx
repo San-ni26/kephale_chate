@@ -112,7 +112,7 @@ export default function JobApplicationsPage() {
                 <div className="grid grid-cols-4 gap-2">
                     {[
                         { label: "Total", value: stats.total, icon: "" },
-                        { label: "En attente", value: stats.pending, icon: "" },
+                        { label: "Attente", value: stats.pending, icon: "" },
                         { label: "Acceptés", value: stats.accepted, icon: "" },
                         { label: "Refusés", value: stats.rejected, icon: "" },
                     ].map(s => (
