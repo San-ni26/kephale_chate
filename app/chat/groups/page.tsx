@@ -91,7 +91,7 @@ function JobCard({ job, onClick }: { job: any; onClick: () => void }) {
                     {/* Compétences preview */}
                     {job.skills && (
                         <p className="text-xs text-muted-foreground mt-2 line-clamp-1">
-                            🔧 {job.skills}
+                            {job.skills}
                         </p>
                     )}
 

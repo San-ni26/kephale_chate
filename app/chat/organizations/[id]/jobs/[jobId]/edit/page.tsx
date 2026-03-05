@@ -226,17 +226,8 @@ export default function EditJobOfferPage() {
 
     return (
         <div className="min-h-screen bg-background pb-20 md:pb-8">
-            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border px-4 py-3">
-                <div className="max-w-3xl mx-auto flex items-center gap-3">
-                    <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                        <ArrowLeft className="w-5 h-5" />
-                    </Button>
-                    <h1 className="text-lg font-bold">Modifier l&apos;offre</h1>
-                </div>
-            </div>
-
-            <div className="max-w-3xl mx-auto px-4 mt-6">
-                <div className="flex items-center justify-between mb-8 mt-20">
+            <div className="max-w-3xl mx-auto px-4 pt-20 pb-20">
+                <div className="flex items-center justify-between mb-8 mt-4">
                     {STEPS.map((s, i) => (
                         <div key={s.id} className="flex items-center">
                             <div className="flex flex-col items-center">
@@ -263,7 +254,7 @@ export default function EditJobOfferPage() {
                 </div>
 
                 {step === 1 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6">
                         <div>
                             <h2 className="text-xl font-bold mb-1">Informations de l&apos;entreprise</h2>
                             <p className="text-muted-foreground text-sm">Ces informations seront visibles par les candidats</p>
@@ -321,7 +312,7 @@ export default function EditJobOfferPage() {
                 )}
 
                 {step === 2 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6">
                         <div>
                             <h2 className="text-xl font-bold mb-1">Informations du poste</h2>
                             <p className="text-muted-foreground text-sm">Décrivez le poste en détail pour attirer les bons candidats</p>
@@ -424,7 +415,7 @@ export default function EditJobOfferPage() {
                 )}
 
                 {step === 3 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 pb-20">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 ">
                         <div>
                             <h2 className="text-xl font-bold mb-1">Formulaire de candidature</h2>
                             <p className="text-muted-foreground text-sm">Choisissez les informations à demander aux candidats</p>
@@ -572,7 +563,7 @@ export default function EditJobOfferPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-between pb-20">
+                        <div className="flex justify-between ">
                             <Button variant="outline" onClick={() => setStep(3)} className="gap-2">
                                 <ArrowLeft className="w-4 h-4" /> Précédent
                             </Button>
@@ -584,7 +575,7 @@ export default function EditJobOfferPage() {
                 )}
 
                 {step === 5 && (
-                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 mb-20">
+                    <div className="space-y-6 bg-card border border-border rounded-2xl p-6 ">
                         <div className="text-center space-y-2">
                             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
                                 <Rocket className="w-8 h-8 text-primary" />

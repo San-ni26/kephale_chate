@@ -161,6 +161,22 @@ export function TopNav() {
         { value: 'REJECTED', label: 'Refusé' },
     ];
 
+    // Page édition offre : /chat/organizations/[id]/jobs/[jobId]/edit
+    const jobEditMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/jobs\/([^/]+)\/edit\/?$/);
+    const jobEditOrgId = jobEditMatch?.[1];
+    const jobEditId = jobEditMatch?.[2];
+    const { data: jobEditData } = useSWR<{ job: { title: string; companyName?: string; status?: string } }>(
+        jobEditOrgId && jobEditId ? `/api/organizations/${jobEditOrgId}/jobs/${jobEditId}` : null,
+        fetcher
+    );
+    const jobEdit = jobEditData?.job;
+    const isJobEditPage = Boolean(jobEditOrgId && jobEditId);
+
+    // Page création offre : /chat/organizations/[id]/jobs/create
+    const jobCreateMatch = pathname?.match(/^\/chat\/organizations\/([^/]+)\/jobs\/create\/?$/);
+    const jobCreateOrgId = jobCreateMatch?.[1];
+    const isJobCreatePage = Boolean(jobCreateOrgId);
+
     // Page département (détail / chat / rapports) : même top bar avec retour, avatar, nom, membres
     const deptMatch = pathname?.match(
         /^\/chat\/organizations\/([^/]+)\/departments\/([^/]+)(?:\/(chat|reports)\/?)?$/
@@ -694,6 +710,98 @@ export function TopNav() {
                         </div>
                     </div>
                 )
+            ) : isJobEditPage && jobEditOrgId && jobEditId ? (
+                /* Top bar page édition offre : retour, icône, titre, badge statut */
+                <div className="flex items-center gap-3 w-full min-w-0">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push(`/chat/organizations/${jobEditOrgId}/jobs`)}
+                        className="shrink-0"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                    <Briefcase className="w-5 h-5 text-primary shrink-0" />
+                    <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                            <h2 className="font-semibold text-foreground truncate">
+                                {jobEdit?.title || 'Modifier l\'offre'}
+                            </h2>
+                            <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${jobEdit?.status === 'PUBLISHED'
+                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                                }`}>
+                                {jobEdit?.status === 'PUBLISHED' ? 'Publiée' : 'Brouillon'}
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground truncate">
+                            {jobEdit?.companyName || ''}
+                        </p>
+                    </div>
+                </div>
+            ) : isJobCreatePage && jobCreateOrgId ? (
+                /* Top bar page création offre : retour + titre */
+                <div className="flex items-center gap-3 w-full min-w-0">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push(`/chat/organizations/${jobCreateOrgId}/jobs`)}
+                        className="shrink-0"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                    <Briefcase className="w-5 h-5 text-primary shrink-0" />
+                    <div className="min-w-0 flex-1">
+                        <h2 className="font-semibold text-foreground truncate">Nouvelle offre d&apos;emploi</h2>
+                        <p className="text-xs text-muted-foreground">Création en cours</p>
+                    </div>
+                </div>
+            ) : isJobEditPage && jobEditOrgId && jobEditId ? (
+                /* Top bar page édition offre : retour, icône, titre, badge statut */
+                <div className="flex items-center gap-3 w-full min-w-0">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push(`/chat/organizations/${jobEditOrgId}/jobs`)}
+                        className="shrink-0"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                    <Briefcase className="w-5 h-5 text-primary shrink-0" />
+                    <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                            <h2 className="font-semibold text-foreground truncate">
+                                {jobEdit?.title || 'Modifier l\'offre'}
+                            </h2>
+                            <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${jobEdit?.status === 'PUBLISHED'
+                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                                }`}>
+                                {jobEdit?.status === 'PUBLISHED' ? 'Publiée' : 'Brouillon'}
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground truncate">
+                            {jobEdit?.companyName || ''}
+                        </p>
+                    </div>
+                </div>
+            ) : isJobCreatePage && jobCreateOrgId ? (
+                /* Top bar page création offre : retour + titre */
+                <div className="flex items-center gap-3 w-full min-w-0">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push(`/chat/organizations/${jobCreateOrgId}/jobs`)}
+                        className="shrink-0"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                    <Briefcase className="w-5 h-5 text-primary shrink-0" />
+                    <div className="min-w-0 flex-1">
+                        <h2 className="font-semibold text-foreground truncate">Nouvelle offre d&apos;emploi</h2>
+                        <p className="text-xs text-muted-foreground">Création en cours</p>
+                    </div>
+                </div>
             ) : isJobsListPage && jobsOrgId ? (
                 /* Top bar page offres d'emploi : retour, titre, plan, nouvelle offre */
                 <div className="flex items-center justify-between w-full gap-3">
@@ -1162,7 +1270,7 @@ export function TopNav() {
                 </div>
             )}
 
-            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && !isGroupsPage && !isNotesPage && !isSettingsPage && !isJobsListPage && !isJobDetailPage && !isPublicJobPage && !isMyApplicationsPage && !(mounted && isDiscussionPage) && !(mounted && isPublicPageView) && (
+            {!isDeptChatPage && !isDeptDetailPage && !isTaskPage && !isOrgDetailPage && !isEventsPage && !isNotificationsPage && !isOrgSettingsPage && !isOrganizationsPage && !isFinancesPage && !isGroupsPage && !isNotesPage && !isSettingsPage && !isJobsListPage && !isJobDetailPage && !isPublicJobPage && !isMyApplicationsPage && !isJobEditPage && !isJobCreatePage && !(mounted && isDiscussionPage) && !(mounted && isPublicPageView) && (
                 <div className="flex items-center gap-2">
                     {!isOrganizationsPage && <UserSearch />}
 
