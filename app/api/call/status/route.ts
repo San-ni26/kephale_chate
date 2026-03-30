@@ -11,6 +11,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { getCallState, getPendingCall, getAndClearPendingCall } from '@/src/lib/call-redis';
 import { prisma } from '@/src/lib/prisma';
+import { decryptPII } from '@/src/lib/server-crypto';
+
 
 export async function GET(request: NextRequest) {
     const authError = await authenticate(request);
@@ -39,7 +41,7 @@ export async function GET(request: NextRequest) {
                 });
                 activeCallWithName = {
                     ...activeCall,
-                    withUserName: otherUser?.name || otherUser?.email || 'Utilisateur',
+                    withUserName: otherUser?.name || (otherUser?.email ? decryptPII(otherUser.email) : undefined) || 'Utilisateur',
                 } as typeof activeCall & { withUserName: string };
             } catch {
                 // Ignore

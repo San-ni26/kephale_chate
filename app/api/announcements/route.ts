@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { z } from 'zod';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 
 const createAnnouncementSchema = z.object({
     title: z.string().min(3, 'Le titre doit contenir au moins 3 caractères'),
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
             },
         });
 
-        return NextResponse.json({ announcements }, { status: 200 });
+        return NextResponse.json({ announcements: decryptUserPII(announcements) }, { status: 200 });
 
     } catch (error) {
         console.error('Get announcements error:', error);
@@ -116,7 +117,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
             {
                 message: 'Annonce publiée avec succès',
-                announcement,
+                announcement: decryptUserPII(announcement),
             },
             { status: 201 }
         );

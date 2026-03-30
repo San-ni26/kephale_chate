@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { notifyNewMessage } from '@/src/lib/websocket';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 // GET: Get messages for a conversation with cursor-based pagination
 export async function GET(
@@ -63,7 +65,7 @@ export async function GET(
                 take: limit,
             });
 
-            return NextResponse.json({ messages, hasMore: false });
+            return NextResponse.json({ messages: decryptUserPII(messages), hasMore: false });
         }
 
         // Case 2: Load OLDER messages before a cursor (clicking "load older")
@@ -91,7 +93,7 @@ export async function GET(
             messages.reverse();
 
             return NextResponse.json({
-                messages,
+                messages: decryptUserPII(messages),
                 hasMore: messages.length === limit,
             });
         }
@@ -111,7 +113,7 @@ export async function GET(
         // Check if there are older messages
         const hasMore = messages.length === limit;
 
-        return NextResponse.json({ messages, hasMore });
+        return NextResponse.json({ messages: decryptUserPII(messages), hasMore });
 
     } catch (error) {
         console.error('Get messages error:', error);
@@ -203,7 +205,7 @@ export async function POST(
             console.error('[Messages API] Notification error:', notifErr);
         }
 
-        return NextResponse.json({ message }, { status: 201 });
+        return NextResponse.json({ message: decryptUserPII(message) }, { status: 201 });
 
     } catch (error) {
         console.error('Send message error:', error);

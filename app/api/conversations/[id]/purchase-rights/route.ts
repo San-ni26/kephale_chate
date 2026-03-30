@@ -15,6 +15,7 @@ import {
     type DiscussionRightDuration,
 } from '@/src/lib/discussion-rights';
 import { notifySuperAdminNewPaymentOrder } from '@/src/lib/notify-payment-order';
+import { decryptPII } from '@/src/lib/server-crypto';
 
 const CINETPAY_API_URL = 'https://api-checkout.cinetpay.com/v2/payment';
 
@@ -273,8 +274,8 @@ export async function POST(
             }),
             customer_name: (dbUser?.name || 'Client').split(/\s+/)[0] || 'Client',
             customer_surname: (dbUser?.name || ' ').split(/\s+/).slice(1).join(' ') || ' ',
-            customer_email: dbUser?.email || `contact-${transactionId}@placeholder.local`,
-            customer_phone_number: dbUser?.phone || '770000000',
+            customer_email: (dbUser?.email ? decryptPII(dbUser.email) : undefined) || `contact-${transactionId}@placeholder.local`,
+            customer_phone_number: (dbUser?.phone ? decryptPII(dbUser.phone) : undefined) || '770000000',
             customer_address: 'Adresse non renseignée',
             customer_city: 'Abidjan',
             customer_country: defaultCountry.toUpperCase().slice(0, 2),

@@ -13,6 +13,7 @@ import {
     type UserProPlan,
 } from '@/src/lib/user-pro';
 import { notifySuperAdminNewPaymentOrder } from '@/src/lib/notify-payment-order';
+import { decryptPII } from '@/src/lib/server-crypto';
 
 const CINETPAY_API_URL = 'https://api-checkout.cinetpay.com/v2/payment';
 
@@ -188,8 +189,8 @@ export async function POST(request: NextRequest) {
 
         const custName = (parsed.customer_name?.trim() || dbUser?.name) || 'Client';
         const custSurname = (parsed.customer_surname?.trim() || dbUser?.name?.split(/\s+/)[0]) || ' ';
-        const custEmail = parsed.customer_email?.trim() || dbUser?.email || `contact-${transactionId}@placeholder.local`;
-        const custPhone = parsed.customer_phone_number?.trim() || dbUser?.phone || '770000000';
+        const custEmail = parsed.customer_email?.trim() || (dbUser?.email ? decryptPII(dbUser.email) : undefined) || `contact-${transactionId}@placeholder.local`;
+        const custPhone = parsed.customer_phone_number?.trim() || (dbUser?.phone ? decryptPII(dbUser.phone) : undefined) || '770000000';
         const custAddress = parsed.customer_address?.trim() || 'Adresse non renseignée';
         const custCity = parsed.customer_city?.trim() || 'Abidjan';
         const custCountry = (parsed.customer_country?.trim() || defaultCountry).toUpperCase().slice(0, 2);

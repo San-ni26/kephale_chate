@@ -5,6 +5,8 @@ import { getOnlineUserIds } from '@/src/lib/presence';
 import { getUsersInCall } from '@/src/lib/call-redis';
 import { isUserProActive } from '@/src/lib/user-pro';
 import { canUserControlDiscussion } from '@/src/lib/discussion-rights';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 export async function GET(
     request: NextRequest,
@@ -171,7 +173,7 @@ export async function GET(
                 },
             }));
             return NextResponse.json({
-                conversation: {
+                conversation: decryptUserPII({
                     ...conversationSafe,
                     members: membersWithPresence,
                     isLocked,
@@ -192,12 +194,12 @@ export async function GET(
                     canPurchaseRights,
                     pendingRightsPayment,
                     pendingRightsOrder,
-                },
+                }),
             }, { status: 200 });
         }
 
         return NextResponse.json({
-            conversation: {
+            conversation: decryptUserPII({
                 ...conversationSafe,
                 isLocked,
                 currentUserIsPro,
@@ -217,7 +219,7 @@ export async function GET(
                 canPurchaseRights,
                 pendingRightsPayment,
                 pendingRightsOrder,
-            },
+            }),
         }, { status: 200 });
 
     } catch (error: unknown) {

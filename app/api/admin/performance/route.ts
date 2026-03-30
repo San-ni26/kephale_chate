@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { requireAdmin } from '@/src/middleware/auth';
 import { getOnlineUsersCount, isRedisAvailable } from '@/src/lib/presence';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -97,11 +99,11 @@ export async function GET(request: NextRequest) {
                     },
                 }),
             ]);
-            payload.details = {
+            payload.details = decryptUserPII({
                 recentNotifications,
                 recentMessages,
                 pushSubscriptionsSample: pushSample,
-            };
+            });
         }
 
         return NextResponse.json(payload);

@@ -12,6 +12,8 @@ import { isUserProActive } from '@/src/lib/user-pro';
 import { canUserControlDiscussion } from '@/src/lib/discussion-rights';
 import { sendDiscussionLockCodeEmail } from '@/src/lib/email';
 import bcrypt from 'bcryptjs';
+import { decryptPII } from '@/src/lib/server-crypto';
+
 
 const CODE_REGEX = /^\d{4}$/;
 
@@ -125,7 +127,7 @@ export async function POST(
             });
             if (otherUser?.email && otherProSub && isUserProActive(otherProSub.endDate)) {
                 await sendDiscussionLockCodeEmail(
-                    otherUser.email,
+                    decryptPII(otherUser.email) || otherUser.email,
                     otherUser.name,
                     newCode,
                     setterUser?.name ?? null,

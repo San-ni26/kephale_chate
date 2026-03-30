@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { emitToConversation } from '@/src/lib/pusher-server';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 // GET: Récupérer un message complet (avec pièces jointes) par son ID
 // Utilisé quand Pusher envoie un payload allégé sans les données des pièces jointes
@@ -41,7 +43,7 @@ export async function GET(
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
-        return NextResponse.json({ message }, { status: 200 });
+        return NextResponse.json({ message: decryptUserPII(message) }, { status: 200 });
 
     } catch (error) {
         console.error('Get message error:', error);
@@ -134,7 +136,7 @@ export async function PATCH(
             message: updatedMessage,
         }).catch(err => console.error('Error broadcasting message edit:', err));
 
-        return NextResponse.json({ message: updatedMessage }, { status: 200 });
+        return NextResponse.json({ message: decryptUserPII(updatedMessage) }, { status: 200 });
 
     } catch (error) {
         console.error('Edit message error:', error);

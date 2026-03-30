@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { handleApiError } from '@/src/lib/api-response';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 /**
  * GET /api/conversations/[id]/shared-notes
@@ -85,7 +87,7 @@ export async function GET(
             group: s.note.document.group,
         }));
 
-        return NextResponse.json({ notes });
+        return NextResponse.json({ notes: decryptUserPII(notes) });
     } catch (error) {
         return handleApiError(error);
     }

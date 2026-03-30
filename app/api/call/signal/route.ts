@@ -3,6 +3,7 @@ import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { emitToUser } from '@/src/lib/pusher-server';
 import { prisma } from '@/src/lib/prisma';
 import { notifyIncomingCall } from '@/src/lib/websocket';
+import { decryptPII } from '@/src/lib/server-crypto';
 import {
     setUserInCall,
     setUserCallEnded,
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
                         select: { name: true, email: true }
                     });
                     if (caller) {
-                        callerName = caller.name || caller.email;
+                        callerName = caller.name || (caller.email ? decryptPII(caller.email) : undefined) || 'Utilisateur';
                     }
                 } catch (e) {
                     console.error('Error fetching caller name:', e);
