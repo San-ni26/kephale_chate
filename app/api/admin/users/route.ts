@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { requireSuperAdmin, AuthenticatedRequest } from '@/src/middleware/auth';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 
 // GET: Get all users (super admin only)
 export async function GET(request: NextRequest) {
@@ -89,7 +90,7 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json(
             {
-                users,
+                users: decryptUserPII(users),
                 pagination: {
                     total,
                     page,
@@ -189,7 +190,7 @@ export async function PATCH(request: NextRequest) {
         return NextResponse.json(
             {
                 message: 'Utilisateur mis à jour avec succès',
-                user: updatedUser,
+                user: decryptUserPII(updatedUser),
             },
             { status: 200 }
         );

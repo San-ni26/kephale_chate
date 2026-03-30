@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 // GET /api/organizations/[id]/jobs — Liste des offres (admins)
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -41,7 +43,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     });
 
     return NextResponse.json({
-        jobs,
+        jobs: decryptUserPII(jobs),
         subscription: org.subscription,
         isAdmin,
     });

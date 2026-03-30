@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { requireAdmin } from '@/src/middleware/auth';
 import { sendUnreachablePhoneNotificationEmail } from '@/src/lib/email';
+import { decryptPII } from '@/src/lib/server-crypto';
+
 
 export async function POST(
     request: NextRequest,
@@ -35,9 +37,9 @@ export async function POST(
         }
 
         const sent = await sendUnreachablePhoneNotificationEmail(
-            user.email,
+            decryptPII(user.email) || user.email,
             user.name,
-            user.phone
+            user.phone ? (decryptPII(user.phone) || user.phone) : null
         );
 
         if (!sent) {

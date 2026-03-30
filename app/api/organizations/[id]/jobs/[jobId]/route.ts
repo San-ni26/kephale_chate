@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 function getUser(req: NextRequest) {
     const token = req.headers.get('Authorization')?.replace('Bearer ', '');
@@ -33,7 +35,7 @@ export async function GET(
     });
     if (!job) return NextResponse.json({ error: 'Offre non trouvée' }, { status: 404 });
 
-    return NextResponse.json({ job });
+    return NextResponse.json({ job: decryptUserPII(job) });
 }
 
 // PATCH /api/organizations/[id]/jobs/[jobId]

@@ -3,6 +3,8 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { z } from 'zod';
 import { notifyNewMessage } from '@/src/lib/websocket';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 const messageSchema = z.object({
     groupId: z.string(),
@@ -73,7 +75,7 @@ export async function GET(request: NextRequest) {
             skip: offset,
         });
 
-        return NextResponse.json({ messages: messages.reverse() }, { status: 200 });
+        return NextResponse.json({ messages: decryptUserPII(messages.reverse()) }, { status: 200 });
 
     } catch (error) {
         console.error('Get messages error:', error);
@@ -152,7 +154,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
             {
                 message: 'Message envoyé avec succès',
-                data: message,
+                data: decryptUserPII(message),
             },
             { status: 201 }
         );
@@ -250,7 +252,7 @@ export async function PATCH(request: NextRequest) {
         return NextResponse.json(
             {
                 message: 'Message modifié avec succès',
-                data: updatedMessage,
+                data: decryptUserPII(updatedMessage),
             },
             { status: 200 }
         );

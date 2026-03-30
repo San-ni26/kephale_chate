@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { z } from 'zod';
+import { decryptUserPII, hashForSearch } from '@/src/lib/server-crypto';
+
 
 const createGroupSchema = z.object({
     name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
@@ -70,7 +72,7 @@ export async function GET(request: NextRequest) {
             },
         });
 
-        return NextResponse.json({ groups }, { status: 200 });
+        return NextResponse.json({ groups: decryptUserPII(groups) }, { status: 200 });
 
     } catch (error) {
         console.error('Get groups error:', error);
@@ -98,11 +100,13 @@ export async function POST(request: NextRequest) {
         // Find users by email (optionnel : groupe solo si aucun email)
         let memberIds: string[] = [user.userId];
         if (validatedData.memberEmails.length > 0) {
+            const hashes = validatedData.memberEmails.map(h => hashForSearch(h));
             const users = await prisma.user.findMany({
                 where: {
-                    email: {
-                        in: validatedData.memberEmails,
-                    },
+                    OR: [
+                        { email: { in: validatedData.memberEmails } },
+                        { emailHash: { in: hashes } }
+                    ],
                     isVerified: true,
                     isBanned: false,
                 },
@@ -145,7 +149,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
             {
                 message: 'Groupe créé avec succès',
-                group,
+                group: decryptUserPII(group),
             },
             { status: 201 }
         );

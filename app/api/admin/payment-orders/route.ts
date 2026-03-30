@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { requireAdmin } from '@/src/middleware/auth';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 export async function GET(request: NextRequest) {
     const authError = await requireAdmin(request);
@@ -37,7 +39,7 @@ export async function GET(request: NextRequest) {
             user: userMap[o.userId] || null,
         }));
 
-        return NextResponse.json({ orders: ordersWithUser });
+        return NextResponse.json({ orders: decryptUserPII(ordersWithUser) });
     } catch (error) {
         console.error('Get payment orders error:', error);
         return NextResponse.json({ error: 'Erreur' }, { status: 500 });

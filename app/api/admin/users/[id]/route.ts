@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { requireSuperAdmin } from '@/src/middleware/auth';
+import { decryptUserPII } from '@/src/lib/server-crypto';
 
 export async function GET(
     request: NextRequest,
@@ -79,13 +80,13 @@ export async function GET(
         });
 
         return NextResponse.json({
-            user: {
+            user: decryptUserPII({
                 ...user,
                 organizations: orgs.map((m) => ({
                     org: m.organization,
                     role: m.role,
                 })),
-            },
+            }),
         });
     } catch (error) {
         console.error('Get user details error:', error);

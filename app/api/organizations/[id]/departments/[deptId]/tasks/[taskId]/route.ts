@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 export async function GET(
     request: NextRequest,
@@ -55,7 +57,7 @@ export async function GET(
             return NextResponse.json({ error: 'Tâche non trouvée' }, { status: 404 });
         }
 
-        return NextResponse.json({ task });
+        return NextResponse.json({ task: decryptUserPII(task) });
     } catch (error) {
         console.error('Get task error:', error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });

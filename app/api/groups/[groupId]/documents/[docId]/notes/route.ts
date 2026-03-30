@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { apiError, handleApiError } from '@/src/lib/api-response';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 const createNoteSchema = z.object({
     title: z.string().min(1, 'Titre requis').max(500),
@@ -74,7 +76,7 @@ export async function GET(
             });
         }
 
-        return NextResponse.json({ notes });
+        return NextResponse.json({ notes: decryptUserPII(notes) });
     } catch (error) {
         return handleApiError(error);
     }
@@ -125,7 +127,7 @@ export async function POST(
             },
         });
 
-        return NextResponse.json({ note }, { status: 201 });
+        return NextResponse.json({ note: decryptUserPII(note) }, { status: 201 });
     } catch (error) {
         return handleApiError(error);
     }

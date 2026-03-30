@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { apiError, handleApiError } from '@/src/lib/api-response';
+import { decryptUserPII, hashForSearch } from '@/src/lib/server-crypto';
+
 
 const addMemberSchema = z.object({
     email: z.string().email('Email invalide'),
@@ -52,7 +54,7 @@ export async function GET(
             orderBy: { joinedAt: 'asc' },
         });
 
-        return NextResponse.json({ members });
+        return NextResponse.json({ members: decryptUserPII(members) });
     } catch (error) {
         return handleApiError(error);
     }
@@ -84,7 +86,10 @@ export async function POST(
 
         const targetUser = await prisma.user.findFirst({
             where: {
-                email: validated.data.email.toLowerCase(),
+                OR: [
+                    { email: validated.data.email.toLowerCase() },
+                    { emailHash: hashForSearch(validated.data.email.toLowerCase()) }
+                ],
                 isVerified: true,
                 isBanned: false,
             },
@@ -124,7 +129,7 @@ export async function POST(
 
         return NextResponse.json({
             message: 'Membre ajouté',
-            member,
+            member: decryptUserPII(member),
         }, { status: 201 });
     } catch (error) {
         return handleApiError(error);

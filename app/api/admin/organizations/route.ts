@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { requireAdmin } from '@/src/middleware/auth';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 export async function GET(request: NextRequest) {
     const authError = await requireAdmin(request);
@@ -44,7 +46,7 @@ export async function GET(request: NextRequest) {
             owner: ownerMap[o.ownerId] || null,
         }));
 
-        return NextResponse.json({ organizations: orgsWithOwner });
+        return NextResponse.json({ organizations: decryptUserPII(orgsWithOwner) });
     } catch (error) {
         console.error('Get organizations error:', error);
         return NextResponse.json({ error: 'Erreur' }, { status: 500 });

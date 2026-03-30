@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { apiError, handleApiError } from '@/src/lib/api-response';
+import { decryptUserPII } from '@/src/lib/server-crypto';
+
 
 const updateDocumentSchema = z.object({
     title: z.string().min(1).max(255).optional(),
@@ -78,7 +80,7 @@ export async function GET(
             return NextResponse.json({ error: 'Document non trouvé' }, { status: 404 });
         }
 
-        return NextResponse.json({ document });
+        return NextResponse.json({ document: decryptUserPII(document) });
     } catch (error) {
         return handleApiError(error);
     }
@@ -111,7 +113,7 @@ export async function PATCH(
             data: validated.data,
         });
 
-        return NextResponse.json({ document: updated });
+        return NextResponse.json({ document: decryptUserPII(updated) });
     } catch (error) {
         return handleApiError(error);
     }

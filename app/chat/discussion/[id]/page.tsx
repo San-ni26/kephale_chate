@@ -812,13 +812,27 @@ export default function DiscussionPage() {
             </Dialog>
 
             {/* ── Dialog : désactiver le verrouillage ── */}
-            <Dialog open={lockHandlers.showDisableLockDialog} onOpenChange={lockHandlers.setShowDisableLockDialog}>
+            <Dialog open={lockHandlers.showDisableLockDialog} onOpenChange={open => { lockHandlers.setShowDisableLockDialog(open); if (!open) lockHandlers.setLockCode(''); }}>
                 <DialogContent>
                     <DialogHeader><DialogTitle>Désactiver le verrouillage</DialogTitle></DialogHeader>
-                    <div className="py-4"><p className="text-sm text-muted-foreground">Êtes-vous sûr de vouloir désactiver le code de verrouillage ? Cette discussion ne sera plus protégée.</p></div>
+                    <div className="py-4 space-y-4">
+                        <p className="text-sm text-muted-foreground">Entrez le code actuel pour désactiver le verrouillage. Cette discussion ne sera plus protégée.</p>
+                        <div>
+                            <label className="text-sm font-medium mb-2 block">Code actuel</label>
+                            <div className="relative">
+                                <Input type={lockHandlers.showLockCode ? 'text' : 'password'} inputMode="numeric" maxLength={4} placeholder="••••"
+                                    value={lockHandlers.lockCode} onChange={e => lockHandlers.setLockCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                    onKeyDown={e => e.key === 'Enter' && lockHandlers.lockCode.length === 4 && lockHandlers.handleDisableLock(lockHandlers.lockCode)}
+                                    className="text-center text-lg tracking-[0.5em] pr-10" />
+                                <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground" onClick={() => lockHandlers.setShowLockCode(!lockHandlers.showLockCode)}>
+                                    {lockHandlers.showLockCode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => lockHandlers.setShowDisableLockDialog(false)}>Annuler</Button>
-                        <Button variant="destructive" onClick={() => lockHandlers.handleDisableLock(lockHandlers.lockCode)} disabled={lockHandlers.lockActionLoading}>
+                        <Button variant="outline" onClick={() => { lockHandlers.setShowDisableLockDialog(false); lockHandlers.setLockCode(''); }}>Annuler</Button>
+                        <Button variant="destructive" onClick={() => lockHandlers.handleDisableLock(lockHandlers.lockCode)} disabled={lockHandlers.lockActionLoading || lockHandlers.lockCode.length !== 4}>
                             {lockHandlers.lockActionLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}Désactiver
                         </Button>
                     </DialogFooter>
