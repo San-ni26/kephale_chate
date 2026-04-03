@@ -3,7 +3,25 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { notifyNewMessage } from '@/src/lib/websocket';
 import { decryptUserPII } from '@/src/lib/server-crypto';
-import { supabaseAdmin, STORAGE_BUCKET } from '@/src/lib/supabase';
+import { supabaseAdmin, STORAGE_BUCKET, getPublicUrl } from '@/src/lib/supabase';
+
+/** Transforme les attachments : si storageKey présent → url publique, data supprimé */
+function optimizeMsg(msg: any) {
+    if (!msg?.attachments) return msg;
+    return {
+        ...msg,
+        attachments: msg.attachments.map((att: any) => {
+            if (att.storageKey) {
+                const { data: _data, ...rest } = att;
+                return { ...rest, url: getPublicUrl(att.storageKey) };
+            }
+            return att;
+        }),
+    };
+}
+function optimizeAttachments(messages: any[]) {
+    return messages.map(optimizeMsg);
+}
 
 // GET: Get messages for a conversation with cursor-based pagination
 export async function GET(
@@ -50,7 +68,15 @@ export async function GET(
                     publicKey: true,
                 },
             },
-            attachments: true,
+            attachments: {
+                select: {
+                    id: true,
+                    filename: true,
+                    type: true,
+                    data: true,
+                    storageKey: true,
+                },
+            },
         };
 
         // Case 1: Load messages AFTER a certain date (for polling new messages)
@@ -65,7 +91,7 @@ export async function GET(
                 take: limit,
             });
 
-            return NextResponse.json({ messages: decryptUserPII(messages), hasMore: false });
+            return NextResponse.json({ messages: optimizeAttachments(decryptUserPII(messages)), hasMore: false });
         }
 
         // Case 2: Load OLDER messages before a cursor (clicking "load older")
@@ -93,7 +119,7 @@ export async function GET(
             messages.reverse();
 
             return NextResponse.json({
-                messages: decryptUserPII(messages),
+                messages: optimizeAttachments(decryptUserPII(messages)),
                 hasMore: messages.length === limit,
             });
         }
@@ -113,7 +139,7 @@ export async function GET(
         // Check if there are older messages
         const hasMore = messages.length === limit;
 
-        return NextResponse.json({ messages: decryptUserPII(messages), hasMore });
+        return NextResponse.json({ messages: optimizeAttachments(decryptUserPII(messages)), hasMore });
 
     } catch (error) {
         console.error('Get messages error:', error);
@@ -239,7 +265,7 @@ export async function POST(
             console.error('[Messages API] Notification error:', notifErr);
         }
 
-        return NextResponse.json({ message: decryptUserPII(message) }, { status: 201 });
+        return NextResponse.json({ message: optimizeMsg(decryptUserPII(message)) }, { status: 201 });
 
     } catch (error) {
         console.error('Send message error:', error);

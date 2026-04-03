@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { Button } from '@/src/components/ui/button';
 import { Download, Share2, X } from 'lucide-react';
 import { AudioBubbleWhatsApp } from '@/src/components/AudioBubbleWhatsApp';
@@ -6,6 +7,7 @@ import { DocumentBubbleWhatsApp } from '@/src/components/DocumentBubbleWhatsApp'
 import { DocumentViewerFullScreen } from '@/src/components/DocumentViewerFullScreen';
 import { downloadFromDataUrl, shareFileFromDataUrl, canShareFile } from '@/src/lib/download-file';
 import { toast } from 'sonner';
+import { cn } from '@/src/lib/utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -14,6 +16,8 @@ interface FileAttachmentProps {
         filename: string;
         type: string;
         data?: string;
+        url?: string;
+        storageKey?: string;
     };
     isOwnMessage?: boolean;
     myPrivateKey?: string;
@@ -119,7 +123,9 @@ function toBlobUrl(dataUrl: string, fallbackMime: string): string | null {
 
 export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, theirPublicKey, currentUserId }: FileAttachmentProps) {
     // ─── Extraction 100% null-safe des props ─────────────────────────────────
-    const attachData     = safeStr(attachment?.data);
+    // Priorité : url (Supabase optimisé) > data (legacy/fallback)
+    const attachUrl      = safeStr(attachment?.url);
+    const attachData     = attachUrl || safeStr(attachment?.data);
     const attachFilename = safeStr(attachment?.filename);
     const attachType     = safeStr(attachment?.type);
 
@@ -136,6 +142,7 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
     const [inlineViewOpen, setInlineViewOpen] = useState(false);
     const [imageViewOpen, setImageViewOpen] = useState(false);
     const [audioBlobUrl, setAudioBlobUrl] = useState<string | null>(null);
+    const [imageLoaded, setImageLoaded] = useState(false);
     const attemptRef = useRef(0);
 
     // Hook 1 : Déchiffrement / résolution URL
@@ -283,26 +290,54 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
     }
 
     // Image
+    const useNextImage = isImage && fileUrl && isSupabaseUrl;
     if (isImage && fileUrl) {
         return (
             <>
                 <div className="relative group max-w-sm">
-                    <img
-                        src={fileUrl}
-                        alt={attachFilename}
-                        className="rounded-lg max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity"
-                        onClick={() => setImageViewOpen(true)}
-                        loading="lazy"
-                    />
-                    <Button
-                        size="sm"
-                        variant="secondary"
-                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => { e.stopPropagation(); handleDownload(); }}
-                    >
-                        <Download className="w-4 h-4 mr-1" />
-                        Télécharger
-                    </Button>
+                    {/* Skeleton pendant le chargement */}
+                    {!imageLoaded && (
+                        <div className="w-full aspect-[4/3] max-w-[400px] rounded-lg bg-muted animate-pulse" />
+                    )}
+                    {useNextImage ? (
+                        <Image
+                            src={fileUrl}
+                            alt={attachFilename}
+                            width={400}
+                            height={300}
+                            sizes="(max-width: 768px) 90vw, 400px"
+                            className={cn(
+                                'rounded-lg max-w-full h-auto object-contain cursor-pointer hover:opacity-90 transition-opacity',
+                                !imageLoaded && 'invisible absolute'
+                            )}
+                            onClick={() => setImageViewOpen(true)}
+                            onLoad={() => setImageLoaded(true)}
+                            loading="lazy"
+                        />
+                    ) : (
+                        <img
+                            src={fileUrl}
+                            alt={attachFilename}
+                            className={cn(
+                                'rounded-lg max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity',
+                                !imageLoaded && 'invisible absolute'
+                            )}
+                            onClick={() => setImageViewOpen(true)}
+                            onLoad={() => setImageLoaded(true)}
+                            loading="lazy"
+                        />
+                    )}
+                    {imageLoaded && (
+                        <Button
+                            size="sm"
+                            variant="secondary"
+                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={(e) => { e.stopPropagation(); handleDownload(); }}
+                        >
+                            <Download className="w-4 h-4 mr-1" />
+                            Télécharger
+                        </Button>
+                    )}
                 </div>
                 {imageViewOpen && (
                     <div
@@ -311,6 +346,7 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
                         role="dialog"
                         aria-modal="true"
                     >
+                        {/* Lightbox : toujours img natif pour full-res */}
                         <img
                             src={fileUrl}
                             alt={attachFilename}

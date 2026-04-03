@@ -12,7 +12,7 @@ export interface Message {
     createdAt: string;
     updatedAt: string;
     isEdited: boolean;
-    attachments?: { filename: string; type: string; data: string }[];
+    attachments?: { id?: string; filename: string; type: string; data?: string; url?: string; storageKey?: string }[];
     sender: { id: string; name: string; email: string; publicKey: string };
 }
 

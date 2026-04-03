@@ -28,9 +28,12 @@ import { addMessageToCache, removeMessageFromCache } from '@/src/lib/api-cache';
 import { encryptMessage } from '@/src/lib/crypto';
 
 export interface MessageAttachment {
+    id?: string;
     filename: string;
     type: string;
-    data: string;
+    data?: string;
+    url?: string;
+    storageKey?: string;
 }
 
 export interface MessagePayload {
@@ -141,7 +144,7 @@ export function useDiscussionMessages({
             });
 
             addMessageToCache(
-                `/api/conversations/${conversationId}/messages?limit=30`,
+                `/api/conversations/${conversationId}/messages?limit=50`,
                 realMessage
             );
         },
@@ -352,7 +355,7 @@ export function useDiscussionMessages({
             try {
                 setMessages(prev => prev.filter(m => m.id !== messageId));
                 removeMessageFromCache(
-                    `/api/conversations/${conversationId}/messages?limit=30`,
+                    `/api/conversations/${conversationId}/messages?limit=50`,
                     messageId
                 );
                 const res = await fetchWithAuth(`/api/messages/${messageId}`, { method: 'DELETE' });

@@ -10,6 +10,21 @@ const API_CACHE_NAME = 'mango-v1-api';
 
 const cacheServedKeys = new Set<string>();
 
+/** Strip le champ `data` des attachments pour éviter de cacher du base64 lourd */
+function stripAttachmentData(messages: any[]): any[] {
+    return messages.map((msg: any) => {
+        if (!msg?.attachments?.length) return msg;
+        return {
+            ...msg,
+            attachments: msg.attachments.map((att: any) => {
+                if (!att) return att;
+                const { data: _data, ...rest } = att;
+                return rest;
+            }),
+        };
+    });
+}
+
 export async function getCachedApiResponse<T = unknown>(url: string): Promise<T | null> {
     if (typeof caches === 'undefined' || typeof location === 'undefined') return null;
 
@@ -51,7 +66,7 @@ export async function addMessageToCache(
         } else {
             messages.push(message);
         }
-        const updated = { ...data, messages };
+        const updated = { ...data, messages: stripAttachmentData(messages) };
         const response = new Response(JSON.stringify(updated), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
