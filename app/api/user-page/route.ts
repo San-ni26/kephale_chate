@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/src/lib/prisma";
 import { authenticate, AuthenticatedRequest } from "@/src/middleware/auth";
 import { z } from "zod";
+import { deleteStorageFileByUrl } from "@/src/lib/supabase";
 
 const createPageSchema = z.object({
     handle: z.string().startsWith("@", "Le nom d'utilisateur doit commencer par @").min(3, "Le nom doit avoir au moins 3 caractères"),
@@ -119,6 +120,21 @@ export async function DELETE(request: NextRequest) {
     }
 
     try {
+        // Récupérer tous les posts avec imageUrl avant suppression
+        const pageWithPosts = await prisma.userPage.findUnique({
+            where: { userId: user.userId },
+            include: {
+                posts: { select: { imageUrl: true } }
+            }
+        });
+        // Nettoyer toutes les images Supabase des posts
+        if (pageWithPosts?.posts) {
+            await Promise.all(
+                pageWithPosts.posts
+                    .filter(p => p.imageUrl && p.imageUrl.includes('supabase.co'))
+                    .map(p => deleteStorageFileByUrl(p.imageUrl!))
+            );
+        }
         await prisma.userPage.delete({
             where: { userId: user.userId }
         });
@@ -154,8 +170,21 @@ export async function PATCH(request: NextRequest) {
         }
 
         // Update User info
-        if (name || avatarUrl) {
-            // Note: In real app, we should validate avatarUrl format/virus scan etc.
+        if (name || avatarUrl !== undefined) {
+            // Si l'avatar change, supprimer l'ancien du storage Supabase
+            if (avatarUrl !== undefined && avatarUrl !== null) {
+                const currentUser = await prisma.user.findUnique({
+                    where: { id: user.userId },
+                    select: { avatarUrl: true }
+                });
+                if (
+                    currentUser?.avatarUrl &&
+                    currentUser.avatarUrl !== avatarUrl &&
+                    currentUser.avatarUrl.includes('supabase.co')
+                ) {
+                    await deleteStorageFileByUrl(currentUser.avatarUrl);
+                }
+            }
             await prisma.user.update({
                 where: { id: user.userId },
                 data: {

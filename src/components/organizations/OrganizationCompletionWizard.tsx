@@ -130,14 +130,24 @@ export default function OrganizationCompletionWizard({
         return () => clearInterval(interval);
     }, [createdOrder, onSuccess]);
 
-    const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setLogo(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Image trop volumineuse (max 5 Mo)');
+            return;
+        }
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('context', 'org-logo');
+            formData.append('contextId', 'wizard');
+            const res = await fetchWithAuth('/api/upload/image', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Erreur upload');
+            setLogo(data.url);
+        } catch {
+            toast.error('Erreur lors de l\'upload du logo');
         }
     };
 

@@ -4,6 +4,7 @@ import { verifyToken } from '@/src/lib/jwt';
 import { decryptUserPII } from '@/src/lib/server-crypto';
 import { notifyDepartmentNewMessage } from '@/src/lib/notify-department';
 import { emitMessageNewToConversation } from '@/src/lib/pusher-server';
+import { supabaseAdmin, STORAGE_BUCKET } from '@/src/lib/supabase';
 
 export async function GET(
     request: NextRequest,
@@ -271,21 +272,57 @@ export async function POST(
             });
         }
 
+        let attachmentsData = undefined;
+        if (attachments && Array.isArray(attachments) && attachments.length > 0) {
+            const processedAttachments = await Promise.all(
+                attachments.map(async (att: any) => {
+                    let finalData = att.data;
+                    let storageKey: string | undefined = undefined;
+
+                    // Upload tout fichier base64 (image, PDF, Word, audio) vers Supabase
+                    const base64Match = att.data?.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                    if (base64Match && base64Match.length === 3) {
+                        const mimeType = base64Match[1];
+                        const buffer = Buffer.from(base64Match[2], 'base64');
+                        const safeName = att.filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+                        storageKey = `departments/${deptId}/messages/${Date.now()}_${safeName}`;
+
+                        const { error: uploadError } = await supabaseAdmin.storage
+                            .from(STORAGE_BUCKET)
+                            .upload(storageKey, buffer, {
+                                contentType: mimeType,
+                                upsert: false,
+                            });
+
+                        if (!uploadError) {
+                            const { data: publicData } = supabaseAdmin.storage
+                                .from(STORAGE_BUCKET)
+                                .getPublicUrl(storageKey);
+                            finalData = publicData.publicUrl;
+                        } else {
+                            console.error('[Dept Messages] Erreur upload Supabase:', uploadError);
+                            storageKey = undefined;
+                        }
+                    }
+
+                    return {
+                        filename: att.filename,
+                        type: att.type,
+                        data: finalData,
+                        storageKey,
+                    };
+                })
+            );
+            attachmentsData = { create: processedAttachments };
+        }
+
         // Create message
         const message = await prisma.message.create({
             data: {
                 content: content || '',
                 senderId: userId,
                 groupId: conversation.id,
-                attachments: attachments
-                    ? {
-                        create: attachments.map((att: any) => ({
-                            filename: att.filename,
-                            type: att.type,
-                            data: att.data,
-                        })),
-                    }
-                    : undefined,
+                attachments: attachmentsData,
             },
             include: {
                 sender: {

@@ -4,6 +4,8 @@ import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { z } from 'zod';
 import { notifyNewMessage } from '@/src/lib/websocket';
 import { decryptUserPII } from '@/src/lib/server-crypto';
+import { supabaseAdmin, STORAGE_BUCKET } from '@/src/lib/supabase';
+import { FileType } from '@/src/prisma/client';
 
 
 const messageSchema = z.object({
@@ -116,18 +118,47 @@ export async function POST(request: NextRequest) {
         }
 
         // Create message with attachments
+        let attachmentsData = undefined;
+        if (validatedData.attachments && validatedData.attachments.length > 0) {
+            const processed = await Promise.all(
+                validatedData.attachments.map(async (att) => {
+                    let finalData = att.data;
+                    let storageKey: string | undefined = undefined;
+
+                    const base64Match = att.data?.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                    if (base64Match && base64Match.length === 3) {
+                        const mimeType = base64Match[1];
+                        const buffer = Buffer.from(base64Match[2], 'base64');
+                        const safeName = att.filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+                        storageKey = `groups/${validatedData.groupId}/messages/${Date.now()}_${safeName}`;
+
+                        const { error: uploadError } = await supabaseAdmin.storage
+                            .from(STORAGE_BUCKET)
+                            .upload(storageKey, buffer, { contentType: mimeType, upsert: false });
+
+                        if (!uploadError) {
+                            const { data: publicData } = supabaseAdmin.storage
+                                .from(STORAGE_BUCKET)
+                                .getPublicUrl(storageKey);
+                            finalData = publicData.publicUrl;
+                        } else {
+                            console.error('[Messages] Erreur upload Supabase:', uploadError);
+                            storageKey = undefined;
+                        }
+                    }
+
+                    return { type: att.type as FileType, filename: att.filename, data: finalData, storageKey };
+                })
+            );
+            attachmentsData = { create: processed };
+        }
+
         const message = await prisma.message.create({
             data: {
                 content: validatedData.content,
                 senderId: user.userId,
                 groupId: validatedData.groupId,
-                attachments: validatedData.attachments ? {
-                    create: validatedData.attachments.map(att => ({
-                        type: att.type,
-                        filename: att.filename,
-                        data: att.data,
-                    })),
-                } : undefined,
+                attachments: attachmentsData,
             },
             include: {
                 sender: {

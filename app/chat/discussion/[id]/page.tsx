@@ -66,7 +66,7 @@ interface Message {
     createdAt: string;
     updatedAt: string;
     isEdited: boolean;
-    attachments?: { filename: string; type: string; data: string }[];
+    attachments?: { filename: string; type: string; data?: string }[];
     sender: { id: string; name: string; email: string; publicKey: string };
 }
 
@@ -160,7 +160,7 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
                         )}
                         {message.attachments && message.attachments.length > 0 && (
                             <div className={cn(decryptedContent?.trim() ? 'mt-2' : '', 'space-y-2', isBlurred && 'blur-md select-none pointer-events-none opacity-70')}>
-                                {message.attachments.map((att, idx) => {
+                                {message.attachments.filter(att => att && (att.data || att.filename)).map((att, idx) => {
                                     const attachmentTheirPublicKey = isOwn
                                         ? otherUser?.publicKey
                                         : (message.sender?.publicKey || otherUser?.publicKey);

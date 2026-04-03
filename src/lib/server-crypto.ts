@@ -119,6 +119,7 @@ export function verifySearchHash(value: string, hash: string): boolean {
  */
 export function decryptUserPII<T>(obj: T): T {
     if (obj === null || obj === undefined) return obj;
+    if (obj instanceof Date) return obj;
     if (Array.isArray(obj)) return obj.map(decryptUserPII) as unknown as T;
     if (typeof obj === 'object') {
         const result = { ...obj } as Record<string, unknown>;

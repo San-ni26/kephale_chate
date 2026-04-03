@@ -136,20 +136,43 @@ function MyPageContent() {
         if (node) observer.current.observe(node);
     }, [loadingPosts, hasMore, cursor, userPage]);
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, setUrl: (url: string) => void) => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, setUrl: (url: string) => void) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        if (file.size > 5 * 1024 * 1024) {
             toast.error("L'image est trop volumineuse (max 5MB)");
             return;
         }
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setUrl(reader.result as string);
-        };
-        reader.readAsDataURL(file);
+        // Preview local immédiat
+        const previewUrl = URL.createObjectURL(file);
+        setUrl(previewUrl);
+
+        try {
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('context', 'posts');
+            fd.append('contextId', user?.id || 'unknown');
+            const res = await fetch('/api/upload/image', {
+                method: 'POST',
+                headers: getAuthHeader(),
+                body: fd,
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setUrl(data.url);
+                URL.revokeObjectURL(previewUrl);
+            } else {
+                toast.error('Erreur upload image');
+                setUrl('');
+                URL.revokeObjectURL(previewUrl);
+            }
+        } catch {
+            toast.error('Erreur upload image');
+            setUrl('');
+            URL.revokeObjectURL(previewUrl);
+        }
     };
 
     const handleCreatePost = async () => {
@@ -264,10 +287,10 @@ function MyPageContent() {
     };
 
     const startPageEdit = () => {
-        if (!userPage || !user) return;
+        if (!user) return;
         setEditPageName(user.name || "");
-        setEditPageHandle(userPage.handle);
-        setEditPageBio(userPage.bio || "");
+        setEditPageHandle(userPage?.handle || "");
+        setEditPageBio(userPage?.bio || "");
         setEditPageAvatarUrl(user.avatarUrl || "");
         setIsEditPageOpen(true);
     };
@@ -410,64 +433,80 @@ function MyPageContent() {
 
     return (
         <div className="p-4 space-y-6 pt-16 pb-20 max-w-2xl mx-auto">
-            {/* Header Profile */}
-            <div className="relative">
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
-                    <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-                        {user?.avatarUrl && <AvatarImage src={user.avatarUrl} className="object-cover" />}
-                        <AvatarFallback className="text-2xl bg-primary/10 text-primary">
-                            {userPage?.handle.substring(1, 3).toUpperCase()}
-                        </AvatarFallback>
-                    </Avatar>
+            {!userPage ? (
+                <Card className="mt-10 max-w-md mx-auto border-border text-center shadow-lg bg-card text-foreground">
+                    <CardHeader>
+                        <CardTitle className="text-2xl">Ma Page</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-muted-foreground">Vous n'avez pas encore de page publique. Créez-en une pour commencer à publier !</p>
+                        <Button onClick={startPageEdit} className="w-full">
+                            <Plus className="mr-2 h-4 w-4"/> Créer ma page
+                        </Button>
+                    </CardContent>
+                </Card>
+            ) : (
+                <>
+                    {/* Header Profile */}
+                    <div className="relative">
+                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
+                            <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+                                {user?.avatarUrl && <AvatarImage src={user.avatarUrl} className="object-cover" />}
+                                <AvatarFallback className="text-2xl bg-primary/10 text-primary">
+                                    {(userPage?.handle || "US").substring(1, 3).toUpperCase()}
+                                </AvatarFallback>
+                            </Avatar>
 
-                    <div className="flex-1 space-y-3">
-                        <div>
-                            <h2 className="text-2xl font-bold text-foreground">{user?.name}</h2>
-                            <p className="text-muted-foreground font-medium">{userPage?.handle}</p>
+                            <div className="flex-1 space-y-3">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-foreground">{user?.name}</h2>
+                                    <p className="text-muted-foreground font-medium">{userPage?.handle}</p>
+                                </div>
+
+                                <div className="flex items-center justify-center sm:justify-start gap-6 text-sm">
+                                    <div className="text-center sm:text-left">
+                                        <span className="block font-bold text-foreground text-lg">
+                                            {userPage?.user?._count?.followers || 0}
+                                        </span>
+                                        <span className="text-muted-foreground">Abonnés</span>
+                                    </div>
+                                    <div className="text-center sm:text-left">
+                                        <span className="block font-bold text-foreground text-lg">
+                                            {userPage?.user?._count?.following || 0}
+                                        </span>
+                                        <span className="text-muted-foreground">Abonnements</span>
+                                    </div>
+                                    <div className="text-center sm:text-left">
+                                        <span className="block font-bold text-foreground text-lg">
+                                            {/* Calculated roughly from loaded posts or backend should provide it */}
+                                            -
+                                        </span>
+                                        <span className="text-muted-foreground">J'aime</span>
+                                    </div>
+                                </div>
+
+                                {userPage?.bio && <p className="text-sm text-foreground/80 max-w-md">{userPage.bio}</p>}
+                            </div>
+
+                            <div className="flex gap-2">
+                                <Button variant="outline" size="sm" onClick={startPageEdit}>
+                                    <Pencil className="h-4 w-4 mr-2" /> Modifier
+                                </Button>
+                                <Button variant="destructive" size="icon" className="h-8 w-8" onClick={handleDeletePage}>
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            </div>
                         </div>
-
-                        <div className="flex items-center justify-center sm:justify-start gap-6 text-sm">
-                            <div className="text-center sm:text-left">
-                                <span className="block font-bold text-foreground text-lg">
-                                    {userPage?.user?._count?.followers || 0}
-                                </span>
-                                <span className="text-muted-foreground">Abonnés</span>
-                            </div>
-                            <div className="text-center sm:text-left">
-                                <span className="block font-bold text-foreground text-lg">
-                                    {userPage?.user?._count?.following || 0}
-                                </span>
-                                <span className="text-muted-foreground">Abonnements</span>
-                            </div>
-                            <div className="text-center sm:text-left">
-                                <span className="block font-bold text-foreground text-lg">
-                                    {/* Calculated roughly from loaded posts or backend should provide it */}
-                                    -
-                                </span>
-                                <span className="text-muted-foreground">J'aime</span>
-                            </div>
-                        </div>
-
-                        {userPage?.bio && <p className="text-sm text-foreground/80 max-w-md">{userPage.bio}</p>}
                     </div>
 
-                    <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={startPageEdit}>
-                            <Pencil className="h-4 w-4 mr-2" /> Modifier
-                        </Button>
-                        <Button variant="destructive" size="icon" className="h-8 w-8" onClick={handleDeletePage}>
-                            <Trash2 className="h-4 w-4" />
+                    <div className="flex justify-between items-center py-2 border-b border-border">
+                        <h3 className="font-semibold text-lg">Publications</h3>
+                        <Button onClick={() => setIsCreateOpen(true)} size="sm" className="bg-primary text-primary-foreground rounded-full">
+                            <Plus className="h-4 w-4 mr-1" /> Nouveau
                         </Button>
                     </div>
-                </div>
-            </div>
-
-            <div className="flex justify-between items-center py-2 border-b border-border">
-                <h3 className="font-semibold text-lg">Publications</h3>
-                <Button onClick={() => setIsCreateOpen(true)} size="sm" className="bg-primary text-primary-foreground rounded-full">
-                    <Plus className="h-4 w-4 mr-1" /> Nouveau
-                </Button>
-            </div>
+                </>
+            )}
 
             {/* Create Post Dialog */}
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
@@ -601,13 +640,13 @@ function MyPageContent() {
                                 onClick={() => openInteractions(post, "LIKES")}
                                 className="flex items-center hover:text-primary transition-colors"
                             >
-                                <Heart className="w-3 h-3 mr-1" /> {post.likes.length} J'aime
+                                <Heart className="w-3 h-3 mr-1" /> {post.likes?.length || 0} J'aime
                             </button>
                             <button
                                 onClick={() => openInteractions(post, "COMMENTS")}
                                 className="flex items-center hover:text-primary transition-colors"
                             >
-                                <Users className="w-3 h-3 mr-1" />{post.comments.length} Coms
+                                <Users className="w-3 h-3 mr-1" />{post.comments?.length || 0} Coms
                             </button>
                         </div>
                     </div>

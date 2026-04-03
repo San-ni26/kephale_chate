@@ -24,7 +24,7 @@ import {
     Wifi,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
+import { fetchWithAuth, getUser, getAuthHeader } from '@/src/lib/auth-client';
 import { sendWithOfflineQueue } from '@/src/lib/offline-queue';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -539,13 +539,20 @@ export default function CollaborationGroupChatPage() {
         setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
     };
 
-    const fileToBase64 = async (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
+    const uploadFileToSupabase = async (file: File, context: string, contextId: string): Promise<string> => {
+        const isImage = file.type.startsWith('image/');
+        const endpoint = isImage ? '/api/upload/image' : '/api/upload/document';
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('context', context);
+        formData.append('contextId', contextId);
+        const res = await fetch(endpoint, { method: 'POST', headers: getAuthHeader(), body: formData });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || `Erreur upload (${res.status})`);
+        }
+        const data = await res.json();
+        return data.url as string;
     };
 
     const handleAudioRecorded = async (blob: Blob) => {
@@ -571,8 +578,18 @@ export default function CollaborationGroupChatPage() {
         setSending(true);
         const encryptedContent = encryptMessage('', privateKey, group.publicKey);
         const tempId = `temp-${Date.now()}`;
-        const base64Data = await fileToBase64(audioFile);
-        const attachment = { filename: audioFile.name, type: 'AUDIO', data: base64Data };
+
+        // Upload audio vers Supabase avant envoi
+        let audioUrl: string;
+        try {
+            audioUrl = await uploadFileToSupabase(audioFile, 'audio', groupId || 'unknown');
+        } catch {
+            toast.error("Erreur upload audio");
+            setSending(false);
+            return;
+        }
+
+        const attachment = { filename: audioFile.name, type: 'AUDIO', data: audioUrl };
 
         const optimisticMessage: Message = {
             id: tempId,
@@ -639,13 +656,13 @@ export default function CollaborationGroupChatPage() {
         let attachments: { filename: string; type: string; data: string }[] = [];
         if (currentFiles.length > 0) {
             for (const file of currentFiles) {
-                const base64Data = await fileToBase64(file);
                 const ext = file.name.split('.').pop()?.toLowerCase() || '';
                 let fileType = 'IMAGE';
                 if (['pdf'].includes(ext)) fileType = 'PDF';
                 else if (['doc', 'docx'].includes(ext)) fileType = 'WORD';
-                else if (['webm', 'mp3', 'ogg', 'm4a', 'wav'].includes(ext)) fileType = 'AUDIO';
-                attachments.push({ filename: file.name, type: fileType, data: base64Data });
+                else if (['webm', 'mp3', 'ogg', 'm4a', 'wav', 'aac'].includes(ext)) fileType = 'AUDIO';
+                const fileUrl = await uploadFileToSupabase(file, fileType === 'AUDIO' ? 'audio' : 'messages', groupId || 'unknown');
+                attachments.push({ filename: file.name, type: fileType, data: fileUrl });
             }
         }
 

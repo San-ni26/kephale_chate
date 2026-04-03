@@ -3,7 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { notifyNewMessage } from '@/src/lib/websocket';
 import { decryptUserPII } from '@/src/lib/server-crypto';
-
+import { supabaseAdmin, STORAGE_BUCKET } from '@/src/lib/supabase';
 
 // GET: Get messages for a conversation with cursor-based pagination
 export async function GET(
@@ -166,11 +166,45 @@ export async function POST(
 
         let attachmentsData = undefined;
         if (attachments && Array.isArray(attachments) && attachments.length > 0) {
-            const processedAttachments = attachments.map((att: any) => ({
-                filename: att.filename,
-                type: att.type,
-                data: att.data,
-            }));
+            const processedAttachments = await Promise.all(
+                attachments.map(async (att: any) => {
+                    let finalData = att.data;
+                    let storageKey: string | undefined = undefined;
+
+                    // Upload tout fichier base64 (image, PDF, Word, audio) vers Supabase
+                    const base64Match = att.data?.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                    if (base64Match && base64Match.length === 3) {
+                        const mimeType = base64Match[1];
+                        const buffer = Buffer.from(base64Match[2], 'base64');
+                        const safeName = att.filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+                        storageKey = `conversations/${conversationId}/${Date.now()}_${safeName}`;
+
+                        const { error: uploadError } = await supabaseAdmin.storage
+                            .from(STORAGE_BUCKET)
+                            .upload(storageKey, buffer, {
+                                contentType: mimeType,
+                                upsert: false,
+                            });
+
+                        if (!uploadError) {
+                            const { data: publicData } = supabaseAdmin.storage
+                                .from(STORAGE_BUCKET)
+                                .getPublicUrl(storageKey);
+                            finalData = publicData.publicUrl;
+                        } else {
+                            console.error('[Messages] Erreur upload Supabase:', uploadError);
+                            storageKey = undefined; // Reset si erreur
+                        }
+                    }
+
+                    return {
+                        filename: att.filename,
+                        type: att.type,
+                        data: finalData,
+                        storageKey,
+                    };
+                })
+            );
             attachmentsData = { create: processedAttachments };
         }
 

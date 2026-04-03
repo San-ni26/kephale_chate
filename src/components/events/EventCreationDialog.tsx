@@ -97,11 +97,9 @@ export default function EventCreationDialog({
         const file = e.target.files?.[0];
         if (file) {
             setImageFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+            // Preview local uniquement (Supabase upload lors de la soumission)
+            const url = URL.createObjectURL(file);
+            setImagePreview(url);
         }
     };
 
@@ -128,15 +126,21 @@ export default function EventCreationDialog({
         setLoading(true);
 
         try {
-            // Convert image to base64 if provided
-            let imageBase64: string | null = null;
+            // Upload image vers Supabase Storage si fournie
+            let imageUrl: string | null = null;
             if (imageFile) {
-                imageBase64 = await new Promise<string>((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(imageFile);
-                    reader.onload = () => resolve(reader.result as string);
-                    reader.onerror = error => reject(error);
-                });
+                const fd = new FormData();
+                fd.append('file', imageFile);
+                fd.append('context', 'events');
+                fd.append('contextId', orgId);
+                const uploadRes = await fetch('/api/upload/image', { method: 'POST', body: fd });
+                if (uploadRes.ok) {
+                    const uploadData = await uploadRes.json();
+                    imageUrl = uploadData.url;
+                } else {
+                    toast.error('Erreur upload image');
+                    return;
+                }
             }
 
             const body: Record<string, unknown> = {
@@ -145,7 +149,7 @@ export default function EventCreationDialog({
                 eventType: formData.eventType,
                 eventDate: formData.eventDate,
                 maxAttendees: formData.maxAttendees,
-                imageUrl: imageBase64,
+                imageUrl,
             };
             if (sendInvitationsByEmail) {
                 body.sendInvitations = {
@@ -196,6 +200,8 @@ export default function EventCreationDialog({
             });
             setImageFile(null);
             setImagePreview('');
+            // Révoquer le blob URL de preview
+            if (imagePreview?.startsWith('blob:')) URL.revokeObjectURL(imagePreview);
 
             onSuccess();
         } catch (error) {

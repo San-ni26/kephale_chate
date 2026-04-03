@@ -20260,6 +20260,7 @@ export namespace Prisma {
     filename: string | null
     type: $Enums.FileType | null
     data: string | null
+    storageKey: string | null
     uploadedBy: string | null
     createdAt: Date | null
   }
@@ -20270,6 +20271,7 @@ export namespace Prisma {
     filename: string | null
     type: $Enums.FileType | null
     data: string | null
+    storageKey: string | null
     uploadedBy: string | null
     createdAt: Date | null
   }
@@ -20280,6 +20282,7 @@ export namespace Prisma {
     filename: number
     type: number
     data: number
+    storageKey: number
     uploadedBy: number
     createdAt: number
     _all: number
@@ -20292,6 +20295,7 @@ export namespace Prisma {
     filename?: true
     type?: true
     data?: true
+    storageKey?: true
     uploadedBy?: true
     createdAt?: true
   }
@@ -20302,6 +20306,7 @@ export namespace Prisma {
     filename?: true
     type?: true
     data?: true
+    storageKey?: true
     uploadedBy?: true
     createdAt?: true
   }
@@ -20312,6 +20317,7 @@ export namespace Prisma {
     filename?: true
     type?: true
     data?: true
+    storageKey?: true
     uploadedBy?: true
     createdAt?: true
     _all?: true
@@ -20395,6 +20401,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey: string | null
     uploadedBy: string
     createdAt: Date
     _count: CollaborationDocumentCountAggregateOutputType | null
@@ -20422,6 +20429,7 @@ export namespace Prisma {
     filename?: boolean
     type?: boolean
     data?: boolean
+    storageKey?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
     group?: boolean | CollaborationGroupDefaultArgs<ExtArgs>
@@ -20434,6 +20442,7 @@ export namespace Prisma {
     filename?: boolean
     type?: boolean
     data?: boolean
+    storageKey?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
     group?: boolean | CollaborationGroupDefaultArgs<ExtArgs>
@@ -20446,6 +20455,7 @@ export namespace Prisma {
     filename?: boolean
     type?: boolean
     data?: boolean
+    storageKey?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
     group?: boolean | CollaborationGroupDefaultArgs<ExtArgs>
@@ -20458,11 +20468,12 @@ export namespace Prisma {
     filename?: boolean
     type?: boolean
     data?: boolean
+    storageKey?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
   }
 
-  export type CollaborationDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "groupId" | "filename" | "type" | "data" | "uploadedBy" | "createdAt", ExtArgs["result"]["collaborationDocument"]>
+  export type CollaborationDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "groupId" | "filename" | "type" | "data" | "storageKey" | "uploadedBy" | "createdAt", ExtArgs["result"]["collaborationDocument"]>
   export type CollaborationDocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     group?: boolean | CollaborationGroupDefaultArgs<ExtArgs>
     uploader?: boolean | UserDefaultArgs<ExtArgs>
@@ -20488,6 +20499,7 @@ export namespace Prisma {
       filename: string
       type: $Enums.FileType
       data: string
+      storageKey: string | null
       uploadedBy: string
       createdAt: Date
     }, ExtArgs["result"]["collaborationDocument"]>
@@ -20920,6 +20932,7 @@ export namespace Prisma {
     readonly filename: FieldRef<"CollaborationDocument", 'String'>
     readonly type: FieldRef<"CollaborationDocument", 'FileType'>
     readonly data: FieldRef<"CollaborationDocument", 'String'>
+    readonly storageKey: FieldRef<"CollaborationDocument", 'String'>
     readonly uploadedBy: FieldRef<"CollaborationDocument", 'String'>
     readonly createdAt: FieldRef<"CollaborationDocument", 'DateTime'>
   }
@@ -28659,6 +28672,7 @@ export namespace Prisma {
     filename: string | null
     type: $Enums.FileType | null
     data: string | null
+    storageKey: string | null
     uploadedBy: string | null
     createdAt: Date | null
   }
@@ -28669,6 +28683,7 @@ export namespace Prisma {
     filename: string | null
     type: $Enums.FileType | null
     data: string | null
+    storageKey: string | null
     uploadedBy: string | null
     createdAt: Date | null
   }
@@ -28679,6 +28694,7 @@ export namespace Prisma {
     filename: number
     type: number
     data: number
+    storageKey: number
     uploadedBy: number
     createdAt: number
     _all: number
@@ -28691,6 +28707,7 @@ export namespace Prisma {
     filename?: true
     type?: true
     data?: true
+    storageKey?: true
     uploadedBy?: true
     createdAt?: true
   }
@@ -28701,6 +28718,7 @@ export namespace Prisma {
     filename?: true
     type?: true
     data?: true
+    storageKey?: true
     uploadedBy?: true
     createdAt?: true
   }
@@ -28711,6 +28729,7 @@ export namespace Prisma {
     filename?: true
     type?: true
     data?: true
+    storageKey?: true
     uploadedBy?: true
     createdAt?: true
     _all?: true
@@ -28794,6 +28813,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey: string | null
     uploadedBy: string
     createdAt: Date
     _count: DepartmentDocumentCountAggregateOutputType | null
@@ -28821,6 +28841,7 @@ export namespace Prisma {
     filename?: boolean
     type?: boolean
     data?: boolean
+    storageKey?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
     department?: boolean | DepartmentDefaultArgs<ExtArgs>
@@ -28833,6 +28854,7 @@ export namespace Prisma {
     filename?: boolean
     type?: boolean
     data?: boolean
+    storageKey?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
     department?: boolean | DepartmentDefaultArgs<ExtArgs>
@@ -28845,6 +28867,7 @@ export namespace Prisma {
     filename?: boolean
     type?: boolean
     data?: boolean
+    storageKey?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
     department?: boolean | DepartmentDefaultArgs<ExtArgs>
@@ -28857,11 +28880,12 @@ export namespace Prisma {
     filename?: boolean
     type?: boolean
     data?: boolean
+    storageKey?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
   }
 
-  export type DepartmentDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deptId" | "filename" | "type" | "data" | "uploadedBy" | "createdAt", ExtArgs["result"]["departmentDocument"]>
+  export type DepartmentDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deptId" | "filename" | "type" | "data" | "storageKey" | "uploadedBy" | "createdAt", ExtArgs["result"]["departmentDocument"]>
   export type DepartmentDocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     department?: boolean | DepartmentDefaultArgs<ExtArgs>
     uploader?: boolean | UserDefaultArgs<ExtArgs>
@@ -28887,6 +28911,7 @@ export namespace Prisma {
       filename: string
       type: $Enums.FileType
       data: string
+      storageKey: string | null
       uploadedBy: string
       createdAt: Date
     }, ExtArgs["result"]["departmentDocument"]>
@@ -29319,6 +29344,7 @@ export namespace Prisma {
     readonly filename: FieldRef<"DepartmentDocument", 'String'>
     readonly type: FieldRef<"DepartmentDocument", 'FileType'>
     readonly data: FieldRef<"DepartmentDocument", 'String'>
+    readonly storageKey: FieldRef<"DepartmentDocument", 'String'>
     readonly uploadedBy: FieldRef<"DepartmentDocument", 'String'>
     readonly createdAt: FieldRef<"DepartmentDocument", 'DateTime'>
   }
@@ -46571,6 +46597,7 @@ export namespace Prisma {
     type: $Enums.FileType | null
     filename: string | null
     data: string | null
+    storageKey: string | null
     createdAt: Date | null
   }
 
@@ -46580,6 +46607,7 @@ export namespace Prisma {
     type: $Enums.FileType | null
     filename: string | null
     data: string | null
+    storageKey: string | null
     createdAt: Date | null
   }
 
@@ -46589,6 +46617,7 @@ export namespace Prisma {
     type: number
     filename: number
     data: number
+    storageKey: number
     createdAt: number
     _all: number
   }
@@ -46600,6 +46629,7 @@ export namespace Prisma {
     type?: true
     filename?: true
     data?: true
+    storageKey?: true
     createdAt?: true
   }
 
@@ -46609,6 +46639,7 @@ export namespace Prisma {
     type?: true
     filename?: true
     data?: true
+    storageKey?: true
     createdAt?: true
   }
 
@@ -46618,6 +46649,7 @@ export namespace Prisma {
     type?: true
     filename?: true
     data?: true
+    storageKey?: true
     createdAt?: true
     _all?: true
   }
@@ -46700,6 +46732,7 @@ export namespace Prisma {
     type: $Enums.FileType
     filename: string
     data: string
+    storageKey: string | null
     createdAt: Date
     _count: AttachmentCountAggregateOutputType | null
     _min: AttachmentMinAggregateOutputType | null
@@ -46726,6 +46759,7 @@ export namespace Prisma {
     type?: boolean
     filename?: boolean
     data?: boolean
+    storageKey?: boolean
     createdAt?: boolean
     message?: boolean | MessageDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attachment"]>
@@ -46736,6 +46770,7 @@ export namespace Prisma {
     type?: boolean
     filename?: boolean
     data?: boolean
+    storageKey?: boolean
     createdAt?: boolean
     message?: boolean | MessageDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attachment"]>
@@ -46746,6 +46781,7 @@ export namespace Prisma {
     type?: boolean
     filename?: boolean
     data?: boolean
+    storageKey?: boolean
     createdAt?: boolean
     message?: boolean | MessageDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attachment"]>
@@ -46756,10 +46792,11 @@ export namespace Prisma {
     type?: boolean
     filename?: boolean
     data?: boolean
+    storageKey?: boolean
     createdAt?: boolean
   }
 
-  export type AttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "messageId" | "type" | "filename" | "data" | "createdAt", ExtArgs["result"]["attachment"]>
+  export type AttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "messageId" | "type" | "filename" | "data" | "storageKey" | "createdAt", ExtArgs["result"]["attachment"]>
   export type AttachmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     message?: boolean | MessageDefaultArgs<ExtArgs>
   }
@@ -46781,6 +46818,7 @@ export namespace Prisma {
       type: $Enums.FileType
       filename: string
       data: string
+      storageKey: string | null
       createdAt: Date
     }, ExtArgs["result"]["attachment"]>
     composites: {}
@@ -47211,6 +47249,7 @@ export namespace Prisma {
     readonly type: FieldRef<"Attachment", 'FileType'>
     readonly filename: FieldRef<"Attachment", 'String'>
     readonly data: FieldRef<"Attachment", 'String'>
+    readonly storageKey: FieldRef<"Attachment", 'String'>
     readonly createdAt: FieldRef<"Attachment", 'DateTime'>
   }
     
@@ -81490,6 +81529,10 @@ export namespace Prisma {
     coverLetterData: string | null
     portfolioUrl: string | null
     portfolioData: string | null
+    photoStorageKey: string | null
+    cvStorageKey: string | null
+    coverLetterStorageKey: string | null
+    portfolioStorageKey: string | null
     educationLevel: string | null
     experience: string | null
     desiredSalary: string | null
@@ -81512,6 +81555,10 @@ export namespace Prisma {
     coverLetterData: string | null
     portfolioUrl: string | null
     portfolioData: string | null
+    photoStorageKey: string | null
+    cvStorageKey: string | null
+    coverLetterStorageKey: string | null
+    portfolioStorageKey: string | null
     educationLevel: string | null
     experience: string | null
     desiredSalary: string | null
@@ -81534,6 +81581,10 @@ export namespace Prisma {
     coverLetterData: number
     portfolioUrl: number
     portfolioData: number
+    photoStorageKey: number
+    cvStorageKey: number
+    coverLetterStorageKey: number
+    portfolioStorageKey: number
     educationLevel: number
     experience: number
     socialLinks: number
@@ -81560,6 +81611,10 @@ export namespace Prisma {
     coverLetterData?: true
     portfolioUrl?: true
     portfolioData?: true
+    photoStorageKey?: true
+    cvStorageKey?: true
+    coverLetterStorageKey?: true
+    portfolioStorageKey?: true
     educationLevel?: true
     experience?: true
     desiredSalary?: true
@@ -81582,6 +81637,10 @@ export namespace Prisma {
     coverLetterData?: true
     portfolioUrl?: true
     portfolioData?: true
+    photoStorageKey?: true
+    cvStorageKey?: true
+    coverLetterStorageKey?: true
+    portfolioStorageKey?: true
     educationLevel?: true
     experience?: true
     desiredSalary?: true
@@ -81604,6 +81663,10 @@ export namespace Prisma {
     coverLetterData?: true
     portfolioUrl?: true
     portfolioData?: true
+    photoStorageKey?: true
+    cvStorageKey?: true
+    coverLetterStorageKey?: true
+    portfolioStorageKey?: true
     educationLevel?: true
     experience?: true
     socialLinks?: true
@@ -81701,6 +81764,10 @@ export namespace Prisma {
     coverLetterData: string | null
     portfolioUrl: string | null
     portfolioData: string | null
+    photoStorageKey: string | null
+    cvStorageKey: string | null
+    coverLetterStorageKey: string | null
+    portfolioStorageKey: string | null
     educationLevel: string | null
     experience: string | null
     socialLinks: JsonValue | null
@@ -81742,6 +81809,10 @@ export namespace Prisma {
     coverLetterData?: boolean
     portfolioUrl?: boolean
     portfolioData?: boolean
+    photoStorageKey?: boolean
+    cvStorageKey?: boolean
+    coverLetterStorageKey?: boolean
+    portfolioStorageKey?: boolean
     educationLevel?: boolean
     experience?: boolean
     socialLinks?: boolean
@@ -81767,6 +81838,10 @@ export namespace Prisma {
     coverLetterData?: boolean
     portfolioUrl?: boolean
     portfolioData?: boolean
+    photoStorageKey?: boolean
+    cvStorageKey?: boolean
+    coverLetterStorageKey?: boolean
+    portfolioStorageKey?: boolean
     educationLevel?: boolean
     experience?: boolean
     socialLinks?: boolean
@@ -81792,6 +81867,10 @@ export namespace Prisma {
     coverLetterData?: boolean
     portfolioUrl?: boolean
     portfolioData?: boolean
+    photoStorageKey?: boolean
+    cvStorageKey?: boolean
+    coverLetterStorageKey?: boolean
+    portfolioStorageKey?: boolean
     educationLevel?: boolean
     experience?: boolean
     socialLinks?: boolean
@@ -81817,6 +81896,10 @@ export namespace Prisma {
     coverLetterData?: boolean
     portfolioUrl?: boolean
     portfolioData?: boolean
+    photoStorageKey?: boolean
+    cvStorageKey?: boolean
+    coverLetterStorageKey?: boolean
+    portfolioStorageKey?: boolean
     educationLevel?: boolean
     experience?: boolean
     socialLinks?: boolean
@@ -81829,7 +81912,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type JobApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "jobId" | "fullName" | "email" | "phone" | "address" | "photoData" | "cvData" | "coverLetterData" | "portfolioUrl" | "portfolioData" | "educationLevel" | "experience" | "socialLinks" | "desiredSalary" | "availability" | "customAnswers" | "status" | "internalNote" | "createdAt" | "updatedAt", ExtArgs["result"]["jobApplication"]>
+  export type JobApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "jobId" | "fullName" | "email" | "phone" | "address" | "photoData" | "cvData" | "coverLetterData" | "portfolioUrl" | "portfolioData" | "photoStorageKey" | "cvStorageKey" | "coverLetterStorageKey" | "portfolioStorageKey" | "educationLevel" | "experience" | "socialLinks" | "desiredSalary" | "availability" | "customAnswers" | "status" | "internalNote" | "createdAt" | "updatedAt", ExtArgs["result"]["jobApplication"]>
   export type JobApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     jobOffer?: boolean | JobOfferDefaultArgs<ExtArgs>
   }
@@ -81857,6 +81940,10 @@ export namespace Prisma {
       coverLetterData: string | null
       portfolioUrl: string | null
       portfolioData: string | null
+      photoStorageKey: string | null
+      cvStorageKey: string | null
+      coverLetterStorageKey: string | null
+      portfolioStorageKey: string | null
       educationLevel: string | null
       experience: string | null
       socialLinks: Prisma.JsonValue | null
@@ -82302,6 +82389,10 @@ export namespace Prisma {
     readonly coverLetterData: FieldRef<"JobApplication", 'String'>
     readonly portfolioUrl: FieldRef<"JobApplication", 'String'>
     readonly portfolioData: FieldRef<"JobApplication", 'String'>
+    readonly photoStorageKey: FieldRef<"JobApplication", 'String'>
+    readonly cvStorageKey: FieldRef<"JobApplication", 'String'>
+    readonly coverLetterStorageKey: FieldRef<"JobApplication", 'String'>
+    readonly portfolioStorageKey: FieldRef<"JobApplication", 'String'>
     readonly educationLevel: FieldRef<"JobApplication", 'String'>
     readonly experience: FieldRef<"JobApplication", 'String'>
     readonly socialLinks: FieldRef<"JobApplication", 'Json'>
@@ -82890,6 +82981,7 @@ export namespace Prisma {
     filename: 'filename',
     type: 'type',
     data: 'data',
+    storageKey: 'storageKey',
     uploadedBy: 'uploadedBy',
     createdAt: 'createdAt'
   };
@@ -82997,6 +83089,7 @@ export namespace Prisma {
     filename: 'filename',
     type: 'type',
     data: 'data',
+    storageKey: 'storageKey',
     uploadedBy: 'uploadedBy',
     createdAt: 'createdAt'
   };
@@ -83207,6 +83300,7 @@ export namespace Prisma {
     type: 'type',
     filename: 'filename',
     data: 'data',
+    storageKey: 'storageKey',
     createdAt: 'createdAt'
   };
 
@@ -83666,6 +83760,10 @@ export namespace Prisma {
     coverLetterData: 'coverLetterData',
     portfolioUrl: 'portfolioUrl',
     portfolioData: 'portfolioData',
+    photoStorageKey: 'photoStorageKey',
+    cvStorageKey: 'cvStorageKey',
+    coverLetterStorageKey: 'coverLetterStorageKey',
+    portfolioStorageKey: 'portfolioStorageKey',
     educationLevel: 'educationLevel',
     experience: 'experience',
     socialLinks: 'socialLinks',
@@ -85136,6 +85234,7 @@ export namespace Prisma {
     filename?: StringFilter<"CollaborationDocument"> | string
     type?: EnumFileTypeFilter<"CollaborationDocument"> | $Enums.FileType
     data?: StringFilter<"CollaborationDocument"> | string
+    storageKey?: StringNullableFilter<"CollaborationDocument"> | string | null
     uploadedBy?: StringFilter<"CollaborationDocument"> | string
     createdAt?: DateTimeFilter<"CollaborationDocument"> | Date | string
     group?: XOR<CollaborationGroupScalarRelationFilter, CollaborationGroupWhereInput>
@@ -85148,6 +85247,7 @@ export namespace Prisma {
     filename?: SortOrder
     type?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrderInput | SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
     group?: CollaborationGroupOrderByWithRelationInput
@@ -85163,6 +85263,7 @@ export namespace Prisma {
     filename?: StringFilter<"CollaborationDocument"> | string
     type?: EnumFileTypeFilter<"CollaborationDocument"> | $Enums.FileType
     data?: StringFilter<"CollaborationDocument"> | string
+    storageKey?: StringNullableFilter<"CollaborationDocument"> | string | null
     uploadedBy?: StringFilter<"CollaborationDocument"> | string
     createdAt?: DateTimeFilter<"CollaborationDocument"> | Date | string
     group?: XOR<CollaborationGroupScalarRelationFilter, CollaborationGroupWhereInput>
@@ -85175,6 +85276,7 @@ export namespace Prisma {
     filename?: SortOrder
     type?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrderInput | SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
     _count?: CollaborationDocumentCountOrderByAggregateInput
@@ -85191,6 +85293,7 @@ export namespace Prisma {
     filename?: StringWithAggregatesFilter<"CollaborationDocument"> | string
     type?: EnumFileTypeWithAggregatesFilter<"CollaborationDocument"> | $Enums.FileType
     data?: StringWithAggregatesFilter<"CollaborationDocument"> | string
+    storageKey?: StringNullableWithAggregatesFilter<"CollaborationDocument"> | string | null
     uploadedBy?: StringWithAggregatesFilter<"CollaborationDocument"> | string
     createdAt?: DateTimeWithAggregatesFilter<"CollaborationDocument"> | Date | string
   }
@@ -85743,6 +85846,7 @@ export namespace Prisma {
     filename?: StringFilter<"DepartmentDocument"> | string
     type?: EnumFileTypeFilter<"DepartmentDocument"> | $Enums.FileType
     data?: StringFilter<"DepartmentDocument"> | string
+    storageKey?: StringNullableFilter<"DepartmentDocument"> | string | null
     uploadedBy?: StringFilter<"DepartmentDocument"> | string
     createdAt?: DateTimeFilter<"DepartmentDocument"> | Date | string
     department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
@@ -85755,6 +85859,7 @@ export namespace Prisma {
     filename?: SortOrder
     type?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrderInput | SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
     department?: DepartmentOrderByWithRelationInput
@@ -85770,6 +85875,7 @@ export namespace Prisma {
     filename?: StringFilter<"DepartmentDocument"> | string
     type?: EnumFileTypeFilter<"DepartmentDocument"> | $Enums.FileType
     data?: StringFilter<"DepartmentDocument"> | string
+    storageKey?: StringNullableFilter<"DepartmentDocument"> | string | null
     uploadedBy?: StringFilter<"DepartmentDocument"> | string
     createdAt?: DateTimeFilter<"DepartmentDocument"> | Date | string
     department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
@@ -85782,6 +85888,7 @@ export namespace Prisma {
     filename?: SortOrder
     type?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrderInput | SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
     _count?: DepartmentDocumentCountOrderByAggregateInput
@@ -85798,6 +85905,7 @@ export namespace Prisma {
     filename?: StringWithAggregatesFilter<"DepartmentDocument"> | string
     type?: EnumFileTypeWithAggregatesFilter<"DepartmentDocument"> | $Enums.FileType
     data?: StringWithAggregatesFilter<"DepartmentDocument"> | string
+    storageKey?: StringNullableWithAggregatesFilter<"DepartmentDocument"> | string | null
     uploadedBy?: StringWithAggregatesFilter<"DepartmentDocument"> | string
     createdAt?: DateTimeWithAggregatesFilter<"DepartmentDocument"> | Date | string
   }
@@ -86879,6 +86987,7 @@ export namespace Prisma {
     type?: EnumFileTypeFilter<"Attachment"> | $Enums.FileType
     filename?: StringFilter<"Attachment"> | string
     data?: StringFilter<"Attachment"> | string
+    storageKey?: StringNullableFilter<"Attachment"> | string | null
     createdAt?: DateTimeFilter<"Attachment"> | Date | string
     message?: XOR<MessageScalarRelationFilter, MessageWhereInput>
   }
@@ -86889,6 +86998,7 @@ export namespace Prisma {
     type?: SortOrder
     filename?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     message?: MessageOrderByWithRelationInput
   }
@@ -86902,6 +87012,7 @@ export namespace Prisma {
     type?: EnumFileTypeFilter<"Attachment"> | $Enums.FileType
     filename?: StringFilter<"Attachment"> | string
     data?: StringFilter<"Attachment"> | string
+    storageKey?: StringNullableFilter<"Attachment"> | string | null
     createdAt?: DateTimeFilter<"Attachment"> | Date | string
     message?: XOR<MessageScalarRelationFilter, MessageWhereInput>
   }, "id">
@@ -86912,6 +87023,7 @@ export namespace Prisma {
     type?: SortOrder
     filename?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: AttachmentCountOrderByAggregateInput
     _max?: AttachmentMaxOrderByAggregateInput
@@ -86927,6 +87039,7 @@ export namespace Prisma {
     type?: EnumFileTypeWithAggregatesFilter<"Attachment"> | $Enums.FileType
     filename?: StringWithAggregatesFilter<"Attachment"> | string
     data?: StringWithAggregatesFilter<"Attachment"> | string
+    storageKey?: StringNullableWithAggregatesFilter<"Attachment"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Attachment"> | Date | string
   }
 
@@ -89236,6 +89349,10 @@ export namespace Prisma {
     coverLetterData?: StringNullableFilter<"JobApplication"> | string | null
     portfolioUrl?: StringNullableFilter<"JobApplication"> | string | null
     portfolioData?: StringNullableFilter<"JobApplication"> | string | null
+    photoStorageKey?: StringNullableFilter<"JobApplication"> | string | null
+    cvStorageKey?: StringNullableFilter<"JobApplication"> | string | null
+    coverLetterStorageKey?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioStorageKey?: StringNullableFilter<"JobApplication"> | string | null
     educationLevel?: StringNullableFilter<"JobApplication"> | string | null
     experience?: StringNullableFilter<"JobApplication"> | string | null
     socialLinks?: JsonNullableFilter<"JobApplication">
@@ -89261,6 +89378,10 @@ export namespace Prisma {
     coverLetterData?: SortOrderInput | SortOrder
     portfolioUrl?: SortOrderInput | SortOrder
     portfolioData?: SortOrderInput | SortOrder
+    photoStorageKey?: SortOrderInput | SortOrder
+    cvStorageKey?: SortOrderInput | SortOrder
+    coverLetterStorageKey?: SortOrderInput | SortOrder
+    portfolioStorageKey?: SortOrderInput | SortOrder
     educationLevel?: SortOrderInput | SortOrder
     experience?: SortOrderInput | SortOrder
     socialLinks?: SortOrderInput | SortOrder
@@ -89289,6 +89410,10 @@ export namespace Prisma {
     coverLetterData?: StringNullableFilter<"JobApplication"> | string | null
     portfolioUrl?: StringNullableFilter<"JobApplication"> | string | null
     portfolioData?: StringNullableFilter<"JobApplication"> | string | null
+    photoStorageKey?: StringNullableFilter<"JobApplication"> | string | null
+    cvStorageKey?: StringNullableFilter<"JobApplication"> | string | null
+    coverLetterStorageKey?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioStorageKey?: StringNullableFilter<"JobApplication"> | string | null
     educationLevel?: StringNullableFilter<"JobApplication"> | string | null
     experience?: StringNullableFilter<"JobApplication"> | string | null
     socialLinks?: JsonNullableFilter<"JobApplication">
@@ -89314,6 +89439,10 @@ export namespace Prisma {
     coverLetterData?: SortOrderInput | SortOrder
     portfolioUrl?: SortOrderInput | SortOrder
     portfolioData?: SortOrderInput | SortOrder
+    photoStorageKey?: SortOrderInput | SortOrder
+    cvStorageKey?: SortOrderInput | SortOrder
+    coverLetterStorageKey?: SortOrderInput | SortOrder
+    portfolioStorageKey?: SortOrderInput | SortOrder
     educationLevel?: SortOrderInput | SortOrder
     experience?: SortOrderInput | SortOrder
     socialLinks?: SortOrderInput | SortOrder
@@ -89344,6 +89473,10 @@ export namespace Prisma {
     coverLetterData?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
     portfolioUrl?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
     portfolioData?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    photoStorageKey?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    cvStorageKey?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    coverLetterStorageKey?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
+    portfolioStorageKey?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
     educationLevel?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
     experience?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
     socialLinks?: JsonNullableWithAggregatesFilter<"JobApplication">
@@ -90426,6 +90559,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
     group: CollaborationGroupCreateNestedOneWithoutDocumentsInput
     uploader: UserCreateNestedOneWithoutUploadedCollaborationDocsInput
@@ -90437,6 +90571,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     uploadedBy: string
     createdAt?: Date | string
   }
@@ -90446,6 +90581,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     group?: CollaborationGroupUpdateOneRequiredWithoutDocumentsNestedInput
     uploader?: UserUpdateOneRequiredWithoutUploadedCollaborationDocsNestedInput
@@ -90457,6 +90593,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -90467,6 +90604,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     uploadedBy: string
     createdAt?: Date | string
   }
@@ -90476,6 +90614,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -90485,6 +90624,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -91060,6 +91200,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
     department: DepartmentCreateNestedOneWithoutDocumentsInput
     uploader: UserCreateNestedOneWithoutUploadedDepartmentDocumentsInput
@@ -91071,6 +91212,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     uploadedBy: string
     createdAt?: Date | string
   }
@@ -91080,6 +91222,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneRequiredWithoutDocumentsNestedInput
     uploader?: UserUpdateOneRequiredWithoutUploadedDepartmentDocumentsNestedInput
@@ -91091,6 +91234,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -91101,6 +91245,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     uploadedBy: string
     createdAt?: Date | string
   }
@@ -91110,6 +91255,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -91119,6 +91265,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -92203,6 +92350,7 @@ export namespace Prisma {
     type: $Enums.FileType
     filename: string
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
     message: MessageCreateNestedOneWithoutAttachmentsInput
   }
@@ -92213,6 +92361,7 @@ export namespace Prisma {
     type: $Enums.FileType
     filename: string
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
   }
 
@@ -92221,6 +92370,7 @@ export namespace Prisma {
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     filename?: StringFieldUpdateOperationsInput | string
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     message?: MessageUpdateOneRequiredWithoutAttachmentsNestedInput
   }
@@ -92231,6 +92381,7 @@ export namespace Prisma {
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     filename?: StringFieldUpdateOperationsInput | string
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -92240,6 +92391,7 @@ export namespace Prisma {
     type: $Enums.FileType
     filename: string
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
   }
 
@@ -92248,6 +92400,7 @@ export namespace Prisma {
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     filename?: StringFieldUpdateOperationsInput | string
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -92257,6 +92410,7 @@ export namespace Prisma {
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     filename?: StringFieldUpdateOperationsInput | string
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -94743,6 +94897,10 @@ export namespace Prisma {
     coverLetterData?: string | null
     portfolioUrl?: string | null
     portfolioData?: string | null
+    photoStorageKey?: string | null
+    cvStorageKey?: string | null
+    coverLetterStorageKey?: string | null
+    portfolioStorageKey?: string | null
     educationLevel?: string | null
     experience?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -94768,6 +94926,10 @@ export namespace Prisma {
     coverLetterData?: string | null
     portfolioUrl?: string | null
     portfolioData?: string | null
+    photoStorageKey?: string | null
+    cvStorageKey?: string | null
+    coverLetterStorageKey?: string | null
+    portfolioStorageKey?: string | null
     educationLevel?: string | null
     experience?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -94791,6 +94953,10 @@ export namespace Prisma {
     coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    photoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    cvStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
     educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
     experience?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -94816,6 +94982,10 @@ export namespace Prisma {
     coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    photoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    cvStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
     educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
     experience?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -94840,6 +95010,10 @@ export namespace Prisma {
     coverLetterData?: string | null
     portfolioUrl?: string | null
     portfolioData?: string | null
+    photoStorageKey?: string | null
+    cvStorageKey?: string | null
+    coverLetterStorageKey?: string | null
+    portfolioStorageKey?: string | null
     educationLevel?: string | null
     experience?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -94863,6 +95037,10 @@ export namespace Prisma {
     coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    photoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    cvStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
     educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
     experience?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -94887,6 +95065,10 @@ export namespace Prisma {
     coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    photoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    cvStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
     educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
     experience?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -96077,6 +96259,7 @@ export namespace Prisma {
     filename?: SortOrder
     type?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
   }
@@ -96087,6 +96270,7 @@ export namespace Prisma {
     filename?: SortOrder
     type?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
   }
@@ -96097,6 +96281,7 @@ export namespace Prisma {
     filename?: SortOrder
     type?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
   }
@@ -96502,6 +96687,7 @@ export namespace Prisma {
     filename?: SortOrder
     type?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
   }
@@ -96512,6 +96698,7 @@ export namespace Prisma {
     filename?: SortOrder
     type?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
   }
@@ -96522,6 +96709,7 @@ export namespace Prisma {
     filename?: SortOrder
     type?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
   }
@@ -97244,6 +97432,7 @@ export namespace Prisma {
     type?: SortOrder
     filename?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -97253,6 +97442,7 @@ export namespace Prisma {
     type?: SortOrder
     filename?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -97262,6 +97452,7 @@ export namespace Prisma {
     type?: SortOrder
     filename?: SortOrder
     data?: SortOrder
+    storageKey?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -98797,6 +98988,10 @@ export namespace Prisma {
     coverLetterData?: SortOrder
     portfolioUrl?: SortOrder
     portfolioData?: SortOrder
+    photoStorageKey?: SortOrder
+    cvStorageKey?: SortOrder
+    coverLetterStorageKey?: SortOrder
+    portfolioStorageKey?: SortOrder
     educationLevel?: SortOrder
     experience?: SortOrder
     socialLinks?: SortOrder
@@ -98821,6 +99016,10 @@ export namespace Prisma {
     coverLetterData?: SortOrder
     portfolioUrl?: SortOrder
     portfolioData?: SortOrder
+    photoStorageKey?: SortOrder
+    cvStorageKey?: SortOrder
+    coverLetterStorageKey?: SortOrder
+    portfolioStorageKey?: SortOrder
     educationLevel?: SortOrder
     experience?: SortOrder
     desiredSalary?: SortOrder
@@ -98843,6 +99042,10 @@ export namespace Prisma {
     coverLetterData?: SortOrder
     portfolioUrl?: SortOrder
     portfolioData?: SortOrder
+    photoStorageKey?: SortOrder
+    cvStorageKey?: SortOrder
+    coverLetterStorageKey?: SortOrder
+    portfolioStorageKey?: SortOrder
     educationLevel?: SortOrder
     experience?: SortOrder
     desiredSalary?: SortOrder
@@ -106394,6 +106597,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
     department: DepartmentCreateNestedOneWithoutDocumentsInput
   }
@@ -106404,6 +106608,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
   }
 
@@ -106658,6 +106863,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
     group: CollaborationGroupCreateNestedOneWithoutDocumentsInput
   }
@@ -106668,6 +106874,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
   }
 
@@ -107914,6 +108121,7 @@ export namespace Prisma {
     filename?: StringFilter<"DepartmentDocument"> | string
     type?: EnumFileTypeFilter<"DepartmentDocument"> | $Enums.FileType
     data?: StringFilter<"DepartmentDocument"> | string
+    storageKey?: StringNullableFilter<"DepartmentDocument"> | string | null
     uploadedBy?: StringFilter<"DepartmentDocument"> | string
     createdAt?: DateTimeFilter<"DepartmentDocument"> | Date | string
   }
@@ -108140,6 +108348,7 @@ export namespace Prisma {
     filename?: StringFilter<"CollaborationDocument"> | string
     type?: EnumFileTypeFilter<"CollaborationDocument"> | $Enums.FileType
     data?: StringFilter<"CollaborationDocument"> | string
+    storageKey?: StringNullableFilter<"CollaborationDocument"> | string | null
     uploadedBy?: StringFilter<"CollaborationDocument"> | string
     createdAt?: DateTimeFilter<"CollaborationDocument"> | Date | string
   }
@@ -110403,6 +110612,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
     uploader: UserCreateNestedOneWithoutUploadedCollaborationDocsInput
   }
@@ -110412,6 +110622,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     uploadedBy: string
     createdAt?: Date | string
   }
@@ -115178,6 +115389,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
     uploader: UserCreateNestedOneWithoutUploadedDepartmentDocumentsInput
   }
@@ -115187,6 +115399,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     uploadedBy: string
     createdAt?: Date | string
   }
@@ -122059,6 +122272,7 @@ export namespace Prisma {
     type: $Enums.FileType
     filename: string
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
   }
 
@@ -122067,6 +122281,7 @@ export namespace Prisma {
     type: $Enums.FileType
     filename: string
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
   }
 
@@ -122303,6 +122518,7 @@ export namespace Prisma {
     type?: EnumFileTypeFilter<"Attachment"> | $Enums.FileType
     filename?: StringFilter<"Attachment"> | string
     data?: StringFilter<"Attachment"> | string
+    storageKey?: StringNullableFilter<"Attachment"> | string | null
     createdAt?: DateTimeFilter<"Attachment"> | Date | string
   }
 
@@ -130444,6 +130660,10 @@ export namespace Prisma {
     coverLetterData?: string | null
     portfolioUrl?: string | null
     portfolioData?: string | null
+    photoStorageKey?: string | null
+    cvStorageKey?: string | null
+    coverLetterStorageKey?: string | null
+    portfolioStorageKey?: string | null
     educationLevel?: string | null
     experience?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -130467,6 +130687,10 @@ export namespace Prisma {
     coverLetterData?: string | null
     portfolioUrl?: string | null
     portfolioData?: string | null
+    photoStorageKey?: string | null
+    cvStorageKey?: string | null
+    coverLetterStorageKey?: string | null
+    portfolioStorageKey?: string | null
     educationLevel?: string | null
     experience?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -130732,6 +130956,10 @@ export namespace Prisma {
     coverLetterData?: StringNullableFilter<"JobApplication"> | string | null
     portfolioUrl?: StringNullableFilter<"JobApplication"> | string | null
     portfolioData?: StringNullableFilter<"JobApplication"> | string | null
+    photoStorageKey?: StringNullableFilter<"JobApplication"> | string | null
+    cvStorageKey?: StringNullableFilter<"JobApplication"> | string | null
+    coverLetterStorageKey?: StringNullableFilter<"JobApplication"> | string | null
+    portfolioStorageKey?: StringNullableFilter<"JobApplication"> | string | null
     educationLevel?: StringNullableFilter<"JobApplication"> | string | null
     experience?: StringNullableFilter<"JobApplication"> | string | null
     socialLinks?: JsonNullableFilter<"JobApplication">
@@ -131203,6 +131431,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
   }
 
@@ -131288,6 +131517,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
   }
 
@@ -132360,6 +132590,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneRequiredWithoutDocumentsNestedInput
   }
@@ -132370,6 +132601,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -132379,6 +132611,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -132629,6 +132862,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     group?: CollaborationGroupUpdateOneRequiredWithoutDocumentsNestedInput
   }
@@ -132639,6 +132873,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -132648,6 +132883,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -133379,6 +133615,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     uploadedBy: string
     createdAt?: Date | string
   }
@@ -133533,6 +133770,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     uploader?: UserUpdateOneRequiredWithoutUploadedCollaborationDocsNestedInput
   }
@@ -133542,6 +133780,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -133551,6 +133790,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -133737,6 +133977,7 @@ export namespace Prisma {
     filename: string
     type: $Enums.FileType
     data: string
+    storageKey?: string | null
     uploadedBy: string
     createdAt?: Date | string
   }
@@ -134079,6 +134320,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     uploader?: UserUpdateOneRequiredWithoutUploadedDepartmentDocumentsNestedInput
   }
@@ -134088,6 +134330,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -134097,6 +134340,7 @@ export namespace Prisma {
     filename?: StringFieldUpdateOperationsInput | string
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -134413,6 +134657,7 @@ export namespace Prisma {
     type: $Enums.FileType
     filename: string
     data: string
+    storageKey?: string | null
     createdAt?: Date | string
   }
 
@@ -134421,6 +134666,7 @@ export namespace Prisma {
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     filename?: StringFieldUpdateOperationsInput | string
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -134429,6 +134675,7 @@ export namespace Prisma {
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     filename?: StringFieldUpdateOperationsInput | string
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -134437,6 +134684,7 @@ export namespace Prisma {
     type?: EnumFileTypeFieldUpdateOperationsInput | $Enums.FileType
     filename?: StringFieldUpdateOperationsInput | string
     data?: StringFieldUpdateOperationsInput | string
+    storageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -134863,6 +135111,10 @@ export namespace Prisma {
     coverLetterData?: string | null
     portfolioUrl?: string | null
     portfolioData?: string | null
+    photoStorageKey?: string | null
+    cvStorageKey?: string | null
+    coverLetterStorageKey?: string | null
+    portfolioStorageKey?: string | null
     educationLevel?: string | null
     experience?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -134886,6 +135138,10 @@ export namespace Prisma {
     coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    photoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    cvStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
     educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
     experience?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -134909,6 +135165,10 @@ export namespace Prisma {
     coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    photoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    cvStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
     educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
     experience?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
@@ -134932,6 +135192,10 @@ export namespace Prisma {
     coverLetterData?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioUrl?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioData?: NullableStringFieldUpdateOperationsInput | string | null
+    photoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    cvStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverLetterStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    portfolioStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
     educationLevel?: NullableStringFieldUpdateOperationsInput | string | null
     experience?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue

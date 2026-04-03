@@ -273,7 +273,8 @@ model CollaborationDocument {
   groupId    String
   filename   String
   type       FileType
-  data       String   @db.Text
+  data       String   @db.Text // URL Supabase Storage (ou base64 legacy)
+  storageKey String?           // Chemin dans le bucket Supabase (pour suppression)
   uploadedBy String
   createdAt  DateTime @default(now())
 
@@ -433,7 +434,8 @@ model DepartmentDocument {
   deptId     String
   filename   String
   type       FileType
-  data       String   @db.Text
+  data       String   @db.Text // URL Supabase Storage (ou base64 legacy)
+  storageKey String?           // Chemin dans le bucket Supabase (pour suppression)
   uploadedBy String
   createdAt  DateTime @default(now())
 
@@ -718,13 +720,14 @@ model Message {
 }
 
 model Attachment {
-  id        String   @id @default(cuid())
-  messageId String
-  type      FileType
-  filename  String
-  data      String   @db.Text
-  createdAt DateTime @default(now())
-  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  messageId  String
+  type       FileType
+  filename   String
+  data       String   @db.Text
+  storageKey String?
+  createdAt  DateTime @default(now())
+  message    Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@index([messageId])
 }
@@ -1396,11 +1399,15 @@ model JobApplication {
   email           String
   phone           String?
   address         String?
-  photoData       String?           @db.Text // Base64 photo
-  cvData          String?           @db.Text // Base64 CV
-  coverLetterData String?           @db.Text // Base64 lettre de motivation
-  portfolioUrl    String?           @db.Text
-  portfolioData   String?           @db.Text // Base64 portfolio optionnel
+  photoData           String?           @db.Text // URL Supabase Storage (ou base64 legacy)
+  cvData              String?           @db.Text // URL Supabase Storage (ou base64 legacy)
+  coverLetterData     String?           @db.Text // URL Supabase Storage (ou base64 legacy)
+  portfolioUrl        String?           @db.Text
+  portfolioData       String?           @db.Text // URL Supabase Storage (ou base64 legacy)
+  photoStorageKey     String?                    // Clé Supabase pour suppression
+  cvStorageKey        String?                    // Clé Supabase pour suppression
+  coverLetterStorageKey String?                  // Clé Supabase pour suppression
+  portfolioStorageKey String?                    // Clé Supabase pour suppression
   educationLevel  String?
   experience      String?           @db.Text
   socialLinks     Json? // { linkedin, github, twitter, ... }

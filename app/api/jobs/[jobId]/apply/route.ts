@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { sendJobApplicationConfirmationEmail } from '@/src/lib/email';
+import { supabaseAdmin, STORAGE_BUCKET } from '@/src/lib/supabase';
+
+async function uploadBase64ToStorage(base64Data: string, jobId: string, filename: string): Promise<{ url: string; storageKey: string } | null> {
+    const base64Match = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    if (!base64Match) return null;
+    const mimeType = base64Match[1];
+    const buffer = Buffer.from(base64Match[2], 'base64');
+    const safeName = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const storageKey = `job-applications/${jobId}/${Date.now()}_${safeName}`;
+    const { error } = await supabaseAdmin.storage.from(STORAGE_BUCKET).upload(storageKey, buffer, { contentType: mimeType, upsert: false });
+    if (error) { console.error('[Jobs Apply] Upload error:', error); return null; }
+    const { data: publicData } = supabaseAdmin.storage.from(STORAGE_BUCKET).getPublicUrl(storageKey);
+    return { url: publicData.publicUrl, storageKey };
+}
 
 // POST /api/jobs/[jobId]/apply — Postuler à une offre
 export async function POST(
@@ -59,6 +73,33 @@ export async function POST(
         return NextResponse.json({ error: "Vous avez déjà postulé à cette offre" }, { status: 409 });
     }
 
+    // Convertir les éventuels base64 résiduels vers Supabase Storage
+    let finalPhotoData = photoData || null;
+    let finalCvData = cvData || null;
+    let finalCoverLetterData = coverLetterData || null;
+    let finalPortfolioData = portfolioData || null;
+    let photoStorageKey: string | undefined;
+    let cvStorageKey: string | undefined;
+    let coverLetterStorageKey: string | undefined;
+    let portfolioStorageKey: string | undefined;
+
+    if (photoData?.startsWith('data:')) {
+        const r = await uploadBase64ToStorage(photoData, jobId, 'photo');
+        if (r) { finalPhotoData = r.url; photoStorageKey = r.storageKey; }
+    }
+    if (cvData?.startsWith('data:')) {
+        const r = await uploadBase64ToStorage(cvData, jobId, 'cv.pdf');
+        if (r) { finalCvData = r.url; cvStorageKey = r.storageKey; }
+    }
+    if (coverLetterData?.startsWith('data:')) {
+        const r = await uploadBase64ToStorage(coverLetterData, jobId, 'lettre.pdf');
+        if (r) { finalCoverLetterData = r.url; coverLetterStorageKey = r.storageKey; }
+    }
+    if (portfolioData?.startsWith('data:')) {
+        const r = await uploadBase64ToStorage(portfolioData, jobId, 'portfolio');
+        if (r) { finalPortfolioData = r.url; portfolioStorageKey = r.storageKey; }
+    }
+
     const application = await prisma.jobApplication.create({
         data: {
             jobId,
@@ -66,11 +107,15 @@ export async function POST(
             email: email.toLowerCase(),
             phone: phone || null,
             address: address || null,
-            photoData: photoData || null,
-            cvData: cvData || null,
-            coverLetterData: coverLetterData || null,
+            photoData: finalPhotoData,
+            cvData: finalCvData,
+            coverLetterData: finalCoverLetterData,
             portfolioUrl: portfolioUrl || null,
-            portfolioData: portfolioData || null,
+            portfolioData: finalPortfolioData,
+            photoStorageKey: photoStorageKey || null,
+            cvStorageKey: cvStorageKey || null,
+            coverLetterStorageKey: coverLetterStorageKey || null,
+            portfolioStorageKey: portfolioStorageKey || null,
             educationLevel: educationLevel || null,
             experience: experience || null,
             socialLinks: socialLinks || null,

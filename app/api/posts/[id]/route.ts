@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/src/lib/prisma";
 import { authenticate, AuthenticatedRequest } from "@/src/middleware/auth";
 import { z } from "zod";
+import { deleteStorageFileByUrl } from "@/src/lib/supabase";
 
 const updatePostSchema = z.object({
     content: z.string().min(1, "Le contenu ne peut pas être vide").optional(),
@@ -97,6 +98,11 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
             return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
         }
 
+        // Supprimer l'image Supabase si elle existe
+        if (post.imageUrl && post.imageUrl.includes('supabase.co')) {
+            await deleteStorageFileByUrl(post.imageUrl);
+        }
+
         await prisma.post.delete({
             where: { id }
         });
@@ -133,6 +139,16 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         // Verify ownership
         if (post.page.userId !== user.userId) {
             return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+        }
+
+        // Si l'image a changé, supprimer l'ancienne du storage Supabase
+        if (
+            data.imageUrl !== undefined &&
+            post.imageUrl &&
+            post.imageUrl !== data.imageUrl &&
+            post.imageUrl.includes('supabase.co')
+        ) {
+            await deleteStorageFileByUrl(post.imageUrl);
         }
 
         const updatedPost = await prisma.post.update({

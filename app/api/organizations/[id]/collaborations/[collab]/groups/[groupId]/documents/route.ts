@@ -10,7 +10,10 @@ export const dynamic = 'force-dynamic';
 const addDocumentSchema = z.object({
     filename: z.string().min(1).max(255),
     type: z.enum(['IMAGE', 'PDF', 'WORD', 'AUDIO', 'OTHER']),
+    // data = URL Supabase Storage
     data: z.string().min(1),
+    // storageKey = chemin dans le bucket (pour suppression future)
+    storageKey: z.string().optional(),
 });
 
 export async function GET(
@@ -98,10 +101,17 @@ export async function POST(
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
-        const { filename, type, data } = validated.data;
+        const { filename, type, data, storageKey } = validated.data;
 
         const doc = await prisma.collaborationDocument.create({
-            data: { groupId, filename, type, data, uploadedBy: user.userId },
+            data: {
+                groupId,
+                filename,
+                type,
+                data,
+                storageKey: storageKey ?? null,
+                uploadedBy: user.userId,
+            },
             include: {
                 uploader: { select: { id: true, name: true, email: true } },
             },

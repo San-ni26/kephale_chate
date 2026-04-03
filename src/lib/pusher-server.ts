@@ -51,13 +51,23 @@ export async function emitToConversation(conversationId: string, event: string, 
 
 /**
  * Payload allégé pour message:new (Pusher limite 10 240 bytes).
- * Exclut les données base64 des pièces jointes — le client fetch le message complet si besoin.
+ * Depuis la migration Supabase, les pièces jointes sont des URLs courtes (https://...)
+ * et non plus des base64 lourds → on peut les inclure directement dans le payload.
+ * Les anciens base64 (legacy) sont exclus pour éviter l'erreur 413.
  */
 function buildLightweightMessagePayload(message: any, conversationId: string) {
-    const attachmentsMeta = (message.attachments ?? []).map((a: any) => ({
-        filename: a.filename,
-        type: a.type,
-    }));
+    // Inclure les données des pièces jointes seulement si ce sont des URLs Supabase (courtes)
+    // Exclure les base64 legacy qui dépasseraient la limite Pusher
+    const attachments = (message.attachments ?? []).map((a: any) => {
+        const isSupabaseUrl = typeof a.data === 'string' && a.data.startsWith('https://');
+        return {
+            filename: a.filename,
+            type: a.type,
+            // Inclure le data seulement si c'est une URL Supabase (court), pas un base64 lourd
+            data: isSupabaseUrl ? a.data : undefined,
+            storageKey: a.storageKey,
+        };
+    });
 
     const pusherPayload = {
         conversationId,
@@ -76,13 +86,14 @@ function buildLightweightMessagePayload(message: any, conversationId: string) {
                 : message.updatedAt,
             isEdited: message.isEdited ?? false,
             replyTo: message.replyTo ?? null,
-            hasAttachments: attachmentsMeta.length > 0,
-            attachmentsMeta,
+            hasAttachments: attachments.length > 0,
+            attachments,
         },
     };
 
     const payloadSize = Buffer.byteLength(JSON.stringify(pusherPayload), 'utf8');
     if (payloadSize > 9500) {
+        // Si toujours trop lourd (cas edge), tronquer le contenu texte
         pusherPayload.message.content = pusherPayload.message.content?.substring(0, 500) ?? '';
     }
 

@@ -66,6 +66,16 @@ export function MessageItem({
 
     const handleDownload = async (attachment: any) => {
         try {
+            // Handle HTTP Supabase URLs and Legacy Data URLs
+            if (attachment.data.startsWith('http') || attachment.data.startsWith('data:')) {
+                const response = await fetch(attachment.data);
+                const blob = await response.blob();
+                downloadFile(blob, attachment.filename);
+                toast.success("Téléchargement réussi");
+                return;
+            }
+
+            // Legacy decryption attempt (in case any exist)
             const blob = decryptFile(
                 {
                     filename: attachment.filename,
@@ -134,14 +144,20 @@ export function MessageItem({
                                 {message.attachments && message.attachments.length > 0 && (
                                     <div className="mt-2 space-y-2">
                                         {message.attachments.map((attachment) => (
-                                            <div
-                                                key={attachment.id}
-                                                className="flex items-center gap-2 p-2 bg-background/50 rounded-lg border border-border"
-                                            >
-                                                <span className="text-xs flex-1 truncate">
-                                                    {attachment.filename}
-                                                </span>
-                                                {(attachment.type === "PDF" || attachment.type === "WORD") && (
+                                            <div key={attachment.id} className="space-y-2">
+                                                {attachment.type === "IMAGE" && (
+                                                    <div className="max-w-[250px] rounded-lg overflow-hidden border border-border bg-background/50">
+                                                        <img
+                                                            src={attachment.data}
+                                                            alt={attachment.filename}
+                                                            className="w-full h-auto object-cover"
+                                                        />
+                                                    </div>
+                                                )}
+                                                <div className="flex items-center gap-2 p-2 bg-background/50 rounded-lg border border-border">
+                                                    <span className="text-xs flex-1 truncate">
+                                                        {attachment.filename}
+                                                    </span>
                                                     <Button
                                                         size="sm"
                                                         variant="ghost"
@@ -150,7 +166,7 @@ export function MessageItem({
                                                     >
                                                         <Download className="h-3 w-3" />
                                                     </Button>
-                                                )}
+                                                </div>
                                             </div>
                                         ))}
                                     </div>

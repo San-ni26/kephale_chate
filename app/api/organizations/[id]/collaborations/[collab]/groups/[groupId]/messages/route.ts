@@ -4,6 +4,8 @@ import { verifyToken } from '@/src/lib/jwt';
 import { decryptUserPII } from '@/src/lib/server-crypto';
 import { emitMessageNewToConversation } from '@/src/lib/pusher-server';
 import { notifyCollaborationGroupNewMessage } from '@/src/lib/websocket';
+import { supabaseAdmin, STORAGE_BUCKET } from '@/src/lib/supabase';
+import { FileType } from '@/src/prisma/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -237,20 +239,47 @@ export async function POST(
             });
         }
 
+        let attachmentsData = undefined;
+        if (attachments && Array.isArray(attachments) && attachments.length > 0) {
+            const processed = await Promise.all(
+                attachments.map(async (att: { filename: string; type: string; data: string }) => {
+                    let finalData = att.data;
+                    let storageKey: string | undefined = undefined;
+
+                    const base64Match = att.data?.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                    if (base64Match && base64Match.length === 3) {
+                        const mimeType = base64Match[1];
+                        const buffer = Buffer.from(base64Match[2], 'base64');
+                        const safeName = att.filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+                        storageKey = `collabs/${groupId}/messages/${Date.now()}_${safeName}`;
+
+                        const { error: uploadError } = await supabaseAdmin.storage
+                            .from(STORAGE_BUCKET)
+                            .upload(storageKey, buffer, { contentType: mimeType, upsert: false });
+
+                        if (!uploadError) {
+                            const { data: publicData } = supabaseAdmin.storage
+                                .from(STORAGE_BUCKET)
+                                .getPublicUrl(storageKey);
+                            finalData = publicData.publicUrl;
+                        } else {
+                            console.error('[Collab Messages] Erreur upload Supabase:', uploadError);
+                            storageKey = undefined;
+                        }
+                    }
+
+                    return { filename: att.filename, type: att.type as FileType, data: finalData, storageKey };
+                })
+            );
+            attachmentsData = { create: processed };
+        }
+
         const message = await prisma.message.create({
             data: {
                 content: content || '',
                 senderId: userId,
                 groupId: conversation.id,
-                attachments: attachments
-                    ? {
-                          create: attachments.map((att: { filename: string; type: string; data: string }) => ({
-                              filename: att.filename,
-                              type: att.type,
-                              data: att.data,
-                          })),
-                      }
-                    : undefined,
+                attachments: attachmentsData,
             },
             include: {
                 sender: {

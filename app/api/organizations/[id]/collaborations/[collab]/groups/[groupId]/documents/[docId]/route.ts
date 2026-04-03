@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
+import { deleteStorageFile } from '@/src/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,6 +43,11 @@ export async function DELETE(
 
         if (doc.uploadedBy !== user.userId) {
             return NextResponse.json({ error: 'Vous ne pouvez supprimer que vos propres documents' }, { status: 403 });
+        }
+
+        // Supprimer de Supabase Storage (si storageKey présent = nouveau système)
+        if (doc.storageKey) {
+            await deleteStorageFile(doc.storageKey);
         }
 
         await prisma.collaborationDocument.delete({ where: { id: docId } });

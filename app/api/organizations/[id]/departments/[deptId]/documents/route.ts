@@ -8,7 +8,10 @@ import { apiError, handleApiError } from '@/src/lib/api-response';
 const addDocumentSchema = z.object({
     filename: z.string().min(1, 'filename requis').max(255, 'filename trop long'),
     type: z.enum(['IMAGE', 'PDF', 'WORD', 'AUDIO', 'OTHER']),
+    // data = URL Supabase Storage (obligatoire)
     data: z.string().min(1, 'data requis'),
+    // storageKey = chemin dans le bucket (pour suppression future)
+    storageKey: z.string().optional(),
 });
 
 export async function GET(
@@ -92,7 +95,7 @@ export async function POST(
             });
         }
 
-        const { filename, type, data } = validated.data;
+        const { filename, type, data, storageKey } = validated.data;
 
         const [deptMember, department, orgMember] = await Promise.all([
             prisma.departmentMember.findFirst({ where: { userId, deptId } }),
@@ -111,6 +114,7 @@ export async function POST(
                 filename,
                 type,
                 data,
+                storageKey: storageKey ?? null,
                 uploadedBy: userId,
             },
             include: {

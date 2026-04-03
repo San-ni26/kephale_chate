@@ -83,6 +83,9 @@ interface CollaborationDocumentsPanelProps {
 }
 
 function getDocDataUrl(doc: Doc): string {
+    // Nouveau système : data est une URL Supabase
+    if (doc.data.startsWith('http')) return doc.data;
+    // Ancien système (rétrocompatibilité base64)
     if (doc.data.startsWith('data:')) return doc.data;
     const mime = doc.type === 'PDF' ? 'application/pdf' : doc.type === 'IMAGE' ? 'image/jpeg' : 'application/octet-stream';
     return `data:${mime};base64,${doc.data}`;
@@ -136,17 +139,25 @@ export function CollaborationDocumentsPanel({
             setPdfPreviewBlobUrl(null);
             return;
         }
+        // Nouveau système : URL Supabase directe
+        if (previewDoc.data.startsWith('http')) {
+            setPdfPreviewBlobUrl(previewDoc.data);
+            return;
+        }
+        // Ancien système : convertir base64 en blob URL
         let cancelled = false;
         const dataUrl = previewDoc.data.startsWith('data:') ? previewDoc.data : `data:application/pdf;base64,${previewDoc.data}`;
-        dataUrlToBlob(dataUrl).then((blob) => {
-            if (cancelled) return;
-            if (blob) {
-                const url = URL.createObjectURL(blob);
-                pdfPreviewBlobUrlRef.current = url;
-                setPdfPreviewBlobUrl(url);
-            } else {
-                setPdfPreviewBlobUrl(null);
-            }
+        import('@/src/lib/download-file').then(({ dataUrlToBlob }) => {
+            dataUrlToBlob(dataUrl).then((blob) => {
+                if (cancelled) return;
+                if (blob) {
+                    const url = URL.createObjectURL(blob);
+                    pdfPreviewBlobUrlRef.current = url;
+                    setPdfPreviewBlobUrl(url);
+                } else {
+                    setPdfPreviewBlobUrl(null);
+                }
+            });
         });
         return () => {
             cancelled = true;
@@ -156,7 +167,7 @@ export function CollaborationDocumentsPanel({
             }
             setPdfPreviewBlobUrl(null);
         };
-    }, [previewDoc?.id, previewDoc?.type]);
+    }, [previewDoc?.id, previewDoc?.type, previewDoc?.data]);
 
     const fetchDocuments = async (q?: string) => {
         if (!baseUrl) return;
@@ -228,23 +239,44 @@ export function CollaborationDocumentsPanel({
 
         setUploading(true);
         try {
-            const base64 = await new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result as string);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
+            // 1. Upload vers Supabase Storage
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('context', 'collab');
+            formData.append('contextId', groupId);
+
+            const uploadRes = await fetchWithAuth('/api/upload/document', {
+                method: 'POST',
+                body: formData,
             });
 
+            if (!uploadRes.ok) {
+                const err = await uploadRes.json();
+                toast.error(err.error || 'Erreur upload');
+                return;
+            }
+
+            const { storageKey, url, filename: uploadedFilename, type: fileType } = await uploadRes.json();
+
+            // 2. Enregistrer la référence en base de données
             const ext = file.name.split('.').pop()?.toLowerCase() || '';
-            let fileType = 'OTHER';
-            if (['jpeg', 'jpg', 'png', 'gif', 'webp'].includes(ext)) fileType = 'IMAGE';
-            else if (ext === 'pdf') fileType = 'PDF';
-            else if (['doc', 'docx'].includes(ext)) fileType = 'WORD';
+            let resolvedType = fileType;
+            if (!resolvedType) {
+                if (['jpeg', 'jpg', 'png', 'gif', 'webp'].includes(ext)) resolvedType = 'IMAGE';
+                else if (ext === 'pdf') resolvedType = 'PDF';
+                else if (['doc', 'docx'].includes(ext)) resolvedType = 'WORD';
+                else resolvedType = 'OTHER';
+            }
 
             const res = await fetchWithAuth(`${baseUrl}/documents`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ filename: file.name, type: fileType, data: base64 }),
+                body: JSON.stringify({
+                    filename: uploadedFilename || file.name,
+                    type: resolvedType,
+                    data: url,
+                    storageKey,
+                }),
             });
 
             if (res.ok) {
@@ -467,10 +499,17 @@ export function CollaborationDocumentsPanel({
                                                                     size="icon"
                                                                     className="h-8 w-8 text-muted-foreground"
                                                                     onClick={async () => {
-                                                                        const dataUrl = doc.data.startsWith('data:') ? doc.data : getDocDataUrl(doc);
-                                                                        const ok = await shareFileFromDataUrl(dataUrl, doc.filename);
-                                                                        if (ok) toast.success('Partage ouvert');
-                                                                        else toast.error('Partage non disponible');
+                                                                        const url = getDocDataUrl(doc);
+                                                                        if (doc.data.startsWith('http')) {
+                                                                            try {
+                                                                                if (navigator.share) await navigator.share({ url, title: doc.filename });
+                                                                                else { await navigator.clipboard.writeText(url); toast.success('Lien copié'); }
+                                                                            } catch { toast.error('Partage non disponible'); }
+                                                                        } else {
+                                                                            const ok = await shareFileFromDataUrl(url, doc.filename);
+                                                                            if (ok) toast.success('Partage ouvert');
+                                                                            else toast.error('Partage non disponible');
+                                                                        }
                                                                     }}
                                                                     title="Partager"
                                                                 >
@@ -482,16 +521,13 @@ export function CollaborationDocumentsPanel({
                                                                 size="icon"
                                                                 className="h-8 w-8 text-muted-foreground"
                                                                 onClick={() => {
-                                                                    try {
-                                                                        const url = doc.data.startsWith('data:') ? doc.data : `data:application/octet-stream;base64,${doc.data}`;
-                                                                        const a = document.createElement('a');
-                                                                        a.href = url;
-                                                                        a.download = doc.filename;
-                                                                        a.click();
-                                                                        toast.success('Téléchargement démarré');
-                                                                    } catch {
-                                                                        toast.error('Erreur téléchargement');
-                                                                    }
+                                                                    const url = getDocDataUrl(doc);
+                                                                    const a = document.createElement('a');
+                                                                    a.href = url;
+                                                                    a.download = doc.filename;
+                                                                    if (doc.data.startsWith('http')) a.target = '_blank';
+                                                                    a.click();
+                                                                    toast.success('Téléchargement démarré');
                                                                 }}
                                                                 title="Télécharger"
                                                             >
@@ -649,6 +685,22 @@ function DocumentViewerInline({
         setWordHtml(null);
         setWordError(null);
         setWordLoading(true);
+        // Nouveau système : URL Supabase — fetch + ArrayBuffer
+        if (doc.data.startsWith('http')) {
+            fetch(doc.data)
+                .then(r => r.arrayBuffer())
+                .then(arrayBuffer => {
+                    import('mammoth').then((mammoth) => {
+                        mammoth.default.convertToHtml({ arrayBuffer })
+                            .then((result) => { setWordHtml(result.value); setWordError(null); })
+                            .catch((err) => { setWordError(err?.message || 'Erreur'); setWordHtml(null); })
+                            .finally(() => setWordLoading(false));
+                    }).catch(() => { setWordError('Bibliothèque non disponible'); setWordLoading(false); });
+                })
+                .catch(() => { setWordError('Erreur téléchargement du fichier'); setWordLoading(false); });
+            return;
+        }
+        // Ancien système : base64
         const base64 = doc.data.startsWith('data:') ? doc.data.split(',')[1] : doc.data;
         if (!base64) {
             setWordError('Données invalides');
@@ -667,16 +719,13 @@ function DocumentViewerInline({
     }, [doc.id, doc.type, doc.data]);
 
     const handleDownload = () => {
-        try {
-            const url = doc.data.startsWith('data:') ? doc.data : `data:application/octet-stream;base64,${doc.data}`;
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = doc.filename;
-            a.click();
-            toast.success('Téléchargement démarré');
-        } catch {
-            toast.error('Erreur téléchargement');
-        }
+        const url = getDocDataUrl(doc);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = doc.filename;
+        if (doc.data.startsWith('http')) a.target = '_blank';
+        a.click();
+        toast.success('Téléchargement démarré');
     };
 
     return (
@@ -695,7 +744,7 @@ function DocumentViewerInline({
             <div className="flex-1 min-h-0 overflow-auto bg-muted/20 flex items-center justify-center p-4">
                 {doc.type === 'IMAGE' ? (
                     <img
-                        src={doc.data.startsWith('data:') ? doc.data : `data:image/jpeg;base64,${doc.data}`}
+                        src={getDocDataUrl(doc)}
                         alt={doc.filename}
                         className="max-w-full max-h-[60vh] object-contain rounded-lg"
                     />

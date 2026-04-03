@@ -22,7 +22,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
-import { fetchWithAuth } from '@/src/lib/auth-client';
+import { fetchWithAuth, getAuthHeader } from '@/src/lib/auth-client';
 import { sendWithOfflineQueue } from '@/src/lib/offline-queue';
 import { addMessageToCache, removeMessageFromCache } from '@/src/lib/api-cache';
 import { encryptMessage } from '@/src/lib/crypto';
@@ -93,14 +93,21 @@ export function useDiscussionMessages({
      */
     const pendingTempIdsRef = useRef<Set<string>>(new Set());
 
-    /** Convertit un File en base64 dataURL */
-    const fileToBase64 = useCallback(async (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
+    /** Upload un fichier vers Supabase et retourne l'URL publique */
+    const uploadFileToSupabase = useCallback(async (file: File, context: string, contextId: string): Promise<{ url: string; storageKey?: string }> => {
+        const isAudio = file.type.startsWith('audio/') || file.type.startsWith('video/webm') || file.type.startsWith('video/mp4');
+        const isImage = file.type.startsWith('image/');
+        const endpoint = isImage ? '/api/upload/image' : '/api/upload/document';
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('context', context);
+        formData.append('contextId', contextId);
+        const res = await fetch(endpoint, { method: 'POST', headers: getAuthHeader(), body: formData });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || `Erreur upload (${res.status})`);
+        }
+        return res.json();
     }, []);
 
     /**
@@ -171,9 +178,9 @@ export function useDiscussionMessages({
                     let fileType = 'IMAGE';
                     if (['pdf'].includes(ext)) fileType = 'PDF';
                     else if (['doc', 'docx'].includes(ext)) fileType = 'WORD';
-                    else if (['webm', 'mp3', 'ogg', 'm4a', 'wav'].includes(ext)) fileType = 'AUDIO';
-                    const base64Data = await fileToBase64(file);
-                    attachments.push({ filename: file.name, type: fileType, data: base64Data });
+                    else if (['webm', 'mp3', 'ogg', 'm4a', 'wav', 'aac'].includes(ext)) fileType = 'AUDIO';
+                    const uploaded = await uploadFileToSupabase(file, 'discussions', conversationId || 'unknown');
+                    attachments.push({ filename: file.name, type: fileType, data: uploaded.url });
                 }
 
                 const cipherText = encryptMessage(
@@ -238,7 +245,7 @@ export function useDiscussionMessages({
                 setSending(false);
             }
         },
-        [conversationId, currentUser, otherUser, privateKey, setMessages, scrollToBottom, setShowPasswordDialog, stopTyping, fileToBase64, replaceTempMessage]
+        [conversationId, currentUser, otherUser, privateKey, setMessages, scrollToBottom, setShowPasswordDialog, stopTyping, uploadFileToSupabase, replaceTempMessage]
     );
 
     /** Envoie un message audio */
@@ -255,8 +262,8 @@ export function useDiscussionMessages({
             let payload: MessagePayload | null = null;
 
             try {
-                const base64Data = await fileToBase64(audioFile);
-                const attachment: MessageAttachment = { filename: audioFile.name, type: 'AUDIO', data: base64Data };
+                const uploaded = await uploadFileToSupabase(audioFile, 'audio', conversationId || 'unknown');
+                const attachment: MessageAttachment = { filename: audioFile.name, type: 'AUDIO', data: uploaded.url };
                 const encryptedContent = encryptMessage('', privateKey, otherUser.publicKey);
                 payload = { encryptedContent, attachments: [attachment] };
 
@@ -308,7 +315,7 @@ export function useDiscussionMessages({
                 setSending(false);
             }
         },
-        [conversationId, currentUser, otherUser, privateKey, setMessages, scrollToBottom, fileToBase64, replaceTempMessage]
+        [conversationId, currentUser, otherUser, privateKey, setMessages, scrollToBottom, uploadFileToSupabase, replaceTempMessage]
     );
 
     /** Modifie un message existant */

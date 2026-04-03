@@ -3,6 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { authenticate, AuthenticatedRequest } from '@/src/middleware/auth';
 import { emitToConversation } from '@/src/lib/pusher-server';
 import { decryptUserPII } from '@/src/lib/server-crypto';
+import { supabaseAdmin, STORAGE_BUCKET } from '@/src/lib/supabase';
 
 
 // GET: Récupérer un message complet (avec pièces jointes) par son ID
@@ -196,7 +197,27 @@ export async function DELETE(
 
         const groupId = message.groupId;
 
-        // Delete message
+        // Récupérer les pièces jointes avant suppression pour nettoyer Supabase
+        const attachments = await prisma.attachment.findMany({
+            where: { messageId: messageId },
+            select: { storageKey: true },
+        });
+
+        // Supprimer les fichiers Supabase associés
+        const storageKeys = attachments
+            .map(a => a.storageKey)
+            .filter((key): key is string => !!key);
+
+        if (storageKeys.length > 0) {
+            const { error: storageError } = await supabaseAdmin.storage
+                .from(STORAGE_BUCKET)
+                .remove(storageKeys);
+            if (storageError) {
+                console.error('[Messages] Erreur suppression Supabase:', storageError);
+            }
+        }
+
+        // Supprimer le message (les attachments sont supprimés en cascade par Prisma)
         await prisma.message.delete({
             where: { id: messageId },
         });

@@ -178,8 +178,8 @@ export default function OrganizationSettingsPage() {
         });
     }, [org]);
 
-    const MAX_LOGO_SIZE = 2 * 1024 * 1024; // 2 Mo
-    const handleLogoFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const MAX_LOGO_SIZE = 5 * 1024 * 1024; // 5 Mo
+    const handleLogoFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
         if (!file.type.startsWith("image/")) {
@@ -187,23 +187,35 @@ export default function OrganizationSettingsPage() {
             return;
         }
         if (file.size > MAX_LOGO_SIZE) {
-            toast.error("Image trop volumineuse (max 2 Mo)");
+            toast.error("Image trop volumineuse (max 5 Mo)");
             return;
         }
+        // Preview local immédiat
+        const previewUrl = URL.createObjectURL(file);
+        setEditOrgForm((f) => ({ ...f, logo: previewUrl }));
+        setLogoImageError(false);
         setLoadingLogo(true);
-        const reader = new FileReader();
-        reader.onload = () => {
-            const dataUrl = reader.result as string;
-            setEditOrgForm((f) => ({ ...f, logo: dataUrl }));
-            setLogoImageError(false);
+        try {
+            const fd = new FormData();
+            fd.append("file", file);
+            fd.append("context", "orgs");
+            fd.append("contextId", orgId);
+            const res = await fetchWithAuth("/api/upload/image", { method: "POST", body: fd });
+            if (res.ok) {
+                const data = await res.json();
+                setEditOrgForm((f) => ({ ...f, logo: data.url }));
+            } else {
+                toast.error("Erreur upload logo");
+                setEditOrgForm((f) => ({ ...f, logo: "" }));
+            }
+            URL.revokeObjectURL(previewUrl);
+        } catch {
+            toast.error("Erreur upload logo");
+            setEditOrgForm((f) => ({ ...f, logo: "" }));
+        } finally {
             setLoadingLogo(false);
             if (logoFileInputRef.current) logoFileInputRef.current.value = "";
-        };
-        reader.onerror = () => {
-            toast.error("Erreur lors de la lecture de l'image");
-            setLoadingLogo(false);
-        };
-        reader.readAsDataURL(file);
+        }
     };
 
     const handleUpdateOrgInfos = async () => {

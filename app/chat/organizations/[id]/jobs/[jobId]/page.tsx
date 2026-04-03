@@ -33,11 +33,26 @@ function StatusBadge({ status }: { status: string }) {
 
 function DownloadButton({ data, filename }: { data?: string | null; filename: string }) {
     if (!data) return null;
-    const handleDownload = () => {
-        const link = document.createElement('a');
-        link.href = data;
-        link.download = filename;
-        link.click();
+    const handleDownload = async () => {
+        if (data.startsWith('http://') || data.startsWith('https://')) {
+            try {
+                const res = await fetch(data);
+                const blob = await res.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                link.click();
+                URL.revokeObjectURL(blobUrl);
+            } catch {
+                window.open(data, '_blank');
+            }
+        } else {
+            const link = document.createElement('a');
+            link.href = data;
+            link.download = filename;
+            link.click();
+        }
     };
     return (
         <Button variant="outline" size="sm" className="gap-1 h-7 text-xs" onClick={handleDownload}>

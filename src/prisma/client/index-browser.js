@@ -243,6 +243,7 @@ exports.Prisma.CollaborationDocumentScalarFieldEnum = {
   filename: 'filename',
   type: 'type',
   data: 'data',
+  storageKey: 'storageKey',
   uploadedBy: 'uploadedBy',
   createdAt: 'createdAt'
 };
@@ -329,6 +330,7 @@ exports.Prisma.DepartmentDocumentScalarFieldEnum = {
   filename: 'filename',
   type: 'type',
   data: 'data',
+  storageKey: 'storageKey',
   uploadedBy: 'uploadedBy',
   createdAt: 'createdAt'
 };
@@ -491,6 +493,7 @@ exports.Prisma.AttachmentScalarFieldEnum = {
   type: 'type',
   filename: 'filename',
   data: 'data',
+  storageKey: 'storageKey',
   createdAt: 'createdAt'
 };
 
@@ -857,6 +860,10 @@ exports.Prisma.JobApplicationScalarFieldEnum = {
   coverLetterData: 'coverLetterData',
   portfolioUrl: 'portfolioUrl',
   portfolioData: 'portfolioData',
+  photoStorageKey: 'photoStorageKey',
+  cvStorageKey: 'cvStorageKey',
+  coverLetterStorageKey: 'coverLetterStorageKey',
+  portfolioStorageKey: 'portfolioStorageKey',
   educationLevel: 'educationLevel',
   experience: 'experience',
   socialLinks: 'socialLinks',

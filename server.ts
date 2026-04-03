@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import { ensureJwtSecret } from '@/src/lib/jwt';
 import { createServer } from 'http';
-import { parse } from 'url';
 import next from 'next';
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -19,8 +18,30 @@ if (process.env.NODE_ENV === 'production') {
 app.prepare().then(() => {
     const server = createServer(async (req, res) => {
         try {
-            const parsedUrl = parse(req.url!, true);
-            await handle(req, res, parsedUrl);
+            // Use WHATWG URL API to replace deprecated url.parse
+            const protocol = req.headers['x-forwarded-proto'] || 'http';
+            const host = req.headers.host || `${hostname}:${port}`;
+            const url = new URL(req.url!, `${protocol}://${host}`);
+            
+            const query: Record<string, string | string[]> = {};
+            url.searchParams.forEach((value, key) => {
+                if (query[key]) {
+                    if (Array.isArray(query[key])) {
+                        (query[key] as string[]).push(value);
+                    } else {
+                        query[key] = [query[key] as string, value];
+                    }
+                } else {
+                    query[key] = value;
+                }
+            });
+
+            const parsedUrl = {
+                pathname: url.pathname,
+                query: query,
+            };
+
+            await handle(req, res, parsedUrl as any);
         } catch (err) {
             console.error('Error occurred handling', req.url, err);
             res.statusCode = 500;

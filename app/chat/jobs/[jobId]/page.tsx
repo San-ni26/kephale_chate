@@ -14,6 +14,7 @@ import { Label } from "@/src/components/ui/label";
 import { Textarea } from "@/src/components/ui/textarea";
 import { toast } from "sonner";
 import { fetcher } from "@/src/lib/fetcher";
+import { getAuthHeader } from "@/src/lib/auth-client";
 import useSWR from "swr";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -47,18 +48,9 @@ const FIELD_LABELS: Record<string, string> = {
     availability: "Disponibilité",
 };
 
-function fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
-
-function UploadField({ label, required, onChange, accept, fieldKey }: {
+function UploadField({ label, required, onChange, accept, fieldKey, jobId }: {
     label: string; required: boolean; onChange: (val: string) => void;
-    accept?: string; fieldKey: string;
+    accept?: string; fieldKey: string; jobId?: string;
 }) {
     const [fileName, setFileName] = useState("");
     const [uploading, setUploading] = useState(false);
@@ -67,13 +59,26 @@ function UploadField({ label, required, onChange, accept, fieldKey }: {
     const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        if (file.size > 5 * 1024 * 1024) { toast.error("Fichier trop volumineux (max 5 Mo)"); return; }
+        if (file.size > 10 * 1024 * 1024) { toast.error("Fichier trop volumineux (max 10 Mo)"); return; }
         setUploading(true);
         try {
-            const base64 = await fileToBase64(file);
-            onChange(base64);
+            const isImage = file.type.startsWith('image/');
+            const endpoint = isImage ? '/api/upload/image' : '/api/upload/document';
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('context', 'job-applications');
+            formData.append('contextId', jobId || 'unknown');
+
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: getAuthHeader(),
+                body: formData,
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Erreur upload');
+            onChange(data.url);
             setFileName(file.name);
-        } catch { toast.error("Erreur lors de la lecture du fichier"); }
+        } catch { toast.error("Erreur lors de l'upload du fichier"); }
         finally { setUploading(false); }
     };
 
@@ -519,6 +524,7 @@ export default function JobDetailPage() {
                                                             required={required}
                                                             fieldKey={fieldKey}
                                                             accept={accept}
+                                                            jobId={jobId}
                                                             onChange={val => updateField(fieldKey, val)}
                                                         />
                                                     );

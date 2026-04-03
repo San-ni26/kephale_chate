@@ -79,18 +79,29 @@ export default function SettingsPage() {
 
     const invitations = invitationsData?.invitations || [];
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            if (file.size > 2 * 1024 * 1024) { // 2MB limit
-                toast.error("L'image est trop volumineuse (Max 2MB).");
+            if (file.size > 5 * 1024 * 1024) {
+                toast.error("L'image est trop volumineuse (Max 5MB).");
                 return;
             }
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setNewInvitation(prev => ({ ...prev, imageBase64: reader.result as string }));
-            };
-            reader.readAsDataURL(file);
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('context', 'invitations');
+                formData.append('contextId', user?.id || 'unknown');
+                const res = await fetch('/api/upload/image', {
+                    method: 'POST',
+                    headers: getAuthHeader(),
+                    body: formData,
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Erreur upload');
+                setNewInvitation(prev => ({ ...prev, imageBase64: data.url }));
+            } catch {
+                toast.error("Erreur lors de l'upload de l'image");
+            }
         }
     };
 

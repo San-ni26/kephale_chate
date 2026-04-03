@@ -9,7 +9,7 @@ import { Label } from "@/src/components/ui/label";
 import { Textarea } from "@/src/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/components/ui/select";
 import { toast } from "sonner";
-import { fetchWithAuth, getUser } from "@/src/lib/auth-client";
+import { fetchWithAuth, getUser, getAuthHeader } from "@/src/lib/auth-client";
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
 
@@ -168,13 +168,24 @@ export default function EditJobOfferPage() {
         setCustomQuestions(prev => prev.map(q => q.id === id ? { ...q, ...updates } : q));
     };
 
-    const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        if (file.size > 2 * 1024 * 1024) { toast.error("Image trop volumineuse (max 2 Mo)"); return; }
-        const reader = new FileReader();
-        reader.onload = () => setCompanyLogo(reader.result as string);
-        reader.readAsDataURL(file);
+        if (file.size > 5 * 1024 * 1024) { toast.error("Image trop volumineuse (max 5 Mo)"); return; }
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('context', 'job-logos');
+            formData.append('contextId', orgId || 'unknown');
+            const res = await fetch('/api/upload/image', {
+                method: 'POST',
+                headers: getAuthHeader(),
+                body: formData,
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Erreur upload');
+            setCompanyLogo(data.url);
+        } catch { toast.error("Erreur lors de l'upload du logo"); }
     };
 
     const handleSubmit = async (publish: boolean) => {

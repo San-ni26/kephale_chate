@@ -342,8 +342,8 @@ export default function OrganizationDashboard() {
         setShowSettingsDialog(true);
     };
 
-    const MAX_LOGO_SIZE = 2 * 1024 * 1024; // 2 Mo
-    const handleLogoFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const MAX_LOGO_SIZE = 5 * 1024 * 1024; // 5 Mo
+    const handleLogoFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
         if (!file.type.startsWith('image/')) {
@@ -351,23 +351,26 @@ export default function OrganizationDashboard() {
             return;
         }
         if (file.size > MAX_LOGO_SIZE) {
-            toast.error('Image trop volumineuse (max 2 Mo)');
+            toast.error('Image trop volumineuse (max 5 Mo)');
             return;
         }
         setLoadingLogo(true);
-        const reader = new FileReader();
-        reader.onload = () => {
-            const dataUrl = reader.result as string;
-            setEditOrgForm(f => ({ ...f, logo: dataUrl }));
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('context', 'org-logo');
+            formData.append('contextId', orgId || 'new');
+            const res = await fetchWithAuth('/api/upload/image', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Erreur upload');
+            setEditOrgForm(f => ({ ...f, logo: data.url }));
             setLogoImageError(false);
-            setLoadingLogo(false);
             if (logoFileInputRef.current) logoFileInputRef.current.value = '';
-        };
-        reader.onerror = () => {
-            toast.error('Erreur lors de la lecture de l\'image');
+        } catch {
+            toast.error('Erreur lors de l\'upload du logo');
+        } finally {
             setLoadingLogo(false);
-        };
-        reader.readAsDataURL(file);
+        }
     };
 
     const handleUpdateOrg = async () => {
@@ -633,7 +636,8 @@ export default function OrganizationDashboard() {
                             {/* Generate last 6 months */}
                             {Array.from({ length: 6 }).map((_, i) => {
                                 const date = new Date();
-                                date.setMonth(date.getMonth() - i);
+                                date.setDate(1); // Fix: éviter le bug du 31 du mois (ex: 31 février -> 3 mars)
+                                date.setMonth(new Date().getMonth() - i);
                                 const value = format(date, 'yyyy-MM');
                                 const label = format(date, 'MMMM yyyy', { locale: fr });
                                 return (
@@ -1478,7 +1482,7 @@ export default function OrganizationDashboard() {
                                                 {loadingLogo ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ImagePlus className="w-4 h-4 mr-2" />}
                                                 Choisir une image
                                             </Button>
-                                            <p className="text-xs text-muted-foreground">JPEG, PNG, GIF ou WebP — max 2 Mo. L&apos;image est convertie en base64 et remplace l&apos;ancien logo.</p>
+                                            <p className="text-xs text-muted-foreground">JPEG, PNG, GIF ou WebP — max 5 Mo. L&apos;image est uploadée sur le serveur et remplace l&apos;ancien logo.</p>
                                             <Button type="button" variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={() => { setEditOrgForm(f => ({ ...f, logo: '' })); setLogoImageError(false); }}>
                                                 <Trash2 className="w-4 h-4 mr-1" />
                                                 Supprimer le logo

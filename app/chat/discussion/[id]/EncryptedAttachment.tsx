@@ -7,11 +7,13 @@ import { DocumentViewerFullScreen } from '@/src/components/DocumentViewerFullScr
 import { downloadFromDataUrl, shareFileFromDataUrl, canShareFile } from '@/src/lib/download-file';
 import { toast } from 'sonner';
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+
 interface FileAttachmentProps {
     attachment: {
         filename: string;
         type: string;
-        data: string;
+        data?: string;
     };
     isOwnMessage?: boolean;
     myPrivateKey?: string;
@@ -19,6 +21,9 @@ interface FileAttachmentProps {
     currentUserId?: string;
 }
 
+// ─── Fonctions pures au niveau module ─────────────────────────────────────────
+
+/** Déchiffre un attachment chiffré E2E (nacl.box) */
 async function decryptAttachment(
     encryptedBase64: string,
     myPrivateKey: string,
@@ -39,6 +44,7 @@ async function decryptAttachment(
     }
 }
 
+/** Cherche la clé privée dans sessionStorage */
 function getPrivKeyFromSession(currentUserId?: string): string | null {
     try {
         if (currentUserId) {
@@ -52,129 +58,191 @@ function getPrivKeyFromSession(currentUserId?: string): string | null {
     }
 }
 
-export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, theirPublicKey, currentUserId }: FileAttachmentProps) {
-    const isImage = attachment.type === 'IMAGE';
-    const isAudio = attachment.type === 'AUDIO';
-    const isPDF = attachment.type === 'PDF';
-    const isWord = attachment.type === 'WORD';
-    const isEncryptedE2E = typeof attachment.data === 'string' && attachment.data.startsWith('enc:');
+/** Force string — retourne '' si la valeur n'est pas une string non-vide */
+function safeStr(val: unknown): string {
+    return typeof val === 'string' ? val : '';
+}
 
-    // ─── TOUS LES HOOKS EN HAUT — AVANT TOUT RETURN CONDITIONNEL ────────────
-    const [decryptedUrl, setDecryptedUrl] = useState<string | null>(null);
-    const [decryptState, setDecryptState] = useState<'idle' | 'pending' | 'ok' | 'error'>('idle');
+/** Retourne le MIME type à partir du nom de fichier et du type d'attachement */
+function resolveMimeType(filename: string, attachType: string): string {
+    const ext = (filename || '').split('.').pop()?.toLowerCase() ?? '';
+    if (attachType === 'IMAGE') {
+        if (ext === 'png')  return 'image/png';
+        if (ext === 'gif')  return 'image/gif';
+        if (ext === 'webp') return 'image/webp';
+        return 'image/jpeg';
+    }
+    if (attachType === 'AUDIO') {
+        if (ext === 'mp3') return 'audio/mpeg';
+        if (ext === 'ogg') return 'audio/ogg';
+        if (ext === 'wav') return 'audio/wav';
+        if (ext === 'm4a') return 'audio/mp4';
+        return 'audio/webm';
+    }
+    if (attachType === 'PDF')  return 'application/pdf';
+    if (attachType === 'WORD') return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    return 'application/octet-stream';
+}
+
+/** Retourne une URL displayable à partir de data brut */
+function resolveDataUrl(data: string, filename: string, attachType: string): string {
+    if (!data) return '';
+    if (data.startsWith('https://') || data.startsWith('http://')) return data;
+    if (data.startsWith('data:')) return data;
+    return `data:${resolveMimeType(filename, attachType)};base64,${data}`;
+}
+
+/** Convertit un data: URI ou base64 brut en blob: URL (safe pour CSP media-src) */
+function toBlobUrl(dataUrl: string, fallbackMime: string): string | null {
+    try {
+        let base64 = dataUrl;
+        let mime = fallbackMime;
+        if (dataUrl.startsWith('data:')) {
+            const comma = dataUrl.indexOf(',');
+            if (comma === -1) return null;
+            const meta = dataUrl.slice(5, comma);
+            // data:audio/webm;codecs=opus;base64 → mime = audio/webm
+            mime = meta.replace(/;base64$/i, '').split(';')[0] || fallbackMime;
+            base64 = dataUrl.slice(comma + 1);
+        }
+        if (!base64) return null;
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        return URL.createObjectURL(new Blob([bytes], { type: mime }));
+    } catch {
+        return null;
+    }
+}
+
+// ─── Composant ────────────────────────────────────────────────────────────────
+
+export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, theirPublicKey, currentUserId }: FileAttachmentProps) {
+    // ─── Extraction 100% null-safe des props ─────────────────────────────────
+    const attachData     = safeStr(attachment?.data);
+    const attachFilename = safeStr(attachment?.filename);
+    const attachType     = safeStr(attachment?.type);
+
+    const isImage = attachType === 'IMAGE';
+    const isAudio = attachType === 'AUDIO';
+    const isPDF   = attachType === 'PDF';
+
+    const isSupabaseUrl  = !!attachData && (attachData.startsWith('https://') || attachData.startsWith('http://'));
+    const isEncryptedE2E = !!attachData && attachData.startsWith('enc:') && !isSupabaseUrl;
+
+    // ─── HOOKS ───────────────────────────────────────────────────────────────
+    const [decryptedUrl, setDecryptedUrl] = useState<string | null>(isSupabaseUrl ? attachData : null);
+    const [decryptState, setDecryptState] = useState<'idle' | 'pending' | 'ok' | 'error'>(isSupabaseUrl ? 'ok' : 'idle');
     const [inlineViewOpen, setInlineViewOpen] = useState(false);
     const [imageViewOpen, setImageViewOpen] = useState(false);
+    const [audioBlobUrl, setAudioBlobUrl] = useState<string | null>(null);
     const attemptRef = useRef(0);
 
-    const getMimeType = () => {
-        if (isImage) {
-            const ext = attachment.filename.split('.').pop()?.toLowerCase();
-            if (ext === 'png') return 'image/png';
-            if (ext === 'gif') return 'image/gif';
-            if (ext === 'webp') return 'image/webp';
-            return 'image/jpeg';
-        }
-        if (isAudio) {
-            const ext = attachment.filename.split('.').pop()?.toLowerCase();
-            if (ext === 'mp3') return 'audio/mpeg';
-            if (ext === 'ogg') return 'audio/ogg';
-            if (ext === 'wav') return 'audio/wav';
-            if (ext === 'm4a') return 'audio/mp4';
-            return 'audio/webm';
-        }
-        if (isPDF) return 'application/pdf';
-        if (isWord) return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-        return 'application/octet-stream';
-    };
-
-    const getDataUrl = () => {
-        if (attachment.data.startsWith('data:')) return attachment.data;
-        return `data:${getMimeType()};base64,${attachment.data}`;
-    };
-
-    // Hook 1 : Déchiffrement principal
+    // Hook 1 : Déchiffrement / résolution URL
     useEffect(() => {
+        if (!attachData) {
+            setDecryptedUrl('');
+            setDecryptState('ok');
+            return;
+        }
+        if (isSupabaseUrl) {
+            setDecryptedUrl(attachData);
+            setDecryptState('ok');
+            return;
+        }
         if (!isEncryptedE2E) {
-            setDecryptedUrl(getDataUrl());
+            setDecryptedUrl(resolveDataUrl(attachData, attachFilename, attachType));
             setDecryptState('ok');
             return;
         }
 
         const privKey = myPrivateKey || getPrivKeyFromSession(currentUserId);
         const pubKey = theirPublicKey;
-
-        if (!privKey || !pubKey) {
-            setDecryptState('pending');
-            return;
-        }
+        if (!privKey || !pubKey) { setDecryptState('pending'); return; }
 
         const currentAttempt = ++attemptRef.current;
         setDecryptState('pending');
-
-        const nacl64 = attachment.data.replace(/^enc:/, '');
-        const mimeType = getMimeType();
-
-        console.debug('[EncryptedAttachment] Déchiffrement...', {
-            filename: attachment.filename,
-            privKeyStart: privKey.slice(0, 8) + '...',
-            pubKeyStart: pubKey.slice(0, 8) + '...',
-        });
+        const nacl64 = attachData.replace(/^enc:/, '');
+        const mimeType = resolveMimeType(attachFilename, attachType);
 
         decryptAttachment(nacl64, privKey, pubKey, mimeType).then(url => {
             if (currentAttempt !== attemptRef.current) return;
-            if (url) {
-                setDecryptedUrl(url);
-                setDecryptState('ok');
-            } else {
-                console.error('[EncryptedAttachment] nacl.box.open a retourné null — clés incorrectes ou données corrompues');
-                setDecryptState('error');
-            }
+            if (url) { setDecryptedUrl(url); setDecryptState('ok'); }
+            else     { setDecryptState('error'); }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [attachment.data, myPrivateKey, theirPublicKey, currentUserId, isEncryptedE2E]);
+    }, [attachData, attachFilename, attachType, myPrivateKey, theirPublicKey, currentUserId, isEncryptedE2E, isSupabaseUrl]);
 
-    // Hook 2 : Polling sessionStorage (clé privée qui arrive après le render)
+    // Hook 2 : Polling sessionStorage (clé privée)
     useEffect(() => {
         if (!isEncryptedE2E || decryptState === 'ok' || decryptState === 'error') return;
         if (myPrivateKey || getPrivKeyFromSession(currentUserId)) return;
-
         let elapsed = 0;
         const interval = setInterval(() => {
             elapsed += 500;
-            const privKey = getPrivKeyFromSession(currentUserId);
-            if (privKey) {
-                clearInterval(interval);
-                // Force re-exécution du hook principal en changeant un dep fictif via l'état
-                setDecryptState('idle');
-            } else if (elapsed >= 20_000) {
-                clearInterval(interval);
-                setDecryptState('error');
-            }
+            if (getPrivKeyFromSession(currentUserId)) { clearInterval(interval); setDecryptState('idle'); }
+            else if (elapsed >= 20_000)               { clearInterval(interval); setDecryptState('error'); }
         }, 500);
         return () => clearInterval(interval);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEncryptedE2E, decryptState, myPrivateKey, currentUserId]);
 
-    // Hook 3 : Blocage du scroll body quand la lightbox image est ouverte
+    // Hook 3 : Lightbox scroll lock
     useEffect(() => {
         if (!imageViewOpen) return;
         document.body.style.overflow = 'hidden';
-        const onKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') setImageViewOpen(false);
-        };
+        const onKeyDown = (e: KeyboardEvent) => { if (e.key === 'Escape') setImageViewOpen(false); };
         window.addEventListener('keydown', onKeyDown);
-        return () => {
-            document.body.style.overflow = '';
-            window.removeEventListener('keydown', onKeyDown);
-        };
+        return () => { document.body.style.overflow = ''; window.removeEventListener('keydown', onKeyDown); };
     }, [imageViewOpen]);
-    // ────────────────────────────────────────────────────────────────────────
 
-    const fileUrl = decryptedUrl || (isEncryptedE2E ? null : getDataUrl());
+    // Hook 4 : Convertir audio data:/base64 → blob: URL (CSP bloque data: pour media-src)
+    useEffect(() => {
+        if (!isAudio || !decryptedUrl) { if (isAudio) setAudioBlobUrl(null); return; }
+        // URL Supabase ou blob: → passer directement
+        if (decryptedUrl.startsWith('https://') || decryptedUrl.startsWith('http://') || decryptedUrl.startsWith('blob:')) {
+            setAudioBlobUrl(decryptedUrl);
+            return;
+        }
+        // data: ou base64 brut → convertir en blob:
+        const mime = resolveMimeType(attachFilename, attachType);
+        const blobUrl = toBlobUrl(decryptedUrl, mime);
+        if (blobUrl) {
+            setAudioBlobUrl(blobUrl);
+            return () => URL.revokeObjectURL(blobUrl);
+        }
+        setAudioBlobUrl(null);
+    }, [isAudio, decryptedUrl, attachFilename, attachType]);
+
+    // ─── Valeurs dérivées ────────────────────────────────────────────────────
+    const fileUrl = decryptedUrl || (!isEncryptedE2E && attachData ? resolveDataUrl(attachData, attachFilename, attachType) : null);
 
     const handleDownload = async () => {
-        if (!fileUrl) { toast.error('Fichier non déchiffré'); return; }
-        const ok = await downloadFromDataUrl(fileUrl, attachment.filename);
+        const url = fileUrl || (isAudio ? audioBlobUrl : null);
+        if (!url) { toast.error('Fichier non disponible'); return; }
+        if (url.startsWith('https://') || url.startsWith('http://')) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = attachFilename || 'download';
+                a.click();
+                URL.revokeObjectURL(blobUrl);
+                toast.success('Téléchargement démarré');
+            } catch { toast.error('Erreur de téléchargement'); }
+            return;
+        }
+        if (url.startsWith('blob:')) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = attachFilename || 'audio.webm';
+            a.click();
+            toast.success('Téléchargement démarré');
+            return;
+        }
+        const ok = await downloadFromDataUrl(url, attachFilename);
         if (ok) toast.success('Téléchargement démarré');
         else toast.error('Erreur de téléchargement');
     };
@@ -182,15 +250,16 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
     const handleShare = async () => {
         if (!fileUrl) { toast.error('Fichier non déchiffré'); return; }
         try {
-            const ok = await shareFileFromDataUrl(fileUrl, attachment.filename);
+            const ok = await shareFileFromDataUrl(fileUrl, attachFilename);
             if (ok) toast.success('Partage ouvert');
             else toast.error('Partage non disponible');
-        } catch {
-            toast.error('Erreur de partage');
-        }
+        } catch { toast.error('Erreur de partage'); }
     };
 
-    // ── Returns conditionnels APRÈS tous les hooks ───────────────────────────
+    // ─── Rendu conditionnel APRÈS tous les hooks ─────────────────────────────
+
+    // Donnée manquante — rien à afficher
+    if (!attachData && !isEncryptedE2E) return null;
 
     if (decryptState === 'error') {
         return (
@@ -198,7 +267,7 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
                 <span>🔒</span>
                 <div>
                     <p className="font-medium">Impossible de déchiffrer</p>
-                    <p className="text-xs opacity-70">{attachment.filename}</p>
+                    <p className="text-xs opacity-70">{attachFilename}</p>
                 </div>
             </div>
         );
@@ -208,7 +277,7 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
         return (
             <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg text-muted-foreground text-sm">
                 <span className="inline-block animate-spin">🔄</span>
-                <span>Déchiffrement de {attachment.filename}...</span>
+                <span>Déchiffrement de {attachFilename}...</span>
             </div>
         );
     }
@@ -220,7 +289,7 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
                 <div className="relative group max-w-sm">
                     <img
                         src={fileUrl}
-                        alt={attachment.filename}
+                        alt={attachFilename}
                         className="rounded-lg max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity"
                         onClick={() => setImageViewOpen(true)}
                         loading="lazy"
@@ -244,7 +313,7 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
                     >
                         <img
                             src={fileUrl}
-                            alt={attachment.filename}
+                            alt={attachFilename}
                             className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
                             onClick={(e) => e.stopPropagation()}
                         />
@@ -267,21 +336,33 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
         );
     }
 
-    // Audio
-    if (isAudio && fileUrl) {
-        return <AudioBubbleWhatsApp src={fileUrl} isOwn={isOwnMessage ?? false} />;
+    // Audio — blob: URL (autorisé par CSP) ou Supabase URL
+    if (isAudio && audioBlobUrl) {
+        return <AudioBubbleWhatsApp src={audioBlobUrl} isOwn={isOwnMessage ?? false} />;
+    }
+    if (isAudio && decryptState === 'ok') {
+        // Pas de blob URL dispo (conversion échouée ou data vide) → téléchargement
+        return (
+            <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg text-muted-foreground text-sm">
+                <span>🎵</span>
+                <span className="flex-1 truncate">{attachFilename || 'Audio'}</span>
+                <Button size="sm" variant="secondary" onClick={handleDownload}>
+                    <Download className="w-4 h-4 mr-1" />Télécharger
+                </Button>
+            </div>
+        );
     }
 
-    // Document (PDF / Word)
+    // Document (PDF / Word / autre)
     const docType = isPDF ? 'PDF' : 'WORD';
     const showShare = canShareFile();
     return (
         <>
             <DocumentBubbleWhatsApp
-                filename={attachment.filename}
+                filename={attachFilename}
                 fileUrl={fileUrl || ''}
                 type={docType}
-                data={fileUrl || attachment.data}
+                data={fileUrl || attachData}
                 isOwn={isOwnMessage ?? false}
                 onView={() => setInlineViewOpen(true)}
                 onDownload={handleDownload}
@@ -290,7 +371,7 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
             <DocumentViewerFullScreen
                 open={inlineViewOpen}
                 onClose={() => setInlineViewOpen(false)}
-                filename={attachment.filename}
+                filename={attachFilename}
                 fileUrl={fileUrl || ''}
                 type={docType}
                 onDownload={handleDownload}

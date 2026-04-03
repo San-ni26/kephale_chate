@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifyToken } from '@/src/lib/jwt';
+import { deleteStorageFile } from '@/src/lib/supabase';
 
 export async function DELETE(
     request: NextRequest,
@@ -39,9 +40,13 @@ export async function DELETE(
             return NextResponse.json({ error: 'Document non trouvé' }, { status: 404 });
         }
 
-        // Seul l'uploader ou un admin peut supprimer (on autorise l'uploader pour simplifier)
         if (doc.uploadedBy !== userId) {
             return NextResponse.json({ error: 'Vous ne pouvez supprimer que vos propres documents' }, { status: 403 });
+        }
+
+        // Supprimer de Supabase Storage (si storageKey présent = nouveau système)
+        if (doc.storageKey) {
+            await deleteStorageFile(doc.storageKey);
         }
 
         await prisma.departmentDocument.delete({
