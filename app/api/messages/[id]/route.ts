@@ -101,16 +101,6 @@ export async function PATCH(
             );
         }
 
-        // Check 5-minute window
-        const messageTime = new Date(message.createdAt).getTime();
-        const now = Date.now();
-        if (now - messageTime > 5 * 60 * 1000) {
-            return NextResponse.json(
-                { error: 'Délai de modification dépassé (5 minutes)' },
-                { status: 403 }
-            );
-        }
-
         // Update message
         const updatedMessage = await prisma.message.update({
             where: { id: messageId },
@@ -181,16 +171,6 @@ export async function DELETE(
         if (message.senderId !== user.userId) {
             return NextResponse.json(
                 { error: 'Vous ne pouvez supprimer que vos propres messages' },
-                { status: 403 }
-            );
-        }
-
-        // Check 5-minute window
-        const messageTime = new Date(message.createdAt).getTime();
-        const now = Date.now();
-        if (now - messageTime > 5 * 60 * 1000) {
-            return NextResponse.json(
-                { error: 'Délai de suppression dépassé (5 minutes)' },
                 { status: 403 }
             );
         }

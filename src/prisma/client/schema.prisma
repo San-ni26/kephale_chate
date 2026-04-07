@@ -789,6 +789,7 @@ enum FileType {
   PDF
   WORD
   AUDIO
+  LINK
   OTHER
 }
 

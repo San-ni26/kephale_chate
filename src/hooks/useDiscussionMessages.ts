@@ -36,6 +36,14 @@ export interface MessageAttachment {
     storageKey?: string;
 }
 
+// URL extraction regex
+const URL_REGEX = /(https?:\/\/[^\s<]+[^\s<.,:;!?])/gi;
+
+function extractUrls(text: string): string[] {
+    const matches = text.match(URL_REGEX);
+    return matches ? [...new Set(matches)] : [];
+}
+
 export interface MessagePayload {
     encryptedContent: string;
     attachments?: MessageAttachment[];
@@ -184,6 +192,17 @@ export function useDiscussionMessages({
                     else if (['webm', 'mp3', 'ogg', 'm4a', 'wav', 'aac'].includes(ext)) fileType = 'AUDIO';
                     const uploaded = await uploadFileToSupabase(file, 'discussions', conversationId || 'unknown');
                     attachments.push({ filename: file.name, type: fileType, data: uploaded.url });
+                }
+
+                // Detect URLs in message and create LINK attachments if no file attachments
+                const urls = extractUrls(messageText);
+                if (urls.length > 0 && attachments.length === 0) {
+                    // Add first URL as a LINK attachment
+                    attachments.push({
+                        filename: new URL(urls[0]).hostname,
+                        type: 'LINK',
+                        data: urls[0]
+                    });
                 }
 
                 const cipherText = encryptMessage(

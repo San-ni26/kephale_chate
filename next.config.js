@@ -20,7 +20,7 @@ const nextConfig = {
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://api.dicebear.com https://*.supabase.co",
+      "img-src 'self' data: blob: https://api.dicebear.com https://*.supabase.co https: http:",
       "media-src 'self' blob: https://*.supabase.co",
       "connect-src 'self' https://*.pusher.com wss://*.pusher.com ws://*.pusher.com https://*.supabase.co",
       "font-src 'self'",

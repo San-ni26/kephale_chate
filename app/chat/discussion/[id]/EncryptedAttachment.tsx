@@ -5,6 +5,7 @@ import { Download, Share2, X } from 'lucide-react';
 import { AudioBubbleWhatsApp } from '@/src/components/AudioBubbleWhatsApp';
 import { DocumentBubbleWhatsApp } from '@/src/components/DocumentBubbleWhatsApp';
 import { DocumentViewerFullScreen } from '@/src/components/DocumentViewerFullScreen';
+import { LinkPreview } from './LinkPreview';
 import { downloadFromDataUrl, shareFileFromDataUrl, canShareFile } from '@/src/lib/download-file';
 import { toast } from 'sonner';
 import { cn } from '@/src/lib/utils';
@@ -132,6 +133,7 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
     const isImage = attachType === 'IMAGE';
     const isAudio = attachType === 'AUDIO';
     const isPDF   = attachType === 'PDF';
+    const isLink  = attachType === 'LINK';
 
     const isSupabaseUrl  = !!attachData && (attachData.startsWith('https://') || attachData.startsWith('http://'));
     const isEncryptedE2E = !!attachData && attachData.startsWith('enc:') && !isSupabaseUrl;
@@ -266,7 +268,17 @@ export function EncryptedAttachment({ attachment, isOwnMessage, myPrivateKey, th
     // ─── Rendu conditionnel APRÈS tous les hooks ─────────────────────────────
 
     // Donnée manquante — rien à afficher
-    if (!attachData && !isEncryptedE2E) return null;
+    if (!attachData && !isEncryptedE2E && !isLink) return null;
+
+    // Link Preview
+    if (isLink && attachData) {
+        return (
+            <LinkPreview
+                url={attachData}
+                isOwnMessage={isOwnMessage}
+            />
+        );
+    }
 
     if (decryptState === 'error') {
         return (

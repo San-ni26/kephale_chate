@@ -36,6 +36,7 @@ import {
 } from '@/src/components/ui/dialog';
 import { decryptMessage, decryptPrivateKeyAsync } from '@/src/lib/crypto';
 import { EncryptedAttachment } from './EncryptedAttachment';
+import { LinkPreview } from './LinkPreview';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { useInitialMessages } from '@/src/hooks/useInitialMessages';
 import { useDiscussionLockState } from '@/src/hooks/useDiscussionLockState';
@@ -137,6 +138,42 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
     }, [message.id, message.content, message.senderId, message.sender?.publicKey, currentUser?.id, otherUser?.publicKey, privateKey]);
 
     const timestamp = displayCreatedAt ?? message.createdAt;
+    const bubbleRef = useRef<HTMLDivElement>(null);
+    const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+    const handleTouchStart = useCallback(() => {
+        if (!isOwn) return;
+        longPressTimer.current = setTimeout(() => {
+            setShowDeleteConfirm(true);
+        }, 600);
+    }, [isOwn]);
+
+    const handleTouchEnd = useCallback(() => {
+        if (longPressTimer.current) {
+            clearTimeout(longPressTimer.current);
+            longPressTimer.current = null;
+        }
+    }, []);
+
+    const handleMouseDown = useCallback(() => {
+        if (!isOwn) return;
+        longPressTimer.current = setTimeout(() => {
+            setShowDeleteConfirm(true);
+        }, 600);
+    }, [isOwn]);
+
+    const handleMouseUp = useCallback(() => {
+        if (longPressTimer.current) {
+            clearTimeout(longPressTimer.current);
+            longPressTimer.current = null;
+        }
+    }, []);
+
+    const handleConfirmDelete = () => {
+        onDelete();
+        setShowDeleteConfirm(false);
+    };
 
     return (
         <div className={cn('flex', isOwn ? 'justify-end' : 'justify-start')}>
@@ -150,10 +187,19 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
                         </div>
                     </div>
                 ) : (
-                    <div className={cn('group relative', isFailed && 'ring-1 ring-destructive/50 rounded-2xl')}>
+                    <div 
+                        ref={bubbleRef}
+                        className={cn('group relative', isFailed && 'ring-1 ring-destructive/50 rounded-2xl')}
+                        onTouchStart={handleTouchStart}
+                        onTouchEnd={handleTouchEnd}
+                        onTouchMove={handleTouchEnd}
+                        onMouseDown={handleMouseDown}
+                        onMouseUp={handleMouseUp}
+                        onMouseLeave={handleMouseUp}
+                    >
                         {decryptedContent && decryptedContent.trim() && (
                             <div className={cn(
-                                'px-4 py-2 border transition-all duration-200',
+                                'px-4 py-2 border transition-all duration-200 select-text',
                                 isOwn
                                     ? 'bg-primary text-primary-foreground border-primary rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-sm'
                                     : 'bg-muted text-foreground border-border rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm',
@@ -198,7 +244,7 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
                                             <MoreVertical className="w-4 h-4" /><span className="sr-only">Actions</span>
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
+                                    <DropdownMenuContent align="end" className="z-[80]">
                                         <DropdownMenuItem onClick={() => onEditOpen(decryptedContent || '')}>
                                             <Edit2 className="w-4 h-4 mr-2" />Modifier
                                         </DropdownMenuItem>
@@ -209,6 +255,24 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
                                 </DropdownMenu>
                             )}
                         </div>
+
+                        {/* Delete confirmation overlay */}
+                        {showDeleteConfirm && (
+                            <div className="absolute inset-0 z-50 flex items-center justify-center bg-destructive/90 rounded-2xl animate-in fade-in duration-150">
+                                <div className="flex flex-col items-center gap-2 p-2">
+                                    <Trash2 className="w-6 h-6 text-white" />
+                                    <span className="text-white text-xs font-medium">Supprimer ?</span>
+                                    <div className="flex gap-2 mt-1">
+                                        <Button size="sm" variant="ghost" className="h-7 text-white hover:bg-white/20" onClick={() => setShowDeleteConfirm(false)}>
+                                            Non
+                                        </Button>
+                                        <Button size="sm" className="h-7 bg-white text-destructive hover:bg-white/90" onClick={handleConfirmDelete}>
+                                            Oui
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
@@ -287,6 +351,13 @@ export default function DiscussionPage() {
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
     const [typingUsers, setTypingUsers] = useState<Record<string, boolean>>({});
     const [loadingMore, setLoadingMore] = useState(false);
+
+    // URL detection for link preview in input
+    const detectedUrl = useMemo(() => {
+        const urlRegex = /(https?:\/\/[^\s]+)/;
+        const match = newMessage.match(urlRegex);
+        return match ? match[0] : null;
+    }, [newMessage]);
 
     // ── Messages ──
     const { messages, setMessages, loading, hasMore, setHasMore, refreshing } = useInitialMessages(conversationId);
@@ -441,6 +512,10 @@ export default function DiscussionPage() {
 
     const lockHandlers = useDiscussionLockHandlers({ conversationId, mutateConversation, setIsUnlockedSession });
     const { selectedFiles, handleFileSelect, removeFile, revokeAllFileUrls } = useFileSelection(conversationId);
+
+    // Link preview visibility (after selectedFiles declaration)
+    const [dismissedUrl, setDismissedUrl] = useState<string | null>(null);
+    const showLinkPreview = detectedUrl && detectedUrl !== dismissedUrl && selectedFiles.length === 0;
 
     // ── Call status au montage ──
     useEffect(() => {
@@ -1025,6 +1100,16 @@ export default function DiscussionPage() {
                                 </button>
                             </div>
                         ))}
+                    </div>
+                )}
+                {/* ── Aperçu lien détecté ── */}
+                {showLinkPreview && (
+                    <div className="px-4 pt-3 pb-1">
+                        <LinkPreview
+                            url={detectedUrl}
+                            variant="compact"
+                            onDismiss={() => setDismissedUrl(detectedUrl)}
+                        />
                     </div>
                 )}
                 <div className="flex items-center gap-2 p-4 pt-2">

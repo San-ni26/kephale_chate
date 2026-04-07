@@ -10,7 +10,7 @@ import { Label } from "@/src/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/src/components/ui/dialog";
 import { toast } from "sonner";
-import { Trash2, Send, Image as ImageIcon, Pencil, X, Upload, Plus, Users, Heart } from "lucide-react";
+import { Trash2, Send, Image as ImageIcon, Pencil, X, Upload, Plus, Users, Heart, Camera } from "lucide-react";
 import { Textarea } from "@/src/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 import { Skeleton } from "@/src/components/ui/skeleton";
@@ -57,6 +57,7 @@ function MyPageContent() {
     const [editPageBio, setEditPageBio] = useState("");
     const [editPageAvatarUrl, setEditPageAvatarUrl] = useState("");
     const editPageFileInputRef = useRef<HTMLInputElement>(null);
+    const headerAvatarInputRef = useRef<HTMLInputElement>(null);
 
     // Interaction Modal State
     const [isInteractionOpen, setIsInteractionOpen] = useState(false);
@@ -302,7 +303,7 @@ function MyPageContent() {
             name: editPageName,
             handle: editPageHandle,
             bio: editPageBio,
-            avatarUrl: editPageAvatarUrl
+            avatarUrl: editPageAvatarUrl || null
         };
 
         try {
@@ -318,7 +319,7 @@ function MyPageContent() {
                 setIsEditPageOpen(false);
                 mutateUserPage();
 
-                const updatedUser = { name: editPageName, avatarUrl: editPageAvatarUrl };
+                const updatedUser = { name: editPageName, avatarUrl: editPageAvatarUrl || null };
                 updateAuthUser(updatedUser);
                 setUser(prev => prev ? { ...prev, ...updatedUser } : null);
             } else {
@@ -327,6 +328,51 @@ function MyPageContent() {
         } catch (error) {
             toast.error("Erreur serveur");
         }
+    };
+
+    const handleDeleteAvatar = async () => {
+        setEditPageAvatarUrl("");
+    };
+
+    const handleHeaderAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error("L'image est trop volumineuse (max 5MB)");
+            return;
+        }
+        try {
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('context', 'posts');
+            fd.append('contextId', user?.id || 'unknown');
+            const res = await fetch('/api/upload/image', {
+                method: 'POST',
+                headers: getAuthHeader(),
+                body: fd,
+            });
+            if (!res.ok) { toast.error('Erreur upload image'); return; }
+            const data = await res.json();
+            const newUrl = data.url;
+
+            // Save directly via API
+            const patchRes = await fetch("/api/user-page", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json", ...getAuthHeader() },
+                body: JSON.stringify({ avatarUrl: newUrl })
+            });
+            if (patchRes.ok) {
+                toast.success("Photo de profil mise à jour !");
+                updateAuthUser({ avatarUrl: newUrl });
+                setUser(prev => prev ? { ...prev, avatarUrl: newUrl } : null);
+                mutateUserPage();
+            } else {
+                toast.error("Erreur lors de la mise à jour");
+            }
+        } catch {
+            toast.error('Erreur upload image');
+        }
+        if (headerAvatarInputRef.current) headerAvatarInputRef.current.value = '';
     };
 
     const openInteractions = (post: any, tab: "COMMENTS" | "LIKES") => {
@@ -450,12 +496,24 @@ function MyPageContent() {
                     {/* Header Profile */}
                     <div className="relative">
                         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
-                            <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-                                {user?.avatarUrl && <AvatarImage src={user.avatarUrl} className="object-cover" />}
-                                <AvatarFallback className="text-2xl bg-primary/10 text-primary">
-                                    {(userPage?.handle || "US").substring(1, 3).toUpperCase()}
-                                </AvatarFallback>
-                            </Avatar>
+                            <div className="relative group cursor-pointer" onClick={() => headerAvatarInputRef.current?.click()}>
+                                <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+                                    {user?.avatarUrl && <AvatarImage src={user.avatarUrl} className="object-cover" />}
+                                    <AvatarFallback className="text-2xl bg-primary/10 text-primary">
+                                        {(userPage?.handle || "US").substring(1, 3).toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <Camera className="w-6 h-6 text-white" />
+                                </div>
+                                <input
+                                    type="file"
+                                    ref={headerAvatarInputRef}
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleHeaderAvatarChange}
+                                />
+                            </div>
 
                             <div className="flex-1 space-y-3">
                                 <div>
@@ -671,18 +729,42 @@ function MyPageContent() {
                         <div>
                             <Label className="block mb-2">Photo de profil</Label>
                             <div className="flex items-center gap-4">
-                                <Avatar className="h-16 w-16">
-                                    {editPageAvatarUrl && <AvatarImage src={editPageAvatarUrl} className="object-cover" />}
-                                    <AvatarFallback>{editPageHandle?.substring(1, 3).toUpperCase()}</AvatarFallback>
-                                </Avatar>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => editPageFileInputRef.current?.click()}
-                                >
-                                    <Upload className="w-4 h-4 mr-2" />
-                                    Changer
-                                </Button>
+                                <div className="relative group">
+                                    <Avatar className="h-20 w-20 border-2 border-border">
+                                        {editPageAvatarUrl && <AvatarImage src={editPageAvatarUrl} className="object-cover" />}
+                                        <AvatarFallback className="text-lg bg-primary/10 text-primary">
+                                            {editPageHandle?.substring(1, 3).toUpperCase()}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <button
+                                        type="button"
+                                        onClick={() => editPageFileInputRef.current?.click()}
+                                        className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <Camera className="w-5 h-5 text-white" />
+                                    </button>
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => editPageFileInputRef.current?.click()}
+                                    >
+                                        <Upload className="w-4 h-4 mr-2" />
+                                        Changer
+                                    </Button>
+                                    {editPageAvatarUrl && (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                            onClick={handleDeleteAvatar}
+                                        >
+                                            <Trash2 className="w-4 h-4 mr-2" />
+                                            Supprimer
+                                        </Button>
+                                    )}
+                                </div>
                                 <input
                                     type="file"
                                     ref={editPageFileInputRef}

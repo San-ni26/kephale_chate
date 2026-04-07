@@ -171,8 +171,8 @@ export async function PATCH(request: NextRequest) {
 
         // Update User info
         if (name || avatarUrl !== undefined) {
-            // Si l'avatar change, supprimer l'ancien du storage Supabase
-            if (avatarUrl !== undefined && avatarUrl !== null) {
+            // Si l'avatar change ou est supprimé, supprimer l'ancien du storage Supabase
+            if (avatarUrl !== undefined) {
                 const currentUser = await prisma.user.findUnique({
                     where: { id: user.userId },
                     select: { avatarUrl: true }

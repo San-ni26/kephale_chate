@@ -440,6 +440,7 @@ export const FileType: {
   PDF: 'PDF',
   WORD: 'WORD',
   AUDIO: 'AUDIO',
+  LINK: 'LINK',
   OTHER: 'OTHER'
 };
 
