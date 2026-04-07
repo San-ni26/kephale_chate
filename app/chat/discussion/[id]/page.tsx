@@ -19,7 +19,8 @@ import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import {
     Send, Paperclip, Loader2, MoreVertical, Edit2, Trash2,
-    ArrowUp, RotateCw, Check, X, Lock, LockOpen, Eye, EyeOff,
+    ArrowUp, ArrowDown, RotateCw, Check, X, Lock, LockOpen, Eye, EyeOff,
+    FileText, Image as ImageIcon,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
@@ -109,6 +110,7 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
     message, isOwn, canEdit, currentUser, otherUser, privateKey,
     isEditing, editContent, onEditContentChange, onEditOpen, onEditSave, onEditCancel,
     onDelete, onRetry, isFailed, displayCreatedAt, isBlurred,
+    isFirstInGroup, isLastInGroup,
 }: {
     message: Message; isOwn: boolean; canEdit: boolean;
     currentUser: { id: string; name: string | null; email: string; publicKey: string } | null;
@@ -120,6 +122,7 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
     onEditSave: () => void; onEditCancel: () => void; onDelete: () => void;
     onRetry?: () => void; isFailed: boolean;
     displayCreatedAt?: string; isBlurred?: boolean;
+    isFirstInGroup?: boolean; isLastInGroup?: boolean;
 }) {
     const decryptedContent = useMemo(() => {
         if (!currentUser || !otherUser || !privateKey) return '[Chiffré]';
@@ -150,8 +153,10 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
                     <div className={cn('group relative', isFailed && 'ring-1 ring-destructive/50 rounded-2xl')}>
                         {decryptedContent && decryptedContent.trim() && (
                             <div className={cn(
-                                'rounded-2xl px-4 py-2 border transition-all duration-200',
-                                isOwn ? 'bg-primary text-primary-foreground border-primary' : 'bg-muted text-foreground border-border',
+                                'px-4 py-2 border transition-all duration-200',
+                                isOwn
+                                    ? 'bg-primary text-primary-foreground border-primary rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-sm'
+                                    : 'bg-muted text-foreground border-border rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm',
                                 isBlurred && 'blur-md select-none pointer-events-none opacity-70'
                             )}>
                                 <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
@@ -177,7 +182,7 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
                                 })}
                             </div>
                         )}
-                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <div className={cn('flex items-center gap-2 mt-1 flex-wrap', !isLastInGroup && 'hidden')}>
                             <span className="text-xs text-muted-foreground">
                                 {formatDistanceToNow(new Date(timestamp), { addSuffix: true, locale: fr })}
                             </span>
@@ -222,7 +227,9 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
     prev.privateKey === next.privateKey &&
     prev.currentUser?.id === next.currentUser?.id &&
     prev.otherUser?.publicKey === next.otherUser?.publicKey &&
-    prev.displayCreatedAt === next.displayCreatedAt
+    prev.displayCreatedAt === next.displayCreatedAt &&
+    prev.isFirstInGroup === next.isFirstInGroup &&
+    prev.isLastInGroup === next.isLastInGroup
 ));
 
 // ─── Page principale ──────────────────────────────────────────────────────────
@@ -282,7 +289,7 @@ export default function DiscussionPage() {
     const [loadingMore, setLoadingMore] = useState(false);
 
     // ── Messages ──
-    const { messages, setMessages, loading, hasMore, setHasMore } = useInitialMessages(conversationId);
+    const { messages, setMessages, loading, hasMore, setHasMore, refreshing } = useInitialMessages(conversationId);
     const messageIds = useMemo(() => messages.map(m => m.id), [messages]);
 
     const uniqueMessages = useMemo(() => {
@@ -322,9 +329,28 @@ export default function DiscussionPage() {
     const callContext = useCallContext();
     const isCallActiveRef = useRef(false);
     isCallActiveRef.current = callContext?.activeCall !== null;
+    const [isAtBottom, setIsAtBottom] = useState(true);
 
-    const scrollToBottom = useCallback(() => {
-        requestAnimationFrame(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }));
+    const scrollToBottom = useCallback((instant?: boolean) => {
+        const doScroll = () => {
+            const container = scrollRef.current;
+            if (!container) return;
+            if (instant) {
+                container.scrollTop = container.scrollHeight;
+            } else {
+                container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+            }
+            setIsAtBottom(true);
+        };
+        // Double rAF ensures DOM has painted new content before scrolling
+        requestAnimationFrame(() => requestAnimationFrame(doScroll));
+    }, []);
+
+    const handleScroll = useCallback(() => {
+        const container = scrollRef.current;
+        if (!container) return;
+        const atBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+        setIsAtBottom(atBottom);
     }, []);
 
     const setDiscussionBlur = useSetDiscussionBlur();
@@ -414,7 +440,7 @@ export default function DiscussionPage() {
     stopTypingRef.current = stopTyping;
 
     const lockHandlers = useDiscussionLockHandlers({ conversationId, mutateConversation, setIsUnlockedSession });
-    const { selectedFiles, handleFileSelect, revokeAllFileUrls } = useFileSelection(conversationId);
+    const { selectedFiles, handleFileSelect, removeFile, revokeAllFileUrls } = useFileSelection(conversationId);
 
     // ── Call status au montage ──
     useEffect(() => {
@@ -567,11 +593,16 @@ export default function DiscussionPage() {
     const lastMessageCount = useRef(0);
     useEffect(() => {
         if (loading) return;
-        if (isFirstLoad.current && messages.length > 0) { scrollToBottom(); isFirstLoad.current = false; }
+        if (isFirstLoad.current && messages.length > 0) {
+            scrollToBottom(true);
+            // Retry after a short delay in case images/attachments shift layout
+            setTimeout(() => scrollToBottom(true), 300);
+            isFirstLoad.current = false;
+        }
         if (messages.length > lastMessageCount.current) {
             const lastMsg = messages[messages.length - 1];
             if (lastMsg?.senderId === currentUser?.id) {
-                scrollToBottom();
+                scrollToBottom(true);
             } else {
                 const container = scrollRef.current;
                 if (container) {
@@ -892,8 +923,14 @@ export default function DiscussionPage() {
             <div
                 className={cn("flex-1 overflow-y-auto px-4 pb-32 md:pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-0", deletionRequest ? "pt-36 md:pt-16" : "pt-16")}
                 ref={scrollRef}
+                onScroll={handleScroll}
             >
-                <ScreenshotBlocker enabled={shouldBlockScreenshot} className="min-h-full space-y-2">
+                {refreshing && (
+                    <div className="flex justify-center py-2">
+                        <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                    </div>
+                )}
+                <ScreenshotBlocker enabled={shouldBlockScreenshot} className="min-h-full">
                     {hasMore && (
                         <div className="flex justify-center py-2">
                             <Button variant="ghost" size="sm" onClick={loadMoreHistory} disabled={loadingMore} className="text-muted-foreground text-xs h-6">
@@ -902,28 +939,38 @@ export default function DiscussionPage() {
                             </Button>
                         </div>
                     )}
-                    {uniqueMessages.map(message => (
-                        <DiscussionMessageBubble
-                            key={stableMessageKeysRef.current.get(message.id) ?? message.id}
-                            message={message}
-                            displayCreatedAt={stableMessageTimestampsRef.current.get(message.id)}
-                            isOwn={message.senderId === currentUser?.id}
-                            canEdit={editableMessageIds.has(message.id)}
-                            currentUser={currentUser ?? null}
-                            otherUser={otherUser ?? null}
-                            privateKey={privateKey}
-                            isEditing={editingMessageId === message.id}
-                            editContent={editContent}
-                            onEditContentChange={setEditContent}
-                            onEditOpen={content => handleEditOpen(message.id, content)}
-                            onEditSave={() => handleEditMessage(message.id, editContent, handleEditCancel)}
-                            onEditCancel={handleEditCancel}
-                            onDelete={() => handleDeleteMessage(message.id)}
-                            onRetry={failedMessagePayloads.has(message.id) ? () => handleRetryMessage(message.id) : undefined}
-                            isFailed={failedMessagePayloads.has(message.id)}
-                            isBlurred={blurredMessageIds.has(message.id)}
-                        />
-                    ))}
+                    {uniqueMessages.map((message, idx) => {
+                        const prevMsg = idx > 0 ? uniqueMessages[idx - 1] : null;
+                        const nextMsg = idx < uniqueMessages.length - 1 ? uniqueMessages[idx + 1] : null;
+                        const isFirstInGroup = !prevMsg || prevMsg.senderId !== message.senderId;
+                        const isLastInGroup = !nextMsg || nextMsg.senderId !== message.senderId;
+
+                        return (
+                            <div key={stableMessageKeysRef.current.get(message.id) ?? message.id} className={cn(isLastInGroup ? 'mb-2' : 'mb-0.5')}>
+                                <DiscussionMessageBubble
+                                    message={message}
+                                    displayCreatedAt={stableMessageTimestampsRef.current.get(message.id)}
+                                    isOwn={message.senderId === currentUser?.id}
+                                    canEdit={editableMessageIds.has(message.id)}
+                                    currentUser={currentUser ?? null}
+                                    otherUser={otherUser ?? null}
+                                    privateKey={privateKey}
+                                    isEditing={editingMessageId === message.id}
+                                    editContent={editContent}
+                                    onEditContentChange={setEditContent}
+                                    onEditOpen={content => handleEditOpen(message.id, content)}
+                                    onEditSave={() => handleEditMessage(message.id, editContent, handleEditCancel)}
+                                    onEditCancel={handleEditCancel}
+                                    onDelete={() => handleDeleteMessage(message.id)}
+                                    onRetry={failedMessagePayloads.has(message.id) ? () => handleRetryMessage(message.id) : undefined}
+                                    isFailed={failedMessagePayloads.has(message.id)}
+                                    isBlurred={blurredMessageIds.has(message.id)}
+                                    isFirstInGroup={isFirstInGroup}
+                                    isLastInGroup={isLastInGroup}
+                                />
+                            </div>
+                        );
+                    })}
                     {typingCount > 0 && (
                         <div className="flex justify-start items-center gap-1.5 py-0.5 animate-pulse">
                             <span className="flex gap-0.5">
@@ -940,9 +987,47 @@ export default function DiscussionPage() {
                 </ScreenshotBlocker>
             </div>
 
+            {/* ── Bouton scroll to bottom ── */}
+            {!isAtBottom && (
+                <div className="fixed bottom-36 right-6 md:absolute md:bottom-20 md:right-6 z-[61]">
+                    <Button
+                        variant="secondary"
+                        size="icon"
+                        className="rounded-full shadow-lg h-10 w-10"
+                        onClick={() => scrollToBottom()}
+                    >
+                        <ArrowDown className="w-5 h-5" />
+                    </Button>
+                </div>
+            )}
+
             {/* ── Zone de saisie ── */}
-            <div className="fixed bottom-16 left-0 right-0 md:static md:bottom-auto md:w-full bg-background border-t border-border p-4 z-[60]">
-                <div className="flex items-center gap-2">
+            <div className="fixed bottom-16 left-0 right-0 md:static md:bottom-auto md:w-full bg-background border-t border-border z-[60]">
+                {/* ── Aperçu des fichiers sélectionnés ── */}
+                {selectedFiles.length > 0 && (
+                    <div className="px-4 pt-3 pb-1 flex gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden transition-all duration-200">
+                        {selectedFiles.map((sf, idx) => (
+                            <div key={idx} className="relative shrink-0 group">
+                                {sf.file.type.startsWith('image/') ? (
+                                    <img src={sf.previewUrl} alt={sf.file.name} className="h-16 w-16 object-cover rounded-lg border border-border" />
+                                ) : (
+                                    <div className="h-16 w-28 bg-muted rounded-lg border border-border flex flex-col items-center justify-center px-2">
+                                        <FileText className="w-5 h-5 text-muted-foreground mb-1" />
+                                        <p className="text-[10px] text-muted-foreground truncate w-full text-center">{sf.file.name}</p>
+                                        <p className="text-[9px] text-muted-foreground/70">{(sf.file.size / 1024).toFixed(0)} KB</p>
+                                    </div>
+                                )}
+                                <button
+                                    onClick={() => removeFile(idx)}
+                                    className="absolute -top-1.5 -right-1.5 bg-destructive text-destructive-foreground rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                    <X className="w-3 h-3" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+                <div className="flex items-center gap-2 p-4 pt-2">
                     <input ref={fileInputRef} type="file" multiple accept="image/*,.pdf,.docx" onChange={handleFileSelect} className="hidden" />
 
                     {!isRecordingAudio && (
