@@ -6,6 +6,7 @@ import { verifyOTP } from '@/src/lib/otp';
 import { checkRateLimitAsync, getRateLimitIdentifier } from '@/src/middleware/rateLimit';
 import { getClientIP } from '@/src/lib/geolocation-server';
 import { hashForSearch } from '@/src/lib/server-crypto';
+import { generateKeyPair, encryptPrivateKey } from '@/src/lib/crypto';
 
 const resetPasswordSchema = z
     .object({
@@ -71,10 +72,16 @@ export async function POST(request: NextRequest) {
 
         const hashedPassword = await bcrypt.hash(validatedData.newPassword, 12);
 
+        // Générer une nouvelle paire de clés (les anciennes sont perdues)
+        const keyPair = generateKeyPair();
+        const encryptedPrivateKey = encryptPrivateKey(keyPair.privateKey, validatedData.newPassword);
+
         await prisma.user.update({
             where: { id: user.id },
             data: {
                 password: hashedPassword,
+                publicKey: keyPair.publicKey,
+                encryptedPrivateKey: encryptedPrivateKey,
                 otpCode: null,
                 otpExpiry: null,
             },
@@ -82,7 +89,9 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(
             {
-                message: 'Mot de passe réinitialisé avec succès. Vous pouvez vous connecter.',
+                message: 'Mot de passe réinitialisé avec succès. Une nouvelle clé de chiffrement a été générée. Vos anciens messages ne sont plus accessibles.',
+                publicKey: keyPair.publicKey,
+                encryptedPrivateKey: encryptedPrivateKey,
             },
             { status: 200 }
         );

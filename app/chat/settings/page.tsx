@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { clearAuthAndAllCacheRedirectToLogin, getUser, type AuthUser, getAuthHeader } from "@/src/lib/auth-client";
+import { decryptPrivateKeyAsync, encryptPrivateKeyAsync } from "@/src/lib/crypto";
 
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
@@ -264,12 +265,32 @@ export default function SettingsPage() {
         }
 
         try {
+            // 1. Récupérer l'utilisateur et sa clé privée chiffrée
+            const currentUser = getUser();
+            if (!currentUser?.encryptedPrivateKey) {
+                toast.error("Clé de chiffrement non disponible");
+                return;
+            }
+
+            // 2. Récupérer la clé privée déchiffrée depuis sessionStorage
+            const privateKey = sessionStorage.getItem(`privateKey_${currentUser.id}`);
+            if (!privateKey) {
+                toast.error("Veuillez d'abord déverrouiller une discussion pour activer le chiffrement");
+                return;
+            }
+
+            // 3. Re-chiffrer la clé privée avec le nouveau mot de passe
+            const newEncryptedPrivateKey = await encryptPrivateKeyAsync(privateKey, passwordData.newPassword);
+
+            // 4. Envoyer au serveur
             const response = await fetch("/api/users/profile", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    action: 'change-password',
                     currentPassword: passwordData.currentPassword,
                     newPassword: passwordData.newPassword,
+                    encryptedPrivateKey: newEncryptedPrivateKey,
                 }),
             });
 
@@ -277,12 +298,14 @@ export default function SettingsPage() {
                 toast.success("Mot de passe modifié avec succès");
                 setIsChangingPassword(false);
                 setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+                // La clé privée en clair dans sessionStorage reste valide
             } else {
                 const data = await response.json();
                 toast.error(data.error || "Erreur lors du changement de mot de passe");
             }
         } catch (error) {
-            toast.error("Erreur réseau");
+            console.error('Change password error:', error);
+            toast.error("Erreur lors du chiffrement de la clé privée");
         }
     };
 

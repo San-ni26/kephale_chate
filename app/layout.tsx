@@ -7,8 +7,10 @@ import { GlobalCallOverlay } from "@/src/components/chat/GlobalCallOverlay";
 import { AuthGuard } from "@/src/components/AuthGuard";
 import { CallProvider } from "@/src/contexts/CallContext";
 import { SWRProvider } from "@/src/providers/SWRProvider";
+import { NetworkStatusProvider } from "@/src/providers/NetworkStatusProvider";
 import { OfflineBanner } from "@/src/components/chat/OfflineBanner";
 import { OfflineQueueSync } from "@/src/components/chat/OfflineQueueSync";
+import { PWAInstaller } from "@/src/components/PWAInstaller";
 import { ThemeProvider } from "@/src/components/ThemeProvider";
 import { Toaster } from "@/src/components/ui/sonner";
 
@@ -77,18 +79,21 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <CallProvider>
-            <SWRProvider>
-              <ServiceWorkerRegistration />
-              <NotificationListener />
-              <OfflineBanner />
-              <OfflineQueueSync />
-              <AuthGuard />
-              {children}
-              <GlobalCallOverlay />
-              <Toaster />
-            </SWRProvider>
-          </CallProvider>
+          <NetworkStatusProvider>
+            <CallProvider>
+              <SWRProvider>
+                <ServiceWorkerRegistration />
+                <NotificationListener />
+                <OfflineBanner />
+                <OfflineQueueSync />
+                <PWAInstaller />
+                <AuthGuard />
+                {children}
+                <GlobalCallOverlay />
+                <Toaster />
+              </SWRProvider>
+            </CallProvider>
+          </NetworkStatusProvider>
         </ThemeProvider>
       </body>
     </html>

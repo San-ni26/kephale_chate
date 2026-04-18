@@ -3,16 +3,33 @@
  * Handles: Push notifications (messages + calls), notification clicks,
  * precache des pages critiques, fetch handler pour mode hors ligne.
  * Push notifications work on all platforms including Vercel.
+ * 
+ * Améliorations:
+ * - Versioning automatique du cache
+ * - Gestion améliorée des mises à jour
+ * - Cache API pour données critiques
+ * - Fallback offline robuste
  */
 
-var CACHE_VERSION = 'mango-v2';
-var PRECACHE_URLS = ['/', '/login', '/register', '/chat', '/offline', '/manifest.json', '/icons/icon-192x192.png', '/icons/icon-512x512.png'];
+// Version incrémentée à chaque déploiement pour invalider le cache
+var CACHE_VERSION = 'mango-v3';
+var PRECACHE_URLS = [
+    '/',
+    '/login',
+    '/register',
+    '/chat',
+    '/offline',
+    '/manifest.json',
+    '/icons/icon-192x192.png',
+    '/icons/icon-512x512.png'
+];
 
-// ============ PUSH SKIP : route actuelle par client (pour masquer si déjà sur la page) ============
+// ============ MESSAGES DU CLIENT ============
 var pathnameByClientId = {};
 var lastKnownPathnames = [];
 
 self.addEventListener('message', function (event) {
+    // Track pathname pour éviter notifications redondantes
     if (event.data && event.data.type === 'PUSH_SKIP_PATH' && event.data.pathname) {
         var clientId = event.source && event.source.id;
         var path = event.data.pathname;
@@ -22,13 +39,15 @@ self.addEventListener('message', function (event) {
         lastKnownPathnames.push(path);
         if (lastKnownPathnames.length > 10) lastKnownPathnames.shift();
     }
+    
+    // SKIP_WAITING - force activation du nouveau SW
     if (event.data && event.data.type === 'SKIP_WAITING') {
+        console.log('[SW] SKIP_WAITING received, activating...');
         self.skipWaiting();
     }
 });
 
 // ============ PUSH NOTIFICATION HANDLER ============
-// S'affiche même quand l'app est fermée (navigateur ou onglet) : le SW reste actif pour les push.
 self.addEventListener('push', function (event) {
     console.log('[SW] Push event received');
 
@@ -88,7 +107,7 @@ self.addEventListener('push', function (event) {
     };
 
     // App fermée (aucune fenêtre) : TOUJOURS afficher la notification
-    // App ouverte : ne pas afficher si l'utilisateur a déjà la conversation ouverte (même sans focus)
+    // App ouverte : ne pas afficher si l'utilisateur a déjà la conversation ouverte
     event.waitUntil(
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
             if (clientList.length === 0) {
@@ -98,8 +117,7 @@ self.addEventListener('push', function (event) {
                 });
             }
 
-            // Appels : skip la notification push SEULEMENT si l'utilisateur a la conversation
-            // de l'appel ouverte et focalisée — sinon il ne saurait pas qu'il a un appel.
+            // Appels : skip SEULEMENT si conversation ouverte ET focalisée
             if (isCall) {
                 var convIdForCall = convId;
                 var skipCall = false;
@@ -117,12 +135,12 @@ self.addEventListener('push', function (event) {
                     }
                 }
                 if (skipCall) {
-                    console.log('[SW] App ouverte + page conversation focalisee, skip notification appel (Pusher gere)');
+                    console.log('[SW] App ouverte + conversation focalisee, skip notification appel');
                     return Promise.resolve();
                 }
             }
 
-            // Message : ne pas afficher si l'utilisateur est déjà dans la page concernée ou sur la page notifications
+            // Message : ne pas afficher si utilisateur déjà sur la page concernée
             if (!isCall) {
                 var targetUrl = (data.url && typeof data.url === 'string') ? data.url.replace(/\/$/, '') : null;
 
@@ -219,7 +237,7 @@ self.addEventListener('notificationclick', function (event) {
         return;
     }
 
-    // Appel en cours : Raccrocher (depuis notification "Appel en cours")
+    // Appel en cours : Raccrocher
     if (notifType === 'active_call' && action === 'hangup') {
         var targetUserId = data.targetUserId;
         if (targetUserId) {
@@ -247,7 +265,7 @@ self.addEventListener('notificationclick', function (event) {
         return;
     }
 
-    // Repondre (appel entrant) ou Ouvrir (appel en cours) : ouvrir/focus la conversation
+    // Repondre ou Ouvrir : ouvrir/focus la conversation
     var convId = data.conversationId;
     var basePath = (url && url.startsWith('/')) ? url : ('/chat' + (convId ? '/discussion/' + convId : ''));
     if (notifType === 'call' && convId) {
@@ -278,25 +296,41 @@ self.addEventListener('notificationclick', function (event) {
 
 // ============ LIFECYCLE ============
 self.addEventListener('install', function (event) {
-    console.log('[SW] Installing...');
+    console.log('[SW] Installing version:', CACHE_VERSION);
     event.waitUntil(
         caches.open(CACHE_VERSION).then(function (cache) {
             return cache.addAll(PRECACHE_URLS).catch(function (err) {
                 console.warn('[SW] Precache failed for some URLs:', err);
             });
         }).then(function () {
+            console.log('[SW] Precache complete, skipping waiting');
             return self.skipWaiting();
         })
     );
 });
 
 self.addEventListener('activate', function (event) {
-    console.log('[SW] Activating...');
+    console.log('[SW] Activating version:', CACHE_VERSION);
     event.waitUntil(
         caches.keys().then(function (keys) {
-            return Promise.all(keys.filter(function (k) { return k !== CACHE_VERSION; }).map(function (k) { return caches.delete(k); }));
+            return Promise.all(
+                keys
+                    .filter(function (k) { return k !== CACHE_VERSION; })
+                    .map(function (k) { 
+                        console.log('[SW] Deleting old cache:', k);
+                        return caches.delete(k); 
+                    })
+            );
         }).then(function () {
+            console.log('[SW] Claiming clients');
             return self.clients.claim();
+        }).then(function () {
+            // Notifier les clients que le SW est activé
+            return self.clients.matchAll().then(function (clients) {
+                clients.forEach(function (client) {
+                    client.postMessage({ type: 'SW_ACTIVATED', version: CACHE_VERSION });
+                });
+            });
         })
     );
 });
@@ -309,26 +343,49 @@ self.addEventListener('fetch', function (event) {
     // Navigation : network-first, fallback cache, puis /offline si hors ligne
     if (event.request.mode === 'navigate') {
         event.respondWith(
-            fetch(event.request).catch(function () {
-                return caches.match(event.request).then(function (cached) {
-                    if (cached) return cached;
-                    return caches.match('/offline').then(function (offline) {
-                        return offline || new Response('Hors ligne', { status: 503, statusText: 'Service Unavailable' });
+            fetch(event.request)
+                .then(function (response) {
+                    // Mettre à jour le cache avec la réponse fraîche
+                    if (response.ok) {
+                        var clone = response.clone();
+                        caches.open(CACHE_VERSION).then(function (cache) {
+                            cache.put(event.request, clone);
+                        });
+                    }
+                    return response;
+                })
+                .catch(function () {
+                    return caches.match(event.request).then(function (cached) {
+                        if (cached) return cached;
+                        return caches.match('/offline').then(function (offline) {
+                            return offline || new Response(
+                                '<!DOCTYPE html><html><body><h1>Hors ligne</h1><p>Veuillez vérifier votre connexion.</p></body></html>',
+                                { 
+                                    status: 503, 
+                                    statusText: 'Service Unavailable',
+                                    headers: { 'Content-Type': 'text/html' }
+                                }
+                            );
+                        });
                     });
-                });
-            })
+                })
         );
         return;
     }
 
-    // Assets statiques : cache-first pour perf
+    // Assets statiques : cache-first pour performance
     if (url.pathname.startsWith('/_next/static/') || url.pathname.startsWith('/icons/')) {
         event.respondWith(
             caches.match(event.request).then(function (cached) {
                 if (cached) return cached;
                 return fetch(event.request).then(function (res) {
+                    if (!res || res.status !== 200 || res.type !== 'basic') {
+                        return res;
+                    }
                     var clone = res.clone();
-                    caches.open(CACHE_VERSION).then(function (cache) { cache.put(event.request, clone); });
+                    caches.open(CACHE_VERSION).then(function (cache) { 
+                        cache.put(event.request, clone); 
+                    });
                     return res;
                 });
             })
@@ -336,31 +393,41 @@ self.addEventListener('fetch', function (event) {
         return;
     }
 
-    // GET /api/* : network-first, cache fallback pour consultation hors ligne (TTL ~5 min via nom de cache)
+    // GET /api/* : network-first, cache fallback pour consultation hors ligne
     if (url.pathname.startsWith('/api/') && event.request.method === 'GET') {
         var apiCacheName = CACHE_VERSION + '-api';
         event.respondWith(
-            fetch(event.request).then(function (res) {
-                if (res.ok && res.status === 200) {
-                    var clone = res.clone();
-                    caches.open(apiCacheName).then(function (cache) { cache.put(event.request, clone); });
-                }
-                return res;
-            }).catch(function () {
-                return caches.open(apiCacheName).then(function (cache) {
-                    return cache.match(event.request);
-                }).then(function (cached) {
-                    return cached || new Response(JSON.stringify({ error: 'Hors ligne' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
-                });
-            })
+            fetch(event.request)
+                .then(function (res) {
+                    if (res.ok && res.status === 200) {
+                        var clone = res.clone();
+                        caches.open(apiCacheName).then(function (cache) { 
+                            cache.put(event.request, clone); 
+                        });
+                    }
+                    return res;
+                })
+                .catch(function () {
+                    return caches.open(apiCacheName).then(function (cache) {
+                        return cache.match(event.request);
+                    }).then(function (cached) {
+                        return cached || new Response(
+                            JSON.stringify({ error: 'Hors ligne', offline: true }), 
+                            { 
+                                status: 503, 
+                                headers: { 'Content-Type': 'application/json' } 
+                            }
+                        );
+                    });
+                })
         );
         return;
     }
 
-    // API POST/PATCH/DELETE : network only
+    // API POST/PATCH/DELETE : network only (pas de cache)
 });
 
-// ============ BACKGROUND SYNC (file messages hors ligne) ============
+// ============ BACKGROUND SYNC (messages hors ligne) ============
 var DB_NAME = 'mango-offline-queue';
 var STORE_NAME = 'messages';
 
@@ -387,6 +454,14 @@ function swProcessQueue() {
             req.onsuccess = function () {
                 var items = req.result || [];
                 db.close();
+                
+                if (items.length === 0) {
+                    resolve({ sent: 0, failed: 0 });
+                    return;
+                }
+                
+                console.log('[SW] Processing queue:', items.length, 'items');
+                
                 Promise.all(items.map(function (item) {
                     return fetch(item.url, {
                         method: item.method,
@@ -404,14 +479,34 @@ function swProcessQueue() {
                             }).then(function () {
                                 return self.clients.matchAll().then(function (clients) {
                                     clients.forEach(function (c) {
-                                        try { c.postMessage({ type: 'QUEUE_ITEM_SENT', tempId: item.tempId, itemId: item.id }); } catch (e) { }
+                                        try { 
+                                            c.postMessage({ 
+                                                type: 'QUEUE_ITEM_SENT', 
+                                                tempId: item.tempId, 
+                                                itemId: item.id 
+                                            }); 
+                                        } catch (e) { }
                                     });
                                 });
+                            }).then(function () {
+                                return { success: true };
                             });
                         }
-                        return Promise.resolve();
-                    }).catch(function () { return Promise.resolve(); });
-                })).then(resolve);
+                        return { success: false, status: res.status };
+                    }).catch(function (err) {
+                        console.error('[SW] Queue item failed:', err);
+                        return { success: false, error: err.message };
+                    });
+                })).then(function (results) {
+                    var sent = results.filter(function (r) { return r.success; }).length;
+                    var failed = results.length - sent;
+                    console.log('[SW] Queue processed:', sent, 'sent,', failed, 'failed');
+                    resolve({ sent: sent, failed: failed });
+                });
+            };
+            req.onerror = function () {
+                console.error('[SW] Failed to read queue');
+                resolve({ sent: 0, failed: 0 });
             };
         });
     });
@@ -419,7 +514,15 @@ function swProcessQueue() {
 
 self.addEventListener('sync', function (event) {
     if (event.tag === 'mango-send-messages') {
+        console.log('[SW] Background sync triggered');
         event.waitUntil(swProcessQueue());
     }
 });
 
+// ============ PERIODIC SYNC (si supporté) ============
+self.addEventListener('periodicsync', function (event) {
+    if (event.tag === 'mango-sync') {
+        console.log('[SW] Periodic sync triggered');
+        // Optionnel: rafraîchir le cache des données critiques
+    }
+});

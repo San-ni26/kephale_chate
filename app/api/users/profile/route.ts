@@ -14,6 +14,7 @@ const updateProfileSchema = z.object({
 const changePasswordSchema = z.object({
     currentPassword: z.string().min(1, 'Mot de passe actuel requis'),
     newPassword: z.string().min(8, 'Le nouveau mot de passe doit contenir au moins 8 caractères'),
+    encryptedPrivateKey: z.string().optional(), // NOUVEAU: clé privée re-chiffrée avec nouveau mot de passe
 });
 
 // GET: Get user profile
@@ -148,16 +149,19 @@ export async function PATCH(request: NextRequest) {
             // Hash new password
             const hashedPassword = await bcrypt.hash(validatedData.newPassword, 12);
 
-            // Re-encrypt private key with new password
-            // Note: In production, this should be done client-side
-            // For now, we'll keep the same encrypted private key
-            // The client should decrypt with old password and re-encrypt with new password
+            // Update password and encrypted private key if provided
+            const updateData: any = {
+                password: hashedPassword,
+            };
+
+            // Si le client envoie une nouvelle clé privée chiffrée, la mettre à jour
+            if (validatedData.encryptedPrivateKey) {
+                updateData.encryptedPrivateKey = validatedData.encryptedPrivateKey;
+            }
 
             await prisma.user.update({
                 where: { id: user.userId },
-                data: {
-                    password: hashedPassword,
-                },
+                data: updateData,
             });
 
             return NextResponse.json(
