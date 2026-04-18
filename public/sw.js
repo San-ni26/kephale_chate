@@ -2,17 +2,12 @@
  * Service Worker for Chat Mango
  * Handles: Push notifications (messages + calls), notification clicks,
  * precache des pages critiques, fetch handler pour mode hors ligne.
- * Push notifications work on all platforms including Vercel.
  * 
- * Améliorations:
- * - Versioning automatique du cache
- * - Gestion améliorée des mises à jour
- * - Cache API pour données critiques
- * - Fallback offline robuste
+ * Compatible avec Safari iOS (gestion gracieuse de l'absence de caches API).
  */
 
 // Version incrémentée à chaque déploiement pour invalider le cache
-var CACHE_VERSION = 'mango-v3';
+var CACHE_VERSION = 'mango-v4';
 var PRECACHE_URLS = [
     '/',
     '/login',
@@ -24,12 +19,50 @@ var PRECACHE_URLS = [
     '/icons/icon-512x512.png'
 ];
 
+// Vérifier si Cache API est disponible (Safari iOS mode privé = non)
+var cacheAvailable = typeof caches !== 'undefined';
+
+// ============ HELPERS CACHE SÉCURISÉS ============
+function safeCachesOpen(cacheName) {
+    if (!cacheAvailable) return Promise.resolve(null);
+    return caches.open(cacheName).catch(function(err) {
+        console.warn('[SW] Failed to open cache:', err);
+        return null;
+    });
+}
+
+function safeCachesMatch(request, cacheName) {
+    if (!cacheAvailable) return Promise.resolve(null);
+    if (cacheName) {
+        return caches.open(cacheName).then(function(cache) {
+            return cache.match(request);
+        }).catch(function() { return null; });
+    }
+    return caches.match(request).catch(function() { return null; });
+}
+
+function safeCachePut(cache, request, response) {
+    if (!cache || !cacheAvailable) return Promise.resolve();
+    return cache.put(request, response).catch(function(err) {
+        console.warn('[SW] Failed to put in cache:', err);
+    });
+}
+
+function safeCachesDelete(cacheName) {
+    if (!cacheAvailable) return Promise.resolve(false);
+    return caches.delete(cacheName).catch(function() { return false; });
+}
+
+function safeCachesKeys() {
+    if (!cacheAvailable) return Promise.resolve([]);
+    return caches.keys().catch(function() { return []; });
+}
+
 // ============ MESSAGES DU CLIENT ============
 var pathnameByClientId = {};
 var lastKnownPathnames = [];
 
 self.addEventListener('message', function (event) {
-    // Track pathname pour éviter notifications redondantes
     if (event.data && event.data.type === 'PUSH_SKIP_PATH' && event.data.pathname) {
         var clientId = event.source && event.source.id;
         var path = event.data.pathname;
@@ -40,7 +73,6 @@ self.addEventListener('message', function (event) {
         if (lastKnownPathnames.length > 10) lastKnownPathnames.shift();
     }
     
-    // SKIP_WAITING - force activation du nouveau SW
     if (event.data && event.data.type === 'SKIP_WAITING') {
         console.log('[SW] SKIP_WAITING received, activating...');
         self.skipWaiting();
@@ -58,16 +90,11 @@ self.addEventListener('push', function (event) {
             data = parsed && typeof parsed === 'object' ? parsed : { title: 'Mango', body: 'Nouveau message' };
         } catch (e) {
             console.error('[SW] Failed to parse push data:', e);
-            data = {
-                title: 'Chat',
-                body: event.data.text() || 'Nouveau message',
-            };
+            data = { title: 'Chat', body: event.data.text() || 'Nouveau message' };
         }
     } else {
         data = { title: 'Mango', body: 'Nouveau message' };
     }
-
-    console.log('[SW] Push data parsed:', data.title, data.type);
 
     var isCall = data.type === 'call';
     var convId = data.data && data.data.conversationId;
@@ -75,9 +102,7 @@ self.addEventListener('push', function (event) {
     var deptId = data.data && data.data.deptId;
     var collabId = data.data && data.data.collabId;
     var groupId = data.data && data.data.groupId;
-    var tag = isCall
-        ? 'incoming-call-' + Date.now()
-        : 'message-' + (convId || Date.now());
+    var tag = isCall ? 'incoming-call-' + Date.now() : 'message-' + (convId || Date.now());
 
     var options = {
         body: data.body || 'Nouveau message',
@@ -97,62 +122,38 @@ self.addEventListener('push', function (event) {
             callerId: data.data && data.data.callerId,
         },
         actions: isCall
-            ? [
-                { action: 'answer', title: 'Repondre' },
-                { action: 'reject', title: 'Refuser' }
-            ]
-            : [
-                { action: 'view', title: 'Voir' }
-            ]
+            ? [{ action: 'answer', title: 'Repondre' }, { action: 'reject', title: 'Refuser' }]
+            : [{ action: 'view', title: 'Voir' }]
     };
 
-    // App fermée (aucune fenêtre) : TOUJOURS afficher la notification
-    // App ouverte : ne pas afficher si l'utilisateur a déjà la conversation ouverte
     event.waitUntil(
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
             if (clientList.length === 0) {
-                console.log('[SW] App fermee, affichage notification');
                 return self.registration.showNotification(data.title || 'Chat', options).catch(function (err) {
                     console.warn('[SW] showNotification failed:', err);
                 });
             }
 
-            // Appels : skip SEULEMENT si conversation ouverte ET focalisée
             if (isCall) {
-                var convIdForCall = convId;
                 var skipCall = false;
-                if (convIdForCall) {
+                if (convId) {
                     for (var ci = 0; ci < clientList.length; ci++) {
                         var cc = clientList[ci];
                         if (!cc.focused || !cc.url) continue;
                         try {
                             var ccPath = new URL(cc.url).pathname;
-                            if (ccPath.indexOf('/chat/discussion/' + convIdForCall) !== -1) {
+                            if (ccPath.indexOf('/chat/discussion/' + convId) !== -1) {
                                 skipCall = true;
                                 break;
                             }
-                        } catch (e) { /* ignore */ }
+                        } catch (e) { }
                     }
                 }
-                if (skipCall) {
-                    console.log('[SW] App ouverte + conversation focalisee, skip notification appel');
-                    return Promise.resolve();
-                }
+                if (skipCall) return Promise.resolve();
             }
 
-            // Message : ne pas afficher si utilisateur déjà sur la page concernée
             if (!isCall) {
                 var targetUrl = (data.url && typeof data.url === 'string') ? data.url.replace(/\/$/, '') : null;
-
-                function pathMatchesTarget(p) {
-                    if (!p || typeof p !== 'string') return false;
-                    p = p.replace(/\/$/, '');
-                    if (!targetUrl) return false;
-                    if (p === targetUrl) return true;
-                    if (p.indexOf(targetUrl + '/') === 0) return true;
-                    if (p.indexOf(targetUrl + '?') === 0) return true;
-                    return false;
-                }
 
                 function pathMatchesByData(p) {
                     if (!p) return false;
@@ -187,19 +188,14 @@ self.addEventListener('push', function (event) {
                     }
                 }
                 for (var k = 0; k < allPaths.length; k++) {
-                    var p = allPaths[k];
-                    if (pathMatchesByData(p) || (targetUrl && pathMatchesTarget(p))) {
+                    if (pathMatchesByData(allPaths[k])) {
                         skip = true;
                         break;
                     }
                 }
-                if (skip) {
-                    console.log('[SW] User is viewing this chat, skip push notification');
-                    return Promise.resolve();
-                }
+                if (skip) return Promise.resolve();
             }
 
-            console.log('[SW] Showing notification:', data.title || 'Chat');
             return self.registration.showNotification(data.title || 'Chat', options).catch(function (err) {
                 console.warn('[SW] showNotification failed:', err);
             });
@@ -209,8 +205,6 @@ self.addEventListener('push', function (event) {
 
 // ============ NOTIFICATION CLICK HANDLER ============
 self.addEventListener('notificationclick', function (event) {
-    console.log('[SW] Notification clicked, action:', event.action, 'type:', event.notification.data && event.notification.data.type);
-
     var notification = event.notification;
     var action = event.action || '';
     var data = notification.data || {};
@@ -219,7 +213,6 @@ self.addEventListener('notificationclick', function (event) {
 
     notification.close();
 
-    // Appel entrant : Refuser
     if (action === 'reject') {
         var callerId = data.callerId;
         if (callerId) {
@@ -237,7 +230,6 @@ self.addEventListener('notificationclick', function (event) {
         return;
     }
 
-    // Appel en cours : Raccrocher
     if (notifType === 'active_call' && action === 'hangup') {
         var targetUserId = data.targetUserId;
         if (targetUserId) {
@@ -253,10 +245,7 @@ self.addEventListener('notificationclick', function (event) {
                     clientList.forEach(function (c) {
                         try { c.postMessage({ type: 'CALL_ENDED_BY_NOTIFICATION' }); } catch (e) { }
                     });
-                    if (clientList.length > 0) {
-                        return clientList[0].focus();
-                    }
-                    return Promise.resolve();
+                    if (clientList.length > 0) return clientList[0].focus();
                 }).catch(function (err) {
                     console.error('[SW] Failed to end call:', err);
                 })
@@ -265,14 +254,11 @@ self.addEventListener('notificationclick', function (event) {
         return;
     }
 
-    // Repondre ou Ouvrir : ouvrir/focus la conversation
     var convId = data.conversationId;
     var basePath = (url && url.startsWith('/')) ? url : ('/chat' + (convId ? '/discussion/' + convId : ''));
     if (notifType === 'call' && convId) {
         basePath = '/chat/discussion/' + convId;
-        if (action === 'answer') {
-            basePath += '?answer=1';
-        }
+        if (action === 'answer') basePath += '?answer=1';
     }
     var fullUrl = self.location.origin + basePath;
 
@@ -285,9 +271,7 @@ self.addEventListener('notificationclick', function (event) {
                         return c.navigate ? c.navigate(fullUrl) : Promise.resolve();
                     });
                 }
-                if (client.focus) {
-                    return client.focus();
-                }
+                if (client.focus) return client.focus();
             }
             return self.clients.openWindow(fullUrl);
         })
@@ -296,14 +280,22 @@ self.addEventListener('notificationclick', function (event) {
 
 // ============ LIFECYCLE ============
 self.addEventListener('install', function (event) {
-    console.log('[SW] Installing version:', CACHE_VERSION);
+    console.log('[SW] Installing version:', CACHE_VERSION, 'Cache available:', cacheAvailable);
+    
+    if (!cacheAvailable) {
+        // Safari iOS mode privé - pas de cache mais on continue
+        console.log('[SW] Cache API not available, skipping precache');
+        event.waitUntil(self.skipWaiting());
+        return;
+    }
+    
     event.waitUntil(
-        caches.open(CACHE_VERSION).then(function (cache) {
+        safeCachesOpen(CACHE_VERSION).then(function (cache) {
+            if (!cache) return;
             return cache.addAll(PRECACHE_URLS).catch(function (err) {
                 console.warn('[SW] Precache failed for some URLs:', err);
             });
         }).then(function () {
-            console.log('[SW] Precache complete, skipping waiting');
             return self.skipWaiting();
         })
     );
@@ -311,21 +303,20 @@ self.addEventListener('install', function (event) {
 
 self.addEventListener('activate', function (event) {
     console.log('[SW] Activating version:', CACHE_VERSION);
+    
     event.waitUntil(
-        caches.keys().then(function (keys) {
+        safeCachesKeys().then(function (keys) {
             return Promise.all(
                 keys
                     .filter(function (k) { return k !== CACHE_VERSION; })
                     .map(function (k) { 
                         console.log('[SW] Deleting old cache:', k);
-                        return caches.delete(k); 
+                        return safeCachesDelete(k); 
                     })
             );
         }).then(function () {
-            console.log('[SW] Claiming clients');
             return self.clients.claim();
         }).then(function () {
-            // Notifier les clients que le SW est activé
             return self.clients.matchAll().then(function (clients) {
                 clients.forEach(function (client) {
                     client.postMessage({ type: 'SW_ACTIVATED', version: CACHE_VERSION });
@@ -345,26 +336,27 @@ self.addEventListener('fetch', function (event) {
         event.respondWith(
             fetch(event.request)
                 .then(function (response) {
-                    // Mettre à jour le cache avec la réponse fraîche
-                    if (response.ok) {
+                    if (response.ok && cacheAvailable) {
                         var clone = response.clone();
-                        caches.open(CACHE_VERSION).then(function (cache) {
-                            cache.put(event.request, clone);
+                        safeCachesOpen(CACHE_VERSION).then(function (cache) {
+                            safeCachePut(cache, event.request, clone);
                         });
                     }
                     return response;
                 })
                 .catch(function () {
-                    return caches.match(event.request).then(function (cached) {
+                    if (!cacheAvailable) {
+                        return new Response(
+                            '<!DOCTYPE html><html><body style="font-family:sans-serif;text-align:center;padding:40px;"><h1>Hors ligne</h1><p>Veuillez vérifier votre connexion internet.</p></body></html>',
+                            { status: 503, headers: { 'Content-Type': 'text/html' } }
+                        );
+                    }
+                    return safeCachesMatch(event.request, CACHE_VERSION).then(function (cached) {
                         if (cached) return cached;
-                        return caches.match('/offline').then(function (offline) {
+                        return safeCachesMatch('/offline', CACHE_VERSION).then(function (offline) {
                             return offline || new Response(
-                                '<!DOCTYPE html><html><body><h1>Hors ligne</h1><p>Veuillez vérifier votre connexion.</p></body></html>',
-                                { 
-                                    status: 503, 
-                                    statusText: 'Service Unavailable',
-                                    headers: { 'Content-Type': 'text/html' }
-                                }
+                                '<!DOCTYPE html><html><body style="font-family:sans-serif;text-align:center;padding:40px;"><h1>Hors ligne</h1><p>Veuillez vérifier votre connexion internet.</p></body></html>',
+                                { status: 503, headers: { 'Content-Type': 'text/html' } }
                             );
                         });
                     });
@@ -375,16 +367,16 @@ self.addEventListener('fetch', function (event) {
 
     // Assets statiques : cache-first pour performance
     if (url.pathname.startsWith('/_next/static/') || url.pathname.startsWith('/icons/')) {
+        if (!cacheAvailable) return; // Pas de cache = pas d'interception
+        
         event.respondWith(
-            caches.match(event.request).then(function (cached) {
+            safeCachesMatch(event.request, CACHE_VERSION).then(function (cached) {
                 if (cached) return cached;
                 return fetch(event.request).then(function (res) {
-                    if (!res || res.status !== 200 || res.type !== 'basic') {
-                        return res;
-                    }
+                    if (!res || res.status !== 200 || res.type !== 'basic') return res;
                     var clone = res.clone();
-                    caches.open(CACHE_VERSION).then(function (cache) { 
-                        cache.put(event.request, clone); 
+                    safeCachesOpen(CACHE_VERSION).then(function (cache) {
+                        safeCachePut(cache, event.request, clone);
                     });
                     return res;
                 });
@@ -393,41 +385,34 @@ self.addEventListener('fetch', function (event) {
         return;
     }
 
-    // GET /api/* : network-first, cache fallback pour consultation hors ligne
-    if (url.pathname.startsWith('/api/') && event.request.method === 'GET') {
+    // GET /api/* : network-first, cache fallback
+    if (url.pathname.startsWith('/api/') && event.request.method === 'GET' && cacheAvailable) {
         var apiCacheName = CACHE_VERSION + '-api';
         event.respondWith(
             fetch(event.request)
                 .then(function (res) {
                     if (res.ok && res.status === 200) {
                         var clone = res.clone();
-                        caches.open(apiCacheName).then(function (cache) { 
-                            cache.put(event.request, clone); 
+                        safeCachesOpen(apiCacheName).then(function (cache) {
+                            safeCachePut(cache, event.request, clone);
                         });
                     }
                     return res;
                 })
                 .catch(function () {
-                    return caches.open(apiCacheName).then(function (cache) {
-                        return cache.match(event.request);
-                    }).then(function (cached) {
+                    return safeCachesMatch(event.request, apiCacheName).then(function (cached) {
                         return cached || new Response(
                             JSON.stringify({ error: 'Hors ligne', offline: true }), 
-                            { 
-                                status: 503, 
-                                headers: { 'Content-Type': 'application/json' } 
-                            }
+                            { status: 503, headers: { 'Content-Type': 'application/json' } }
                         );
                     });
                 })
         );
         return;
     }
-
-    // API POST/PATCH/DELETE : network only (pas de cache)
 });
 
-// ============ BACKGROUND SYNC (messages hors ligne) ============
+// ============ BACKGROUND SYNC ============
 var DB_NAME = 'mango-offline-queue';
 var STORE_NAME = 'messages';
 
@@ -454,14 +439,10 @@ function swProcessQueue() {
             req.onsuccess = function () {
                 var items = req.result || [];
                 db.close();
-                
                 if (items.length === 0) {
                     resolve({ sent: 0, failed: 0 });
                     return;
                 }
-                
-                console.log('[SW] Processing queue:', items.length, 'items');
-                
                 Promise.all(items.map(function (item) {
                     return fetch(item.url, {
                         method: item.method,
@@ -480,49 +461,26 @@ function swProcessQueue() {
                                 return self.clients.matchAll().then(function (clients) {
                                     clients.forEach(function (c) {
                                         try { 
-                                            c.postMessage({ 
-                                                type: 'QUEUE_ITEM_SENT', 
-                                                tempId: item.tempId, 
-                                                itemId: item.id 
-                                            }); 
+                                            c.postMessage({ type: 'QUEUE_ITEM_SENT', tempId: item.tempId, itemId: item.id }); 
                                         } catch (e) { }
                                     });
                                 });
-                            }).then(function () {
-                                return { success: true };
-                            });
+                            }).then(function () { return { success: true }; });
                         }
-                        return { success: false, status: res.status };
-                    }).catch(function (err) {
-                        console.error('[SW] Queue item failed:', err);
-                        return { success: false, error: err.message };
-                    });
+                        return { success: false };
+                    }).catch(function () { return { success: false }; });
                 })).then(function (results) {
                     var sent = results.filter(function (r) { return r.success; }).length;
-                    var failed = results.length - sent;
-                    console.log('[SW] Queue processed:', sent, 'sent,', failed, 'failed');
-                    resolve({ sent: sent, failed: failed });
+                    resolve({ sent: sent, failed: items.length - sent });
                 });
             };
-            req.onerror = function () {
-                console.error('[SW] Failed to read queue');
-                resolve({ sent: 0, failed: 0 });
-            };
+            req.onerror = function () { resolve({ sent: 0, failed: 0 }); };
         });
     });
 }
 
 self.addEventListener('sync', function (event) {
     if (event.tag === 'mango-send-messages') {
-        console.log('[SW] Background sync triggered');
         event.waitUntil(swProcessQueue());
-    }
-});
-
-// ============ PERIODIC SYNC (si supporté) ============
-self.addEventListener('periodicsync', function (event) {
-    if (event.tag === 'mango-sync') {
-        console.log('[SW] Periodic sync triggered');
-        // Optionnel: rafraîchir le cache des données critiques
     }
 });
