@@ -8,6 +8,17 @@ import { getToken, isProtectedPath } from '@/src/lib/auth-client';
 import { registerPushSubscription, syncPushSubscriptionIfGranted } from '@/src/lib/register-push-client';
 
 /**
+ * Vérifie si les notifications push sont supportées (pas sur Safari iOS)
+ */
+const isPushSupported = (): boolean => {
+    return typeof window !== 'undefined' &&
+        'serviceWorker' in navigator &&
+        'PushManager' in window &&
+        // Safari iOS ne supporte pas les notifications push
+        !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream);
+};
+
+/**
  * Envoie la route actuelle au Service Worker.
  * Le SW l'utilise pour supprimer le push si l'utilisateur est déjà sur la page.
  * Envoi à chaque changement de route ET au retour de visibilité.
@@ -190,6 +201,15 @@ export function NotificationListener() {
     useEffect(() => {
         if (typeof window === 'undefined') return;
         if (pushRegistered.current) return;
+        
+        // Ne pas essayer d'enregistrer les push sur Safari iOS (non supporté)
+        if (!isPushSupported()) {
+            if (process.env.NODE_ENV === 'development') {
+                console.log('[NotificationListener] Push not supported on this device (iOS Safari)');
+            }
+            return;
+        }
+        
         if (!pathname || !isProtectedPath(pathname) || !getToken()) return;
 
         const run = async () => {
@@ -203,6 +223,9 @@ export function NotificationListener() {
     // ── Re-synchroniser l'abonnement push au retour sur l'app ────────────
     useEffect(() => {
         if (typeof document === 'undefined') return;
+        
+        // Ne pas essayer sur Safari iOS
+        if (!isPushSupported()) return;
 
         const onVisibilityChange = () => {
             if (document.visibilityState !== 'visible') return;

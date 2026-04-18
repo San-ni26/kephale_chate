@@ -11,6 +11,7 @@ import { NetworkStatusProvider } from "@/src/providers/NetworkStatusProvider";
 import { OfflineBanner } from "@/src/components/chat/OfflineBanner";
 import { OfflineQueueSync } from "@/src/components/chat/OfflineQueueSync";
 import { PWAInstaller } from "@/src/components/PWAInstaller";
+import { IOSCallWarning } from "@/src/components/ios/IOSCallWarning";
 import { ThemeProvider } from "@/src/components/ThemeProvider";
 import { Toaster } from "@/src/components/ui/sonner";
 
@@ -87,6 +88,7 @@ export default function RootLayout({
                 <OfflineBanner />
                 <OfflineQueueSync />
                 <PWAInstaller />
+                <IOSCallWarning />
                 <AuthGuard />
                 {children}
                 <GlobalCallOverlay />

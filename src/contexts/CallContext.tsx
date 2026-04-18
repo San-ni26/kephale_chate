@@ -50,6 +50,25 @@ const getAudioConstraints = (): MediaTrackConstraints => ({
     sampleSize: { ideal: 16 },
 });
 
+// ─── Détection support navigateur ────────────────────────────────────────────
+
+const isMediaDevicesSupported = (): boolean => {
+    return typeof navigator !== 'undefined' && 
+           !!navigator.mediaDevices && 
+           typeof navigator.mediaDevices.getUserMedia === 'function';
+};
+
+const isIOS = (): boolean => {
+    if (typeof navigator === 'undefined') return false;
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+};
+
+const getIOSVersion = (): number => {
+    if (!isIOS()) return 0;
+    const match = navigator.userAgent.match(/OS (\d+)_/);
+    return match ? parseInt(match[1], 10) : 0;
+};
+
 // ─── Serveurs ICE (STUN public Google + TURN libres) ─────────────────────────
 // Note: Pour production, remplacez openrelay par votre TURN Coturn ou Metered payant
 const ICE_SERVERS: RTCIceServer[] = [
@@ -643,6 +662,27 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
             }, 45_000);
 
             try {
+                // Vérifier support getUserMedia
+                if (!isMediaDevicesSupported()) {
+                    const isIOSDevice = isIOS();
+                    const iOSVersion = getIOSVersion();
+                    
+                    if (isIOSDevice && iOSVersion < 11) {
+                        throw new Error('iOS 11+ requis pour les appels. Veuillez mettre à jour votre appareil.');
+                    }
+                    
+                    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+                        throw new Error('Les appels nécessitent une connexion sécurisée (HTTPS).');
+                    }
+                    
+                    throw new Error('Votre navigateur ne supporte pas les appels audio/vidéo.');
+                }
+
+                // Sur iOS, demander les permissions explicitement
+                if (isIOS()) {
+                    console.log('[Call] iOS detected, requesting media permissions...');
+                }
+
                 const stream = await navigator.mediaDevices.getUserMedia({
                     audio: getAudioConstraints(),
                     ...(type === 'video' && { video: getVideoConstraints() }),
@@ -688,9 +728,29 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
 
             } catch (err) {
                 console.error('[Call] Start error:', err);
-                const msg = err instanceof DOMException && err.name === 'NotAllowedError'
-                    ? 'Accès caméra/micro refusé. Vérifiez les permissions.'
-                    : "Impossible d'accéder à la caméra ou au microphone.";
+                
+                let msg = "Impossible d'accéder à la caméra ou au microphone.";
+                
+                if (err instanceof Error) {
+                    if (err.message.includes('iOS')) {
+                        msg = err.message;
+                    } else if (err.message.includes('HTTPS')) {
+                        msg = err.message;
+                    } else if (err.message.includes('supporte pas')) {
+                        msg = err.message;
+                    }
+                }
+                
+                if (err instanceof DOMException) {
+                    if (err.name === 'NotAllowedError') {
+                        msg = 'Accès caméra/micro refusé. Vérifiez les permissions dans Réglages > Safari > Microphone/Caméra.';
+                    } else if (err.name === 'NotFoundError') {
+                        msg = 'Aucun microphone ou caméra trouvé.';
+                    } else if (err.name === 'NotReadableError') {
+                        msg = 'Le microphone ou la caméra est déjà utilisé par une autre application.';
+                    }
+                }
+                
                 toast.error(msg);
                 dialingRef.current = false;
                 cleanupCall();
@@ -724,6 +784,11 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         setIncomingCallDataState(null);
 
         try {
+            // Vérifier support getUserMedia
+            if (!isMediaDevicesSupported()) {
+                throw new Error('Votre navigateur ne supporte pas les appels audio/vidéo.');
+            }
+
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: getAudioConstraints(),
                 ...(isVideo && { video: getVideoConstraints() }),
@@ -809,6 +874,12 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     const toggleSpeaker = useCallback(async () => {
         const video = remoteVideoRef.current as (HTMLVideoElement & { setSinkId?: (id: string) => Promise<void> }) | null;
         if (!video || typeof video.setSinkId !== 'function') return;
+        
+        if (!isMediaDevicesSupported()) {
+            toast.error('Votre navigateur ne supporte pas le changement de sortie audio.');
+            return;
+        }
+        
         try {
             if (isSpeakerOn) {
                 await video.setSinkId('');
@@ -828,6 +899,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
             setIsSpeakerOn((prev) => !prev);
         } catch (e) {
             console.warn('[Call] Speaker toggle:', e);
+            toast.error('Impossible de changer la sortie audio.');
         }
     }, [isSpeakerOn]);
 
@@ -858,6 +930,8 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
 
     // ── Pré-chauffage média (réduit le délai au premier appel) ─────────────────
     const prewarmMedia = useCallback(async () => {
+        if (!isMediaDevicesSupported()) return;
+        
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: 'user', width: { ideal: 320 }, height: { ideal: 240 } },
