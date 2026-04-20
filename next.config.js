@@ -89,9 +89,11 @@ const nextConfig = {
       },
     ];
   },
-  turbopack: {
-    root: __dirname,
+  experimental: {
+    optimizePackageImports: ['@tiptap/react', '@tiptap/starter-kit', '@tiptap/extension-underline', '@tiptap/extension-task-item', '@tiptap/extension-task-list'],
   },
+  // Turbopack config (empty to satisfy Next.js 16)
+  turbopack: {},
   webpack: (config, { defaultLoaders }) => {
     // Forcer la racine du projet pour éviter la résolution depuis /Users/paulkone
     config.resolve = config.resolve || {};

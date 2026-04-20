@@ -26,6 +26,7 @@ import { toast } from 'sonner';
 import { startRingtone, stopRingtone } from '@/src/lib/ringtone';
 import { safePlay } from '@/src/lib/safe-media-play';
 import { processAudioStream, combineProcessedAudioWithVideo } from '@/src/lib/audio-processor';
+import { getGlobalDuckingController, destroyGlobalDuckingController } from '@/src/lib/audio-ducking';
 
 // ─── Contraintes média ────────────────────────────────────────────────────────
 
@@ -60,7 +61,7 @@ const isMediaDevicesSupported = (): boolean => {
 
 const isIOS = (): boolean => {
     if (typeof navigator === 'undefined') return false;
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as unknown as { MSStream: unknown }).MSStream;
 };
 
 const getIOSVersion = (): number => {
@@ -78,6 +79,8 @@ const ICE_SERVERS: RTCIceServer[] = [
     { urls: 'stun:stun2.l.google.com:19302' },
     { urls: 'stun:stun3.l.google.com:19302' },
     { urls: 'stun:stun4.l.google.com:19302' },
+    // STUN IPv6 Google
+    { urls: 'stun:stun.ipv6.google.com:19302' },
     // STUN Mozilla (backup)
     { urls: 'stun:stun.services.mozilla.com' },
     // TURN openrelay (fallback NAT symétrique)
@@ -95,6 +98,18 @@ const ICE_SERVERS: RTCIceServer[] = [
         urls: 'turn:openrelay.metered.ca:80?transport=udp',
         username: 'openrelayproject',
         credential: 'openrelayproject',
+    },
+    // TURN backup viagenie (redondance)
+    {
+        urls: 'turn:numb.viagenie.ca:3478',
+        username: 'webrtc@live.com',
+        credential: 'muazkh',
+    },
+    // TURN relay.webfps.io (backup)
+    {
+        urls: 'turn:relay.webfps.io:443',
+        username: 'webrtc',
+        credential: 'webrtc',
     },
 ];
 
@@ -141,16 +156,42 @@ async function applyAdaptiveBitrate(
             pc.getSenders().map(async (sender) => {
                 if (!sender.track) return;
                 const params = sender.getParameters();
-                if (!params.encodings?.length) params.encodings = [{}];
+                if (!params.encodings?.length) {
+                    // Initialiser avec simulcast pour la vidéo
+                    if (sender.track.kind === 'video') {
+                        params.encodings = [
+                            { rid: 'low', scaleResolutionDownBy: 4, maxBitrate: 150_000, priority: 'low' },
+                            { rid: 'mid', scaleResolutionDownBy: 2, maxBitrate: 500_000, priority: 'medium' },
+                            { rid: 'high', scaleResolutionDownBy: 1, maxBitrate: videoBps, priority: 'high' },
+                        ];
+                    } else {
+                        params.encodings = [{}];
+                    }
+                }
+                
                 const enc = params.encodings[0];
 
                 if (sender.track.kind === 'video') {
-                    enc.maxBitrate = videoBps;
-                    enc.maxFramerate = profile === 'poor' ? 15 : 30;
-                    enc.priority = 'high';
-                    enc.networkPriority = 'high';
-                    // @ts-expect-error — non-standard mais supporté Chrome/Edge
-                    enc.degradationPreference = profile === 'poor' ? 'maintain-resolution' : 'maintain-framerate';
+                    // Mettre à jour les paramètres de simulcast
+                    params.encodings.forEach((encoding, idx) => {
+                        const baseBitrate = idx === 0 ? 150_000 : idx === 1 ? 500_000 : videoBps;
+                        
+                        encoding.maxBitrate = profile === 'poor' && idx === 2 ? 150_000 : baseBitrate;
+                        encoding.maxFramerate = profile === 'poor' ? 15 : 30;
+                        encoding.priority = idx === 2 ? 'high' : 'medium';
+                        encoding.networkPriority = idx === 2 ? 'high' : 'medium';
+                        // @ts-expect-error — non-standard mais supporté Chrome/Edge
+                        encoding.degradationPreference = profile === 'poor' ? 'maintain-resolution' : 'maintain-framerate';
+                        
+                        // Activer/désactiver les couches selon le profil réseau
+                        if (profile === 'poor') {
+                            encoding.active = idx === 0; // Seulement la couche basse
+                        } else if (profile === 'fair') {
+                            encoding.active = idx <= 1; // Couches basse et moyenne
+                        } else {
+                            encoding.active = true; // Toutes les couches
+                        }
+                    });
                 } else if (sender.track.kind === 'audio') {
                     enc.maxBitrate = audioBps;
                     enc.priority = 'high';
@@ -256,6 +297,10 @@ interface CallContextValue {
     callDuration: number;
     connectionQuality: ConnectionQuality | null;
     networkProfile: NetworkProfile | null;
+    remoteIsSpeaking: boolean;
+    isVideoAutoDisabled: boolean;
+    facingMode: 'user' | 'environment';
+    autoVideoFallback: boolean;
 
     startCall: (conversationId: string, otherUserId: string, otherUserName: string, callType?: CallType) => Promise<void>;
     answerCall: () => Promise<void>;
@@ -265,6 +310,8 @@ interface CallContextValue {
     toggleMute: () => void;
     toggleVideoCamera: () => void;
     toggleSpeaker: () => void;
+    toggleCameraFacing: () => Promise<void>;
+    setAutoVideoFallback: (enabled: boolean) => void;
 
     setIncomingCallData: (data: IncomingCallData | null) => void;
     setRemoteVideoRef: (el: HTMLVideoElement | null) => void;
@@ -330,6 +377,10 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     const [callDuration, setCallDuration] = useState(0);
     const [connectionQuality, setConnectionQuality] = useState<ConnectionQuality | null>(null);
     const [networkProfile, setNetworkProfile] = useState<NetworkProfile | null>(null);
+    const [remoteIsSpeaking, setRemoteIsSpeaking] = useState(false);
+    const [isVideoAutoDisabled, setIsVideoAutoDisabled] = useState(false);
+    const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
+    const [autoVideoFallback, setAutoVideoFallback] = useState(true);
 
     const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
     const localStreamRef = useRef<MediaStream | null>(null);
@@ -344,6 +395,8 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     const activeCallRef = useRef(activeCall);
     const dialingRef = useRef(false);
     const iceRestartAttemptRef = useRef(0);
+    const poorNetworkCounterRef = useRef(0);
+    const goodNetworkCounterRef = useRef(0);
     activeCallRef.current = activeCall;
     localStreamRef.current = localStream;
 
@@ -370,6 +423,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
 
         let prevPacketsLost = 0;
         let prevPacketsSent = 0;
+        let prevAudioLevel = 0;
 
         statsIntervalRef.current = setInterval(async () => {
             if (pc.connectionState === 'closed') return;
@@ -380,6 +434,8 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                 let packetsSent = 0;
                 let jitter = 0;
                 let availableBandwidth = 0;
+                let remoteAudioLevel = 0;
+                let hasRemoteAudio = false;
 
                 stats.forEach((report) => {
                     if (report.type === 'remote-inbound-rtp' && report.kind === 'video') {
@@ -393,7 +449,26 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                     if (report.type === 'candidate-pair' && report.state === 'succeeded') {
                         availableBandwidth = report.availableOutgoingBitrate ?? 0;
                     }
+                    // VAD - Voice Activity Detection depuis les stats audio distantes
+                    if (report.type === 'inbound-rtp' && report.kind === 'audio') {
+                        hasRemoteAudio = true;
+                        // audioLevel est en dBov, -127 = silence, 0 = max
+                        const level = report.audioLevel ?? -127;
+                        // Normaliser entre 0 et 1, seuil à -40dB
+                        remoteAudioLevel = level > -40 ? Math.min(1, (level + 40) / 40) : 0;
+                    }
                 });
+
+                // Détection parole distante (VAD simple)
+                if (hasRemoteAudio) {
+                    const isSpeaking = remoteAudioLevel > 0.1; // Seuil de 10%
+                    // Lissage pour éviter les changements trop rapides
+                    if (isSpeaking !== remoteIsSpeaking) {
+                        const smoothedLevel = prevAudioLevel * 0.7 + remoteAudioLevel * 0.3;
+                        setRemoteIsSpeaking(smoothedLevel > 0.15);
+                    }
+                    prevAudioLevel = remoteAudioLevel;
+                }
 
                 const lostDelta = Math.max(0, packetsLost - prevPacketsLost);
                 const sentDelta = Math.max(1, packetsSent - prevPacketsSent);
@@ -424,23 +499,55 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                 setConnectionQuality(displayQuality);
                 setNetworkProfile(profile);
 
+                // Fallback automatique video → audio si réseau poor
+                if (autoVideoFallback && callType === 'video' && !isVideoAutoDisabled) {
+                    if (profile === 'poor') {
+                        poorNetworkCounterRef.current += 1;
+                        goodNetworkCounterRef.current = 0;
+                        // Après 2 cycles (~6s) en poor, désactiver la vidéo
+                        if (poorNetworkCounterRef.current >= 2) {
+                            console.log('[Call] Network poor - auto-disabling video');
+                            localStreamRef.current?.getVideoTracks().forEach((track) => {
+                                track.enabled = false;
+                            });
+                            setIsVideoOn(false);
+                            setIsVideoAutoDisabled(true);
+                            toast.info('Vidéo désactivée pour stabiliser l\'appel');
+                            // Notifier l'autre pair
+                            if (activeCallRef.current) {
+                                emitCallSignal('call:video-disabled', { 
+                                    targetUserId: activeCallRef.current.otherUserId 
+                                });
+                            }
+                        }
+                    } else if (profile === 'good' || profile === 'excellent') {
+                        goodNetworkCounterRef.current += 1;
+                        if (goodNetworkCounterRef.current >= 3) {
+                            poorNetworkCounterRef.current = 0;
+                        }
+                    }
+                }
+
                 // Adapter le bitrate selon le profil
                 await applyAdaptiveBitrate(pc, profile);
 
                 if (process.env.NODE_ENV === 'development') {
-                    console.debug(`[Call Stats] RTT=${(rtt * 1000).toFixed(0)}ms loss=${lossRate.toFixed(1)}% jitter=${(jitter * 1000).toFixed(1)}ms bw=${bwMbps.toFixed(2)}Mbps → ${profile}`);
+                    console.debug(`[Call Stats] RTT=${(rtt * 1000).toFixed(0)}ms loss=${lossRate.toFixed(1)}% jitter=${(jitter * 1000).toFixed(1)}ms bw=${bwMbps.toFixed(2)}Mbps audioLevel=${remoteAudioLevel.toFixed(2)} → ${profile}`);
                 }
             } catch {
                 // Stats non disponibles encore
             }
         }, 3000); // Toutes les 3 secondes
-    }, []);
+    }, [autoVideoFallback, callType, isVideoAutoDisabled, remoteIsSpeaking, emitCallSignal]);
 
     // ── Cleanup ────────────────────────────────────────────────────────────────
     const cleanupCall = useCallback(() => {
         // Audio processor
         audioProcessorDisconnectRef.current?.();
         audioProcessorDisconnectRef.current = null;
+
+        // Audio ducking
+        destroyGlobalDuckingController();
 
         // Arrêter les tracks locaux
         if (localStreamRef.current) {
@@ -464,6 +571,8 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
 
         iceCandidateBufferRef.current = [];
         iceRestartAttemptRef.current = 0;
+        poorNetworkCounterRef.current = 0;
+        goodNetworkCounterRef.current = 0;
 
         // Notification
         if (activeCallNotificationRef.current) {
@@ -486,6 +595,9 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         setIsSpeakerOn(false);
         setConnectionQuality(null);
         setNetworkProfile(null);
+        setRemoteIsSpeaking(false);
+        setIsVideoAutoDisabled(false);
+        setFacingMode('user');
     }, []);
 
     const startCallTimer = useCallback(() => {
@@ -581,11 +693,15 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
             }
             if (state === 'connected') {
                 startStatsMonitoring(pc);
+                // Démarrer le ducking audio
+                getGlobalDuckingController().start();
             } else if (state === 'failed' || state === 'closed') {
                 if (statsIntervalRef.current) {
                     clearInterval(statsIntervalRef.current);
                     statsIntervalRef.current = null;
                 }
+                // Arrêter le ducking audio
+                destroyGlobalDuckingController();
             }
         };
 
@@ -869,7 +985,11 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
             track.enabled = !track.enabled;
         });
         setIsVideoOn((prev) => !prev);
-    }, []);
+        // Si on réactive manuellement, réinitialiser le flag auto-disabled
+        if (!isVideoOn) {
+            setIsVideoAutoDisabled(false);
+        }
+    }, [isVideoOn]);
 
     const toggleSpeaker = useCallback(async () => {
         const video = remoteVideoRef.current as (HTMLVideoElement & { setSinkId?: (id: string) => Promise<void> }) | null;
@@ -902,6 +1022,64 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
             toast.error('Impossible de changer la sortie audio.');
         }
     }, [isSpeakerOn]);
+
+    // ── Basculement caméra (front/back) ─────────────────────────────────────────
+    const toggleCameraFacing = useCallback(async () => {
+        const pc = peerConnectionRef.current;
+        const stream = localStreamRef.current;
+        if (!pc || !stream) return;
+
+        const videoTrack = stream.getVideoTracks()[0];
+        if (!videoTrack) return;
+
+        const newFacingMode = facingMode === 'user' ? 'environment' : 'user';
+
+        try {
+            // Obtenir un nouveau stream avec la caméra opposée
+            const newStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: newFacingMode,
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                },
+                audio: false, // On garde l'audio existant
+            });
+
+            const newVideoTrack = newStream.getVideoTracks()[0];
+            if (!newVideoTrack) {
+                toast.error('Caméra non disponible');
+                return;
+            }
+
+            // Remplacer la track sur le peer connection
+            const sender = pc.getSenders().find((s) => s.track?.kind === 'video');
+            if (sender) {
+                await sender.replaceTrack(newVideoTrack);
+            }
+
+            // Arrêter l'ancienne track vidéo
+            videoTrack.stop();
+
+            // Mettre à jour le stream local
+            stream.removeTrack(videoTrack);
+            stream.addTrack(newVideoTrack);
+            setLocalStream(stream); // Trigger re-render
+            setFacingMode(newFacingMode);
+
+            // Notifier l'autre pair (info seulement)
+            if (activeCallRef.current) {
+                emitCallSignal('call:video-flipped', {
+                    targetUserId: activeCallRef.current.otherUserId,
+                    facingMode: newFacingMode,
+                });
+            }
+
+            toast.success(newFacingMode === 'user' ? 'Caméra frontale' : 'Caméra arrière');
+        } catch (err) {
+            console.error('[Call] Camera flip error:', err);
+            toast.error('Impossible de basculer la caméra');
+        }
+    }, [facingMode, emitCallSignal]);
 
     // ── Données appel entrant ──────────────────────────────────────────────────
     const setIncomingCallData = useCallback((data: IncomingCallData | null) => {
@@ -1144,6 +1322,10 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         callDuration,
         connectionQuality,
         networkProfile,
+        remoteIsSpeaking,
+        isVideoAutoDisabled,
+        facingMode,
+        autoVideoFallback,
         startCall,
         answerCall,
         answerCallWithData,
@@ -1152,6 +1334,8 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         toggleMute,
         toggleVideoCamera,
         toggleSpeaker,
+        toggleCameraFacing,
+        setAutoVideoFallback,
         setIncomingCallData,
         setRemoteVideoRef,
         prewarmMedia,

@@ -126,6 +126,98 @@ export class AudioRecorder {
 }
 
 /**
+ * Compress audio blob to lower bitrate (target: ~64kbps Opus)
+ * Returns a new blob at 22kHz mono (significant size reduction)
+ */
+export async function compressAudioBlob(blob: Blob): Promise<Blob> {
+    try {
+        const arrayBuffer = await blob.arrayBuffer();
+        const audioContext = new AudioContext({ sampleRate: 48000 });
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+        // Target: 22kHz mono, mono, ~64kbps Opus
+        const targetSampleRate = 22050;
+        const numChannels = 1;
+        const length = Math.floor(audioBuffer.length * targetSampleRate / audioBuffer.sampleRate);
+
+        const offlineCtx = new OfflineAudioContext(numChannels, length, targetSampleRate);
+        const bufferSource = offlineCtx.createBufferSource();
+        bufferSource.buffer = audioBuffer;
+        bufferSource.connect(offlineCtx.destination);
+        bufferSource.start();
+
+        const renderedBuffer = await offlineCtx.startRendering();
+
+        // Encode to WAV (simpler, acceptable for voice)
+        const wavBlob = audioBufferToWav(renderedBuffer);
+        await audioContext.close();
+        return wavBlob;
+    } catch (err) {
+        console.warn('[Audio] Compression failed, using original:', err);
+        return blob;
+    }
+}
+
+/** Encode AudioBuffer to WAV blob */
+function audioBufferToWav(buffer: AudioBuffer): Blob {
+    const numChannels = buffer.numberOfChannels;
+    const sampleRate = buffer.sampleRate;
+    const format = 1; // PCM
+    const bitDepth = 16;
+    const bytesPerSample = bitDepth / 8;
+    const blockAlign = numChannels * bytesPerSample;
+    const dataSize = buffer.length * blockAlign;
+    const headerSize = 44;
+    const totalSize = headerSize + dataSize;
+
+    const wav = new ArrayBuffer(totalSize);
+    const view = new DataView(wav);
+
+    // RIFF header
+    writeString(view, 0, 'RIFF');
+    view.setUint32(4, totalSize - 8, true);
+    writeString(view, 8, 'WAVE');
+
+    // fmt chunk
+    writeString(view, 12, 'fmt ');
+    view.setUint32(16, 16, true); // chunk size
+    view.setUint16(20, format, true);
+    view.setUint16(22, numChannels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * blockAlign, true);
+    view.setUint16(32, blockAlign, true);
+    view.setUint16(34, bitDepth, true);
+
+    // data chunk
+    writeString(view, 36, 'data');
+    view.setUint32(40, dataSize, true);
+
+    // Write interleaved samples
+    const channelData: Float32Array[] = [];
+    for (let c = 0; c < numChannels; c++) {
+        channelData.push(buffer.getChannelData(c));
+    }
+
+    let offset = 44;
+    for (let i = 0; i < buffer.length; i++) {
+        for (let c = 0; c < numChannels; c++) {
+            const sample = Math.max(-1, Math.min(1, channelData[c][i]));
+            const int16 = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+            view.setInt16(offset, int16, true);
+            offset += 2;
+        }
+    }
+
+    return new Blob([wav], { type: 'audio/wav' });
+}
+
+function writeString(view: DataView, offset: number, str: string) {
+    for (let i = 0; i < str.length; i++) {
+        view.setUint8(offset + i, str.charCodeAt(i));
+    }
+}
+
+/**
  * Format milliseconds to MM:SS string
  */
 export function formatDuration(ms: number): string {

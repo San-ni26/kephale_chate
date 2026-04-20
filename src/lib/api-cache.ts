@@ -8,7 +8,17 @@
 
 const API_CACHE_NAME = 'mango-v1-api';
 
-const cacheServedKeys = new Set<string>();
+// TTL de 60 secondes pour le cache served keys
+const CACHE_TTL_MS = 60_000;
+const cacheServedKeys = new Map<string, number>(); // url → timestamp
+
+/** Nettoie les entrées expirées du cache served keys */
+function cleanupExpiredCache() {
+    const now = Date.now();
+    for (const [key, ts] of cacheServedKeys) {
+        if (now - ts > CACHE_TTL_MS) cacheServedKeys.delete(key);
+    }
+}
 
 /** Strip le champ `data` des attachments pour éviter de cacher du base64 lourd */
 function stripAttachmentData(messages: any[]): any[] {
@@ -111,13 +121,18 @@ export function createCacheAwareFetcher<T>(
     fetcher: (url: string) => Promise<T>
 ): (url: string) => Promise<T> {
     return async (url: string): Promise<T> => {
-        if (cacheServedKeys.has(url)) {
+        // Nettoyage périodique des entrées expirées
+        cleanupExpiredCache();
+
+        const lastServed = cacheServedKeys.get(url);
+        if (lastServed !== undefined) {
+            // Refresh: ne sert pas le cache, fetch direct
             cacheServedKeys.delete(url);
             return fetcher(url);
         }
         const cached = await getCachedApiResponse<T>(url);
         if (cached != null) {
-            cacheServedKeys.add(url);
+            cacheServedKeys.set(url, Date.now());
             return cached;
         }
         return fetcher(url);

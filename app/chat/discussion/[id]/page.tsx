@@ -13,6 +13,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Button } from '@/src/components/ui/button';
@@ -402,6 +403,24 @@ export default function DiscussionPage() {
     isCallActiveRef.current = callContext?.activeCall !== null;
     const [isAtBottom, setIsAtBottom] = useState(true);
 
+    // ── Virtualizer for message list ──
+    const rowVirtualizer = useVirtualizer({
+        count: uniqueMessages.length,
+        getScrollElement: () => scrollRef.current,
+        estimateSize: (index) => {
+            const msg = uniqueMessages[index];
+            if (!msg) return 80;
+            // Estimation basée sur le contenu
+            const baseHeight = 60;
+            const contentHeight = msg.content ? Math.ceil(msg.content.length / 50) * 20 : 0;
+            const attachmentHeight = msg.attachments?.length ? msg.attachments.length * 120 : 0;
+            return Math.max(80, baseHeight + contentHeight + attachmentHeight);
+        },
+        overscan: 5,
+        getItemKey: (index) => uniqueMessages[index]?.id ?? index,
+        measureElement: (element) => element.getBoundingClientRect().height,
+    });
+
     const scrollToBottom = useCallback((instant?: boolean) => {
         const doScroll = () => {
             const container = scrollRef.current;
@@ -592,14 +611,23 @@ export default function DiscussionPage() {
         return () => { if (typeof sessionStorage !== 'undefined') sessionStorage.removeItem(`unlocked_${conversationId}`); };
     }, [conversationId]);
 
-    // ── Polling fallback (Quick Win #1) ──
+    // ── Polling fallback — only when WebSocket disconnected ──
+    // Use refs to avoid stale closures in timers
+    const isConnectedRef = useRef(isConnected);
+    isConnectedRef.current = isConnected;
+    const messagesRef = useRef(messages);
+    messagesRef.current = messages;
+
     useEffect(() => {
         if (!conversationId || loading) return;
-        const quickCheck = setTimeout(async () => {
-            if (isConnected) return;
+
+        // Quick check: try polling once after 1.5s if still disconnected
+        const quickTimer = setTimeout(async () => {
+            if (isConnectedRef.current) return;
+            const msgs = messagesRef.current;
+            const lastMsg = [...msgs].reverse().find(m => !m.id.startsWith('temp-'));
+            if (!lastMsg) return;
             try {
-                const lastMsg = [...messages].reverse().find(m => !m.id.startsWith('temp-'));
-                if (!lastMsg) return;
                 const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages?after=${lastMsg.createdAt}&limit=20`);
                 if (res.ok) {
                     const data = await res.json();
@@ -613,17 +641,14 @@ export default function DiscussionPage() {
                 }
             } catch { }
         }, 1500);
-        return () => clearTimeout(quickCheck);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [conversationId, loading, isConnected]);
 
-    useEffect(() => {
-        if (!conversationId || loading) return;
+        // Periodic polling every 30s only when disconnected
         const interval = setInterval(async () => {
-            if (isConnected) return;
+            if (isConnectedRef.current) return;
+            const msgs = messagesRef.current;
+            const lastMsg = [...msgs].reverse().find(m => !m.id.startsWith('temp-'));
+            if (!lastMsg) return;
             try {
-                const lastMsg = [...messages].reverse().find(m => !m.id.startsWith('temp-'));
-                if (!lastMsg) return;
                 const res = await fetchWithAuth(`/api/conversations/${conversationId}/messages?after=${lastMsg.createdAt}&limit=20`);
                 if (res.ok) {
                     const data = await res.json();
@@ -637,9 +662,13 @@ export default function DiscussionPage() {
                 }
             } catch { }
         }, 30000);
-        return () => clearInterval(interval);
+
+        return () => {
+            clearTimeout(quickTimer);
+            clearInterval(interval);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [conversationId, loading, isConnected]);
+    }, [conversationId, loading]);
 
     // ── Clé privée ──
     useEffect(() => {
@@ -996,56 +1025,74 @@ export default function DiscussionPage() {
 
             {/* ── Liste des messages ── */}
             <div
-                className={cn("flex-1 overflow-y-auto px-4 pb-32 md:pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-0", deletionRequest ? "pt-36 md:pt-16" : "pt-16")}
+                className={cn("flex-1 overflow-y-auto pb-32 md:pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-0", deletionRequest ? "pt-36 md:pt-16" : "pt-16")}
                 ref={scrollRef}
                 onScroll={handleScroll}
             >
                 {refreshing && (
-                    <div className="flex justify-center py-2">
+                    <div className="flex justify-center py-2 px-4">
                         <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
                     </div>
                 )}
-                <ScreenshotBlocker enabled={shouldBlockScreenshot} className="min-h-full">
-                    {hasMore && (
-                        <div className="flex justify-center py-2">
-                            <Button variant="ghost" size="sm" onClick={loadMoreHistory} disabled={loadingMore} className="text-muted-foreground text-xs h-6">
-                                {loadingMore ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <ArrowUp className="w-3 h-3 mr-1" />}
-                                Charger plus anciens
-                            </Button>
-                        </div>
-                    )}
-                    {uniqueMessages.map((message, idx) => {
-                        const prevMsg = idx > 0 ? uniqueMessages[idx - 1] : null;
-                        const nextMsg = idx < uniqueMessages.length - 1 ? uniqueMessages[idx + 1] : null;
-                        const isFirstInGroup = !prevMsg || prevMsg.senderId !== message.senderId;
-                        const isLastInGroup = !nextMsg || nextMsg.senderId !== message.senderId;
+                {hasMore && (
+                    <div className="flex justify-center py-2 px-4">
+                        <Button variant="ghost" size="sm" onClick={loadMoreHistory} disabled={loadingMore} className="text-muted-foreground text-xs h-6">
+                            {loadingMore ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <ArrowUp className="w-3 h-3 mr-1" />}
+                            Charger plus anciens
+                        </Button>
+                    </div>
+                )}
+                <ScreenshotBlocker enabled={shouldBlockScreenshot} className="min-h-full relative">
+                    <div
+                        className="relative w-full"
+                        style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+                    >
+                        {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+                            const message = uniqueMessages[virtualItem.index];
+                            const prevMsg = virtualItem.index > 0 ? uniqueMessages[virtualItem.index - 1] : null;
+                            const nextMsg = virtualItem.index < uniqueMessages.length - 1 ? uniqueMessages[virtualItem.index + 1] : null;
+                            const isFirstInGroup = !prevMsg || prevMsg.senderId !== message.senderId;
+                            const isLastInGroup = !nextMsg || nextMsg.senderId !== message.senderId;
 
-                        return (
-                            <div key={stableMessageKeysRef.current.get(message.id) ?? message.id} className={cn(isLastInGroup ? 'mb-2' : 'mb-0.5')}>
-                                <DiscussionMessageBubble
-                                    message={message}
-                                    displayCreatedAt={stableMessageTimestampsRef.current.get(message.id)}
-                                    isOwn={message.senderId === currentUser?.id}
-                                    canEdit={editableMessageIds.has(message.id)}
-                                    currentUser={currentUser ?? null}
-                                    otherUser={otherUser ?? null}
-                                    privateKey={privateKey}
-                                    isEditing={editingMessageId === message.id}
-                                    editContent={editContent}
-                                    onEditContentChange={setEditContent}
-                                    onEditOpen={content => handleEditOpen(message.id, content)}
-                                    onEditSave={() => handleEditMessage(message.id, editContent, handleEditCancel)}
-                                    onEditCancel={handleEditCancel}
-                                    onDelete={() => handleDeleteMessage(message.id)}
-                                    onRetry={failedMessagePayloads.has(message.id) ? () => handleRetryMessage(message.id) : undefined}
-                                    isFailed={failedMessagePayloads.has(message.id)}
-                                    isBlurred={blurredMessageIds.has(message.id)}
-                                    isFirstInGroup={isFirstInGroup}
-                                    isLastInGroup={isLastInGroup}
-                                />
-                            </div>
-                        );
-                    })}
+                            return (
+                                <div
+                                    key={virtualItem.key}
+                                    data-index={virtualItem.index}
+                                    ref={rowVirtualizer.measureElement}
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        transform: `translateY(${virtualItem.start}px)`,
+                                    }}
+                                    className={cn('px-4 py-1.5', isLastInGroup ? 'mb-3' : 'mb-1')}
+                                >
+                                    <DiscussionMessageBubble
+                                        message={message}
+                                        displayCreatedAt={stableMessageTimestampsRef.current.get(message.id)}
+                                        isOwn={message.senderId === currentUser?.id}
+                                        canEdit={editableMessageIds.has(message.id)}
+                                        currentUser={currentUser ?? null}
+                                        otherUser={otherUser ?? null}
+                                        privateKey={privateKey}
+                                        isEditing={editingMessageId === message.id}
+                                        editContent={editContent}
+                                        onEditContentChange={setEditContent}
+                                        onEditOpen={content => handleEditOpen(message.id, content)}
+                                        onEditSave={() => handleEditMessage(message.id, editContent, handleEditCancel)}
+                                        onEditCancel={handleEditCancel}
+                                        onDelete={() => handleDeleteMessage(message.id)}
+                                        onRetry={failedMessagePayloads.has(message.id) ? () => handleRetryMessage(message.id) : undefined}
+                                        isFailed={failedMessagePayloads.has(message.id)}
+                                        isBlurred={blurredMessageIds.has(message.id)}
+                                        isFirstInGroup={isFirstInGroup}
+                                        isLastInGroup={isLastInGroup}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
                     {typingCount > 0 && (
                         <div className="flex justify-start items-center gap-1.5 py-0.5 animate-pulse">
                             <span className="flex gap-0.5">

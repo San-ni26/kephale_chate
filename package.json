@@ -23,6 +23,7 @@
     "@react-google-maps/api": "^2.20.8",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.0",
+    "@tanstack/react-virtual": "^3.13.24",
     "@tiptap/extension-task-item": "^3.19.0",
     "@tiptap/extension-task-list": "^3.19.0",
     "@tiptap/extension-underline": "^3.19.0",

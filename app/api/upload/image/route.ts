@@ -56,8 +56,13 @@ export async function POST(request: NextRequest) {
             .from(IMAGE_BUCKET)
             .getPublicUrl(storageKey);
 
+        // Return URLs for different sizes (Supabase transformations)
+        // Note: Enable image transformations in Supabase dashboard for these to work
+        const baseUrl = publicUrlData.publicUrl;
         return NextResponse.json({
-            url: publicUrlData.publicUrl,
+            url: baseUrl,
+            thumbnailUrl: `${baseUrl}?width=200&height=200&fit=cover`,
+            mediumUrl: `${baseUrl}?width=800&height=600&fit=cover`,
             storageKey,
         }, { status: 201 });
 

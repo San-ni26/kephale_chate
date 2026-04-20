@@ -26,6 +26,7 @@ import { fetchWithAuth, getAuthHeader } from '@/src/lib/auth-client';
 import { sendWithOfflineQueue } from '@/src/lib/offline-queue';
 import { addMessageToCache, removeMessageFromCache } from '@/src/lib/api-cache';
 import { encryptMessage } from '@/src/lib/crypto';
+import { compressAudioBlob } from '@/src/lib/audio-utils';
 
 export interface MessageAttachment {
     id?: string;
@@ -284,7 +285,10 @@ export function useDiscussionMessages({
             let payload: MessagePayload | null = null;
 
             try {
-                const uploaded = await uploadFileToSupabase(audioFile, 'audio', conversationId || 'unknown');
+                // Compress audio before upload (22kHz mono WAV for voice)
+                const compressedBlob = await compressAudioBlob(audioFile);
+                const compressedFile = new File([compressedBlob], audioFile.name.replace(/\.\w+$/, '.wav'), { type: 'audio/wav' });
+                const uploaded = await uploadFileToSupabase(compressedFile, 'audio', conversationId || 'unknown');
                 const attachment: MessageAttachment = { filename: audioFile.name, type: 'AUDIO', data: uploaded.url };
                 const encryptedContent = encryptMessage('', privateKey, otherUser.publicKey);
                 payload = { encryptedContent, attachments: [attachment] };

@@ -11,7 +11,7 @@
  * - CSS `will-change: transform` + `contain: strict` pour accélération GPU.
  */
 
-import { useRef, useEffect, memo, useCallback } from 'react';
+import { useRef, useEffect, memo, useCallback, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
@@ -31,6 +31,8 @@ import {
     Wifi,
     WifiOff,
     RefreshCw,
+    FlipHorizontal,
+    PictureInPicture,
 } from 'lucide-react';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -80,7 +82,7 @@ const RemoteVideo = memo(function RemoteVideo({ stream, className, hidden, onRef
             if (el.srcObject !== stream) el.srcObject = stream;
             if (el.paused) safePlay(el);
         }
-    }, [stream, onRef]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [stream, onRef]);
 
     return (
         <video
@@ -126,6 +128,24 @@ const LocalVideo = memo(function LocalVideo({ stream, className }: LocalVideoPro
     );
 });
 
+// ─── Indicateur VAD (Voice Activity Detection) — mémoïsé ─────────────────────
+
+interface VADIndicatorProps {
+    isSpeaking: boolean;
+    displayName: string;
+}
+
+const VADIndicator = memo(function VADIndicator({ isSpeaking, displayName }: VADIndicatorProps) {
+    if (!isSpeaking) return null;
+
+    return (
+        <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/50 text-blue-100 flex items-center gap-1 animate-pulse">
+            <Mic className="w-3 h-3" />
+            {displayName} parle...
+        </span>
+    );
+});
+
 // ─── Indicateur de qualité — mémoïsé (ne contient pas de vidéo) ───────────────
 
 interface QualityBadgeProps {
@@ -167,6 +187,44 @@ export function GlobalCallOverlay() {
     const pathname = usePathname();
     const router = useRouter();
     const ctx = useCallContext();
+    const remoteVideoRef = useRef<HTMLVideoElement>(null);
+
+    // Picture-in-Picture hooks (doivent être avant les early returns)
+    const [isPiPActive, setIsPiPActive] = useState(false);
+    const isPiPSupported = typeof document !== 'undefined' && 'pictureInPictureEnabled' in document && document.pictureInPictureEnabled;
+
+    const togglePiP = useCallback(async () => {
+        const video = remoteVideoRef.current;
+        if (!video) return;
+
+        try {
+            if (document.pictureInPictureElement === video) {
+                await document.exitPictureInPicture();
+                setIsPiPActive(false);
+            } else {
+                await video.requestPictureInPicture();
+                setIsPiPActive(true);
+            }
+        } catch (err) {
+            console.warn('[PiP] Error:', err);
+        }
+    }, []);
+
+    useEffect(() => {
+        const video = remoteVideoRef.current;
+        if (!video) return;
+
+        const handleEnterPiP = () => setIsPiPActive(true);
+        const handleLeavePiP = () => setIsPiPActive(false);
+
+        video.addEventListener('enterpictureinpicture', handleEnterPiP);
+        video.addEventListener('leavepictureinpicture', handleLeavePiP);
+
+        return () => {
+            video.removeEventListener('enterpictureinpicture', handleEnterPiP);
+            video.removeEventListener('leavepictureinpicture', handleLeavePiP);
+        };
+    }, [ctx?.remoteStream]);
 
     if (!ctx) return null;
 
@@ -183,12 +241,16 @@ export function GlobalCallOverlay() {
         isSpeakerOn,
         callDuration,
         connectionQuality,
+        remoteIsSpeaking,
+        isVideoAutoDisabled,
+        facingMode,
         answerCall,
         rejectCall,
         endCall,
         toggleMute,
         toggleVideoCamera,
         toggleSpeaker,
+        toggleCameraFacing,
         setRemoteVideoRef,
     } = ctx;
 
@@ -212,6 +274,9 @@ export function GlobalCallOverlay() {
     const handleRejoin = () => {
         if (activeCall) router.push(`/chat/discussion/${activeCall.conversationId}`);
     };
+
+    // Détection mobile pour afficher le bouton de basculement caméra
+    const isMobile = typeof window !== 'undefined' && /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     // ── Mode compact ────────────────────────────────────────────────────────────
     if (compactMode) {
@@ -276,7 +341,14 @@ export function GlobalCallOverlay() {
                 </div>
                 {/* Audio distant en mode compact — RemoteVideo mémoïsé évite les re-renders */}
                 {remoteStream && isVideoCall && (
-                    <RemoteVideo stream={remoteStream} hidden onRef={setRemoteVideoRef} />
+                    <RemoteVideo 
+                        stream={remoteStream} 
+                        hidden 
+                        onRef={(el) => {
+                            setRemoteVideoRef(el);
+                            (remoteVideoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
+                        }} 
+                    />
                 )}
             </div>
         );
@@ -297,7 +369,10 @@ export function GlobalCallOverlay() {
                             <>
                                 <RemoteVideo
                                     stream={remoteStream}
-                                    onRef={setRemoteVideoRef}
+                                    onRef={(el) => {
+                                        setRemoteVideoRef(el);
+                                        (remoteVideoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
+                                    }}
                                     className={cn(
                                         'w-full h-full object-cover',
                                         remoteStream.getVideoTracks().length === 0 && 'hidden'
@@ -346,7 +421,7 @@ export function GlobalCallOverlay() {
 
                     {/* Barre info haut — isolée, ne touche PAS aux vidéos */}
                     <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 bg-gradient-to-b from-black/70 to-transparent z-10 pointer-events-none">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 flex-wrap">
                             {isReconnecting ? (
                                 <RefreshCw className="w-3 h-3 text-amber-400 animate-spin" />
                             ) : (
@@ -354,6 +429,13 @@ export function GlobalCallOverlay() {
                             )}
                             <span className="font-semibold text-white drop-shadow-lg">{displayName}</span>
                             <QualityBadge quality={connectionQuality ?? ''} isReconnecting={isReconnecting} />
+                            <VADIndicator isSpeaking={remoteIsSpeaking} displayName={displayName} />
+                            {isVideoAutoDisabled && (
+                                <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/40 text-amber-100 flex items-center gap-1">
+                                    <VideoOff className="w-3 h-3" />
+                                    Vidéo auto-off
+                                </span>
+                            )}
                         </div>
                         <div className="flex items-center gap-1.5 text-white/90">
                             <Clock className="w-4 h-4" />
@@ -482,6 +564,41 @@ export function GlobalCallOverlay() {
                                     {isVideoOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
                                 </Button>
                                 <span className="text-white/60 text-xs">{isVideoOn ? 'Caméra' : 'Cam. off'}</span>
+                            </div>
+                        )}
+
+                        {/* Basculement caméra (mobile uniquement) */}
+                        {isVideoCall && isMobile && callStatus === 'connected' && (
+                            <div className="flex flex-col items-center gap-2">
+                                <Button
+                                    size="lg"
+                                    className="rounded-full w-14 h-14 shadow-lg transition-all active:scale-95 bg-white/20 text-white hover:bg-white/30"
+                                    onClick={toggleCameraFacing}
+                                    aria-label="Changer de caméra"
+                                >
+                                    <FlipHorizontal className="w-6 h-6" />
+                                </Button>
+                                <span className="text-white/60 text-xs">
+                                    {facingMode === 'user' ? 'Face' : 'Arrière'}
+                                </span>
+                            </div>
+                        )}
+
+                        {/* Picture-in-Picture */}
+                        {isVideoCall && isPiPSupported && callStatus === 'connected' && (
+                            <div className="flex flex-col items-center gap-2">
+                                <Button
+                                    size="lg"
+                                    className={cn(
+                                        'rounded-full w-14 h-14 shadow-lg transition-all active:scale-95',
+                                        isPiPActive ? 'bg-primary/60 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                    )}
+                                    onClick={togglePiP}
+                                    aria-label="Picture-in-Picture"
+                                >
+                                    <PictureInPicture className="w-6 h-6" />
+                                </Button>
+                                <span className="text-white/60 text-xs">PiP</span>
                             </div>
                         )}
 
