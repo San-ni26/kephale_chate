@@ -424,6 +424,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         let prevPacketsLost = 0;
         let prevPacketsSent = 0;
         let prevAudioLevel = 0;
+        let isCurrentlySpeaking = false; // Local state pour éviter les dépendances circulaires
 
         statsIntervalRef.current = setInterval(async () => {
             if (pc.connectionState === 'closed') return;
@@ -463,9 +464,10 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                 if (hasRemoteAudio) {
                     const isSpeaking = remoteAudioLevel > 0.1; // Seuil de 10%
                     // Lissage pour éviter les changements trop rapides
-                    if (isSpeaking !== remoteIsSpeaking) {
+                    if (isSpeaking !== isCurrentlySpeaking) {
                         const smoothedLevel = prevAudioLevel * 0.7 + remoteAudioLevel * 0.3;
-                        setRemoteIsSpeaking(smoothedLevel > 0.15);
+                        isCurrentlySpeaking = smoothedLevel > 0.15;
+                        setRemoteIsSpeaking(isCurrentlySpeaking);
                     }
                     prevAudioLevel = remoteAudioLevel;
                 }
@@ -538,7 +540,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                 // Stats non disponibles encore
             }
         }, 3000); // Toutes les 3 secondes
-    }, [autoVideoFallback, callType, isVideoAutoDisabled, remoteIsSpeaking, emitCallSignal]);
+    }, [autoVideoFallback, callType, isVideoAutoDisabled, emitCallSignal]);
 
     // ── Cleanup ────────────────────────────────────────────────────────────────
     const cleanupCall = useCallback(() => {

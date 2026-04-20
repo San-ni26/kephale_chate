@@ -41,7 +41,7 @@ import { LinkPreview } from './LinkPreview';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { useInitialMessages } from '@/src/hooks/useInitialMessages';
 import { useDiscussionLockState } from '@/src/hooks/useDiscussionLockState';
-import { useCallContext } from '@/src/contexts/CallContext';
+import { useCallContext, IncomingCallData } from '@/src/contexts/CallContext';
 import { useSetDiscussionBlur } from '@/src/contexts/DiscussionBlurContext';
 import { ScreenshotBlocker } from '@/src/components/chat/ScreenshotBlocker';
 import { cn } from '@/src/lib/utils';
@@ -399,6 +399,8 @@ export default function DiscussionPage() {
     const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isTypingRef = useRef(false);
     const callContext = useCallContext();
+    const callContextRef = useRef(callContext);
+    callContextRef.current = callContext;
     const isCallActiveRef = useRef(false);
     isCallActiveRef.current = callContext?.activeCall !== null;
     const [isAtBottom, setIsAtBottom] = useState(true);
@@ -539,9 +541,9 @@ export default function DiscussionPage() {
     // ── Call status au montage ──
     useEffect(() => {
         if (!conversationId) return;
-        const applyPendingCall = (data: any) => callContext?.setIncomingCallData(data);
+        const applyPendingCall = (data: unknown) => callContextRef.current?.setIncomingCallData?.(data as IncomingCallData);
         const checkCallStatus = async (claim = true) => {
-            if (isCallActiveRef.current && callContext?.activeCall?.conversationId === conversationId) return;
+            if (isCallActiveRef.current && callContextRef.current?.activeCall?.conversationId === conversationId) return;
             try {
                 const res = await fetchWithAuth(`/api/call/status?claim=${claim ? '1' : '0'}`);
                 if (!res.ok) return;
@@ -550,8 +552,8 @@ export default function DiscussionPage() {
                 if (pendingCall && pendingCall.conversationId !== conversationId) { router.push(`/chat/discussion/${pendingCall.conversationId}`); return; }
                 if (pendingCall && pendingCall.conversationId === conversationId) {
                     const shouldAutoAnswer = searchParams?.get('answer') === '1';
-                    if (shouldAutoAnswer && callContext?.answerCallWithData) {
-                        callContext.answerCallWithData(pendingCall);
+                    if (shouldAutoAnswer && callContextRef.current?.answerCallWithData) {
+                        callContextRef.current.answerCallWithData(pendingCall);
                         router.replace(`/chat/discussion/${conversationId}`, { scroll: false });
                     } else { applyPendingCall(pendingCall); }
                     return;
@@ -573,7 +575,7 @@ export default function DiscussionPage() {
         document.addEventListener('visibilitychange', onVisible);
         const retryTimer = setTimeout(() => { if (!isCallActiveRef.current) checkCallStatus(true); }, 800);
         return () => { document.removeEventListener('visibilitychange', onVisible); clearTimeout(retryTimer); };
-    }, [conversationId, router, callContext, searchParams]);
+    }, [conversationId, router, searchParams]);
 
     // ── Mark as read ──
     useEffect(() => {
@@ -798,12 +800,10 @@ export default function DiscussionPage() {
     const lockStateRef = useRef(lockState);
     const otherUserRef = useRef(otherUser);
     const isUnlockedSessionRef = useRef(isUnlockedSession);
-    const callContextRef = useRef(callContext);
     conversationRef.current = conversation;
     lockStateRef.current = lockState;
     otherUserRef.current = otherUser;
     isUnlockedSessionRef.current = isUnlockedSession;
-    callContextRef.current = callContext;
 
     useEffect(() => {
         const onLockClick = () => {

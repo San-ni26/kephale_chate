@@ -507,26 +507,26 @@ export function GlobalCallOverlay() {
             )}
 
             {/* ── Barre de contrôles (identique dans tous les états) ────────────── */}
-            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-5 pb-10 pt-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-20">
+            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-3 sm:gap-5 pb-6 sm:pb-10 pt-4 sm:pt-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-20 overflow-x-auto">
                 {isIncomingCall ? (
                     <>
                         <div className="flex flex-col items-center gap-2">
                             <Button
                                 size="lg"
-                                className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30 transition-transform active:scale-95"
+                                className="rounded-full w-14 h-14 sm:w-16 sm:h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30 transition-transform active:scale-95"
                                 onClick={rejectCall}
                             >
-                                <PhoneOff className="w-7 h-7 text-white" />
+                                <PhoneOff className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                             </Button>
                             <span className="text-white/60 text-xs">Refuser</span>
                         </div>
                         <div className="flex flex-col items-center gap-2">
                             <Button
                                 size="lg"
-                                className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/30 animate-pulse transition-transform active:scale-95"
+                                className="rounded-full w-14 h-14 sm:w-16 sm:h-16 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/30 animate-pulse transition-transform active:scale-95"
                                 onClick={answerCall}
                             >
-                                <PhoneIncoming className="w-7 h-7 text-white" />
+                                <PhoneIncoming className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                             </Button>
                             <span className="text-white/60 text-xs">Répondre</span>
                         </div>
@@ -534,51 +534,51 @@ export function GlobalCallOverlay() {
                 ) : (
                     <>
                         {/* Micro */}
-                        <div className="flex flex-col items-center gap-2">
+                        <div className="flex flex-col items-center gap-1 sm:gap-2">
                             <Button
                                 size="lg"
                                 className={cn(
-                                    'rounded-full w-14 h-14 shadow-lg transition-all active:scale-95',
+                                    'rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95',
                                     isMuted ? 'bg-red-500/80 text-white' : 'bg-white/20 text-white hover:bg-white/30'
                                 )}
                                 onClick={toggleMute}
                                 aria-label={isMuted ? 'Activer le micro' : 'Couper le micro'}
                             >
-                                {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+                                {isMuted ? <MicOff className="w-5 h-5 sm:w-6 sm:h-6" /> : <Mic className="w-5 h-5 sm:w-6 sm:h-6" />}
                             </Button>
-                            <span className="text-white/60 text-xs">{isMuted ? 'Micro off' : 'Micro'}</span>
+                            <span className="text-white/60 text-[10px] sm:text-xs">{isMuted ? 'Micro off' : 'Micro'}</span>
                         </div>
 
                         {/* Caméra (appel vidéo uniquement) */}
                         {isVideoCall && (
-                            <div className="flex flex-col items-center gap-2">
+                            <div className="flex flex-col items-center gap-1 sm:gap-2">
                                 <Button
                                     size="lg"
                                     className={cn(
-                                        'rounded-full w-14 h-14 shadow-lg transition-all active:scale-95',
+                                        'rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95',
                                         !isVideoOn ? 'bg-red-500/80 text-white' : 'bg-white/20 text-white hover:bg-white/30'
                                     )}
                                     onClick={toggleVideoCamera}
                                     aria-label={isVideoOn ? 'Couper la caméra' : 'Activer la caméra'}
                                 >
-                                    {isVideoOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
+                                    {isVideoOn ? <Video className="w-5 h-5 sm:w-6 sm:h-6" /> : <VideoOff className="w-5 h-5 sm:w-6 sm:h-6" />}
                                 </Button>
-                                <span className="text-white/60 text-xs">{isVideoOn ? 'Caméra' : 'Cam. off'}</span>
+                                <span className="text-white/60 text-[10px] sm:text-xs">{isVideoOn ? 'Caméra' : 'Cam. off'}</span>
                             </div>
                         )}
 
                         {/* Basculement caméra (mobile uniquement) */}
                         {isVideoCall && isMobile && callStatus === 'connected' && (
-                            <div className="flex flex-col items-center gap-2">
+                            <div className="flex flex-col items-center gap-1 sm:gap-2">
                                 <Button
                                     size="lg"
-                                    className="rounded-full w-14 h-14 shadow-lg transition-all active:scale-95 bg-white/20 text-white hover:bg-white/30"
+                                    className="rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95 bg-white/20 text-white hover:bg-white/30"
                                     onClick={toggleCameraFacing}
                                     aria-label="Changer de caméra"
                                 >
-                                    <FlipHorizontal className="w-6 h-6" />
+                                    <FlipHorizontal className="w-5 h-5 sm:w-6 sm:h-6" />
                                 </Button>
-                                <span className="text-white/60 text-xs">
+                                <span className="text-white/60 text-[10px] sm:text-xs">
                                     {facingMode === 'user' ? 'Face' : 'Arrière'}
                                 </span>
                             </div>
@@ -586,49 +586,49 @@ export function GlobalCallOverlay() {
 
                         {/* Picture-in-Picture */}
                         {isVideoCall && isPiPSupported && callStatus === 'connected' && (
-                            <div className="flex flex-col items-center gap-2">
+                            <div className="flex flex-col items-center gap-1 sm:gap-2">
                                 <Button
                                     size="lg"
                                     className={cn(
-                                        'rounded-full w-14 h-14 shadow-lg transition-all active:scale-95',
+                                        'rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95',
                                         isPiPActive ? 'bg-primary/60 text-white' : 'bg-white/20 text-white hover:bg-white/30'
                                     )}
                                     onClick={togglePiP}
                                     aria-label="Picture-in-Picture"
                                 >
-                                    <PictureInPicture className="w-6 h-6" />
+                                    <PictureInPicture className="w-5 h-5 sm:w-6 sm:h-6" />
                                 </Button>
-                                <span className="text-white/60 text-xs">PiP</span>
+                                <span className="text-white/60 text-[10px] sm:text-xs">PiP</span>
                             </div>
                         )}
 
                         {/* Haut-parleur */}
-                        <div className="flex flex-col items-center gap-2">
+                        <div className="flex flex-col items-center gap-1 sm:gap-2">
                             <Button
                                 size="lg"
                                 className={cn(
-                                    'rounded-full w-14 h-14 shadow-lg transition-all active:scale-95',
+                                    'rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95',
                                     isSpeakerOn ? 'bg-primary/60 text-white' : 'bg-white/20 text-white hover:bg-white/30'
                                 )}
                                 onClick={toggleSpeaker}
                                 aria-label="Haut-parleur"
                             >
-                                <Volume2 className="w-6 h-6" />
+                                <Volume2 className="w-5 h-5 sm:w-6 sm:h-6" />
                             </Button>
-                            <span className="text-white/60 text-xs">HP</span>
+                            <span className="text-white/60 text-[10px] sm:text-xs">HP</span>
                         </div>
 
                         {/* Raccrocher */}
-                        <div className="flex flex-col items-center gap-2">
+                        <div className="flex flex-col items-center gap-1 sm:gap-2">
                             <Button
                                 size="lg"
-                                className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30 transition-transform active:scale-95"
+                                className="rounded-full w-14 h-14 sm:w-16 sm:h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30 transition-transform active:scale-95"
                                 onClick={endCall}
                                 aria-label="Raccrocher"
                             >
-                                <PhoneOff className="w-7 h-7 text-white" />
+                                <PhoneOff className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                             </Button>
-                            <span className="text-white/60 text-xs">Raccrocher</span>
+                            <span className="text-white/60 text-[10px] sm:text-xs">Raccrocher</span>
                         </div>
                     </>
                 )}
