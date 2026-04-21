@@ -202,8 +202,8 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
                             <div className={cn(
                                 'px-4 py-2 border transition-all duration-200 select-text',
                                 isOwn
-                                    ? 'bg-primary text-primary-foreground border-primary rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-sm'
-                                    : 'bg-muted text-foreground border-border rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm',
+                                    ? 'bg-[var(--message-sent)] text-[var(--message-sent-text)] border-[var(--message-sent)] rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-sm'
+                                    : 'bg-[var(--message-received)] text-[var(--message-received-text)] border-[var(--border)] rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm',
                                 isBlurred && 'blur-md select-none pointer-events-none opacity-70'
                             )}>
                                 <p className="break-words whitespace-pre-wrap">{decryptedContent}</p>
@@ -849,7 +849,7 @@ export default function DiscussionPage() {
                 <div className="space-y-4 flex-1 max-w-2xl mx-auto w-full">
                     {[1, 2, 3, 4, 5, 6].map(i => (
                         <div key={i} className={cn('flex', i % 2 === 0 ? 'justify-end' : 'justify-start')}>
-                            <div className={cn('rounded-2xl h-12 animate-pulse', i % 2 === 0 ? 'bg-primary/20 w-3/4' : 'bg-muted w-2/3')} />
+                            <div className={cn('rounded-2xl h-12 animate-pulse', i % 2 === 0 ? 'bg-[var(--orange-500)]/20 w-3/4' : 'bg-muted w-2/3')} />
                         </div>
                     ))}
                 </div>
@@ -1211,7 +1211,7 @@ export default function DiscussionPage() {
                         <Button
                             onClick={() => handleSendMessage(newMessage, selectedFiles, revokeAllFileUrls).then(() => setNewMessage(''))}
                             disabled={(!newMessage.trim() && selectedFiles.length === 0) || sending}
-                            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                            className="bg-primary hover:bg-[var(--primary-hover)] text-primary-foreground transition-colors"
                         >
                             {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                         </Button>

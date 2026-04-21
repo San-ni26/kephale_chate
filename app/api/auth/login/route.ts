@@ -149,6 +149,7 @@ export async function POST(request: NextRequest) {
                     email: plaintextEmail,
                     name: user.name,
                     phone: plaintextPhone,
+                    avatarUrl: user.avatarUrl,
                     role: user.role,
                     publicKey: user.publicKey,
                     encryptedPrivateKey: user.encryptedPrivateKey,

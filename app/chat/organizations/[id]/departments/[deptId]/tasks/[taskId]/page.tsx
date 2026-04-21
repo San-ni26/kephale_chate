@@ -21,6 +21,7 @@ import { TaskAttachment } from './TaskAttachment';
 import { encryptMessage, decryptMessage, decryptPrivateKey } from '@/src/lib/crypto';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
+import { UserAvatar } from '@/src/components/ui/UserAvatar';
 
 interface Task {
     id: string;
@@ -288,7 +289,11 @@ export default function TaskPage() {
                 <div className="space-y-3 text-sm">
                     <div className="flex justify-between items-center">
                         <span className="text-muted-foreground flex items-center gap-2">
-                            <Avatar className="w-6 h-6"><AvatarImage src={task.assignee.avatarUrl} /><AvatarFallback>{task.assignee.name[0]}</AvatarFallback></Avatar>
+                            <UserAvatar 
+                                avatarUrl={task.assignee.avatarUrl}
+                                name={task.assignee.name}
+                                size="sm"
+                            />
                             Assigné à
                         </span>
                         <span className="font-medium truncate ml-2">{task.assignee.name}</span>

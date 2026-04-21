@@ -17,6 +17,7 @@ import { Skeleton } from "@/src/components/ui/skeleton";
 
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
+import { UserAvatar } from "@/src/components/ui/UserAvatar";
 
 function MyPageContent() {
     const router = useRouter();
@@ -428,10 +429,11 @@ function MyPageContent() {
         return comments.map((comment) => (
             <div key={comment.id} className="mb-4">
                 <div className="flex gap-3">
-                    <Avatar className="h-8 w-8">
-                        {comment.user.avatarUrl && <AvatarImage src={comment.user.avatarUrl} />}
-                        <AvatarFallback>{comment.user.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
+                    <UserAvatar 
+                        avatarUrl={comment.user.avatarUrl} 
+                        name={comment.user.name}
+                        size="sm"
+                    />
                     <div className="flex-1">
                         <div className="bg-muted/50 p-3 rounded-lg">
                             <span className="font-semibold text-sm">{comment.user.name}</span>
@@ -497,12 +499,12 @@ function MyPageContent() {
                     <div className="relative">
                         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
                             <div className="relative group cursor-pointer" onClick={() => headerAvatarInputRef.current?.click()}>
-                                <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-                                    {user?.avatarUrl && <AvatarImage src={user.avatarUrl} className="object-cover" />}
-                                    <AvatarFallback className="text-2xl bg-primary/10 text-primary">
-                                        {(userPage?.handle || "US").substring(1, 3).toUpperCase()}
-                                    </AvatarFallback>
-                                </Avatar>
+                                <UserAvatar 
+                                    avatarUrl={user?.avatarUrl} 
+                                    name={user?.name}
+                                    size="xl"
+                                    className="border-4 border-background shadow-lg"
+                                />
                                 <div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                     <Camera className="w-6 h-6 text-white" />
                                 </div>
@@ -730,12 +732,12 @@ function MyPageContent() {
                             <Label className="block mb-2">Photo de profil</Label>
                             <div className="flex items-center gap-4">
                                 <div className="relative group">
-                                    <Avatar className="h-20 w-20 border-2 border-border">
-                                        {editPageAvatarUrl && <AvatarImage src={editPageAvatarUrl} className="object-cover" />}
-                                        <AvatarFallback className="text-lg bg-primary/10 text-primary">
-                                            {editPageHandle?.substring(1, 3).toUpperCase()}
-                                        </AvatarFallback>
-                                    </Avatar>
+                                    <UserAvatar 
+                                        avatarUrl={editPageAvatarUrl} 
+                                        name={editPageName}
+                                        size="lg"
+                                        className="border-2 border-border"
+                                    />
                                     <button
                                         type="button"
                                         onClick={() => editPageFileInputRef.current?.click()}
@@ -956,13 +958,11 @@ function MyPageContent() {
                                 <div className="space-y-3">
                                     {selectedPost.likes.map((like: any) => (
                                         <div key={like.userId} className="flex items-center gap-3 p-2 hover:bg-muted/50 rounded-lg">
-                                            <Avatar className="h-8 w-8">
-                                                {like.user.avatarUrl ? (
-                                                    <AvatarImage src={like.user.avatarUrl} />
-                                                ) : (
-                                                    <AvatarFallback>{like.user.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
-                                                )}
-                                            </Avatar>
+                                            <UserAvatar 
+                                                avatarUrl={like.user.avatarUrl} 
+                                                name={like.user.name}
+                                                size="sm"
+                                            />
                                             <span className="font-semibold">{like.user.name}</span>
                                         </div>
                                     ))}

@@ -44,7 +44,7 @@ export function ThemeSelector() {
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
-          Choisissez le thème de l&apos;application (noir et blanc)
+          Choisissez le thème de l&apos;application (orange)
         </p>
         <div className="flex gap-2 flex-wrap">
           {themes.map((t) => (
@@ -52,7 +52,11 @@ export function ThemeSelector() {
               key={t.value}
               variant={theme === t.value ? "default" : "outline"}
               size="sm"
-              className="flex-1 min-w-[100px] border-border"
+              className={`flex-1 min-w-[100px] border-border transition-colors ${
+                theme === t.value 
+                  ? 'bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]' 
+                  : 'hover:bg-accent hover:text-accent-foreground'
+              }`}
               onClick={() => setTheme(t.value)}
             >
               {t.icon}

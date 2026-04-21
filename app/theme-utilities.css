@@ -1,0 +1,142 @@
+/**
+ * Utilitaires de thème Mango Chat
+ * 
+ * Classes utilitaires pour appliquer le thème orange de manière cohérente.
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   BOUTONS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Bouton primaire avec hover */
+.btn-primary {
+  @apply bg-primary text-primary-foreground;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Bouton secondaire */
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MESSAGES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Bulle de message envoyé */
+.message-sent {
+  background-color: var(--message-sent);
+  color: var(--message-sent-text);
+}
+
+/* Bulle de message reçu */
+.message-received {
+  background-color: var(--message-received);
+  color: var(--message-received-text);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Élément de navigation actif */
+.nav-active {
+  @apply text-primary bg-primary/10;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STATUT EN LIGNE
+   ═══════════════════════════════════════════════════════════════ */
+
+.status-online {
+  @apply bg-success border-2 border-card rounded-full;
+}
+
+.status-offline {
+  @apply bg-muted-foreground/30 border-2 border-card rounded-full;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BADGES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Badge de notification */
+.badge-notification {
+  @apply bg-primary text-primary-foreground text-xs font-bold rounded-full;
+}
+
+/* Badge non lu */
+.badge-unread {
+  @apply bg-primary text-primary-foreground text-[11px] font-bold rounded-full;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Scrollbar personnalisée avec thème orange */
+.scrollbar-theme {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted-foreground) transparent;
+}
+
+.scrollbar-theme::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-theme::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-theme::-webkit-scrollbar-thumb {
+  background-color: var(--muted-foreground);
+  border-radius: 3px;
+}
+
+.scrollbar-theme::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Pulse orange */
+@keyframes pulse-orange {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-orange {
+  animation: pulse-orange 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Typing indicator */
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}
+
+.typing-dot {
+  animation: typing 1.4s infinite ease-in-out both;
+}
+
+.typing-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}

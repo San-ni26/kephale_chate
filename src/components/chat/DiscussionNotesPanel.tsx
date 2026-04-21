@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
+import { UserAvatar } from '@/src/components/ui/UserAvatar';
 import { Shield, User as UserIcon, Clock, Loader2 } from 'lucide-react';
 import { getUser } from '@/src/lib/auth-client';
 import useSWR from 'swr';
@@ -61,10 +62,12 @@ export function DiscussionNotesPanel({ conversation }: { conversation: any }) {
                     <CardContent className="space-y-6">
                         {conversation?.isDirect && otherMember ? (
                             <div className="flex flex-col items-center p-4 border rounded-xl bg-muted/30">
-                                <Avatar className="h-24 w-24 mb-4">
-                                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(otherMember.name || 'User')}`} />
-                                    <AvatarFallback><UserIcon className="w-10 h-10 text-muted-foreground" /></AvatarFallback>
-                                </Avatar>
+                                <UserAvatar 
+                                    avatarUrl={otherMember.avatarUrl} 
+                                    name={otherMember.name}
+                                    size="xl"
+                                    className="mb-4"
+                                />
                                 <h3 className="text-xl font-semibold">{otherMember.name}</h3>
 
                                 <div className="grid grid-cols-2 gap-4 w-full mt-4">
@@ -90,10 +93,11 @@ export function DiscussionNotesPanel({ conversation }: { conversation: any }) {
                         ) : (
                             <div className="space-y-4">
                                 <div className="flex items-center gap-4 p-4 border rounded-xl bg-muted/30">
-                                    <Avatar className="h-16 w-16">
-                                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(conversation?.name || 'Group')}`} />
-                                        <AvatarFallback>{(conversation?.name || 'G')[0]}</AvatarFallback>
-                                    </Avatar>
+                                    <UserAvatar 
+                                        avatarUrl={conversation?.avatarUrl} 
+                                        name={conversation?.name}
+                                        size="lg"
+                                    />
                                     <div>
                                         <h3 className="text-xl font-semibold">{conversation?.name || 'Discussion de groupe'}</h3>
                                         <p className="text-sm text-muted-foreground">

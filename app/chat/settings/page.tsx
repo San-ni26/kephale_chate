@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { LogOut, Trash2, Smartphone, Shield, User, Upload, Plus, Copy, Users, Edit, CreditCard, CheckCircle, Mail, ListTodo, MessageSquare, ShieldCheck } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { LogOut, Trash2, Smartphone, Shield, User, Upload, Plus, Copy, Users, Edit, CreditCard, CheckCircle, Mail, ListTodo, MessageSquare, ShieldCheck, Camera, X } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/card";
 import { Skeleton } from "@/src/components/ui/skeleton";
-import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { Textarea } from "@/src/components/ui/textarea";
@@ -14,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { clearAuthAndAllCacheRedirectToLogin, getUser, type AuthUser, getAuthHeader } from "@/src/lib/auth-client";
+import { clearAuthAndAllCacheRedirectToLogin, getUser, type AuthUser, getAuthHeader, updateAuthUser } from "@/src/lib/auth-client";
 import { decryptPrivateKeyAsync, encryptPrivateKeyAsync } from "@/src/lib/crypto";
 
 import useSWR from "swr";
@@ -23,11 +22,14 @@ import { TaskManagement } from "@/src/components/settings/TaskManagement";
 import { ProAccountSection } from "@/src/components/settings/ProAccountSection";
 import { ThemeSelector } from "@/src/components/settings/ThemeSelector";
 import { EnablePushBanner } from "@/src/components/chat/EnablePushBanner";
+import { UserAvatar } from "@/src/components/ui/UserAvatar";
 
 export default function SettingsPage() {
     const router = useRouter();
+    const avatarInputRef = useRef<HTMLInputElement>(null);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [isChangingDevice, setIsChangingDevice] = useState(false);
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
     const [passwordData, setPasswordData] = useState({
         currentPassword: "",
         newPassword: "",
@@ -358,18 +360,130 @@ export default function SettingsPage() {
         }
     };
 
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error("L'image est trop volumineuse (max 5MB)");
+            return;
+        }
+
+        setIsUploadingAvatar(true);
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('context', 'avatars');
+            formData.append('contextId', user?.id || 'unknown');
+            const res = await fetch('/api/upload/image', {
+                method: 'POST',
+                headers: getAuthHeader(),
+                body: formData,
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.error || 'Erreur upload');
+            }
+            const data = await res.json();
+            const newUrl = data.url;
+
+            // Mettre à jour via API
+            const patchRes = await fetch("/api/user-page", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json", ...getAuthHeader() },
+                body: JSON.stringify({ avatarUrl: newUrl })
+            });
+            if (patchRes.ok) {
+                toast.success("Photo de profil mise à jour !");
+                updateAuthUser({ avatarUrl: newUrl });
+                setUser(prev => prev ? { ...prev, avatarUrl: newUrl } : null);
+                mutateUserPage();
+            } else {
+                toast.error("Erreur lors de la mise à jour");
+            }
+        } catch (error: any) {
+            toast.error(error.message || "Erreur upload image");
+        } finally {
+            setIsUploadingAvatar(false);
+            if (avatarInputRef.current) avatarInputRef.current.value = '';
+        }
+    };
+
+    const handleDeleteAvatar = async () => {
+        if (!confirm("Supprimer votre photo de profil ?")) return;
+        try {
+            const patchRes = await fetch("/api/user-page", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json", ...getAuthHeader() },
+                body: JSON.stringify({ avatarUrl: null })
+            });
+            if (patchRes.ok) {
+                toast.success("Photo de profil supprimée");
+                updateAuthUser({ avatarUrl: null });
+                setUser(prev => prev ? { ...prev, avatarUrl: null } : null);
+                mutateUserPage();
+            } else {
+                toast.error("Erreur lors de la suppression");
+            }
+        } catch {
+            toast.error("Erreur réseau");
+        }
+    };
+
     return (
         <div className="p-4 space-y-6 pt-16 pb-20">
             <h2 className="text-xl font-bold px-2 text-foreground">Paramètres</h2>
 
             <div className="flex items-center p-4 bg-card rounded-xl border border-border">
-                <Avatar className="h-16 w-16">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.name || 'User'}`} />
-                    <AvatarFallback>{user?.name?.substring(0, 2).toUpperCase() || 'JD'}</AvatarFallback>
-                </Avatar>
+                <div className="relative group">
+                    <UserAvatar 
+                        avatarUrl={user?.avatarUrl} 
+                        name={user?.name} 
+                        size="lg" 
+                        className={isUploadingAvatar ? "opacity-50" : ""}
+                    />
+                    <button
+                        onClick={() => avatarInputRef.current?.click()}
+                        disabled={isUploadingAvatar}
+                        className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer disabled:cursor-not-allowed"
+                    >
+                        <Camera className="w-6 h-6 text-white" />
+                    </button>
+                    <input
+                        type="file"
+                        ref={avatarInputRef}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleAvatarUpload}
+                        disabled={isUploadingAvatar}
+                    />
+                </div>
                 <div className="ml-4 flex-1">
                     <h3 className="font-semibold text-lg text-foreground">{user?.name || 'Chargement...'}</h3>
                     <p className="text-sm text-muted-foreground">{user?.email || '...'}</p>
+                    <div className="flex gap-2 mt-2">
+                        <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => avatarInputRef.current?.click()}
+                            disabled={isUploadingAvatar}
+                        >
+                            <Upload className="mr-1 h-3 w-3" />
+                            {isUploadingAvatar ? "Upload..." : "Changer"}
+                        </Button>
+                        {user?.avatarUrl && (
+                            <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={handleDeleteAvatar}
+                                disabled={isUploadingAvatar}
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            >
+                                <X className="mr-1 h-3 w-3" />
+                                Supprimer
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </div>
 

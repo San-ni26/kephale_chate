@@ -11,6 +11,7 @@ import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { ConversationActionsMenu } from '@/src/components/chat/ConversationActionsMenu';
+import { UserAvatar } from '@/src/components/ui/UserAvatar';
 
 interface Conversation {
     id: string;
@@ -32,6 +33,7 @@ interface Conversation {
             email: string;
             isOnline: boolean;
             isPro?: boolean;
+            avatarUrl?: string | null;
         };
     }[];
     messages: {
@@ -144,12 +146,12 @@ export default function ChatListPage() {
                                     <div className="flex items-center py-3 px-2 border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer group">
                                         {/* Avatar with online indicator */}
                                         <div className="relative flex-shrink-0">
-                                            <Avatar className="h-12 w-12 border border-border/50">
-                                                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${chatName}`} />
-                                                <AvatarFallback className="bg-muted">
-                                                    <User className="w-6 h-6 text-muted-foreground" />
-                                                </AvatarFallback>
-                                            </Avatar>
+                                            <UserAvatar 
+                                                avatarUrl={otherMember?.avatarUrl} 
+                                                name={chatName}
+                                                size="md"
+                                                className="border border-border/50"
+                                            />
                                             {otherMember?.isOnline && (
                                                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-success border-2 border-background rounded-full" />
                                             )}

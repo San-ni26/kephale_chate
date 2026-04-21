@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/src/components/ui/ca
 import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar";
 import { toast } from "sonner";
 import { Check, User, Phone } from "lucide-react";
+import { UserAvatar } from "@/src/components/ui/UserAvatar";
 
 interface InvitationClientProps {
     initialInvitation?: any;
@@ -171,10 +172,12 @@ export default function InvitationClient({ initialInvitation }: InvitationClient
                 <CardHeader className="text-center space-y-2 pb-2">
                     {!invitation?.imageBase64 && (
                         <div className="mx-auto">
-                            <Avatar className="w-20 h-20 border-2 border-primary">
-                                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${invitation?.user?.name}`} />
-                                <AvatarFallback>{invitation?.user?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
-                            </Avatar>
+                            <UserAvatar 
+                                avatarUrl={invitation?.user?.avatarUrl}
+                                name={invitation?.user?.name}
+                                size="xl"
+                                className="border-2 border-primary"
+                            />
                         </div>
                     )}
                     <CardTitle className="text-2xl pt-2 font-bold">{invitation?.title}</CardTitle>

@@ -8,6 +8,7 @@ import { Badge } from "@/src/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { fetchWithAuth } from "@/src/lib/auth-client";
+import { UserAvatar } from "@/src/components/ui/UserAvatar";
 
 interface SearchResult {
     id: string;
@@ -17,6 +18,7 @@ interface SearchResult {
     publicKey: string;
     isOnline: boolean;
     lastSeen: Date | null;
+    avatarUrl?: string | null;
 }
 
 /** Retourne l'email masqué (ex: j•••@g•••.com). */
@@ -199,11 +201,11 @@ export function UserSearch() {
                                             onClick={() => handleSelectUser(user)}
                                             className="w-full px-4 py-3 hover:bg-muted transition-colors text-left flex items-center gap-3"
                                         >
-                                            <div className="flex-shrink-0">
-                                                <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-foreground font-semibold border border-border">
-                                                    {user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()}
-                                                </div>
-                                            </div>
+                                            <UserAvatar 
+                                                avatarUrl={user.avatarUrl}
+                                                name={user.name || user.email}
+                                                size="md"
+                                            />
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center justify-between gap-2">
                                                     <p className="font-medium text-foreground truncate">

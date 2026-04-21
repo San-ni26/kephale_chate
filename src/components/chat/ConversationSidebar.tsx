@@ -14,6 +14,7 @@ import { Input } from '@/src/components/ui/input';
 import { Button } from '@/src/components/ui/button';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { ConversationActionsMenu } from '@/src/components/chat/ConversationActionsMenu';
+import { UserAvatar } from '@/src/components/ui/UserAvatar';
 
 interface Conversation {
     id: string;
@@ -32,6 +33,7 @@ interface Conversation {
             email: string;
             isOnline?: boolean;
             isPro?: boolean;
+            avatarUrl?: string | null;
         };
     }[];
     messages: {
@@ -197,12 +199,12 @@ export function ConversationSidebar() {
                                 >
 
                                     <div className="relative flex-shrink-0">
-                                        <Avatar className={`border border-border ${isCollapsed ? 'h-10 w-10' : 'h-12 w-12'}`}>
-                                            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${chatName}`} />
-                                            <AvatarFallback>
-                                                <User className="w-5 h-5" />
-                                            </AvatarFallback>
-                                        </Avatar>
+                                        <UserAvatar 
+                                            avatarUrl={otherMember?.avatarUrl}
+                                            name={chatName}
+                                            size={isCollapsed ? "md" : "md"}
+                                            className={`border border-border ${isCollapsed ? 'h-10 w-10' : 'h-12 w-12'}`}
+                                        />
                                         {/* Online indicator */}
                                         {otherMember?.isOnline && (
                                             <span className="absolute bottom-0 right-0 w-3 h-3 bg-success border-2 border-card rounded-full" />

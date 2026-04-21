@@ -18,6 +18,7 @@ import { Button } from '@/src/components/ui/button';
 import { useCallContext } from '@/src/contexts/CallContext';
 import { safePlay } from '@/src/lib/safe-media-play';
 import { cn } from '@/src/lib/utils';
+import { UserAvatar } from '@/src/components/ui/UserAvatar';
 import {
     PhoneOff,
     PhoneIncoming,
@@ -288,10 +289,13 @@ export function GlobalCallOverlay() {
                     'animate-in slide-in-from-bottom-4 duration-300'
                 )}
             >
-                <Avatar className="h-10 w-10 shrink-0 border-2 border-white/30">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
-                    <AvatarFallback className="bg-white/20 text-white">{displayName[0]}</AvatarFallback>
-                </Avatar>
+                <UserAvatar 
+                    avatarUrl={undefined}
+                    name={displayName}
+                    size="md"
+                    className="shrink-0 border-2 border-white/30"
+                    fallbackClassName="bg-white/20 text-white"
+                />
                 <div className="min-w-0 flex-1">
                     <p className="truncate font-medium text-white">
                         {callType === 'video' ? 'Appel vidéo avec' : 'Appel avec'} {displayName}
@@ -381,24 +385,26 @@ export function GlobalCallOverlay() {
                                 {/* Avatar si caméra distante coupée */}
                                 {remoteStream.getVideoTracks().length === 0 && (
                                     <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-950">
-                                        <Avatar className="w-32 h-32 border-4 border-white/20">
-                                            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
-                                            <AvatarFallback className="text-4xl bg-primary/30 text-white">
-                                                {displayName[0]}
-                                            </AvatarFallback>
-                                        </Avatar>
+                                        <UserAvatar 
+                                            avatarUrl={undefined}
+                                            name={displayName}
+                                            size="xl"
+                                            className="border-4 border-white/20"
+                                            fallbackClassName="bg-primary/30 text-white"
+                                        />
                                     </div>
                                 )}
                             </>
                         ) : (
                             /* Pas encore de flux distant */
                             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-950">
-                                <Avatar className="w-32 h-32 border-4 border-white/20">
-                                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
-                                    <AvatarFallback className="text-4xl bg-primary/30 text-white">
-                                        {displayName[0]}
-                                    </AvatarFallback>
-                                </Avatar>
+                                <UserAvatar 
+                                    avatarUrl={undefined}
+                                    name={displayName}
+                                    size="xl"
+                                    className="border-4 border-white/20"
+                                    fallbackClassName="bg-primary/30 text-white"
+                                />
                             </div>
                         )}
                     </div>
@@ -447,12 +453,13 @@ export function GlobalCallOverlay() {
                 /* ── Appel audio connecté ── */
                 <>
                     <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
-                        <Avatar className="w-32 h-32 border-4 border-white/20 ring-4 ring-white/5">
-                            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
-                            <AvatarFallback className="text-4xl bg-primary/30 text-white">
-                                {displayName[0]}
-                            </AvatarFallback>
-                        </Avatar>
+                        <UserAvatar 
+                            avatarUrl={undefined}
+                            name={displayName}
+                            size="xl"
+                            className="border-4 border-white/20 ring-4 ring-white/5"
+                            fallbackClassName="bg-primary/30 text-white"
+                        />
                     </div>
                     <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent z-10 pointer-events-none">
                         <div className="flex items-center gap-3">
@@ -489,12 +496,13 @@ export function GlobalCallOverlay() {
                     </div>
                     <div className={cn('relative z-10 flex flex-col items-center mt-24', isIncomingCall && 'animate-bounce-gentle')}>
                         <div className="bg-white/10 p-1.5 rounded-full ring-4 ring-white/10 mb-6">
-                            <Avatar className="w-28 h-28 border-2 border-white/20">
-                                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
-                                <AvatarFallback className="text-3xl bg-primary/20 text-white">
-                                    {displayName[0]}
-                                </AvatarFallback>
-                            </Avatar>
+                            <UserAvatar 
+                                avatarUrl={undefined}
+                                name={displayName}
+                                size="xl"
+                                className="border-2 border-white/20"
+                                fallbackClassName="bg-primary/20 text-white"
+                            />
                         </div>
                         <h3 className="text-2xl font-bold text-white mb-1 drop-shadow-lg">{displayName}</h3>
                         <p className="text-white/70 mb-8 text-sm drop-shadow">

@@ -23,6 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import OrganizationRequestDialog from '@/src/components/organizations/OrganizationRequestDialog';
 import { useDiscussionBlurState } from '@/src/contexts/DiscussionBlurContext';
 import { PurchaseRightsDialog } from '@/src/components/chat/PurchaseRightsDialog';
+import { UserAvatar } from '@/src/components/ui/UserAvatar';
 import useSWR from 'swr';
 
 const fetcher = (url: string) => fetchWithAuth(url).then((r) => (r.ok ? r.json() : null));
@@ -979,22 +980,18 @@ export function TopNav() {
                     >
                         <ArrowLeft className="w-5 h-5 text-muted-foreground hover:text-foreground" />
                     </Button>
-                    <Avatar className="h-10 w-10 border border-border shrink-0">
-                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(
-                            discussion?.name
-                                ? discussion.name
-                                : discussion?.isDirect && discussion?.members?.length
-                                    ? (discussion.members.find((m: { user: { id: string } }) => m.user.id !== user?.id)?.user?.name || 'Discussion')
-                                    : 'Discussion'
-                        )}`} />
-                        <AvatarFallback>
-                            {discussion?.name
-                                ? discussion.name[0]
-                                : discussion?.isDirect && discussion?.members?.length
-                                    ? (discussion.members.find((m: { user: { id: string } }) => m.user.id !== user?.id)?.user?.name?.[0] || 'D')
-                                    : 'D'}
-                        </AvatarFallback>
-                    </Avatar>
+                    <UserAvatar 
+                        avatarUrl={discussion?.isDirect && discussion?.members?.length
+                            ? discussion.members.find((m: { user: { id: string } }) => m.user.id !== user?.id)?.user?.avatarUrl
+                            : undefined}
+                        name={discussion?.name
+                            ? discussion.name
+                            : discussion?.isDirect && discussion?.members?.length
+                                ? discussion.members.find((m: { user: { id: string } }) => m.user.id !== user?.id)?.user?.name || 'Discussion'
+                                : 'Discussion'}
+                        size="md"
+                        className="border border-border shrink-0"
+                    />
                     <div className="ml-3 flex-1 min-w-0 overflow-hidden">
                         <h2 className="font-semibold text-foreground truncate">
                             {discussion?.name
@@ -1021,132 +1018,124 @@ export function TopNav() {
                             ) : null;
                         })()}
                     </div>
-                    {/* Cadenas + appel + menu trois points (flou, masquer, achat) */}
+                    {/* Cadenas + appel groupé + menu trois points */}
                     <div className="flex items-center gap-1 shrink-0">
-                        {discussion?.isLocked && discussion?.canCurrentUserControl ? (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        title="Code de verrouillage"
-                                        className="hover:bg-primary/10"
-                                    >
-                                        <LockOpen className="w-5 h-5 text-amber-500" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={() => window.dispatchEvent(new CustomEvent('discussion-lock-disable'))}>
-                                        <ShieldOff className="w-4 h-4 mr-2" />
-                                        Désactiver
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => window.dispatchEvent(new CustomEvent('discussion-lock-change-code'))}>
-                                        <KeyRound className="w-4 h-4 mr-2" />
-                                        Modifier le code
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        ) : (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                disabled={!discussion?.canCurrentUserControl}
-                                onClick={() => discussion?.canCurrentUserControl && window.dispatchEvent(new CustomEvent('discussion-lock-click'))}
-                                title={discussion?.canCurrentUserControl ? 'Verrouiller la discussion' : discussion?.currentUserIsPro ? 'Verrouiller (droits achetés par l\'autre)' : 'Verrouiller (Compte Pro requis)'}
-                                className="hover:bg-primary/10"
-                            >
-                                <Lock className={cn("w-5 h-5", discussion?.canCurrentUserControl ? "text-muted-foreground hover:text-primary" : "text-muted-foreground/60")} />
-                            </Button>
-                        )}
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => window.dispatchEvent(new CustomEvent('discussion-call-click', { detail: { callType: 'video' } }))}
-                            title="Appel video"
-                            className="hover:bg-primary/10"
-                        >
-                            <Video className="w-5 h-5 text-muted-foreground hover:text-primary" />
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => window.dispatchEvent(new CustomEvent('discussion-call-click', { detail: { callType: 'audio' } }))}
-                            title="Appel audio"
-                            className="hover:bg-primary/10"
-                        >
-                            <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => router.push(`${pathname}?view=notes`)}
-                            title="Notes"
-                            className="hover:bg-primary/10"
-                        >
-                            <StickyNote className="w-5 h-5 text-muted-foreground hover:text-primary" />
-                        </Button>
-                        {(discussionBlurState?.showBlurToggle || (discussion?.canCurrentUserControl && discussion?.members?.length === 2) || discussion?.canPurchaseRights) && (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        title="Plus d'options"
-                                        className="hover:bg-primary/10"
-                                    >
-                                        <MoreVertical className="w-5 h-5 text-muted-foreground hover:text-foreground" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    {discussionBlurState?.showBlurToggle && (
-                                        <DropdownMenuItem onClick={discussionBlurState.onToggle}>
-                                            {discussionBlurState.blurEnabled ? (
-                                                <><EyeOff className="w-4 h-4 mr-2" /> Afficher les anciens messages</>
-                                            ) : (
-                                                <><Eye className="w-4 h-4 mr-2" /> Flouter les anciens messages</>
-                                            )}
+                        {/* Appel groupé */}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    title="Appel"
+                                    className="hover:bg-primary/10"
+                                >
+                                    <Phone className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => window.dispatchEvent(new CustomEvent('discussion-call-click', { detail: { callType: 'video' } }))}>
+                                    <Video className="w-4 h-4 mr-2" />
+                                    Appel vidéo
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => window.dispatchEvent(new CustomEvent('discussion-call-click', { detail: { callType: 'audio' } }))}>
+                                    <Phone className="w-4 h-4 mr-2" />
+                                    Appel audio
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        {/* Menu trois points : Cadenas + Notes + Options */}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    title="Plus d'options"
+                                    className="hover:bg-primary/10"
+                                >
+                                    <MoreVertical className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                {/* Notes */}
+                                <DropdownMenuItem onClick={() => router.push(`${pathname}?view=notes`)}>
+                                    <StickyNote className="w-4 h-4 mr-2" />
+                                    Notes
+                                </DropdownMenuItem>
+
+                                {/* Cadenas */}
+                                {discussion?.isLocked && discussion?.canCurrentUserControl ? (
+                                    <>
+                                        <DropdownMenuItem onClick={() => window.dispatchEvent(new CustomEvent('discussion-lock-disable'))}>
+                                            <ShieldOff className="w-4 h-4 mr-2" />
+                                            Désactiver le verrou
                                         </DropdownMenuItem>
-                                    )}
-                                    {discussion?.canCurrentUserControl && discussion?.members?.length === 2 && (
-                                        <DropdownMenuItem
-                                            disabled={hideToggleLoading}
-                                            onClick={async () => {
-                                                if (!discussionId || hideToggleLoading) return;
-                                                setHideToggleLoading(true);
-                                                try {
-                                                    const isHiddenByMe = discussion.hiddenByUserId === user?.id;
-                                                    const endpoint = isHiddenByMe ? 'unhide' : 'hide';
-                                                    const res = await fetchWithAuth(`/api/conversations/${discussionId}/${endpoint}`, { method: 'POST' });
-                                                    const data = await res.json().catch(() => ({}));
-                                                    if (res.ok) {
-                                                        toast.success(data.message || (isHiddenByMe ? 'Discussion affichée' : 'Discussion masquée'));
-                                                        mutateDiscussion();
-                                                    } else {
-                                                        toast.error(data.error || 'Erreur');
-                                                    }
-                                                } catch {
-                                                    toast.error('Erreur réseau');
-                                                } finally {
-                                                    setHideToggleLoading(false);
+                                        <DropdownMenuItem onClick={() => window.dispatchEvent(new CustomEvent('discussion-lock-change-code'))}>
+                                            <KeyRound className="w-4 h-4 mr-2" />
+                                            Modifier le code
+                                        </DropdownMenuItem>
+                                    </>
+                                ) : (
+                                    <DropdownMenuItem
+                                        disabled={!discussion?.canCurrentUserControl}
+                                        onClick={() => discussion?.canCurrentUserControl && window.dispatchEvent(new CustomEvent('discussion-lock-click'))}
+                                    >
+                                        <Lock className={cn("w-4 h-4 mr-2", discussion?.canCurrentUserControl ? "" : "text-muted-foreground/60")} />
+                                        {discussion?.canCurrentUserControl ? 'Verrouiller la discussion' : 'Verrouiller (Pro requis)'}
+                                    </DropdownMenuItem>
+                                )}
+
+                                {discussionBlurState?.showBlurToggle && (
+                                    <DropdownMenuItem onClick={discussionBlurState.onToggle}>
+                                        {discussionBlurState.blurEnabled ? (
+                                            <><EyeOff className="w-4 h-4 mr-2" /> Afficher les anciens messages</>
+                                        ) : (
+                                            <><Eye className="w-4 h-4 mr-2" /> Flouter les anciens messages</>
+                                        )}
+                                    </DropdownMenuItem>
+                                )}
+
+                                {discussion?.canCurrentUserControl && discussion?.members?.length === 2 && (
+                                    <DropdownMenuItem
+                                        disabled={hideToggleLoading}
+                                        onClick={async () => {
+                                            if (!discussionId || hideToggleLoading) return;
+                                            setHideToggleLoading(true);
+                                            try {
+                                                const isHiddenByMe = discussion.hiddenByUserId === user?.id;
+                                                const endpoint = isHiddenByMe ? 'unhide' : 'hide';
+                                                const res = await fetchWithAuth(`/api/conversations/${discussionId}/${endpoint}`, { method: 'POST' });
+                                                const data = await res.json().catch(() => ({}));
+                                                if (res.ok) {
+                                                    toast.success(data.message || (isHiddenByMe ? 'Discussion affichée' : 'Discussion masquée'));
+                                                    mutateDiscussion();
+                                                } else {
+                                                    toast.error(data.error || 'Erreur');
                                                 }
-                                            }}
-                                        >
-                                            {discussion.hiddenByUserId === user?.id ? (
-                                                <><ArchiveRestore className="w-4 h-4 mr-2" /> Afficher la discussion pour l'autre</>
-                                            ) : (
-                                                <><Archive className="w-4 h-4 mr-2" /> Masquer la discussion pour l'autre</>
-                                            )}
-                                        </DropdownMenuItem>
-                                    )}
-                                    {discussion?.canPurchaseRights && (
-                                        <DropdownMenuItem onClick={() => setShowPurchaseRightsDialog(true)}>
-                                            <Crown className="w-4 h-4 mr-2 text-amber-500" />
-                                            Acheter les droits de la discussion
-                                        </DropdownMenuItem>
-                                    )}
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        )}
+                                            } catch {
+                                                toast.error('Erreur réseau');
+                                            } finally {
+                                                setHideToggleLoading(false);
+                                            }
+                                        }}
+                                    >
+                                        {discussion.hiddenByUserId === user?.id ? (
+                                            <><ArchiveRestore className="w-4 h-4 mr-2" /> Afficher la discussion</>
+                                        ) : (
+                                            <><Archive className="w-4 h-4 mr-2" /> Masquer la discussion</>
+                                        )}
+                                    </DropdownMenuItem>
+                                )}
+
+                                {discussion?.canPurchaseRights && (
+                                    <DropdownMenuItem onClick={() => setShowPurchaseRightsDialog(true)}>
+                                        <Crown className="w-4 h-4 mr-2 text-amber-500" />
+                                        Acheter les droits
+                                    </DropdownMenuItem>
+                                )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
                         <PurchaseRightsDialog
                             open={showPurchaseRightsDialog}
                             onOpenChange={setShowPurchaseRightsDialog}
@@ -1240,12 +1229,12 @@ export function TopNav() {
                     </Button>
                     {publicPage ? (
                         <>
-                            <Avatar className="h-9 w-9 border border-border shrink-0">
-                                <AvatarImage src={publicPage.user?.avatarUrl ?? undefined} className="object-cover" />
-                                <AvatarFallback className="text-xs bg-primary/10 text-primary">
-                                    {publicPage.handle?.slice(1, 3).toUpperCase() ?? "?"}
-                                </AvatarFallback>
-                            </Avatar>
+                            <UserAvatar 
+                                avatarUrl={publicPage.user?.avatarUrl} 
+                                name={publicPage.user?.name || publicPage.handle}
+                                size="md" 
+                                className="border border-border shrink-0"
+                            />
                             <div className="min-w-0 flex-1">
                                 <h2 className="font-semibold text-foreground truncate text-sm">
                                     {publicPage.handle}
@@ -1262,10 +1251,12 @@ export function TopNav() {
             ) : (
                 // Default Chat Header View
                 <div className="flex items-center gap-3">
-                    <Avatar className="h-9 w-9 border border-border">
-                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.name || 'User'}`} />
-                        <AvatarFallback><UserCircle className="w-6 h-6" /></AvatarFallback>
-                    </Avatar>
+                    <UserAvatar 
+                        avatarUrl={user?.avatarUrl} 
+                        name={user?.name} 
+                        size="md" 
+                        className="border border-border"
+                    />
                     <span className="font-semibold text-foreground">{user?.name || 'Chargement...'}</span>
                 </div>
             )}

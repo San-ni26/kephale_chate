@@ -37,6 +37,7 @@ export async function GET(request: NextRequest) {
                                 id: true,
                                 name: true,
                                 email: true,
+                                avatarUrl: true,
                                 publicKey: true,
                                 isOnline: true,
                                 lastSeen: true,

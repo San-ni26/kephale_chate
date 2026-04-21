@@ -24,6 +24,7 @@ import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
 import { useFeedSearch } from "@/src/contexts/FeedSearchContext";
 import { useRouter, useSearchParams } from "next/navigation";
+import { UserAvatar } from "@/src/components/ui/UserAvatar";
 
 interface Comment {
     id: string;
@@ -485,12 +486,12 @@ export default function FeedPageContent() {
                                 className="flex flex-col items-center shrink-0 gap-2 min-w-[100px] w-[100px]"
                             >
                                 <div className="relative h-24 w-[100px] rounded-xl overflow-hidden bg-muted flex items-center justify-center border border-border">
-                                    <Avatar className="h-14 w-14 ring-2 ring-background">
-                                        <AvatarImage src={user?.avatarUrl ?? undefined} className="object-cover" />
-                                        <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                                            {user?.name?.substring(0, 2).toUpperCase() ?? "?"}
-                                        </AvatarFallback>
-                                    </Avatar>
+                                    <UserAvatar 
+                                        avatarUrl={user?.avatarUrl} 
+                                        name={user?.name}
+                                        size="lg"
+                                        className="ring-2 ring-background"
+                                    />
                                     <div className="absolute bottom-1 right-1 h-10 w-10 rounded-full bg-primary flex items-center justify-center ring-2 ring-background">
                                         <Plus className="h-5 w-5 text-primary-foreground" />
                                     </div>
@@ -591,15 +592,11 @@ export default function FeedPageContent() {
                             <div className="p-4 space-y-3">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <Avatar className="h-10 w-10">
-                                            <AvatarImage
-                                                src={post.page.user?.avatarUrl ?? undefined}
-                                                className="object-cover"
-                                            />
-                                            <AvatarFallback className="bg-primary/10 text-primary">
-                                                {post.page.handle.substring(1, 3).toUpperCase()}
-                                            </AvatarFallback>
-                                        </Avatar>
+                                        <UserAvatar 
+                                            avatarUrl={post.page.user?.avatarUrl} 
+                                            name={post.page.user?.name || post.page.handle}
+                                            size="md"
+                                        />
                                         <div>
                                             <p className="font-semibold text-foreground">
                                                 {post.page.handle}

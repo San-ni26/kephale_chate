@@ -13,6 +13,7 @@ import { fr } from "date-fns/locale";
 import { getAuthHeader, getUser } from "@/src/lib/auth-client";
 import useSWR from "swr";
 import { fetcher } from "@/src/lib/fetcher";
+import { UserAvatar } from "@/src/components/ui/UserAvatar";
 
 export default function PublicPageView() {
     const router = useRouter();
@@ -300,12 +301,12 @@ export default function PublicPageView() {
     return (
         <div className="p-4 space-y-4 pt-16 pb-20 max-w-2xl mx-auto">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-                <Avatar className="h-16 w-16 border-2 border-background shrink-0">
-                    <AvatarImage src={page.user?.avatarUrl ?? undefined} className="object-cover" />
-                    <AvatarFallback className="text-lg bg-primary/10 text-primary">
-                        {page.handle?.substring(1, 3).toUpperCase() ?? "?"}
-                    </AvatarFallback>
-                </Avatar>
+                <UserAvatar 
+                    avatarUrl={page.user?.avatarUrl} 
+                    name={page.user?.name || page.handle}
+                    size="lg"
+                    className="border-2 border-background shrink-0"
+                />
 
                 <div className="flex-1 min-w-0 space-y-1">
                     <h2 className="text-lg font-bold text-foreground truncate">{page.handle}</h2>
@@ -357,12 +358,11 @@ export default function PublicPageView() {
                     >
                         <div className="p-4 space-y-3">
                             <div className="flex items-center gap-3">
-                                <Avatar className="h-10 w-10">
-                                    <AvatarImage src={post.page?.user?.avatarUrl ?? undefined} className="object-cover" />
-                                    <AvatarFallback className="bg-primary/10 text-primary">
-                                        {post.page?.handle?.substring(1, 3).toUpperCase() ?? "?"}
-                                    </AvatarFallback>
-                                </Avatar>
+                                <UserAvatar 
+                                    avatarUrl={post.page?.user?.avatarUrl} 
+                                    name={post.page?.user?.name || post.page?.handle}
+                                    size="md"
+                                />
                                 <div>
                                     <p className="font-semibold text-foreground">{post.page?.handle}</p>
                                     <p className="text-xs text-muted-foreground">

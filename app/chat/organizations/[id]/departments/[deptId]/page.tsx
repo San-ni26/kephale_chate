@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
+import { UserAvatar } from '@/src/components/ui/UserAvatar';
 import {
     Dialog,
     DialogContent,
@@ -60,6 +61,7 @@ interface Department {
             name: string;
             email: string;
             isOnline: boolean;
+            avatarUrl?: string | null;
         };
     }[];
     _count: {
@@ -809,12 +811,12 @@ export default function DepartmentDetailPage() {
                                                 <CardContent className="pt-6">
                                                     <div className="flex items-start justify-between">
                                                         <div className="flex items-center gap-3 flex-1 min-w-0">
-                                                            <Avatar className="h-12 w-12 border border-border">
-                                                                <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${member.user.name || member.user.email}`} />
-                                                                <AvatarFallback>
-                                                                    {(member.user.name || member.user.email)[0].toUpperCase()}
-                                                                </AvatarFallback>
-                                                            </Avatar>
+                                                            <UserAvatar 
+                                                                avatarUrl={member.user.avatarUrl}
+                                                                name={member.user.name || member.user.email}
+                                                                size="md"
+                                                                className="border border-border"
+                                                            />
                                                             <div className="flex-1 min-w-0">
                                                                 <div className="flex items-center gap-2">
                                                                     <p className="text-sm font-semibold text-foreground truncate">
