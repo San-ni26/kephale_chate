@@ -26,6 +26,7 @@ export function getPusher(): Pusher {
             secret,
             cluster,
             useTLS: true,
+            timeout: 5000, // Timeout de 5 secondes
         });
     }
     return pusherInstance;
@@ -34,11 +35,39 @@ export function getPusher(): Pusher {
 // ---- Helper functions ----
 
 /**
+ * Retry wrapper for Pusher operations
+ */
+async function withRetry<T>(
+    operation: () => Promise<T>,
+    maxRetries = 3,
+    delay = 1000
+): Promise<T> {
+    let lastError: Error | undefined;
+    
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            return await operation();
+        } catch (error) {
+            lastError = error as Error;
+            console.warn(`[Pusher] Attempt ${attempt + 1}/${maxRetries} failed:`, lastError.message);
+            
+            if (attempt < maxRetries - 1) {
+                await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, attempt)));
+            }
+        }
+    }
+    
+    throw lastError;
+}
+
+/**
  * Send an event to a user's private channel
  */
 export async function emitToUser(userId: string, event: string, data: any) {
-    const pusher = getPusher();
-    await pusher.trigger(`private-user-${userId}`, event, data);
+    return withRetry(async () => {
+        const pusher = getPusher();
+        await pusher.trigger(`private-user-${userId}`, event, data);
+    }, 3, 500);
 }
 
 /**

@@ -21,7 +21,7 @@ import {
     useEffect,
 } from 'react';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
-import { fetchWithAuth } from '@/src/lib/auth-client';
+import { fetchWithAuth, getUser } from '@/src/lib/auth-client';
 import { toast } from 'sonner';
 import { startRingtone, stopRingtone } from '@/src/lib/ringtone';
 import { safePlay } from '@/src/lib/safe-media-play';
@@ -265,12 +265,27 @@ export type CallStatus =
 export type CallType = 'video' | 'audio';
 export type ConnectionQuality = 'excellent' | 'good' | 'fair' | 'poor';
 
+export interface RemotePeer {
+    userId: string;
+    userName: string;
+    connection: RTCPeerConnection;
+    stream?: MediaStream;
+    connectionState: RTCPeerConnectionState;
+    isMuted: boolean;
+    isVideoOn: boolean;
+    isSpeaking: boolean;
+    networkProfile: NetworkProfile;
+    videoQuality: 'auto' | 'low' | 'medium' | 'high';
+    quality: ConnectionQuality;
+}
+
 export interface IncomingCallData {
     callerId: string;
     callerName?: string;
     offer: RTCSessionDescriptionInit;
     conversationId: string;
     isVideo?: boolean;
+    roomId?: string;
 }
 
 export interface ActiveCallInfo {
@@ -278,6 +293,7 @@ export interface ActiveCallInfo {
     otherUserId: string;
     otherUserName: string;
     callType: CallType;
+    roomId?: string;
 }
 
 interface CallContextValue {
@@ -302,6 +318,13 @@ interface CallContextValue {
     facingMode: 'user' | 'environment';
     autoVideoFallback: boolean;
 
+    // Multi-peer support
+    isGroupCall: boolean;
+    isHost: boolean;
+    roomId: string | null;
+    remotePeers: Map<string, RemotePeer>;
+    canInvite: boolean;
+
     startCall: (conversationId: string, otherUserId: string, otherUserName: string, callType?: CallType) => Promise<void>;
     answerCall: () => Promise<void>;
     answerCallWithData: (data: IncomingCallData) => Promise<void>;
@@ -312,6 +335,13 @@ interface CallContextValue {
     toggleSpeaker: () => void;
     toggleCameraFacing: () => Promise<void>;
     setAutoVideoFallback: (enabled: boolean) => void;
+
+    // Multi-peer methods
+    inviteParticipant: (userId: string) => Promise<void>;
+    joinRoom: (roomId: string, joinToken?: string) => Promise<void>;
+    leaveRoom: () => Promise<void>;
+    transferHost: (newHostId: string) => Promise<void>;
+    getRemotePeer: (userId: string) => RemotePeer | undefined;
 
     setIncomingCallData: (data: IncomingCallData | null) => void;
     setRemoteVideoRef: (el: HTMLVideoElement | null) => void;
@@ -382,7 +412,15 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
     const [autoVideoFallback, setAutoVideoFallback] = useState(true);
 
+    // Multi-peer states
+    const [isGroupCall, setIsGroupCall] = useState(false);
+    const [isHost, setIsHost] = useState(false);
+    const [roomId, setRoomId] = useState<string | null>(null);
+    const [remotePeers, setRemotePeers] = useState<Map<string, RemotePeer>>(new Map());
+    const [canInvite, setCanInvite] = useState(false);
+
     const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+    const remotePeersRef = useRef<Map<string, RemotePeer>>(new Map());
     const localStreamRef = useRef<MediaStream | null>(null);
     const iceCandidateBufferRef = useRef<RTCIceCandidate[]>([]);
     const iceBatcherRef = useRef<IceBatcher | null>(null);
@@ -600,6 +638,14 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         setRemoteIsSpeaking(false);
         setIsVideoAutoDisabled(false);
         setFacingMode('user');
+        
+        // Reset multi-peer states
+        setIsGroupCall(false);
+        setIsHost(false);
+        setRoomId(null);
+        setCanInvite(false);
+        remotePeersRef.current.clear();
+        setRemotePeers(new Map());
     }, []);
 
     const startCallTimer = useCallback(() => {
@@ -769,6 +815,11 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
             setCallType(type);
             setActiveCall({ conversationId, otherUserId, otherUserName, callType: type });
             setCallStatus('dialing');
+            
+            // L'appelant est le host et peut inviter
+            setIsHost(true);
+            setCanInvite(true);
+            setIsGroupCall(false);
 
             // Timeout si pas de réponse dans 45s
             callTimeoutRef.current = setTimeout(() => {
@@ -897,9 +948,18 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
             otherUserId: data.callerId,
             otherUserName: data.callerName || 'Utilisateur',
             callType: isVideo ? 'video' : 'audio',
+            roomId: data.roomId,
         });
         setCallStatus('connecting');
         setIncomingCallDataState(null);
+        
+        // Initialiser les états multi-peer
+        setIsHost(false); // Celui qui répond n'est pas le host par défaut
+        setCanInvite(true); // Mais il peut quand même inviter
+        setIsGroupCall(false);
+        if (data.roomId) {
+            setRoomId(data.roomId);
+        }
 
         try {
             // Vérifier support getUserMedia
@@ -1125,6 +1185,141 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
+    // ─── Multi-peer methods ─────────────────────────────────────────────────────
+
+    const getRemotePeer = useCallback((userId: string): RemotePeer | undefined => {
+        return remotePeersRef.current.get(userId);
+    }, []);
+
+    const inviteParticipant = useCallback(async (userId: string) => {
+        if (!roomId || !isHost) {
+            toast.error('Seul l\'hôte peut inviter des participants');
+            return;
+        }
+
+        try {
+            const res = await fetchWithAuth('/api/call/invite', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ roomId, inviteeId: userId }),
+            });
+
+            if (res.ok) {
+                toast.success('Invitation envoyée');
+            } else {
+                const data = await res.json();
+                toast.error(data.error || 'Erreur lors de l\'invitation');
+            }
+        } catch (err) {
+            toast.error('Erreur réseau');
+        }
+    }, [roomId, isHost]);
+
+    const joinRoom = useCallback(async (joinRoomId: string, joinToken?: string) => {
+        try {
+            const res = await fetchWithAuth('/api/call/join', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ roomId: joinRoomId, joinToken }),
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                toast.error(data.error || 'Impossible de rejoindre l\'appel');
+                return;
+            }
+
+            const { room, existingParticipants, isHost: hostStatus } = await res.json();
+
+            setRoomId(room.roomId);
+            setIsHost(hostStatus);
+            setIsGroupCall(existingParticipants.length > 1);
+            setCanInvite(hostStatus);
+
+            // Créer une connexion pour chaque participant existant
+            for (const participant of existingParticipants) {
+                const currentUser = getUser();
+                if (!currentUser || participant.userId === currentUser.id) continue;
+
+                const pc = initializePeerConnection(participant.userId);
+                
+                // Ajouter le stream local
+                if (localStreamRef.current) {
+                    localStreamRef.current.getTracks().forEach(track => {
+                        pc.addTrack(track, localStreamRef.current!);
+                    });
+                }
+
+                // Créer offer
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+
+                // Envoyer l'offer
+                await emitCallSignal('call:offer-to-peer', {
+                    targetUserId: participant.userId,
+                    roomId: room.roomId,
+                    offer: pc.localDescription,
+                });
+
+                // Ajouter au Map
+                const peer: RemotePeer = {
+                    userId: participant.userId,
+                    userName: participant.userName,
+                    connection: pc,
+                    connectionState: pc.connectionState,
+                    isMuted: false,
+                    isVideoOn: true,
+                    isSpeaking: false,
+                    networkProfile: 'good',
+                    videoQuality: 'auto',
+                    quality: 'good',
+                };
+
+                remotePeersRef.current.set(participant.userId, peer);
+            }
+
+            setRemotePeers(new Map(remotePeersRef.current));
+            setCallStatus('connected');
+
+        } catch (err) {
+            console.error('Join room error:', err);
+            toast.error('Erreur lors de la connexion');
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initializePeerConnection, emitCallSignal]);
+
+    const leaveRoom = useCallback(async () => {
+        if (roomId) {
+            await emitCallSignal('room:leave', { roomId });
+        }
+        
+        // Fermer toutes les connexions
+        remotePeersRef.current.forEach(peer => {
+            peer.connection.close();
+        });
+        remotePeersRef.current.clear();
+        setRemotePeers(new Map());
+        
+        cleanupCall();
+    }, [roomId, emitCallSignal, cleanupCall]);
+
+    const transferHost = useCallback(async (newHostId: string) => {
+        if (!roomId || !isHost) {
+            toast.error('Seul l\'hôte peut transférer le contrôle');
+            return;
+        }
+
+        // Notifier via signal
+        await emitCallSignal('call:signal', {
+            event: 'room:host-transfer',
+            roomId,
+            newHostId,
+        });
+
+        setIsHost(false);
+        setCanInvite(false);
+    }, [roomId, isHost, emitCallSignal]);
+
     // ─── Effets ───────────────────────────────────────────────────────────────
 
     // Sync isInCall
@@ -1328,6 +1523,12 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         isVideoAutoDisabled,
         facingMode,
         autoVideoFallback,
+        // Multi-peer
+        isGroupCall,
+        isHost,
+        roomId,
+        remotePeers,
+        canInvite,
         startCall,
         answerCall,
         answerCallWithData,
@@ -1338,6 +1539,12 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         toggleSpeaker,
         toggleCameraFacing,
         setAutoVideoFallback,
+        // Multi-peer methods
+        inviteParticipant,
+        joinRoom,
+        leaveRoom,
+        transferHost,
+        getRemotePeer,
         setIncomingCallData,
         setRemoteVideoRef,
         prewarmMedia,

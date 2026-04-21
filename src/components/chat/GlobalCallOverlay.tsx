@@ -34,7 +34,9 @@ import {
     RefreshCw,
     FlipHorizontal,
     PictureInPicture,
+    Plus,
 } from 'lucide-react';
+import { InviteModal } from '@/src/components/call/InviteModal';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -227,6 +229,8 @@ export function GlobalCallOverlay() {
         };
     }, [ctx?.remoteStream]);
 
+    const [showInviteModal, setShowInviteModal] = useState(false);
+
     if (!ctx) return null;
 
     const {
@@ -245,6 +249,10 @@ export function GlobalCallOverlay() {
         remoteIsSpeaking,
         isVideoAutoDisabled,
         facingMode,
+        isGroupCall,
+        canInvite,
+        roomId,
+        remotePeers,
         answerCall,
         rejectCall,
         endCall,
@@ -253,6 +261,7 @@ export function GlobalCallOverlay() {
         toggleSpeaker,
         toggleCameraFacing,
         setRemoteVideoRef,
+        inviteParticipant,
     } = ctx;
 
     const isVideoCall = activeCall?.callType === 'video' || (isIncomingCall && incomingCallData?.isVideo !== false);
@@ -610,6 +619,21 @@ export function GlobalCallOverlay() {
                             </div>
                         )}
 
+                        {/* Ajouter participant (visible si host ou mode groupe) */}
+                        {callStatus === 'connected' && canInvite && (
+                            <div className="flex flex-col items-center gap-1 sm:gap-2">
+                                <Button
+                                    size="lg"
+                                    className="rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95 bg-white/20 text-white hover:bg-white/30"
+                                    onClick={() => setShowInviteModal(true)}
+                                    aria-label="Inviter un participant"
+                                >
+                                    <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
+                                </Button>
+                                <span className="text-white/60 text-[10px] sm:text-xs">Inviter</span>
+                            </div>
+                        )}
+
                         {/* Haut-parleur */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2">
                             <Button
@@ -641,6 +665,14 @@ export function GlobalCallOverlay() {
                     </>
                 )}
             </div>
+
+            {/* Modal d'invitation */}
+            <InviteModal
+                isOpen={showInviteModal}
+                onClose={() => setShowInviteModal(false)}
+                roomId={roomId || ''}
+                currentParticipants={Array.from(remotePeers.keys())}
+            />
         </div>
     );
 }

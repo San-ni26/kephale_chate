@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ServiceWorkerRegistration } from "@/src/components/ServiceWorkerRegistration";
 import { NotificationListener } from "@/src/components/chat/NotificationListener";
+import { PresenceHeartbeat } from "@/src/components/chat/PresenceHeartbeat";
 import { GlobalCallOverlay } from "@/src/components/chat/GlobalCallOverlay";
 import { AuthGuard } from "@/src/components/AuthGuard";
 import { CallProvider } from "@/src/contexts/CallContext";
@@ -88,6 +89,7 @@ export default function RootLayout({
               <SWRProvider>
                 <ServiceWorkerRegistration />
                 <NotificationListener />
+                <PresenceHeartbeat />
                 <OfflineBanner />
                 <OfflineQueueSync />
                 <PWAInstaller />
