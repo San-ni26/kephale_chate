@@ -456,13 +456,83 @@ export async function clearRoomInvitation(inviteeId: string, roomId: string): Pr
 }
 
 /**
- * Vérifier si une invitation est valide
+ * Vérifier si une invitation est valide (supporte les tokens publics)
  */
 export async function validateRoomInvitation(
     inviteeId: string,
     roomId: string,
     joinToken: string
 ): Promise<boolean> {
+    // Vérifier le token public (valide pour tous)
+    const publicInvitation = await getRoomInvitation('public', roomId);
+    if (publicInvitation && publicInvitation.joinToken === joinToken) {
+        return true;
+    }
+    
+    // Vérifier l'invitation spécifique à l'utilisateur
     const invitation = await getRoomInvitation(inviteeId, roomId);
     return invitation !== null && invitation.joinToken === joinToken;
+}
+
+/**
+ * Récupérer les informations d'une room
+ */
+export async function getRoomInfo(roomId: string): Promise<(CallRoom & { hostName?: string; status?: string }) | null> {
+    const redis = getRedis();
+    if (!redis) return null;
+
+    try {
+        const data = await redis.get(`${ROOM_PREFIX}${roomId}`);
+        if (!data) return null;
+        
+        const room = (typeof data === 'string' ? JSON.parse(data) : data) as CallRoom;
+        
+        // Récupérer le nom de l'hôte depuis l'invitation publique si disponible
+        const publicInvite = await getRoomInvitation('public', roomId);
+        
+        return {
+            ...room,
+            hostName: publicInvite?.hostName,
+            status: 'active', // Par défaut, on pourrait ajouter un champ status dans CallRoom
+        };
+    } catch (err) {
+        console.error('[Call] getRoomInfo error:', err);
+        return null;
+    }
+}
+
+/**
+ * Valider une invitation pour la page de jointure
+ * Supporte les tokens publics et les invitations spécifiques
+ */
+export async function validateInvitation(
+    roomId: string,
+    inviteeId: string,
+    joinToken: string
+): Promise<boolean> {
+    const redis = getRedis();
+    if (!redis) return false;
+
+    try {
+        // Vérifier d'abord le token public
+        const publicData = await redis.get(`${ROOM_INVITE_PREFIX}public:${roomId}`);
+        if (publicData) {
+            const publicInvite = (typeof publicData === 'string' ? JSON.parse(publicData) : publicData) as RoomInvitation;
+            if (publicInvite.joinToken === joinToken) {
+                return true;
+            }
+        }
+
+        // Vérifier l'invitation spécifique à l'utilisateur
+        const userData = await redis.get(`${ROOM_INVITE_PREFIX}${inviteeId}:${roomId}`);
+        if (userData) {
+            const userInvite = (typeof userData === 'string' ? JSON.parse(userData) : userData) as RoomInvitation;
+            return userInvite.joinToken === joinToken;
+        }
+
+        return false;
+    } catch (err) {
+        console.error('[Call] validateInvitation error:', err);
+        return false;
+    }
 }

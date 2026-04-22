@@ -435,6 +435,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
     const iceRestartAttemptRef = useRef(0);
     const poorNetworkCounterRef = useRef(0);
     const goodNetworkCounterRef = useRef(0);
+    const currentVideoQualityRef = useRef<NetworkProfile>('good');
     activeCallRef.current = activeCall;
     localStreamRef.current = localStream;
 
@@ -539,33 +540,9 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                 setConnectionQuality(displayQuality);
                 setNetworkProfile(profile);
 
-                // Fallback automatique video → audio si réseau poor
-                if (autoVideoFallback && callType === 'video' && !isVideoAutoDisabled) {
-                    if (profile === 'poor') {
-                        poorNetworkCounterRef.current += 1;
-                        goodNetworkCounterRef.current = 0;
-                        // Après 2 cycles (~6s) en poor, désactiver la vidéo
-                        if (poorNetworkCounterRef.current >= 2) {
-                            console.log('[Call] Network poor - auto-disabling video');
-                            localStreamRef.current?.getVideoTracks().forEach((track) => {
-                                track.enabled = false;
-                            });
-                            setIsVideoOn(false);
-                            setIsVideoAutoDisabled(true);
-                            toast.info('Vidéo désactivée pour stabiliser l\'appel');
-                            // Notifier l'autre pair
-                            if (activeCallRef.current) {
-                                emitCallSignal('call:video-disabled', { 
-                                    targetUserId: activeCallRef.current.otherUserId 
-                                });
-                            }
-                        }
-                    } else if (profile === 'good' || profile === 'excellent') {
-                        goodNetworkCounterRef.current += 1;
-                        if (goodNetworkCounterRef.current >= 3) {
-                            poorNetworkCounterRef.current = 0;
-                        }
-                    }
+                // Adaptation progressive de la qualité vidéo (PAS DE COUPURE)
+                if (autoVideoFallback && callType === 'video') {
+                    await applyVideoQuality(profile);
                 }
 
                 // Adapter le bitrate selon le profil
@@ -578,7 +555,50 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
                 // Stats non disponibles encore
             }
         }, 3000); // Toutes les 3 secondes
-    }, [autoVideoFallback, callType, isVideoAutoDisabled, emitCallSignal]);
+    }, [autoVideoFallback, callType, emitCallSignal]);
+
+    // ─── Adaptation progressive de la qualité vidéo locale ───────────────────
+    // Réduit la résolution/framerate sans couper la vidéo
+    
+    const applyVideoQuality = useCallback(async (profile: NetworkProfile): Promise<void> => {
+        if (!localStreamRef.current) return;
+        
+        // Éviter les changements inutiles
+        if (currentVideoQualityRef.current === profile) return;
+        
+        const videoTrack = localStreamRef.current.getVideoTracks()[0];
+        if (!videoTrack) return;
+
+        const settings = {
+            excellent: { width: 1280, height: 720, frameRate: 30 },
+            good: { width: 1280, height: 720, frameRate: 25 },
+            fair: { width: 640, height: 480, frameRate: 20 },
+            poor: { width: 320, height: 240, frameRate: 15 },
+        }[profile];
+        
+        try {
+            await videoTrack.applyConstraints({
+                width: { ideal: settings.width },
+                height: { ideal: settings.height },
+                frameRate: { ideal: settings.frameRate },
+            });
+            
+            currentVideoQualityRef.current = profile;
+            
+            if (process.env.NODE_ENV === 'development') {
+                console.log(`[Call] Video quality adapted: ${profile} → ${settings.width}x${settings.height} @ ${settings.frameRate}fps`);
+            }
+            
+            // Afficher un toast subtil pour informer l'utilisateur
+            if (profile === 'poor') {
+                toast.info('Qualité vidéo réduite pour stabiliser l\'appel', { duration: 3000 });
+            } else if (profile === 'fair' && currentVideoQualityRef.current === 'poor') {
+                toast.success('Qualité vidéo améliorée', { duration: 2000 });
+            }
+        } catch (e) {
+            console.warn('[Call] Failed to apply video quality:', e);
+        }
+    }, []);
 
     // ── Cleanup ────────────────────────────────────────────────────────────────
     const cleanupCall = useCallback(() => {
@@ -613,6 +633,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
         iceRestartAttemptRef.current = 0;
         poorNetworkCounterRef.current = 0;
         goodNetworkCounterRef.current = 0;
+        currentVideoQualityRef.current = 'good';
 
         // Notification
         if (activeCallNotificationRef.current) {

@@ -35,8 +35,12 @@ import {
     FlipHorizontal,
     PictureInPicture,
     Plus,
+    MoreVertical,
+    Users,
+    X,
 } from 'lucide-react';
 import { InviteModal } from '@/src/components/call/InviteModal';
+import { CreateGroupCallModal } from '@/src/components/call/CreateGroupCallModal';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -230,6 +234,20 @@ export function GlobalCallOverlay() {
     }, [ctx?.remoteStream]);
 
     const [showInviteModal, setShowInviteModal] = useState(false);
+    const [showMoreMenu, setShowMoreMenu] = useState(false);
+    const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
+    const moreMenuRef = useRef<HTMLDivElement>(null);
+
+    // Fermer le menu quand on clique ailleurs
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (moreMenuRef.current && !moreMenuRef.current.contains(event.target as Node)) {
+                setShowMoreMenu(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     if (!ctx) return null;
 
@@ -375,9 +393,9 @@ export function GlobalCallOverlay() {
 
             {/* ── Vidéo connectée (plein écran) ────────────────────────────────── */}
             {isVideoCallConnected ? (
-                <>
-                    {/* Vidéo distante — plein écran, jamais interrompue par les re-renders */}
-                    <div className="absolute inset-0">
+                <div className="relative w-full h-full">
+                    {/* Vidéo distante — plein écran */}
+                    <div className="absolute inset-0 z-0">
                         {remoteStream ? (
                             <>
                                 <RemoteVideo
@@ -457,7 +475,7 @@ export function GlobalCallOverlay() {
                             <span className="font-mono text-sm">{formatDuration(callDuration)}</span>
                         </div>
                     </div>
-                </>
+                </div>
             ) : callStatus === 'connected' && !isVideoCall ? (
                 /* ── Appel audio connecté ── */
                 <>
@@ -524,7 +542,7 @@ export function GlobalCallOverlay() {
             )}
 
             {/* ── Barre de contrôles (identique dans tous les états) ────────────── */}
-            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-3 sm:gap-5 pb-6 sm:pb-10 pt-4 sm:pt-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-20 overflow-x-auto">
+            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-3 sm:gap-5 pb-6 sm:pb-10 pt-4 sm:pt-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-30 overflow-x-auto">
                 {isIncomingCall ? (
                     <>
                         <div className="flex flex-col items-center gap-2">
@@ -550,117 +568,275 @@ export function GlobalCallOverlay() {
                     </>
                 ) : (
                     <>
-                        {/* Micro */}
-                        <div className="flex flex-col items-center gap-1 sm:gap-2">
-                            <Button
-                                size="lg"
-                                className={cn(
-                                    'rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95',
-                                    isMuted ? 'bg-red-500/80 text-white' : 'bg-white/20 text-white hover:bg-white/30'
-                                )}
-                                onClick={toggleMute}
-                                aria-label={isMuted ? 'Activer le micro' : 'Couper le micro'}
-                            >
-                                {isMuted ? <MicOff className="w-5 h-5 sm:w-6 sm:h-6" /> : <Mic className="w-5 h-5 sm:w-6 sm:h-6" />}
-                            </Button>
-                            <span className="text-white/60 text-[10px] sm:text-xs">{isMuted ? 'Micro off' : 'Micro'}</span>
-                        </div>
-
-                        {/* Caméra (appel vidéo uniquement) */}
-                        {isVideoCall && (
+                        {/* ─── Barre de contrôles Desktop ─────────────────────────────── */}
+                        <div className="hidden sm:flex items-center justify-center gap-3 sm:gap-5">
+                            {/* Micro */}
                             <div className="flex flex-col items-center gap-1 sm:gap-2">
                                 <Button
                                     size="lg"
                                     className={cn(
                                         'rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95',
-                                        !isVideoOn ? 'bg-red-500/80 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                        isMuted ? 'bg-red-500/80 text-white' : 'bg-white/20 text-white hover:bg-white/30'
                                     )}
-                                    onClick={toggleVideoCamera}
-                                    aria-label={isVideoOn ? 'Couper la caméra' : 'Activer la caméra'}
+                                    onClick={toggleMute}
+                                    aria-label={isMuted ? 'Activer le micro' : 'Couper le micro'}
                                 >
-                                    {isVideoOn ? <Video className="w-5 h-5 sm:w-6 sm:h-6" /> : <VideoOff className="w-5 h-5 sm:w-6 sm:h-6" />}
+                                    {isMuted ? <MicOff className="w-5 h-5 sm:w-6 sm:h-6" /> : <Mic className="w-5 h-5 sm:w-6 sm:h-6" />}
                                 </Button>
-                                <span className="text-white/60 text-[10px] sm:text-xs">{isVideoOn ? 'Caméra' : 'Cam. off'}</span>
+                                <span className="text-white/60 text-[10px] sm:text-xs">{isMuted ? 'Micro off' : 'Micro'}</span>
                             </div>
-                        )}
 
-                        {/* Basculement caméra (mobile uniquement) */}
-                        {isVideoCall && isMobile && callStatus === 'connected' && (
-                            <div className="flex flex-col items-center gap-1 sm:gap-2">
-                                <Button
-                                    size="lg"
-                                    className="rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95 bg-white/20 text-white hover:bg-white/30"
-                                    onClick={toggleCameraFacing}
-                                    aria-label="Changer de caméra"
-                                >
-                                    <FlipHorizontal className="w-5 h-5 sm:w-6 sm:h-6" />
-                                </Button>
-                                <span className="text-white/60 text-[10px] sm:text-xs">
-                                    {facingMode === 'user' ? 'Face' : 'Arrière'}
-                                </span>
-                            </div>
-                        )}
+                            {/* Caméra (appel vidéo uniquement) */}
+                            {isVideoCall && (
+                                <div className="flex flex-col items-center gap-1 sm:gap-2">
+                                    <Button
+                                        size="lg"
+                                        className={cn(
+                                            'rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95',
+                                            !isVideoOn ? 'bg-red-500/80 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                        )}
+                                        onClick={toggleVideoCamera}
+                                        aria-label={isVideoOn ? 'Couper la caméra' : 'Activer la caméra'}
+                                    >
+                                        {isVideoOn ? <Video className="w-5 h-5 sm:w-6 sm:h-6" /> : <VideoOff className="w-5 h-5 sm:w-6 sm:h-6" />}
+                                    </Button>
+                                    <span className="text-white/60 text-[10px] sm:text-xs">{isVideoOn ? 'Caméra' : 'Cam. off'}</span>
+                                </div>
+                            )}
 
-                        {/* Picture-in-Picture */}
-                        {isVideoCall && isPiPSupported && callStatus === 'connected' && (
+                            {/* Basculement caméra (mobile uniquement) */}
+                            {isVideoCall && isMobile && callStatus === 'connected' && (
+                                <div className="flex flex-col items-center gap-1 sm:gap-2">
+                                    <Button
+                                        size="lg"
+                                        className="rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95 bg-white/20 text-white hover:bg-white/30"
+                                        onClick={toggleCameraFacing}
+                                        aria-label="Changer de caméra"
+                                    >
+                                        <FlipHorizontal className="w-5 h-5 sm:w-6 sm:h-6" />
+                                    </Button>
+                                    <span className="text-white/60 text-[10px] sm:text-xs">
+                                        {facingMode === 'user' ? 'Face' : 'Arrière'}
+                                    </span>
+                                </div>
+                            )}
+
+                            {/* Picture-in-Picture */}
+                            {isVideoCall && isPiPSupported && callStatus === 'connected' && (
+                                <div className="flex flex-col items-center gap-1 sm:gap-2">
+                                    <Button
+                                        size="lg"
+                                        className={cn(
+                                            'rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95',
+                                            isPiPActive ? 'bg-primary/60 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                        )}
+                                        onClick={togglePiP}
+                                        aria-label="Picture-in-Picture"
+                                    >
+                                        <PictureInPicture className="w-5 h-5 sm:w-6 sm:h-6" />
+                                    </Button>
+                                    <span className="text-white/60 text-[10px] sm:text-xs">PiP</span>
+                                </div>
+                            )}
+
+                            {/* Ajouter participant (visible si host ou mode groupe) */}
+                            {callStatus === 'connected' && canInvite && (
+                                <div className="flex flex-col items-center gap-1 sm:gap-2">
+                                    <Button
+                                        size="lg"
+                                        className="rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95 bg-white/20 text-white hover:bg-white/30"
+                                        onClick={() => setShowInviteModal(true)}
+                                        aria-label="Inviter un participant"
+                                    >
+                                        <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
+                                    </Button>
+                                    <span className="text-white/60 text-[10px] sm:text-xs">Inviter</span>
+                                </div>
+                            )}
+
+                            {/* Haut-parleur */}
                             <div className="flex flex-col items-center gap-1 sm:gap-2">
                                 <Button
                                     size="lg"
                                     className={cn(
                                         'rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95',
-                                        isPiPActive ? 'bg-primary/60 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                        isSpeakerOn ? 'bg-primary/60 text-white' : 'bg-white/20 text-white hover:bg-white/30'
                                     )}
-                                    onClick={togglePiP}
-                                    aria-label="Picture-in-Picture"
+                                    onClick={toggleSpeaker}
+                                    aria-label="Haut-parleur"
                                 >
-                                    <PictureInPicture className="w-5 h-5 sm:w-6 sm:h-6" />
+                                    <Volume2 className="w-5 h-5 sm:w-6 sm:h-6" />
                                 </Button>
-                                <span className="text-white/60 text-[10px] sm:text-xs">PiP</span>
+                                <span className="text-white/60 text-[10px] sm:text-xs">HP</span>
                             </div>
-                        )}
 
-                        {/* Ajouter participant (visible si host ou mode groupe) */}
-                        {callStatus === 'connected' && canInvite && (
+                            {/* Raccrocher */}
                             <div className="flex flex-col items-center gap-1 sm:gap-2">
                                 <Button
                                     size="lg"
-                                    className="rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95 bg-white/20 text-white hover:bg-white/30"
-                                    onClick={() => setShowInviteModal(true)}
-                                    aria-label="Inviter un participant"
+                                    className="rounded-full w-14 h-14 sm:w-16 sm:h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30 transition-transform active:scale-95"
+                                    onClick={endCall}
+                                    aria-label="Raccrocher"
                                 >
-                                    <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
+                                    <PhoneOff className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                                 </Button>
-                                <span className="text-white/60 text-[10px] sm:text-xs">Inviter</span>
+                                <span className="text-white/60 text-[10px] sm:text-xs">Raccrocher</span>
                             </div>
-                        )}
-
-                        {/* Haut-parleur */}
-                        <div className="flex flex-col items-center gap-1 sm:gap-2">
-                            <Button
-                                size="lg"
-                                className={cn(
-                                    'rounded-full w-12 h-12 sm:w-14 sm:h-14 shadow-lg transition-all active:scale-95',
-                                    isSpeakerOn ? 'bg-primary/60 text-white' : 'bg-white/20 text-white hover:bg-white/30'
-                                )}
-                                onClick={toggleSpeaker}
-                                aria-label="Haut-parleur"
-                            >
-                                <Volume2 className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </Button>
-                            <span className="text-white/60 text-[10px] sm:text-xs">HP</span>
                         </div>
 
-                        {/* Raccrocher */}
-                        <div className="flex flex-col items-center gap-1 sm:gap-2">
-                            <Button
-                                size="lg"
-                                className="rounded-full w-14 h-14 sm:w-16 sm:h-16 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30 transition-transform active:scale-95"
-                                onClick={endCall}
-                                aria-label="Raccrocher"
-                            >
-                                <PhoneOff className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-                            </Button>
-                            <span className="text-white/60 text-[10px] sm:text-xs">Raccrocher</span>
+                        {/* ─── Barre de contrôles Mobile ──────────────────────────────── */}
+                        <div className="flex sm:hidden items-center justify-center gap-3">
+                            {/* Micro */}
+                            <div className="flex flex-col items-center gap-1">
+                                <Button
+                                    size="lg"
+                                    className={cn(
+                                        'rounded-full w-11 h-11 shadow-lg transition-all active:scale-95',
+                                        isMuted ? 'bg-red-500/80 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                    )}
+                                    onClick={toggleMute}
+                                    aria-label={isMuted ? 'Activer le micro' : 'Couper le micro'}
+                                >
+                                    {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                                </Button>
+                                <span className="text-white/60 text-[10px]">{isMuted ? 'Off' : 'Micro'}</span>
+                            </div>
+
+                            {/* Caméra (appel vidéo uniquement) */}
+                            {isVideoCall && (
+                                <div className="flex flex-col items-center gap-1">
+                                    <Button
+                                        size="lg"
+                                        className={cn(
+                                            'rounded-full w-11 h-11 shadow-lg transition-all active:scale-95',
+                                            !isVideoOn ? 'bg-red-500/80 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                        )}
+                                        onClick={toggleVideoCamera}
+                                        aria-label={isVideoOn ? 'Couper la caméra' : 'Activer la caméra'}
+                                    >
+                                        {isVideoOn ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
+                                    </Button>
+                                    <span className="text-white/60 text-[10px]">{isVideoOn ? 'Cam' : 'Off'}</span>
+                                </div>
+                            )}
+
+                            {/* Menu Plus (regroupe les options secondaires) */}
+                            <div className="relative flex flex-col items-center gap-1" ref={moreMenuRef}>
+                                <Button
+                                    size="lg"
+                                    className={cn(
+                                        'rounded-full w-11 h-11 shadow-lg transition-all active:scale-95',
+                                        showMoreMenu ? 'bg-primary/60 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+                                    )}
+                                    onClick={() => setShowMoreMenu(!showMoreMenu)}
+                                    aria-label="Plus d'options"
+                                >
+                                    <MoreVertical className="w-5 h-5" />
+                                </Button>
+                                <span className="text-white/60 text-[10px]">Plus</span>
+
+                                {/* Menu déroulant - utilisant fixed pour sortir du contexte de stacking */}
+                                {showMoreMenu && (
+                                    <div 
+                                        className="fixed flex flex-col gap-2 p-2 bg-black/90 backdrop-blur-md rounded-xl border border-white/10 z-[200] shadow-2xl"
+                                        style={{
+                                            bottom: '100px',
+                                            left: '50%',
+                                            transform: 'translateX(-50%)'
+                                        }}
+                                    >
+                                        {/* Flip caméra */}
+                                        {isVideoCall && isMobile && callStatus === 'connected' && (
+                                            <Button
+                                                size="sm"
+                                                className="rounded-full w-10 h-10 bg-white/10 text-white hover:bg-white/20"
+                                                onClick={() => {
+                                                    toggleCameraFacing();
+                                                    setShowMoreMenu(false);
+                                                }}
+                                                aria-label="Changer de caméra"
+                                            >
+                                                <FlipHorizontal className="w-4 h-4" />
+                                            </Button>
+                                        )}
+
+                                        {/* PiP */}
+                                        {isVideoCall && isPiPSupported && callStatus === 'connected' && (
+                                            <Button
+                                                size="sm"
+                                                className={cn(
+                                                    'rounded-full w-10 h-10',
+                                                    isPiPActive ? 'bg-primary/60 text-white' : 'bg-white/10 text-white hover:bg-white/20'
+                                                )}
+                                                onClick={() => {
+                                                    togglePiP();
+                                                    setShowMoreMenu(false);
+                                                }}
+                                                aria-label="Picture-in-Picture"
+                                            >
+                                                <PictureInPicture className="w-4 h-4" />
+                                            </Button>
+                                        )}
+
+                                        {/* Inviter */}
+                                        {callStatus === 'connected' && canInvite && (
+                                            <Button
+                                                size="sm"
+                                                className="rounded-full w-10 h-10 bg-white/10 text-white hover:bg-white/20"
+                                                onClick={() => {
+                                                    setShowInviteModal(true);
+                                                    setShowMoreMenu(false);
+                                                }}
+                                                aria-label="Inviter un participant"
+                                            >
+                                                <Plus className="w-4 h-4" />
+                                            </Button>
+                                        )}
+
+                                        {/* Nouvel appel groupe */}
+                                        <Button
+                                            size="sm"
+                                            className="rounded-full w-10 h-10 bg-white/10 text-white hover:bg-white/20"
+                                            onClick={() => {
+                                                setShowCreateGroupModal(true);
+                                                setShowMoreMenu(false);
+                                            }}
+                                            aria-label="Nouvel appel groupe"
+                                        >
+                                            <Users className="w-4 h-4" />
+                                        </Button>
+
+                                        {/* Haut-parleur */}
+                                        <Button
+                                            size="sm"
+                                            className={cn(
+                                                'rounded-full w-10 h-10',
+                                                isSpeakerOn ? 'bg-primary/60 text-white' : 'bg-white/10 text-white hover:bg-white/20'
+                                            )}
+                                            onClick={() => {
+                                                toggleSpeaker();
+                                                setShowMoreMenu(false);
+                                            }}
+                                            aria-label="Haut-parleur"
+                                        >
+                                            <Volume2 className="w-4 h-4" />
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Raccrocher */}
+                            <div className="flex flex-col items-center gap-1">
+                                <Button
+                                    size="lg"
+                                    className="rounded-full w-12 h-12 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30 transition-transform active:scale-95"
+                                    onClick={endCall}
+                                    aria-label="Raccrocher"
+                                >
+                                    <PhoneOff className="w-5 h-5 text-white" />
+                                </Button>
+                                <span className="text-white/60 text-[10px]">Fin</span>
+                            </div>
                         </div>
                     </>
                 )}
@@ -672,6 +848,16 @@ export function GlobalCallOverlay() {
                 onClose={() => setShowInviteModal(false)}
                 roomId={roomId || ''}
                 currentParticipants={Array.from(remotePeers.keys())}
+            />
+
+            {/* Modal de création d'appel groupe */}
+            <CreateGroupCallModal
+                isOpen={showCreateGroupModal}
+                onClose={() => setShowCreateGroupModal(false)}
+                onRoomCreated={(roomId, link) => {
+                    console.log('Room created:', roomId, link);
+                    // Optionnel: rediriger vers la room ou afficher un toast
+                }}
             />
         </div>
     );

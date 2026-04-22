@@ -9,6 +9,7 @@ import {
     validateRoomInvitation,
     clearRoomInvitation,
     getRoomByParticipant,
+    getRoomInfo,
 } from '@/src/lib/call-redis';
 
 /**
@@ -198,6 +199,9 @@ export async function GET(request: NextRequest) {
             );
         }
 
+        // Récupérer les infos complètes avec le nom de l'hôte
+        const roomInfo = await getRoomInfo(roomId);
+
         // Vérifier si déjà dans la salle
         if (room.participants.includes(user.userId)) {
             return NextResponse.json({
@@ -209,6 +213,7 @@ export async function GET(request: NextRequest) {
                     callType: room.callType,
                     participantCount: room.participants.length,
                 },
+                hostName: roomInfo?.hostName,
             });
         }
 
@@ -228,6 +233,7 @@ export async function GET(request: NextRequest) {
                 callType: room.callType,
                 participantCount: room.participants.length,
             } : undefined,
+            hostName: canJoin ? roomInfo?.hostName : undefined,
         });
     } catch (error) {
         console.error('Call join validate error:', error);
