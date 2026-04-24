@@ -65,3 +65,85 @@ export function parseDeviceInfo(deviceInfoJson: any): DeviceInfo | null {
         return null;
     }
 }
+
+// ============ Client-side utilities ============
+
+/**
+ * Detect if device is mobile
+ */
+export function isMobileDevice(): boolean {
+    if (typeof window === 'undefined') return false;
+
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+    );
+}
+
+/**
+ * Detect if device is iOS
+ */
+export function isIOS(): boolean {
+    if (typeof window === 'undefined') return false;
+
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+        !(window as unknown as { MSStream: unknown }).MSStream;
+}
+
+/**
+ * Detect if device is Android
+ */
+export function isAndroid(): boolean {
+    if (typeof window === 'undefined') return false;
+
+    return /Android/.test(navigator.userAgent);
+}
+
+/**
+ * Detect if device is a tablet
+ */
+export function isTablet(): boolean {
+    if (typeof window === 'undefined') return false;
+
+    const userAgent = navigator.userAgent;
+    const isIPad = /iPad/.test(userAgent);
+    const isAndroidTablet = /Android/.test(userAgent) && !/Mobile/.test(userAgent);
+
+    return isIPad || isAndroidTablet || (
+        window.innerWidth >= 768 && window.innerWidth <= 1366 && isMobileDevice()
+    );
+}
+
+/**
+ * Detect if device supports touch
+ */
+export function isTouchDevice(): boolean {
+    if (typeof window === 'undefined') return false;
+
+    return 'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        (navigator as unknown as { msMaxTouchPoints: number }).msMaxTouchPoints > 0;
+}
+
+/**
+ * Detect if app is in standalone mode (PWA installed)
+ */
+export function isStandalone(): boolean {
+    if (typeof window === 'undefined') return false;
+
+    return window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as unknown as { standalone: boolean }).standalone === true;
+}
+
+/**
+ * Hook to get device info
+ */
+export function useDeviceInfo() {
+    return {
+        isMobile: isMobileDevice(),
+        isIOS: isIOS(),
+        isAndroid: isAndroid(),
+        isTablet: isTablet(),
+        isTouch: isTouchDevice(),
+        isStandalone: isStandalone(),
+    };
+}

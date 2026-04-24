@@ -61,7 +61,19 @@ export const decryptMessage = (
     theirPublicKey: string
 ): string | null => {
     try {
+        // Vérifier que le message n'est pas vide
+        if (!encryptedStr || encryptedStr.trim() === '') {
+            return null;
+        }
+
         const fullMessage = decodeBase64(encryptedStr);
+        
+        // Vérifier que le message a une taille suffisante pour contenir un nonce
+        if (fullMessage.length < nacl.box.nonceLength) {
+            console.warn('Message trop court pour contenir un nonce');
+            return null;
+        }
+        
         const nonce = fullMessage.slice(0, nacl.box.nonceLength);
         const internalMessage = fullMessage.slice(nacl.box.nonceLength, fullMessage.length);
 

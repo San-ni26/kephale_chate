@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import {
     MapPin, Briefcase, Clock, Users, Globe, Phone, Mail,
     Upload, CheckCircle2, Loader2, ChevronRight, Building2, Calendar,
-    GraduationCap, Star, Send
+    GraduationCap, Star, Send, Lock
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/src/components/ui/dialog";
 import { Button } from "@/src/components/ui/button";
@@ -14,7 +14,7 @@ import { Label } from "@/src/components/ui/label";
 import { Textarea } from "@/src/components/ui/textarea";
 import { toast } from "sonner";
 import { fetcher } from "@/src/lib/fetcher";
-import { getAuthHeader } from "@/src/lib/auth-client";
+import { getAuthHeader, getUser } from "@/src/lib/auth-client";
 import useSWR from "swr";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -135,6 +135,21 @@ export default function JobDetailPage() {
         fetcher
     );
     const myApplication = myAppData?.application;
+
+    // Gérer le clic sur Postuler - rediriger vers login si non connecté
+    const handleApplyClick = () => {
+        const user = getUser();
+        if (!user) {
+            // Stocker l'URL de retour dans localStorage
+            localStorage.setItem('returnUrl', window.location.pathname);
+            toast.info('Veuillez vous connecter pour postuler', {
+                description: 'Vous allez être redirigé vers la page de connexion',
+            });
+            router.push('/login');
+            return;
+        }
+        setShowForm(true);
+    };
 
     useEffect(() => {
         const handler = (e: CustomEvent<{ jobId: string }>) => {
@@ -365,6 +380,23 @@ export default function JobDetailPage() {
                         )}
                     </div>
                 </div>
+
+                {/* Bouton Postuler - Visible publiquement */}
+                {!isExpired && (
+                    <div className="sticky bottom-4 z-10">
+                        <Button
+                            onClick={handleApplyClick}
+                            className="w-full py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-shadow"
+                            size="lg"
+                        >
+                            <Send className="w-5 h-5 mr-2" />
+                            Postuler à cette offre
+                        </Button>
+                        <p className="text-center text-xs text-muted-foreground mt-2">
+                            Connectez-vous ou créez un compte pour postuler
+                        </p>
+                    </div>
+                )}
 
                 {/* Formulaire de candidature (Dialog centré avec étapes) */}
                 <Dialog open={showForm} onOpenChange={(open) => { setShowForm(open); if (!open) setFormStep(0); }}>

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { User, Search, MessageSquarePlus, Building2, NotepadText, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet, Crown } from 'lucide-react';
+import { User, Search, MessageSquarePlus, Building2, NotepadText, Bell, Settings, MessageSquare, ChevronLeft, ChevronRight, Wallet, Crown, Loader2 } from 'lucide-react';
 import useSWR from 'swr';
 import { fetcher } from '@/src/lib/fetcher';
 import { useRouter } from 'next/navigation';
@@ -15,6 +15,9 @@ import { Button } from '@/src/components/ui/button';
 import { useWebSocket } from '@/src/hooks/useWebSocket';
 import { ConversationActionsMenu } from '@/src/components/chat/ConversationActionsMenu';
 import { UserAvatar } from '@/src/components/ui/UserAvatar';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/src/lib/utils';
+import { triggerHaptic } from '@/src/lib/haptics';
 
 interface Conversation {
     id: string;
@@ -60,6 +63,14 @@ export function ConversationSidebar() {
     });
     const [searchQuery, setSearchQuery] = useState('');
     const [isCollapsed, setIsCollapsed] = useState(false);
+    
+    // Pull to refresh state
+    const [isPulling, setIsPulling] = useState(false);
+    const [pullDistance, setPullDistance] = useState(0);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const listRef = useRef<HTMLDivElement>(null);
+    const startY = useRef(0);
+    const isTouching = useRef(false);
 
     const conversations: Conversation[] = conversationsData?.conversations || [];
     const currentUserId = profileData?.profile?.id;
@@ -92,6 +103,54 @@ export function ConversationSidebar() {
         }
         mutateConversations();
     }, [pathname, mutateConversations]);
+
+    // Pull to refresh handlers
+    const handleTouchStart = useCallback((e: React.TouchEvent) => {
+        // Only enable pull to refresh when at the top of the list
+        if (listRef.current && listRef.current.scrollTop === 0) {
+            startY.current = e.touches[0].clientY;
+            isTouching.current = true;
+        }
+    }, []);
+
+    const handleTouchMove = useCallback((e: React.TouchEvent) => {
+        if (!isTouching.current || !listRef.current) return;
+        
+        const currentY = e.touches[0].clientY;
+        const diff = currentY - startY.current;
+        
+        // Only pull down, not up
+        if (diff > 0 && listRef.current.scrollTop === 0) {
+            // Apply resistance
+            const resistance = 0.5;
+            const newDistance = Math.min(diff * resistance, 100);
+            setPullDistance(newDistance);
+            setIsPulling(newDistance > 20);
+            
+            // Prevent default scrolling when pulling
+            if (newDistance > 10) {
+                e.preventDefault();
+            }
+        }
+    }, []);
+
+    const handleTouchEnd = useCallback(async () => {
+        if (!isTouching.current) return;
+        
+        isTouching.current = false;
+        
+        // Trigger refresh if pulled far enough
+        if (pullDistance > 60) {
+            setIsRefreshing(true);
+            triggerHaptic('SUCCESS', 'light');
+            await mutateConversations();
+            setIsRefreshing(false);
+        }
+        
+        // Reset pull distance
+        setPullDistance(0);
+        setIsPulling(false);
+    }, [pullDistance, mutateConversations]);
 
     const filteredConversations = conversations
         .filter(c => c.isDirect)
@@ -157,8 +216,50 @@ export function ConversationSidebar() {
                 )}
             </div>
 
+            {/* Pull to refresh indicator */}
+            <AnimatePresence>
+                {(isPulling || isRefreshing) && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ 
+                            opacity: 1, 
+                            height: Math.max(pullDistance, isRefreshing ? 50 : 0)
+                        }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="flex items-center justify-center overflow-hidden bg-muted/30"
+                    >
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                            {isRefreshing ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    <span className="text-sm">Actualisation...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <motion.div
+                                        animate={{ rotate: pullDistance > 60 ? 180 : 0 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <ChevronLeft className="w-5 h-5 -rotate-90" />
+                                    </motion.div>
+                                    <span className="text-sm">
+                                        {pullDistance > 60 ? 'Relâcher pour actualiser' : 'Tirer pour actualiser'}
+                                    </span>
+                                </>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* List */}
-            <div className="flex-1 min-h-0 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+            <div 
+                ref={listRef}
+                className="flex-1 min-h-0 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+            >
                 {conversationsError ? (
                     <div className="flex flex-col items-center justify-center h-40 text-muted-foreground text-sm gap-2">
                         {!isCollapsed && (
@@ -188,10 +289,13 @@ export function ConversationSidebar() {
                             return (
                                 <div
                                     key={chat.id}
-                                    className={`flex items-center p-3 rounded-lg transition-colors cursor-pointer group ${isActive
-                                        ? 'bg-primary/10 hover:bg-primary/15'
-                                        : 'hover:bg-muted/50'
-                                        } ${isCollapsed ? 'justify-center' : ''}`}
+                                    className={cn(
+                                        'flex items-center p-3 rounded-lg transition-colors cursor-pointer group',
+                                        isActive
+                                            ? 'bg-primary/10 hover:bg-primary/15'
+                                            : 'hover:bg-muted/50',
+                                        isCollapsed ? 'justify-center' : ''
+                                    )}
                                     onClick={() => router.push(`/chat/discussion/${chat.id}`)}
                                     role="button"
                                     tabIndex={0}
@@ -203,7 +307,7 @@ export function ConversationSidebar() {
                                             avatarUrl={otherMember?.avatarUrl}
                                             name={chatName}
                                             size={isCollapsed ? "md" : "md"}
-                                            className={`border border-border ${isCollapsed ? 'h-10 w-10' : 'h-12 w-12'}`}
+                                            className={cn('border border-border', isCollapsed ? 'h-10 w-10' : 'h-12 w-12')}
                                         />
                                         {/* Online indicator */}
                                         {otherMember?.isOnline && (
@@ -221,7 +325,7 @@ export function ConversationSidebar() {
                                         <div className="ml-3 flex-1 min-w-0 transition-opacity duration-200">
                                             <div className="flex justify-between items-baseline mb-1">
                                                 <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                                                    <h3 className={`text-sm truncate ${unread > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground'}`}>
+                                                    <h3 className={cn('text-sm truncate', unread > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground')}>
                                                         {chatName}
                                                     </h3>
                                                     {otherMember?.isPro && (
@@ -232,7 +336,7 @@ export function ConversationSidebar() {
                                                 </div>
                                                 <div className="flex items-center gap-1 shrink-0 ml-2" onClick={(e) => e.stopPropagation()}>
                                                     {lastMessage && (
-                                                        <span className={`text-[10px] ${unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
+                                                        <span className={cn('text-[10px]', unread > 0 ? 'text-primary font-semibold' : 'text-muted-foreground')}>
                                                             {formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: false, locale: fr })}
                                                         </span>
                                                     )}
@@ -251,7 +355,7 @@ export function ConversationSidebar() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center justify-between">
-                                                <p className={`text-xs truncate pr-2 ${unread > 0 ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
+                                                <p className={cn('text-xs truncate pr-2', unread > 0 ? 'text-foreground font-medium' : 'text-muted-foreground')}>
                                                     {lastMessage ? (
                                                         <span>
                                                             {lastMessage.sender.id === currentUserId && "Vous: "}
@@ -279,14 +383,14 @@ export function ConversationSidebar() {
 
             {/* Desktop Navigation */}
             <div className="p-2 border-t border-border bg-muted/20">
-                <div className={`flex items-center ${isCollapsed ? 'flex-col gap-4 py-2' : 'justify-around'}`}>
-                    <Link href="/chat/organizations" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/organizations') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Organisations">
+                <div className={cn('flex items-center', isCollapsed ? 'flex-col gap-4 py-2' : 'justify-around')}>
+                    <Link href="/chat/organizations" className={cn('p-2 rounded-lg transition-colors', pathname?.startsWith('/chat/organizations') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted')} title="Organisations">
                         <Building2 className="w-5 h-5" />
                     </Link>
-                    <Link href="/chat/groups" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/groups') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Notes">
+                    <Link href="/chat/groups" className={cn('p-2 rounded-lg transition-colors', pathname?.startsWith('/chat/groups') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted')} title="Notes">
                         <NotepadText className="w-5 h-5" />
                     </Link>
-                    <Link href="/chat" className={`relative p-2 rounded-lg transition-colors ${pathname === '/chat' || pathname?.startsWith('/chat/discussion') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Chats">
+                    <Link href="/chat" className={cn('relative p-2 rounded-lg transition-colors', pathname === '/chat' || pathname?.startsWith('/chat/discussion') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted')} title="Chats">
                         <MessageSquare className="w-5 h-5" />
                         {totalUnread > 0 && (
                             <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] bg-primary text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center px-1">
@@ -294,13 +398,13 @@ export function ConversationSidebar() {
                             </span>
                         )}
                     </Link>
-                    <Link href="/chat/notifications" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/notifications') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Actualites">
+                    <Link href="/chat/notifications" className={cn('p-2 rounded-lg transition-colors', pathname?.startsWith('/chat/notifications') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted')} title="Actualites">
                         <Bell className="w-5 h-5" />
                     </Link>
-                    <Link href="/chat/finances" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/finances') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Finances">
+                    <Link href="/chat/finances" className={cn('p-2 rounded-lg transition-colors', pathname?.startsWith('/chat/finances') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted')} title="Finances">
                         <Wallet className="w-5 h-5" />
                     </Link>
-                    <Link href="/chat/settings" className={`p-2 rounded-lg transition-colors ${pathname?.startsWith('/chat/settings') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted'}`} title="Reglages">
+                    <Link href="/chat/settings" className={cn('p-2 rounded-lg transition-colors', pathname?.startsWith('/chat/settings') ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:bg-muted')} title="Reglages">
                         <Settings className="w-5 h-5" />
                     </Link>
                 </div>

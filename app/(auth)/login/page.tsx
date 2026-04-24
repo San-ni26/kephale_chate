@@ -67,7 +67,15 @@ export default function LoginPage() {
 
             setAuth(data.token, data.user);
             toast.success(data.message);
-            router.push('/chat');
+            
+            // Vérifier s'il y a une URL de retour stockée
+            const returnUrl = localStorage.getItem('returnUrl');
+            if (returnUrl) {
+                localStorage.removeItem('returnUrl');
+                router.push(returnUrl);
+            } else {
+                router.push('/chat');
+            }
         } catch (error: any) {
             const msg = error.message || 'Erreur lors de la connexion';
             toast.error(msg);

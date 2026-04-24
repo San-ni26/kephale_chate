@@ -27,6 +27,7 @@ import { sendWithOfflineQueue } from '@/src/lib/offline-queue';
 import { addMessageToCache, removeMessageFromCache } from '@/src/lib/api-cache';
 import { encryptMessage } from '@/src/lib/crypto';
 import { compressAudioBlob } from '@/src/lib/audio-utils';
+import { compressImage, needsCompression } from '@/src/lib/image-compression';
 
 export interface MessageAttachment {
     id?: string;
@@ -48,6 +49,7 @@ function extractUrls(text: string): string[] {
 export interface MessagePayload {
     encryptedContent: string;
     attachments?: MessageAttachment[];
+    replyToId?: string;
 }
 
 export interface DiscussionMessage {
@@ -57,6 +59,12 @@ export interface DiscussionMessage {
     createdAt: string;
     updatedAt: string;
     isEdited: boolean;
+    isRead?: boolean;
+    replyTo?: {
+        id: string;
+        content: string;
+        senderName: string;
+    } | null;
     attachments?: MessageAttachment[];
     sender: {
         id: string;
@@ -165,7 +173,8 @@ export function useDiscussionMessages({
         async (
             messageText: string,
             selectedFiles: { file: File; previewUrl: string }[],
-            revokeAllFileUrls: () => void
+            revokeAllFileUrls: () => void,
+            replyToId?: string
         ) => {
             if (!messageText.trim() && selectedFiles.length === 0) return;
             if (!currentUser || !otherUser || !privateKey) {
@@ -185,13 +194,30 @@ export function useDiscussionMessages({
 
             try {
                 const attachments: MessageAttachment[] = [];
+                
+                // Compresser les images avant upload
                 for (const { file } of currentFiles) {
                     const ext = file.name.split('.').pop()?.toLowerCase() || '';
                     let fileType = 'IMAGE';
                     if (['pdf'].includes(ext)) fileType = 'PDF';
                     else if (['doc', 'docx'].includes(ext)) fileType = 'WORD';
                     else if (['webm', 'mp3', 'ogg', 'm4a', 'wav', 'aac'].includes(ext)) fileType = 'AUDIO';
-                    const uploaded = await uploadFileToSupabase(file, 'discussions', conversationId || 'unknown');
+                    
+                    // Compresser si c'est une image et qu'elle est trop grande
+                    let fileToUpload = file;
+                    if (fileType === 'IMAGE' && needsCompression(file, 2)) {
+                        try {
+                            fileToUpload = await compressImage(file, {
+                                maxSizeMB: 2,
+                                maxWidthOrHeight: 1920,
+                            });
+                            console.log(`Image compressée: ${(file.size / 1024 / 1024).toFixed(2)}MB → ${(fileToUpload.size / 1024 / 1024).toFixed(2)}MB`);
+                        } catch (err) {
+                            console.warn('Compression failed, using original file', err);
+                        }
+                    }
+                    
+                    const uploaded = await uploadFileToSupabase(fileToUpload, 'discussions', conversationId || 'unknown');
                     attachments.push({ filename: file.name, type: fileType, data: uploaded.url });
                 }
 
@@ -214,6 +240,7 @@ export function useDiscussionMessages({
                 payload = {
                     encryptedContent: cipherText,
                     attachments: attachments.length > 0 ? attachments : undefined,
+                    replyToId,
                 };
 
                 const optimisticCreatedAt = new Date().toISOString();
@@ -224,6 +251,7 @@ export function useDiscussionMessages({
                     createdAt: optimisticCreatedAt,
                     updatedAt: optimisticCreatedAt,
                     isEdited: false,
+                    replyTo: replyToId ? { id: replyToId, content: '', senderName: '' } : undefined,
                     attachments,
                     sender: {
                         id: currentUser.id,
@@ -240,6 +268,7 @@ export function useDiscussionMessages({
                 const bodyStr = JSON.stringify({
                     content: cipherText,
                     attachments: attachments.length > 0 ? attachments : undefined,
+                    replyToId,
                 });
                 const result = await sendWithOfflineQueue(url, { method: 'POST', body: bodyStr }, tempId, (u, opts) =>
                     fetchWithAuth(u, opts as RequestInit)
@@ -248,7 +277,7 @@ export function useDiscussionMessages({
                 if (result.queued) {
                     toast.info('Message en attente (hors ligne)');
                     pendingTempIdsRef.current.delete(tempId); // Plus en vol, en queue
-                    if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
+                    if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload as MessagePayload));
                 } else if (result.ok && result.response) {
                     const data = await result.response.json();
                     if (data.message) replaceTempMessage(tempId, data.message, optimisticCreatedAt);
@@ -257,13 +286,13 @@ export function useDiscussionMessages({
                     const error = await result.response.json();
                     toast.error(error.error || "Erreur d'envoi");
                     pendingTempIdsRef.current.delete(tempId);
-                    if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
+                    if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload as MessagePayload));
                 }
             } catch (error) {
                 console.error('Send message error:', error);
                 toast.error("Erreur d'envoi du message");
                 pendingTempIdsRef.current.delete(tempId);
-                if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
+                if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload as MessagePayload));
             } finally {
                 setSending(false);
             }
@@ -273,7 +302,7 @@ export function useDiscussionMessages({
 
     /** Envoie un message audio */
     const sendAudioMessage = useCallback(
-        async (audioFile: File) => {
+        async (audioFile: File, replyToId?: string) => {
             if (!currentUser || !otherUser || !privateKey) {
                 toast.error('Clé de chiffrement manquante');
                 return;
@@ -291,7 +320,7 @@ export function useDiscussionMessages({
                 const uploaded = await uploadFileToSupabase(compressedFile, 'audio', conversationId || 'unknown');
                 const attachment: MessageAttachment = { filename: audioFile.name, type: 'AUDIO', data: uploaded.url };
                 const encryptedContent = encryptMessage('', privateKey, otherUser.publicKey);
-                payload = { encryptedContent, attachments: [attachment] };
+                payload = { encryptedContent, attachments: [attachment], replyToId };
 
                 const optimisticCreatedAt = new Date().toISOString();
                 const optimisticMessage: DiscussionMessage = {
@@ -301,6 +330,7 @@ export function useDiscussionMessages({
                     createdAt: optimisticCreatedAt,
                     updatedAt: optimisticCreatedAt,
                     isEdited: false,
+                    replyTo: replyToId ? { id: replyToId, content: '', senderName: '' } : undefined,
                     attachments: [attachment],
                     sender: {
                         id: currentUser.id,
@@ -313,7 +343,7 @@ export function useDiscussionMessages({
                 setMessages(prev => [...prev, optimisticMessage]);
 
                 const url = `/api/conversations/${conversationId}/messages`;
-                const bodyStr = JSON.stringify({ content: encryptedContent, attachments: [attachment] });
+                const bodyStr = JSON.stringify({ content: encryptedContent, attachments: [attachment], replyToId });
                 const result = await sendWithOfflineQueue(url, { method: 'POST', body: bodyStr }, tempId, (u, opts) =>
                     fetchWithAuth(u, opts as RequestInit)
                 );
@@ -411,6 +441,7 @@ export function useDiscussionMessages({
                 const bodyStr = JSON.stringify({
                     content: payload.encryptedContent,
                     attachments: payload.attachments,
+                    replyToId: payload.replyToId,
                 });
                 const res = await fetchWithAuth(url, {
                     method: 'POST',

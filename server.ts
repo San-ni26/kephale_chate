@@ -7,7 +7,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
 const port = parseInt(process.env.PORT || '3000', 10);
 
-const app = next({ dev, hostname, port });
+const app = next({ dev, hostname, port, turbopack: false });
 const handle = app.getRequestHandler();
 
 // En production, vérifier que JWT_SECRET est défini

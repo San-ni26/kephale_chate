@@ -13,8 +13,27 @@ const loginSchema = z.object({
     password: z.string().min(1, 'Mot de passe requis'),
 });
 
+// Handle CORS preflight
+export async function OPTIONS(request: NextRequest) {
+    const origin = request.headers.get('origin') || 'http://localhost:8081';
+    return new NextResponse(null, {
+        status: 204,
+        headers: {
+            'Access-Control-Allow-Origin': origin,
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Max-Age': '86400',
+        },
+    });
+}
+
 export async function POST(request: NextRequest) {
     try {
+        // Log pour debug
+        console.log('[Login] Request received:', request.method, request.url);
+        console.log('[Login] Headers:', Object.fromEntries(request.headers.entries()));
+        
         // Get client IP and check rate limit
         const clientIP = await getClientIP();
         const rateLimitId = getRateLimitIdentifier(clientIP);
@@ -34,7 +53,18 @@ export async function POST(request: NextRequest) {
         }
 
         // Parse and validate request body
-        const body = await request.json();
+        let body;
+        try {
+            body = await request.json();
+            console.log('[Login] Body received:', { email: body.email, hasPassword: !!body.password });
+        } catch (parseError) {
+            console.error('[Login] Failed to parse body:', parseError);
+            return NextResponse.json(
+                { error: 'Invalid JSON body' },
+                { status: 400 }
+            );
+        }
+        
         const validatedData = loginSchema.parse(body);
 
         // Find user by email — Stratégie double :

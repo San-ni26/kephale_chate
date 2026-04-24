@@ -129,7 +129,17 @@ export default function RegisterPage() {
             setStatus({ type: 'success', message: 'Email vérifié avec succès. Redirection...', title: 'Succès' });
             toast.success(data.message);
 
-            setTimeout(() => router.push('/login'), 1500);
+            // Vérifier s'il y a une URL de retour stockée
+            const returnUrl = localStorage.getItem('returnUrl');
+            setTimeout(() => {
+                if (returnUrl) {
+                    // Rediriger vers login avec indication de l'URL de retour
+                    localStorage.setItem('returnUrl', returnUrl);
+                    router.push('/login');
+                } else {
+                    router.push('/login');
+                }
+            }, 1500);
 
         } catch (error: any) {
             setStatus({ type: 'error', message: error.message, title: 'Échec de vérification' });
