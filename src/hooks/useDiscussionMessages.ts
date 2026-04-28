@@ -1,26 +1,15 @@
 /**
  * useDiscussionMessages
  * Gère l'envoi, la modification, la suppression et la réexpédition des messages
- * dans une discussion privée. Extrait de page.tsx pour réduire sa taille (#1).
- *
- * ── Gestion de la race condition Pusher vs HTTP ──────────────────────────────
- * Scénario problème (avant fix) :
- *   1. POST envoyé → message optimiste temp-xxx ajouté
- *   2. Serveur traite → broadcast Pusher du vrai message (realId)
- *   3. Pusher arrive AVANT la réponse HTTP → stableMessageKeysRef vide
- *      → realId ajouté en plus de temp-xxx → [temp-xxx, realId]
- *   4. HTTP arrive → replaceTempMessage → temp-xxx remplacé par realId
- *      → [realId, realId] → flash puis déduplication
- *
- * Solution : `pendingTempIdsRef` = Set des tempId actuellement en transit.
- *   - Peuplé AVANT le POST (synchrone, aucune latence)
- *   - Vidé dans replaceTempMessage (soit par HTTP, soit marqué par Pusher)
- *   - onNewMessage dans page.tsx consulte ce Set pour savoir si un temp attend
- * ─────────────────────────────────────────────────────────────────────────────
+ * dans une discussion privée.
+ * 
+ * Approche : utilisation de localStorage pour persister les messages temporaires
+ * entre les sessions. Quand on envoie un message, il est sauvegardé localement.
+ * Quand le serveur répond, le message temporaire est remplacé par le vrai.
  */
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { fetchWithAuth, getAuthHeader } from '@/src/lib/auth-client';
 import { sendWithOfflineQueue } from '@/src/lib/offline-queue';
@@ -40,6 +29,44 @@ export interface MessageAttachment {
 
 // URL extraction regex
 const URL_REGEX = /(https?:\/\/[^\s<]+[^\s<.,:;!?])/gi;
+
+// Clé localStorage pour les messages temporaires
+const TEMP_MESSAGES_KEY = 'chat_temp_messages';
+
+// Sauvegarder les messages temporaires dans localStorage
+function saveTempMessages(conversationId: string, messages: DiscussionMessage[]) {
+    try {
+        const allTemps = JSON.parse(localStorage.getItem(TEMP_MESSAGES_KEY) || '{}');
+        const tempsForConv = messages.filter(m => m.id.startsWith('temp-'));
+        allTemps[conversationId] = tempsForConv;
+        localStorage.setItem(TEMP_MESSAGES_KEY, JSON.stringify(allTemps));
+    } catch {
+        // Ignorer les erreurs localStorage
+    }
+}
+
+// Récupérer les messages temporaires depuis localStorage
+function getTempMessages(conversationId: string): DiscussionMessage[] {
+    try {
+        const allTemps = JSON.parse(localStorage.getItem(TEMP_MESSAGES_KEY) || '{}');
+        return allTemps[conversationId] || [];
+    } catch {
+        return [];
+    }
+}
+
+// Supprimer un message temporaire du localStorage
+function removeTempMessage(conversationId: string, tempId: string) {
+    try {
+        const allTemps = JSON.parse(localStorage.getItem(TEMP_MESSAGES_KEY) || '{}');
+        if (allTemps[conversationId]) {
+            allTemps[conversationId] = allTemps[conversationId].filter((m: DiscussionMessage) => m.id !== tempId);
+            localStorage.setItem(TEMP_MESSAGES_KEY, JSON.stringify(allTemps));
+        }
+    } catch {
+        // Ignorer les erreurs localStorage
+    }
+}
 
 function extractUrls(text: string): string[] {
     const matches = text.match(URL_REGEX);
@@ -95,23 +122,47 @@ export function useDiscussionMessages({
     setShowPasswordDialog,
     stopTyping,
 }: UseDiscussionMessagesOptions) {
-    const [sending, setSending] = useState(false);
+    // Utiliser un Set pour tracker les messages en cours d'envoi (permet l'envoi multiple)
+    const [sendingIds, setSendingIds] = useState<Set<string>>(new Set());
     const [failedMessagePayloads, setFailedMessagePayloads] = useState<
         Map<string, MessagePayload>
     >(new Map());
 
-    // Map realId → tempId : utilisé pour les clés React stables et la dédup Pusher après HTTP
-    const stableMessageKeysRef = useRef<Map<string, string>>(new Map());
-    // Map realId → timestamp optimiste : garde l'heure d'affichage stable visuellement
-    const stableMessageTimestampsRef = useRef<Map<string, string>>(new Map());
+    // Charger les messages temporaires sauvegardés au démarrage
+    useEffect(() => {
+        if (!conversationId) return;
+        
+        const savedTemps = getTempMessages(conversationId);
+        if (savedTemps.length > 0) {
+            // Fusionner avec les messages existants sans doublons
+            setMessages(prev => {
+                const existingIds = new Set(prev.map(m => m.id));
+                const newTemps = savedTemps.filter(m => !existingIds.has(m.id));
+                return [...prev, ...newTemps];
+            });
+        }
+    }, [conversationId, setMessages]);
 
-    /**
-     * Set des tempId actuellement "en vol" (POST envoyé, réponse HTTP pas encore reçue).
-     * CLEF DE LA FIX : peuplé synchroniquement AVANT le POST, donc disponible
-     * immédiatement quand Pusher arrive. onNewMessage le consulte pour savoir
-     * si un vrai message doit remplacer un temp plutôt que s'ajouter à la liste.
-     */
-    const pendingTempIdsRef = useRef<Set<string>>(new Set());
+    // Helper pour marquer un message comme "en cours d'envoi"
+    const markSending = useCallback((tempId: string, isSending: boolean) => {
+        setSendingIds(prev => {
+            const next = new Set(prev);
+            if (isSending) {
+                next.add(tempId);
+            } else {
+                next.delete(tempId);
+            }
+            return next;
+        });
+    }, []);
+
+    // Vérifier si un message spécifique est en cours d'envoi
+    const isSending = useCallback((tempId: string) => {
+        return sendingIds.has(tempId);
+    }, [sendingIds]);
+
+    // Vérifier si au moins un message est en cours d'envoi (pour l'UI globale)
+    const sending = sendingIds.size > 0;
 
     /** Upload un fichier vers Supabase et retourne l'URL publique */
     const uploadFileToSupabase = useCallback(async (file: File, context: string, contextId: string): Promise<{ url: string; storageKey?: string }> => {
@@ -130,44 +181,6 @@ export function useDiscussionMessages({
         return res.json();
     }, []);
 
-    /**
-     * Remplace le message temporaire par le vrai message serveur.
-     * Gère le cas "Pusher déjà arrivé" : si tempId n'est plus en liste
-     * mais realId y est déjà (Pusher l'a ajouté avant nous), on n'écrase rien.
-     */
-    const replaceTempMessage = useCallback(
-        (tempId: string, realMessage: DiscussionMessage, optimisticCreatedAt: string) => {
-            // Marquer dans les refs stables AVANT le setState
-            stableMessageKeysRef.current.set(realMessage.id, tempId);
-            stableMessageTimestampsRef.current.set(realMessage.id, optimisticCreatedAt);
-            // Retirer du Set "en vol"
-            pendingTempIdsRef.current.delete(tempId);
-
-            setMessages(prev => {
-                const hasTempInList = prev.some(m => m.id === tempId);
-                const hasRealAlready = prev.some(m => m.id === realMessage.id);
-
-                if (!hasTempInList && hasRealAlready) {
-                    // Pusher est arrivé en premier et a déjà ajouté realId à la place de temp
-                    // → rien à faire, la liste est déjà correcte
-                    return prev;
-                }
-                if (!hasTempInList && !hasRealAlready) {
-                    // Cas improbable : temp disparu pour une autre raison
-                    return [...prev, realMessage];
-                }
-                // Cas normal : remplacer temp par real
-                return prev.map(m => (m.id === tempId ? realMessage : m));
-            });
-
-            addMessageToCache(
-                `/api/conversations/${conversationId}/messages?limit=50`,
-                realMessage
-            );
-        },
-        [conversationId, setMessages]
-    );
-
     /** Envoie un message texte + pièces jointes */
     const handleSendMessage = useCallback(
         async (
@@ -182,14 +195,12 @@ export function useDiscussionMessages({
                 return;
             }
 
-            setSending(true);
             const currentFiles = [...selectedFiles];
             revokeAllFileUrls();
             if (conversationId) stopTyping(conversationId);
 
-            const tempId = `temp-${Date.now()}`;
-            // ← Ajouter dans le Set AVANT le POST (synchrone, atomique)
-            pendingTempIdsRef.current.add(tempId);
+            const tempId = `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            markSending(tempId, true);
             let payload: MessagePayload | null = null;
 
             try {
@@ -261,7 +272,18 @@ export function useDiscussionMessages({
                     },
                 };
 
-                setMessages(prev => [...prev, optimisticMessage]);
+                // Ajouter au cache SWR immédiatement (persiste après navigation)
+                addMessageToCache(
+                    `/api/conversations/${conversationId}/messages?limit=50`,
+                    optimisticMessage
+                );
+                // Mettre à jour l'état local aussi pour l'affichage instantané
+                setMessages(prev => {
+                    const newMessages = [...prev, optimisticMessage];
+                    // Sauvegarder dans localStorage pour persistance entre sessions
+                    saveTempMessages(conversationId, newMessages);
+                    return newMessages;
+                });
                 scrollToBottom();
 
                 const url = `/api/conversations/${conversationId}/messages`;
@@ -276,28 +298,42 @@ export function useDiscussionMessages({
 
                 if (result.queued) {
                     toast.info('Message en attente (hors ligne)');
-                    pendingTempIdsRef.current.delete(tempId); // Plus en vol, en queue
                     if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload as MessagePayload));
                 } else if (result.ok && result.response) {
                     const data = await result.response.json();
-                    if (data.message) replaceTempMessage(tempId, data.message, optimisticCreatedAt);
-                    else pendingTempIdsRef.current.delete(tempId);
+                    if (data.message) {
+                        // Remplacer le message temporaire par le vrai message serveur
+                        // dans le cache et dans l'état local
+                        setMessages(prev => {
+                            const hasRealAlready = prev.some(m => m.id === data.message.id);
+                            if (hasRealAlready) return prev;
+                            const newMessages = prev.map(m => m.id === tempId ? data.message : m);
+                            // Mettre à jour localStorage (supprimer le temp, garder le vrai)
+                            saveTempMessages(conversationId, newMessages);
+                            return newMessages;
+                        });
+                        // Supprimer le message temporaire du localStorage
+                        removeTempMessage(conversationId, tempId);
+                        // Mettre à jour le cache aussi
+                        addMessageToCache(
+                            `/api/conversations/${conversationId}/messages?limit=50`,
+                            data.message
+                        );
+                    }
                 } else if (result.response) {
                     const error = await result.response.json();
                     toast.error(error.error || "Erreur d'envoi");
-                    pendingTempIdsRef.current.delete(tempId);
                     if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload as MessagePayload));
                 }
             } catch (error) {
                 console.error('Send message error:', error);
                 toast.error("Erreur d'envoi du message");
-                pendingTempIdsRef.current.delete(tempId);
                 if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload as MessagePayload));
             } finally {
-                setSending(false);
+                markSending(tempId, false);
             }
         },
-        [conversationId, currentUser, otherUser, privateKey, setMessages, scrollToBottom, setShowPasswordDialog, stopTyping, uploadFileToSupabase, replaceTempMessage]
+        [conversationId, currentUser, otherUser, privateKey, setMessages, scrollToBottom, setShowPasswordDialog, stopTyping, uploadFileToSupabase, markSending]
     );
 
     /** Envoie un message audio */
@@ -307,10 +343,8 @@ export function useDiscussionMessages({
                 toast.error('Clé de chiffrement manquante');
                 return;
             }
-            setSending(true);
-            const tempId = `temp-${Date.now()}`;
-            // ← Ajouter dans le Set AVANT le POST
-            pendingTempIdsRef.current.add(tempId);
+            const tempId = `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            markSending(tempId, true);
             let payload: MessagePayload | null = null;
 
             try {
@@ -340,7 +374,19 @@ export function useDiscussionMessages({
                     },
                 };
 
-                setMessages(prev => [...prev, optimisticMessage]);
+                // Ajouter au cache SWR immédiatement (persiste après navigation)
+                addMessageToCache(
+                    `/api/conversations/${conversationId}/messages?limit=50`,
+                    optimisticMessage
+                );
+                // Mettre à jour l'état local aussi pour l'affichage instantané
+                setMessages(prev => {
+                    const newMessages = [...prev, optimisticMessage];
+                    // Sauvegarder dans localStorage pour persistance entre sessions
+                    saveTempMessages(conversationId, newMessages);
+                    return newMessages;
+                });
+                scrollToBottom();
 
                 const url = `/api/conversations/${conversationId}/messages`;
                 const bodyStr = JSON.stringify({ content: encryptedContent, attachments: [attachment], replyToId });
@@ -350,28 +396,41 @@ export function useDiscussionMessages({
 
                 if (result.queued) {
                     toast.info('Message vocal en attente (hors ligne)');
-                    pendingTempIdsRef.current.delete(tempId);
-                    if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
+                    if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload as MessagePayload));
                 } else if (result.ok && result.response) {
                     const data = await result.response.json();
-                    if (data.message) replaceTempMessage(tempId, data.message, optimisticCreatedAt);
-                    else pendingTempIdsRef.current.delete(tempId);
-                    scrollToBottom();
+                    if (data.message) {
+                        // Remplacer le message temporaire par le vrai message serveur
+                        setMessages(prev => {
+                            const hasRealAlready = prev.some(m => m.id === data.message.id);
+                            if (hasRealAlready) return prev;
+                            const newMessages = prev.map(m => m.id === tempId ? data.message : m);
+                            // Mettre à jour localStorage (supprimer le temp, garder le vrai)
+                            saveTempMessages(conversationId, newMessages);
+                            return newMessages;
+                        });
+                        // Supprimer le message temporaire du localStorage
+                        removeTempMessage(conversationId, tempId);
+                        // Mettre à jour le cache aussi
+                        addMessageToCache(
+                            `/api/conversations/${conversationId}/messages?limit=50`,
+                            data.message
+                        );
+                        scrollToBottom();
+                    }
                 } else if (result.response) {
                     toast.error("Erreur d'envoi du message vocal");
-                    pendingTempIdsRef.current.delete(tempId);
-                    if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
+                    if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload as MessagePayload));
                 }
             } catch (error) {
                 console.error('Send audio error:', error);
                 toast.error("Erreur d'envoi du message vocal");
-                pendingTempIdsRef.current.delete(tempId);
-                if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload!));
+                if (payload) setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload as MessagePayload));
             } finally {
-                setSending(false);
+                markSending(tempId, false);
             }
         },
-        [conversationId, currentUser, otherUser, privateKey, setMessages, scrollToBottom, uploadFileToSupabase, replaceTempMessage]
+        [conversationId, currentUser, otherUser, privateKey, setMessages, scrollToBottom, uploadFileToSupabase, markSending]
     );
 
     /** Modifie un message existant */
@@ -406,11 +465,26 @@ export function useDiscussionMessages({
     const handleDeleteMessage = useCallback(
         async (messageId: string) => {
             try {
+                // Supprimer immédiatement de l'état local
                 setMessages(prev => prev.filter(m => m.id !== messageId));
+                
+                // Supprimer du cache API
                 removeMessageFromCache(
                     `/api/conversations/${conversationId}/messages?limit=50`,
                     messageId
                 );
+                
+                // Supprimer aussi du localStorage des messages temporaires
+                try {
+                    const allTemps = JSON.parse(localStorage.getItem('chat_temp_messages') || '{}');
+                    if (allTemps[conversationId]) {
+                        allTemps[conversationId] = allTemps[conversationId].filter((m: DiscussionMessage) => m.id !== messageId);
+                        localStorage.setItem('chat_temp_messages', JSON.stringify(allTemps));
+                    }
+                } catch {
+                    // Ignorer les erreurs localStorage
+                }
+                
                 const res = await fetchWithAuth(`/api/messages/${messageId}`, { method: 'DELETE' });
                 if (!res.ok) {
                     toast.error('Erreur lors de la suppression');
@@ -434,8 +508,6 @@ export function useDiscussionMessages({
                 return next;
             });
 
-            pendingTempIdsRef.current.add(tempId);
-
             try {
                 const url = `/api/conversations/${conversationId}/messages`;
                 const bodyStr = JSON.stringify({
@@ -451,35 +523,33 @@ export function useDiscussionMessages({
                 if (res.ok) {
                     const data = await res.json();
                     if (data.message) {
-                        replaceTempMessage(tempId, data.message, new Date().toISOString());
+                        // Remplacer le message temporaire par le vrai message serveur
+                        setMessages(prev => {
+                            const hasRealAlready = prev.some(m => m.id === data.message.id);
+                            if (hasRealAlready) return prev;
+                            return prev.map(m => m.id === tempId ? data.message : m);
+                        });
+                        addMessageToCache(
+                            `/api/conversations/${conversationId}/messages?limit=50`,
+                            data.message
+                        );
                         scrollToBottom();
-                    } else {
-                        pendingTempIdsRef.current.delete(tempId);
                     }
                 } else {
                     toast.error('Échec de la réexpédition');
-                    pendingTempIdsRef.current.delete(tempId);
                     setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload));
                 }
             } catch {
                 toast.error('Échec de la réexpédition');
-                pendingTempIdsRef.current.delete(tempId);
                 setFailedMessagePayloads(prev => new Map(prev).set(tempId, payload));
             }
         },
-        [conversationId, failedMessagePayloads, setMessages, scrollToBottom, replaceTempMessage]
+        [conversationId, failedMessagePayloads, setMessages, scrollToBottom]
     );
 
     return {
         sending,
         failedMessagePayloads,
-        // Refs exposés pour page.tsx :
-        //  - stableMessageKeysRef   : realId → tempId (clés React stables + dédup post-HTTP)
-        //  - stableMessageTimestampsRef : realId → timestamp optimiste
-        //  - pendingTempIdsRef      : tempIds en vol (dédup AVANT réponse HTTP)
-        stableMessageKeysRef,
-        stableMessageTimestampsRef,
-        pendingTempIdsRef,
         handleSendMessage,
         sendAudioMessage,
         handleEditMessage,

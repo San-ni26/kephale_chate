@@ -111,7 +111,7 @@ const BLUR_THRESHOLD_MS = 24 * 60 * 60 * 1000;
 const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
     message, isOwn, canEdit, currentUser, otherUser, privateKey,
     isEditing, editContent, onEditContentChange, onEditOpen, onEditSave, onEditCancel,
-    onDelete, onRetry, isFailed, displayCreatedAt, isBlurred,
+    onDelete, onRetry, isFailed, isBlurred,
     isFirstInGroup, isLastInGroup,
 }: {
     message: Message; isOwn: boolean; canEdit: boolean;
@@ -123,7 +123,7 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
     onEditOpen: (content: string) => void;
     onEditSave: () => void; onEditCancel: () => void; onDelete: () => void;
     onRetry?: () => void; isFailed: boolean;
-    displayCreatedAt?: string; isBlurred?: boolean;
+    isBlurred?: boolean;
     isFirstInGroup?: boolean; isLastInGroup?: boolean;
 }) {
     const decryptedContent = useMemo(() => {
@@ -138,7 +138,7 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
         }
     }, [message.id, message.content, message.senderId, message.sender?.publicKey, currentUser?.id, otherUser?.publicKey, privateKey]);
 
-    const timestamp = displayCreatedAt ?? message.createdAt;
+    const timestamp = message.createdAt;
     const bubbleRef = useRef<HTMLDivElement>(null);
     const longPressTimer = useRef<NodeJS.Timeout | null>(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -292,7 +292,6 @@ const DiscussionMessageBubble = memo(function DiscussionMessageBubble({
     prev.privateKey === next.privateKey &&
     prev.currentUser?.id === next.currentUser?.id &&
     prev.otherUser?.publicKey === next.otherUser?.publicKey &&
-    prev.displayCreatedAt === next.displayCreatedAt &&
     prev.isFirstInGroup === next.isFirstInGroup &&
     prev.isLastInGroup === next.isLastInGroup
 ));
@@ -457,17 +456,11 @@ export default function DiscussionPage() {
     }, [blurOldMessages, lockState.canUseLock, blurEnabled, setDiscussionBlur]);
 
     // ── useDiscussionMessages en PREMIER ──
-    // IMPORTANT : exposer pendingTempIdsRef + stableMessageKeysRef
-    // avant d'appeler useWebSocket pour la déduplication correcte.
-    // stopTyping est passé via une ref pour éviter la dépendance circulaire.
     const stopTypingRef = useRef<(id: string) => void>(() => { });
 
     const {
         sending,
         failedMessagePayloads,
-        stableMessageKeysRef,       // realId → tempId
-        stableMessageTimestampsRef,
-        pendingTempIdsRef,          // Set<tempId> en vol (race condition fix)
         handleSendMessage,
         sendAudioMessage,
         handleEditMessage,
@@ -485,37 +478,30 @@ export default function DiscussionPage() {
     });
 
     // ── useWebSocket (après useDiscussionMessages) ──
-    // onNewMessage corrige la race condition Pusher-avant-HTTP via pendingTempIdsRef
+    // Simplifié : pas de race condition complexe, remplacement simple par tempId
     const { isConnected, startTyping, stopTyping, joinConversation, leaveConversation } = useWebSocket(
-        // onNewMessage — 4 cas, 0 doublon possible
+        // onNewMessage — simplifié pour éviter les délais
         (data) => {
             const msg = data.message;
             setMessages(prev => {
-                // Cas 1 : realId déjà en liste (HTTP avant Pusher) → skip
+                // Déjà présent → skip
                 if (prev.some(m => m.id === msg.id)) return prev;
 
-                // Cas 2 : Pusher après HTTP — stableMessageKeysRef peuplé
-                const tempId = stableMessageKeysRef.current.get(msg.id);
-                if (tempId && prev.some(m => m.id === tempId)) {
-                    return prev.map(m => m.id === tempId ? msg : m);
+                // Chercher un message temporaire du même utilisateur avec même contenu
+                const tempIndex = prev.findIndex(m => 
+                    m.id.startsWith('temp-') && 
+                    m.senderId === msg.senderId &&
+                    m.content === msg.content
+                );
+
+                if (tempIndex >= 0) {
+                    // Remplacer le temporaire par le message réel
+                    const newMessages = [...prev];
+                    newMessages[tempIndex] = msg;
+                    return newMessages;
                 }
 
-                // Cas 3 : Pusher AVANT HTTP (race condition principale)
-                // pendingTempIdsRef a été peuplé synchro AVANT le POST
-                if (pendingTempIdsRef.current.size > 0) {
-                    const ourTemp = prev.find(
-                        m => m.id.startsWith('temp-') && pendingTempIdsRef.current.has(m.id)
-                    );
-                    if (ourTemp) {
-                        // Stocker le mapping → replaceTempMessage (HTTP) verra que
-                        // Pusher a déjà fait le swap et ne créera pas de doublon
-                        stableMessageKeysRef.current.set(msg.id, ourTemp.id);
-                        pendingTempIdsRef.current.delete(ourTemp.id);
-                        return prev.map(m => m.id === ourTemp.id ? msg : m);
-                    }
-                }
-
-                // Cas 4 : message de l'autre utilisateur → ajouter
+                // Message de l'autre utilisateur → ajouter
                 return [...prev, msg];
             });
         },
@@ -1070,7 +1056,6 @@ export default function DiscussionPage() {
                                 >
                                     <DiscussionMessageBubble
                                         message={message}
-                                        displayCreatedAt={stableMessageTimestampsRef.current.get(message.id)}
                                         isOwn={message.senderId === currentUser?.id}
                                         canEdit={editableMessageIds.has(message.id)}
                                         currentUser={currentUser ?? null}
@@ -1164,7 +1149,7 @@ export default function DiscussionPage() {
 
                     {!isRecordingAudio && (
                         <>
-                            <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} disabled={sending} className="text-muted-foreground hover:text-foreground hover:bg-muted">
+                            <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} className="text-muted-foreground hover:text-foreground hover:bg-muted">
                                 <Paperclip className="w-5 h-5" />
                             </Button>
                             <Input
@@ -1184,11 +1169,14 @@ export default function DiscussionPage() {
                                 }}
                                 placeholder="Message chiffré..."
                                 className="flex-1"
-                                disabled={sending}
                                 onKeyDown={e => {
                                     if (e.key === 'Enter' && !e.shiftKey) {
                                         e.preventDefault();
-                                        handleSendMessage(newMessage, selectedFiles, revokeAllFileUrls).then(() => setNewMessage(''));
+                                        const msg = newMessage;
+                                        const files = selectedFiles;
+                                        setNewMessage('');
+                                        revokeAllFileUrls();
+                                        handleSendMessage(msg, files, () => {});
                                     }
                                 }}
                             />
@@ -1209,8 +1197,14 @@ export default function DiscussionPage() {
 
                     {!isRecordingAudio && (
                         <Button
-                            onClick={() => handleSendMessage(newMessage, selectedFiles, revokeAllFileUrls).then(() => setNewMessage(''))}
-                            disabled={(!newMessage.trim() && selectedFiles.length === 0) || sending}
+                            onClick={() => {
+                                const msg = newMessage;
+                                const files = selectedFiles;
+                                setNewMessage('');
+                                revokeAllFileUrls();
+                                handleSendMessage(msg, files, () => {});
+                            }}
+                            disabled={!newMessage.trim() && selectedFiles.length === 0}
                             className="bg-primary hover:bg-[var(--primary-hover)] text-primary-foreground transition-colors"
                         >
                             {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}

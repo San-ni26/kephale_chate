@@ -59,6 +59,9 @@ export function setAuth(token: string, user: AuthUser): void {
 
     // Le serveur définit un cookie HttpOnly sur la réponse login - priorité pour l'API.
     // Ne pas écraser via document.cookie pour garder HttpOnly.
+
+    // Émettre un événement pour notifier les composants de l'authentification
+    window.dispatchEvent(new CustomEvent('auth-change'));
 }
 
 /**
@@ -134,6 +137,9 @@ export function clearAuth(): void {
 
     // Clear cookie
     document.cookie = 'auth-token=; path=/; max-age=0';
+
+    // Émettre un événement pour notifier les composants de la déconnexion
+    window.dispatchEvent(new CustomEvent('auth-change'));
 }
 
 const LOGIN_PATH = '/login';

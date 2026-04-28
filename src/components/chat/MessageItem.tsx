@@ -199,20 +199,25 @@ export function MessageItem({
     const swipeOpacity = Math.min(swipeState.progress * 0.5, 0.5);
 
     return (
-        <div className={cn('relative mb-1', isOwnMessage ? 'pl-12' : 'pr-12')}>
+        <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className={cn('relative mb-1', isOwnMessage ? 'pl-12' : 'pr-12')}
+        >
             {/* Indicateur de swipe (icône reply) */}
             {swipeState.deltaX > 20 && (
                 <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{
+                        opacity: swipeOpacity,
+                        scale: 0.5 + swipeState.progress * 0.5,
+                        x: isOwnMessage ? 10 : 10
+                    }}
                     className={cn(
                         'absolute top-1/2 -translate-y-1/2',
                         isOwnMessage ? 'left-0' : 'left-0'
                     )}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ 
-                        opacity: swipeOpacity, 
-                        scale: 0.5 + swipeState.progress * 0.5,
-                        x: isOwnMessage ? 10 : 10
-                    }}
                 >
                     <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
                         <Reply className="w-5 h-5 text-primary-foreground" />
@@ -223,16 +228,16 @@ export function MessageItem({
             {/* Indicateur de swipe (icône actions) */}
             {swipeState.deltaX < -20 && (
                 <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{
+                        opacity: swipeOpacity,
+                        scale: 0.5 + swipeState.progress * 0.5,
+                        x: isOwnMessage ? -10 : -10
+                    }}
                     className={cn(
                         'absolute top-1/2 -translate-y-1/2',
                         isOwnMessage ? 'right-0' : 'right-0'
                     )}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ 
-                        opacity: swipeOpacity, 
-                        scale: 0.5 + swipeState.progress * 0.5,
-                        x: isOwnMessage ? -10 : -10
-                    }}
                 >
                     <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
                         <MoreVertical className="w-5 h-5 text-foreground" />
@@ -528,7 +533,7 @@ export function MessageItem({
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </motion.div>
     );
 }
 

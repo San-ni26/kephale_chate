@@ -18,22 +18,40 @@ export function AuthGuard() {
     useEffect(() => {
         if (typeof window === 'undefined' || !pathname) return;
         
+        // DEBUG: Log pour voir ce qui se passe
+        console.log('[AuthGuard] pathname:', pathname);
+        
         // Vérifier si c'est une route publique (exclure de la protection)
         // Matcher /chat/jobs/[jobId] mais pas /chat/jobs/my-applications
-        const isPublicJobPage = pathname.match(/^\/chat\/jobs\/[^\/]+/) !== null 
-            && !pathname.includes('/my-applications')
-            && pathname.split('/').length <= 4; // /chat/jobs/[id] = 4 segments max
+        const pathSegments = pathname.split('/').filter(Boolean);
+        console.log('[AuthGuard] pathSegments:', pathSegments);
+        
+        // Détection plus robuste: /chat/jobs/[id] doit avoir exactement 3 segments
+        const isPublicJobPage = pathSegments.length === 3 
+            && pathSegments[0] === 'chat'
+            && pathSegments[1] === 'jobs'
+            && pathSegments[2] !== 'my-applications';
+        
+        console.log('[AuthGuard] isPublicJobPage:', isPublicJobPage);
         
         if (isPublicJobPage) {
             console.log('[AuthGuard] Page job publique détectée, pas de redirection');
             return;
         }
         
-        if (!isProtectedPath(pathname)) return;
+        if (!isProtectedPath(pathname)) {
+            console.log('[AuthGuard] Route non protégée');
+            return;
+        }
 
         const token = getToken();
         const user = getUser();
-        if (token != null || user != null) return;
+        console.log('[AuthGuard] token:', token ? 'présent' : 'absent', 'user:', user ? 'présent' : 'absent');
+        
+        if (token != null || user != null) {
+            console.log('[AuthGuard] Utilisateur authentifié');
+            return;
+        }
 
         // Route protégée mais pas d'auth au refresh => nettoyage complet et redirect
         console.log('[AuthGuard] Redirection vers login pour pathname:', pathname);

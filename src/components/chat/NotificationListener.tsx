@@ -92,7 +92,12 @@ export function NotificationListener() {
 
     // ── Écoute Pusher in-app ──────────────────────────────────────────────
     useEffect(() => {
-        if (!userChannel || !isConnected) return;
+        if (!userChannel || !isConnected) {
+            console.log('[NotificationListener] Pusher not ready:', { hasUserChannel: !!userChannel, isConnected });
+            return;
+        }
+
+        console.log('[NotificationListener] Binding to notification:new on channel:', userChannel.name);
 
         const handleNewNotification = (data: {
             id: string;
@@ -107,6 +112,8 @@ export function NotificationListener() {
             groupId?: string;
             type?: string;
         }) => {
+            console.log('[NotificationListener] Received notification:new:', data);
+            
             const currentPath = pathnameRef.current;
             const isOnNotificationsPage = currentPath?.startsWith('/chat/notifications') ?? false;
 
@@ -115,7 +122,10 @@ export function NotificationListener() {
                 const discussionMatch = currentPath?.match(/^\/chat\/discussion\/([^/?]+)/);
                 const currentConvId = discussionMatch?.[1];
                 // Skip si l'utilisateur est déjà dans cette discussion ou sur /notifications
-                if ((currentConvId && currentConvId === data.conversationId) || isOnNotificationsPage) return;
+                if ((currentConvId && currentConvId === data.conversationId) || isOnNotificationsPage) {
+                    console.log('[NotificationListener] Skipping toast - user is in current discussion or notifications page');
+                    return;
+                }
 
                 // FIX 1 : Uniquement le toast Sonner — PAS de new Notification()
                 // Le push natif est envoyé par le serveur via VAPID → handled by sw.js
@@ -188,11 +198,10 @@ export function NotificationListener() {
         };
 
         userChannel.bind('notification:new', handleNewNotification);
-        if (process.env.NODE_ENV === 'development') {
-            console.log('[NotificationListener] Écoute Pusher active');
-        }
+        console.log('[NotificationListener] Écoute Pusher active sur', userChannel.name);
 
         return () => {
+            console.log('[NotificationListener] Unbinding from notification:new');
             userChannel.unbind('notification:new', handleNewNotification);
         };
     }, [userChannel, isConnected]);
@@ -200,7 +209,6 @@ export function NotificationListener() {
     // ── Enregistrement Web Push initial ──────────────────────────────────
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        if (pushRegistered.current) return;
         
         // Ne pas essayer d'enregistrer les push sur Safari iOS (non supporté)
         if (!isPushSupported()) {
@@ -210,11 +218,24 @@ export function NotificationListener() {
             return;
         }
         
-        if (!pathname || !isProtectedPath(pathname) || !getToken()) return;
+        if (!pathname || !isProtectedPath(pathname) || !getToken()) {
+            // Réinitialiser si on n'est plus sur une route protégée (logout)
+            pushRegistered.current = false;
+            return;
+        }
+
+        // Si déjà enregistré, ne pas re-enregistrer sauf si on change de route protégée
+        if (pushRegistered.current) return;
 
         const run = async () => {
+            console.log('[NotificationListener] Registering push subscription...');
             const result = await registerPushSubscription();
-            if (result.ok) pushRegistered.current = true;
+            if (result.ok) {
+                pushRegistered.current = true;
+                console.log('[NotificationListener] Push subscription registered successfully');
+            } else {
+                console.error('[NotificationListener] Push registration failed:', result.error);
+            }
         };
         const timeout = setTimeout(run, 500);
         return () => clearTimeout(timeout);

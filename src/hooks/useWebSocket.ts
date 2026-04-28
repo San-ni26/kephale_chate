@@ -78,10 +78,26 @@ export function useWebSocket(
     onUserStatusChangedRef.current = onUserStatusChanged;
     onErrorRef.current = onError;
 
+    // Écouter les changements d'authentification
+    const [authVersion, setAuthVersion] = useState(0);
+    useEffect(() => {
+        const handleAuthChange = () => {
+            setAuthVersion(v => v + 1);
+        };
+        window.addEventListener('auth-change', handleAuthChange);
+        return () => window.removeEventListener('auth-change', handleAuthChange);
+    }, []);
+
     // Initialize Pusher and acquire user channel
     useEffect(() => {
         const user = getUser();
-        if (!user) return;
+        if (!user) {
+            // Si pas d'utilisateur, s'assurer que tout est nettoyé
+            setPusher(null);
+            setUserChannel(null);
+            setIsConnected(false);
+            return;
+        }
 
         const client = getPusherClient();
         if (!client) return;
@@ -128,6 +144,9 @@ export function useWebSocket(
         const uChannel = acquireUserChannel();
         if (uChannel) {
             setUserChannel(uChannel);
+            if (process.env.NODE_ENV === 'development') {
+                console.log('[useWebSocket] User channel acquired:', uChannel.name);
+            }
         }
 
         return () => {
@@ -138,7 +157,7 @@ export function useWebSocket(
             releaseUserChannel();
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [authVersion]); // Se réexécute quand l'authentification change
 
     // Re-subscribe to conversation channel on reconnect
     useEffect(() => {
